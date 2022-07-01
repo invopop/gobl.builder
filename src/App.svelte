@@ -1,18 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import * as GOBL from "./lib/gobl";
+  import Editor from "./builder/Editor.svelte";
+  import Actions from "./builder/Actions.svelte";
 
-  let keypair: Awaited<ReturnType<typeof GOBL.keygen>>;
-
-  $: keypairJSON = JSON.stringify(keypair, null, 2);
-
-  onMount(async () => {
-    keypair = await GOBL.keygen();
-  });
+  import "./app.css";
 </script>
 
-{#if !keypair}
-  <p>Loading ...</p>
-{:else}
-  <pre>{keypairJSON}</pre>
-{/if}
+<div style="float: left;">
+  <Editor />
+</div>
+<div style="clear: left">
+  <Actions />
+</div>

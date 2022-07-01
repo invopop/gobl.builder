@@ -11,27 +11,27 @@ type VerifyRequest = BaseBulkRequest & {
   action: "verify";
   payload: {
     data: string;
-    publickey: string;
+    publickey: Keypair["public"];
   };
 };
 
 type BuildRequest = BaseBulkRequest & {
   action: "build";
   payload: {
-    template: string;
+    template?: string;
     data: string;
-    privatekey: string;
-    type: string;
+    privatekey: Keypair["private"];
+    type?: string;
   };
 };
 
 type EnvelopRequest = BaseBulkRequest & {
   action: "envelop";
   payload: {
-    template: string;
+    template?: string;
     data: string;
-    privatekey: string;
-    type: string;
+    privatekey: Keypair["private"];
+    type?: string;
   };
 };
 
@@ -84,7 +84,7 @@ worker.onmessage = ({ data }: MessageEvent<ReadyMessage | BulkResponse>) => {
   delete inFlight[data.req_id];
 
   if (!waiting) {
-    console.log(`Received response for an unregistered request (req_id: ${data.req_id}).`, { data });
+    console.error(`Received response for an unregistered request (req_id: ${data.req_id}).`, { data });
     return true;
   }
 
@@ -119,7 +119,8 @@ async function sendMessage<T>(data: BulkRequest): Promise<T> {
 }
 
 async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent">) {
-  return sendMessage({
+  // TODO(?): Parse JSON response before returning.
+  return sendMessage<string>({
     action: "build",
     payload,
     indent,
@@ -127,7 +128,8 @@ async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent
 }
 
 async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "indent">) {
-  return sendMessage({
+  // TODO(?): Parse JSON response before returning.
+  return sendMessage<string>({
     action: "verify",
     payload,
     indent,
@@ -135,14 +137,15 @@ async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "inde
 }
 
 async function envelop({ payload, indent }: Pick<EnvelopRequest, "payload" | "indent">) {
-  return sendMessage({
+  // TODO(?): Parse JSON response before returning.
+  return sendMessage<string>({
     action: "envelop",
     payload,
     indent,
   });
 }
 
-type Keypair = {
+export type Keypair = {
   private: JsonWebKey;
   public: Omit<JsonWebKey, "d">;
 };
