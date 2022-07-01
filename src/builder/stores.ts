@@ -1,5 +1,6 @@
 import { writable } from "svelte/store";
 import * as GOBL from "../lib/gobl";
+import type { Severity } from "../ui/alerts";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair>(null, function start(set) {
@@ -213,5 +214,33 @@ const defaultEditor = `{
   "uuid": "3d7fdbdc-d037-11eb-a068-3e7e00ce5635"
 }`;
 
+type Status = {
+  severity: Severity;
+  message: string;
+  context?: string;
+};
+
+// function createStatusStore() {
+//   const { subscribe, set } = writable<Status>(null);
+
+//   return {
+//     subscribe,
+//     setInfo: ({ message, context }: Pick<Status, "message" | "context">) =>
+//       set({
+//         severity: Severity.Info,
+//         message,
+//         context,
+//       }),
+//     setError: ({ message, context }: Pick<Status, "message" | "context">) =>
+//       set({
+//         severity: Severity.Error,
+//         message,
+//         context,
+//       }),
+//   };
+// }
+
 export const keypair = createKeypairStore();
 export const editor = writable(defaultEditor);
+export const draft = writable(false);
+export const status = writable<Status>(null);

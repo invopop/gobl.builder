@@ -1,32 +1,54 @@
 <script lang="ts">
   import * as GOBL from "../lib/gobl";
-  import { keypair, editor } from "./stores";
+  import { keypair, editor, draft, status } from "./stores";
   import Button from "../ui/Button.svelte";
+  import { Severity } from "../ui/alerts";
 
-  let docEnvelopable = false;
+  let envelopable = false;
+  let buildable = false;
+  let verifiable = false;
 
   editor.subscribe((value) => {
     try {
       const data = JSON.parse(value);
-      docEnvelopable = data?.$schema === "https://gobl.org/draft-0/bill/invoice";
+      if (data?.$schema !== "https://gobl.org/draft-0/envelope") {
+        envelopable = true;
+      } else {
+        envelopable = false;
+        buildable = true;
+        verifiable = true;
+      }
     } catch (e) {
-      docEnvelopable = false;
+      envelopable = false;
+      buildable = false;
+      verifiable = false;
     }
   });
 
-  $: envelopEnabled = Boolean($keypair) && docEnvelopable;
+  $: envelopEnabled = Boolean($keypair) && envelopable;
+  $: buildEnabled = Boolean($keypair) && buildable;
+  $: verifyEnabled = Boolean($keypair) && verifiable;
 
   async function handleEnvelopClick() {
     const payload = {
       data: btoa($editor),
       privatekey: $keypair.private,
+      draft: $draft,
     };
 
     try {
       const result = await GOBL.envelop({ payload, indent: true });
       editor.set(result);
+      status.set({
+        severity: Severity.Success,
+        message: "Successfully wrapped document in an envelope.",
+      });
     } catch (e) {
-      console.error(e);
+      status.set({
+        severity: Severity.Error,
+        message: "Failed to wrap document in an envelope.",
+        context: e,
+      });
     }
   }
 
@@ -34,13 +56,18 @@
     const payload = {
       data: btoa($editor),
       privatekey: $keypair.private,
+      draft: $draft,
     };
 
     try {
       const result = await GOBL.build({ payload, indent: true });
-      // TODO: Handle result.
+      editor.set(result);
     } catch (e) {
-      console.error(e);
+      status.set({
+        severity: Severity.Error,
+        message: "Failed to build document.",
+        context: e,
+      });
     }
   }
 
@@ -51,18 +78,34 @@
     };
 
     try {
-      const result = await GOBL.verify({ payload, indent: true });
-      // TODO: Handle result.
+      await GOBL.verify({ payload, indent: true });
+      status.set({
+        severity: Severity.Success,
+        message: "Document successfully verified.",
+      });
     } catch (e) {
-      console.error(e);
+      status.set({
+        severity: Severity.Error,
+        message: "Document verification failed.",
+        context: e,
+      });
     }
   }
 </script>
 
+<div class="flex items-center mb-4">
+  <input
+    id="draft"
+    bind:checked={$draft}
+    type="checkbox"
+    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+  />
+  <label for="draft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Draft</label>
+</div>
 <Button
   on:click={handleEnvelopClick}
   disabled={!envelopEnabled}
   title={!envelopEnabled ? "Document schema is not supported for enveloping." : ""}>Envelop</Button
 >
-<!-- <Button on:click={handleBuildClick} disabled={!Boolean($keypair)}>Build</Button> -->
-<!-- <Button on:click={handleVerifyClick} disabled={!Boolean($keypair)}>Verify</Button> -->
+<Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
+<Button on:click={handleVerifyClick} disabled={!verifyEnabled}>Verify</Button>

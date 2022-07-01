@@ -22,6 +22,7 @@ type BuildRequest = BaseBulkRequest & {
     data: string;
     privatekey: Keypair["private"];
     type?: string;
+    draft?: boolean;
   };
 };
 
@@ -32,6 +33,7 @@ type EnvelopRequest = BaseBulkRequest & {
     data: string;
     privatekey: Keypair["private"];
     type?: string;
+    draft?: boolean;
   };
 };
 
