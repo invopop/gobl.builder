@@ -4,5 +4,7 @@
 </script>
 
 {#if $status}
-  <Alert {...$status} />
+  <div class="mb-4">
+    <Alert {...$status} />
+  </div>
 {/if}

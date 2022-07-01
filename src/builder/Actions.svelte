@@ -93,19 +93,21 @@
   }
 </script>
 
-<div class="flex items-center mb-4">
-  <input
-    id="draft"
-    bind:checked={$draft}
-    type="checkbox"
-    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-  />
-  <label for="draft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Draft</label>
+<div class="flex gap-2">
+  <div class="flex items-center">
+    <input
+      id="draft"
+      bind:checked={$draft}
+      type="checkbox"
+      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+    />
+    <label for="draft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Draft</label>
+  </div>
+  <Button
+    on:click={handleEnvelopClick}
+    disabled={!envelopEnabled}
+    title={!envelopEnabled ? "Document schema is not supported for enveloping." : ""}>Envelop</Button
+  >
+  <Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
+  <Button on:click={handleVerifyClick} disabled={!verifyEnabled}>Verify</Button>
 </div>
-<Button
-  on:click={handleEnvelopClick}
-  disabled={!envelopEnabled}
-  title={!envelopEnabled ? "Document schema is not supported for enveloping." : ""}>Envelop</Button
->
-<Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
-<Button on:click={handleVerifyClick} disabled={!verifyEnabled}>Verify</Button>
