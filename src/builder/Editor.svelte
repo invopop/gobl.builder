@@ -24,22 +24,25 @@
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({ validate: true, enableSchemaRequest: true });
 
     monacoEditor = monaco.editor.create(editorEl, {
-      value: $editor,
       language: "json",
       minimap: {
         enabled: false,
       },
+      scrollBeyondLastLine: false,
+    });
+
+    editor.subscribe((value) => {
+      // To keep undo/redo in the editor working, only overwrite the model
+      // contents when the current editor model value isn't the same as the new
+      // store value.
+      if (monacoEditor.getValue() !== value) {
+        monacoEditor.setValue(value);
+      }
     });
 
     monacoEditor.onDidChangeModelContent(() => {
       editor.set(monacoEditor.getValue());
     });
-  });
-
-  editor.subscribe((value) => {
-    if (monacoEditor) {
-      monacoEditor.setValue(value);
-    }
   });
 </script>
 
