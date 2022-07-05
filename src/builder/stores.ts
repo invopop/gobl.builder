@@ -224,26 +224,6 @@ type Status = {
   context?: string;
 };
 
-// function createStatusStore() {
-//   const { subscribe, set } = writable<Status>(null);
-
-//   return {
-//     subscribe,
-//     setInfo: ({ message, context }: Pick<Status, "message" | "context">) =>
-//       set({
-//         severity: Severity.Info,
-//         message,
-//         context,
-//       }),
-//     setError: ({ message, context }: Pick<Status, "message" | "context">) =>
-//       set({
-//         severity: Severity.Error,
-//         message,
-//         context,
-//       }),
-//   };
-// }
-
 export const keypair = createKeypairStore();
 export const editor = writable(defaultEditor);
 export const draft = writable(false);
