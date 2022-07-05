@@ -5,9 +5,11 @@
 
   import { onMount } from "svelte";
   import { editor } from "./stores";
+  import EditorProblem from "./EditorProblem.svelte";
 
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
+  let problems: monaco.editor.IMarker[] = [];
 
   onMount(() => {
     self.MonacoEnvironment = {
@@ -21,7 +23,11 @@
       },
     };
 
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({ validate: true, enableSchemaRequest: true });
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      enableSchemaRequest: true,
+      schemaValidation: "error",
+    });
 
     monacoEditor = monaco.editor.create(editorEl, {
       language: "json",
@@ -29,6 +35,7 @@
         enabled: false,
       },
       scrollBeyondLastLine: false,
+      automaticLayout: true,
     });
 
     editor.subscribe((value) => {
@@ -43,14 +50,32 @@
     monacoEditor.onDidChangeModelContent(() => {
       editor.set(monacoEditor.getValue());
     });
+
+    monaco.editor.onDidChangeMarkers(() => {
+      problems = monaco.editor.getModelMarkers({});
+    });
   });
+
+  function handleProblemClick(problem: monaco.editor.IMarker) {
+    return function () {
+      monacoEditor.setPosition({ lineNumber: problem.startLineNumber, column: problem.startColumn });
+      monacoEditor.revealLineInCenter(problem.startLineNumber);
+    };
+  }
 </script>
 
-<div id="monaco-editor" bind:this={editorEl} />
-
-<style>
-  div {
-    width: 100%;
-    height: 100%;
-  }
-</style>
+<div class="flex flex-col h-full">
+  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
+  <div class="flex-none h-36 py-3 overflow-auto border-t-2">
+    {#if problems.length === 0}
+      <p class="text-sm text-green-600 ml-4">No problems detected.</p>
+    {/if}
+    <ul>
+      {#each problems as problem}
+        <li class="block cursor-pointer px-4 py-1 hover:bg-slate-100" on:click={handleProblemClick(problem)}>
+          <EditorProblem {problem} />
+        </li>
+      {/each}
+    </ul>
+  </div>
+</div>

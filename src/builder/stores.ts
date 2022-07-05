@@ -55,11 +55,13 @@ const defaultEditor = `{
       "taxes": [
         {
           "cat": "VAT",
-          "rate": "standard"
+          "rate": "standard",
+          "percent": "21.0%"
         },
         {
           "cat": "IRPF",
-          "rate": "pro"
+          "rate": "pro",
+          "percent": "21.0%"
         }
       ],
       "total": "4000.00"
@@ -75,7 +77,8 @@ const defaultEditor = `{
       "taxes": [
         {
           "cat": "VAT",
-          "rate": "standard"
+          "rate": "standard",
+          "percent": "21.0%"
         }
       ],
       "total": "1000.00"
@@ -91,7 +94,8 @@ const defaultEditor = `{
       "taxes": [
         {
           "cat": "VAT",
-          "rate": "zero"
+          "rate": "zero",
+          "percent": "0.0%"
         }
       ],
       "total": "172.50"

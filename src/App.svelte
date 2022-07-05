@@ -6,14 +6,14 @@
   import StatusBar from "./builder/StatusBar.svelte";
 </script>
 
-<div class="flex flex-col h-screen">
-  <div class="item pt-4 pl-4 mb-4">
+<div class="flex flex-col h-full">
+  <div class="flex-none pt-4 pl-4 mb-4">
     <Actions />
   </div>
-  <div class="item px-4">
+  <div class="flex-none px-4">
     <StatusBar />
   </div>
-  <div class="item flex-auto">
+  <div class="flex-1 overflow-hidden">
     <Editor />
   </div>
 </div>
