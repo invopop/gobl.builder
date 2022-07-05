@@ -30,6 +30,7 @@
     });
 
     monacoEditor = monaco.editor.create(editorEl, {
+      value: "Foobar",
       language: "json",
       minimap: {
         enabled: false,
