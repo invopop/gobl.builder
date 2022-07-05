@@ -62,6 +62,10 @@
     try {
       const result = await GOBL.build({ payload, indent: true });
       editor.set(result);
+      status.set({
+        severity: Severity.Success,
+        message: "Document successfully built.",
+      });
     } catch (e) {
       status.set({
         severity: Severity.Error,
