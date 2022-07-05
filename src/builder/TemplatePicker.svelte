@@ -41,7 +41,7 @@
   });
 </script>
 
-<select class=" form-select border-gray-300 border rounded-lg text-sm" on:change={handleTemplatePick}>
+<select class="form-select border-gray-300 border rounded-lg text-sm shadow-sm" on:change={handleTemplatePick}>
   <option value="" selected={selectedId === ""}>Pick a template...</option>
   {#each [...templates] as [key, template]}
     <option value={key} selected={selectedId === key}>{template.name}</option>
