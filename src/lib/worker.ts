@@ -12,6 +12,6 @@ if (!WebAssembly.instantiateStreaming) {
 
 // Initialize the Go WASM glue.
 const go = new Go();
-WebAssembly.instantiateStreaming(fetch("/gobl.wasm.gz"), go.importObject).then((result) => {
+WebAssembly.instantiateStreaming(fetch("/gobl.wasm"), go.importObject).then((result) => {
   go.run(result.instance);
 });
