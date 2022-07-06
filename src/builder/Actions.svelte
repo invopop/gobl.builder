@@ -13,6 +13,8 @@
       const data = JSON.parse(value);
       if (data?.$schema !== "https://gobl.org/draft-0/envelope") {
         envelopable = true;
+        buildable = false;
+        verifiable = false;
       } else {
         envelopable = false;
         buildable = true;
