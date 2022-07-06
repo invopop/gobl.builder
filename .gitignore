@@ -1,6 +1,5 @@
 /node_modules
 /dist
-/public/gobl.wasm
 
 .vscode/*
 !.vscode/extensions.json
