@@ -1,8 +1,8 @@
 <script lang="ts">
   import * as GOBL from "../lib/gobl";
-  import { keypair, editor, draft, status } from "./stores";
+  import { keypair, editor, draft } from "./stores";
   import Button from "../ui/Button.svelte";
-  import { Severity } from "../ui/alerts";
+  import { createNotification, Severity } from "./notifications";
 
   let envelopable = false;
   let buildable = false;
@@ -41,12 +41,12 @@
     try {
       const result = await GOBL.envelop({ payload, indent: true });
       editor.set(result);
-      status.set({
+      createNotification({
         severity: Severity.Success,
         message: "Successfully wrapped document in an envelope.",
       });
     } catch (e) {
-      status.set({
+      createNotification({
         severity: Severity.Error,
         message: "Failed to wrap document in an envelope.",
         context: e,
@@ -64,12 +64,12 @@
     try {
       const result = await GOBL.build({ payload, indent: true });
       editor.set(result);
-      status.set({
+      createNotification({
         severity: Severity.Success,
         message: "Document successfully built.",
       });
     } catch (e) {
-      status.set({
+      createNotification({
         severity: Severity.Error,
         message: "Failed to build document.",
         context: e,
@@ -85,12 +85,12 @@
 
     try {
       await GOBL.verify({ payload, indent: true });
-      status.set({
+      createNotification({
         severity: Severity.Success,
         message: "Document successfully verified.",
       });
     } catch (e) {
-      status.set({
+      createNotification({
         severity: Severity.Error,
         message: "Document verification failed.",
         context: e,
