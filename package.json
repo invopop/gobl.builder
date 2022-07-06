@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
-    "format": "prettier --write --plugin-search-dir=. ."
+    "format": "prettier --write --plugin-search-dir=. .",
+    "postinstall": "node scripts/install-gobl-wasm.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
@@ -20,10 +21,12 @@
     "@typescript-eslint/parser": "^5.30.0",
     "autoprefixer": "^10.4.7",
     "classnames": "^2.3.1",
+    "dotenv": "^16.0.1",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-svelte3": "^4.0.0",
     "monaco-editor": "^0.33.0",
+    "node-fetch": "^3.2.6",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.7.0",
