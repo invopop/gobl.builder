@@ -6,7 +6,7 @@ import zlib from "zlib";
 import dotenv from "dotenv";
 
 dotenv.config();
-export const goblVersion = process.env.VITE_GOBL_VERSION;
+const goblVersion = process.env.VITE_GOBL_VERSION;
 const path = `public/gobl.v${goblVersion}.wasm`;
 
 const ws = fs.createWriteStream(path);
