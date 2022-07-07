@@ -17,4 +17,10 @@ function createKeypairStore() {
 
 export const keypair = createKeypairStore();
 export const editor = writable("");
-export const draft = writable(false);
+export const draft = writable(true);
+
+type Envelope = {
+  doc: Record<string, unknown>;
+};
+
+export const envelope = writable<Envelope>(null);

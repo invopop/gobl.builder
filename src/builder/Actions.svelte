@@ -1,69 +1,61 @@
 <script lang="ts">
   import * as GOBL from "../lib/gobl";
-  import { keypair, editor, draft } from "./stores";
+  import { keypair, editor, envelope } from "./stores";
   import Button from "../ui/Button.svelte";
   import { createNotification, Severity } from "./notifications";
 
-  let envelopable = false;
   let buildable = false;
+  // TODO: When "sealing" has been implemented, `verifiable` should become true
+  // once sealed.
   let verifiable = false;
 
   editor.subscribe((value) => {
     try {
-      const data = JSON.parse(value);
-      if (data?.$schema !== "https://gobl.org/draft-0/envelope") {
-        envelopable = true;
-        buildable = false;
-        verifiable = false;
-      } else {
-        envelopable = false;
-        buildable = true;
-        verifiable = true;
-      }
+      JSON.parse(value);
+      buildable = true;
     } catch (e) {
-      envelopable = false;
       buildable = false;
-      verifiable = false;
     }
   });
 
-  $: envelopEnabled = Boolean($keypair) && envelopable;
   $: buildEnabled = Boolean($keypair) && buildable;
-  $: verifyEnabled = Boolean($keypair) && verifiable;
-
-  async function handleEnvelopClick() {
-    const payload = {
-      data: btoa($editor),
-      privatekey: $keypair.private,
-      draft: $draft,
-    };
-
-    try {
-      const result = await GOBL.envelop({ payload, indent: true });
-      editor.set(result);
-      createNotification({
-        severity: Severity.Success,
-        message: "Successfully wrapped document in an envelope.",
-      });
-    } catch (e) {
-      createNotification({
-        severity: Severity.Error,
-        message: "Failed to wrap document in an envelope.",
-        context: e,
-      });
-    }
-  }
+  $: verifyEnabled = Boolean($keypair) && $envelope && verifiable;
 
   async function handleBuildClick() {
-    const payload = {
-      data: btoa($editor),
-      privatekey: $keypair.private,
-      draft: $draft,
-    };
+    let envelopeValue = $envelope;
 
     try {
-      const result = await GOBL.build({ payload, indent: true });
-      editor.set(result);
+      if (!envelopeValue) {
+        // If no envelope exists yet, create one with the current editor
+        // contents.
+        const result = await GOBL.envelop({
+          payload: {
+            data: btoa($editor),
+            privatekey: $keypair.private,
+            draft: true,
+          },
+          indent: true,
+        });
+        envelopeValue = JSON.parse(result);
+      } else {
+        // If envelope already exists, replace the `doc` property with the
+        // current editor contents.
+        envelopeValue.doc = JSON.parse($editor);
+
+        const payload = {
+          data: btoa(JSON.stringify(envelopeValue)),
+          privatekey: $keypair.private,
+          draft: true,
+        };
+
+        // Do a "build" operation with the updated envelope.
+        const result = await GOBL.build({ payload, indent: true });
+        envelopeValue = JSON.parse(result);
+      }
+
+      envelope.set(envelopeValue);
+      editor.set(JSON.stringify(envelopeValue.doc, null, 4));
+
       createNotification({
         severity: Severity.Success,
         message: "Document successfully built.",
@@ -78,8 +70,11 @@
   }
 
   async function handleVerifyClick() {
+    const envelopeValue = $envelope;
+    envelopeValue.doc = JSON.parse($editor);
+
     const payload = {
-      data: btoa($editor),
+      data: btoa(JSON.stringify(envelopeValue)),
       publickey: $keypair.public,
     };
 
@@ -100,20 +95,6 @@
 </script>
 
 <div class="flex gap-2">
-  <div class="flex items-center">
-    <input
-      id="draft"
-      bind:checked={$draft}
-      type="checkbox"
-      class="form-checkbox w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-    />
-    <label for="draft" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">Draft</label>
-  </div>
-  <Button
-    on:click={handleEnvelopClick}
-    disabled={!envelopEnabled}
-    title={!envelopEnabled ? "Document schema is not supported for enveloping." : ""}>Envelop</Button
-  >
   <Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
   <Button on:click={handleVerifyClick} disabled={!verifyEnabled}>Verify</Button>
 </div>

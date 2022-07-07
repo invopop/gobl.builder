@@ -5,7 +5,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor } from "./stores";
+  import { editor, draft } from "./stores";
   import EditorProblem from "./EditorProblem.svelte";
 
   let editorEl: HTMLElement;
@@ -86,13 +86,17 @@
   <div class="flex-1 overflow-hidden" bind:this={editorEl} />
 
   <div
-    class="flex-none px-4 py-2 bg-zinc-700 text-white text-sm border-b-gray-600 flex gap-4"
+    class="flex-none px-4 py-2 bg-zinc-700 text-white text-sm border-b-gray-600 flex gap-6"
     on:dblclick={handleDrawerToggle}
   >
-    <div class="flex-1">
-      <span class="mr-2">{problems.length > 0 ? "❌" : "✅"}</span>
+    <div>
+      <span class="mr-1">{problems.length > 0 ? "❌" : "✅"}</span>
       {problems.length}
       {problems.length === 1 ? "error" : "errors"}
+    </div>
+    <div class="flex-1">
+      <span class="mr-1">{$draft ? "✍️" : "🔏"}</span>
+      {$draft ? "Draft" : "Signed"}
     </div>
     <div>Ln {lineNumber}, Col {column}</div>
     <span class="cursor-pointer" on:click={handleDrawerToggle}>{drawerClosed ? "🔼" : "⬇️"}</span>
