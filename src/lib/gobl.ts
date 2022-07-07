@@ -1,4 +1,5 @@
 import GoblWorker from "./worker?worker";
+import { createNotification, Notification } from "../builder/notifications";
 
 type BaseBulkRequest = {
   req_id?: string;
@@ -72,13 +73,18 @@ const worker = new GoblWorker();
 let reqId = 0;
 let ready = false;
 
-worker.onmessage = ({ data }: MessageEvent<ReadyMessage | BulkResponse>) => {
+worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkResponse>) => {
   if ("ready" in data) {
     console.log("GoblWorker is ready ...");
     ready = true;
     for (let i = 0; i < queue.length; i++) {
       worker.postMessage(queue[i]);
     }
+    return true;
+  }
+
+  if ("message" in data) {
+    createNotification(data);
     return true;
   }
 

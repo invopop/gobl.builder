@@ -14,6 +14,14 @@ if (!WebAssembly.instantiateStreaming) {
 
 // Initialize the Go WASM glue.
 const go = new Go();
-WebAssembly.instantiateStreaming(fetch(`/gobl.v${goblVersion}.wasm`), go.importObject).then((result) => {
-  go.run(result.instance);
-});
+WebAssembly.instantiateStreaming(fetch(`/gobl.v${goblVersion}.wasm`), go.importObject)
+  .then((result) => {
+    go.run(result.instance);
+  })
+  .catch((err) => {
+    postMessage({
+      severity: "error",
+      message: "Failed to run GOBL WASM instance.",
+      context: err,
+    });
+  });
