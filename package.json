@@ -4,13 +4,14 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "npm run install-gobl-wasm && vite",
+    "build": "npm run install-gobl-wasm && vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "lint": "prettier --check --plugin-search-dir=. . && eslint .",
     "format": "prettier --write --plugin-search-dir=. .",
-    "postinstall": "node scripts/install-gobl-wasm.js"
+    "install-gobl-wasm": "node scripts/install-gobl-wasm.js",
+    "postinstall": "npm run install-gobl-wasm"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",

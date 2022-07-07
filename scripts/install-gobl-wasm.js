@@ -9,6 +9,11 @@ dotenv.config();
 const goblVersion = process.env.VITE_GOBL_VERSION;
 const path = `public/gobl.v${goblVersion}.wasm`;
 
+if (fs.existsSync(path)) {
+  console.log(`Skipping GOBL WASM download: path "${path}" already exists.`);
+  process.exit(0);
+}
+
 const ws = fs.createWriteStream(path);
 const gunzip = zlib.createGunzip();
 
