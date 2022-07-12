@@ -2,6 +2,7 @@
   import esInvoice from "./templates/es/invoice.json";
   import esInvoiceRevCharge from "./templates/es/invoice-rev-charge.json";
   import esInvoiceFreelance from "./templates/es/invoice-freelance.json";
+  import nlInvoice from "./templates/nl/invoice.json";
 
   import message from "./templates/misc/message.json";
 
@@ -35,6 +36,18 @@
           {
             name: "Invoice (freelance)",
             value: esInvoiceFreelance as unknown,
+          },
+        ],
+      ]),
+    ],
+    [
+      "Netherlands",
+      new Map([
+        [
+          "nl-invoice",
+          {
+            name: "Invoice",
+            value: nlInvoice as unknown,
           },
         ],
       ]),

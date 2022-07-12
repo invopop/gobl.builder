@@ -1,0 +1,79 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "code": "HS2022071201",
+  "currency": "EUR",
+  "issue_date": "2022-07-12",
+  "supplier": {
+    "tax_id": {
+      "country": "NL",
+      "code": "NL123456789B01.1"
+    },
+    "name": "Foobar BV",
+    "addresses": [
+      {
+        "num": "1",
+        "street": "Dam",
+        "locality": "Amsterdam",
+        "region": "Noord-Holland",
+        "code": "1000AA",
+        "country": "NL"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "foobar@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "tax_id": {
+      "country": "NL",
+      "code": "NL112233445B01.1"
+    },
+    "name": "Lorem Ipsum BV"
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "5",
+      "item": {
+        "name": "Oranje tulpen",
+        "price": "13.50"
+      },
+      "sum": "67.50",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "rate": "standard",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "67.50"
+    }
+  ],
+  "totals": {
+    "sum": "67.50",
+    "total": "67.50",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "67.50",
+              "percent": "21.0%",
+              "amount": "14.17"
+            }
+          ],
+          "base": "67.50",
+          "amount": "14.17"
+        }
+      ],
+      "sum": "14.17"
+    },
+    "tax": "14.17",
+    "total_with_tax": "81.67",
+    "payable": "81.67"
+  }
+}
