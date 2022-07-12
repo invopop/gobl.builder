@@ -8,9 +8,6 @@
   import { createNotification, Severity } from "./notifications";
 
   let buildable = false;
-  // TODO: When "sealing" has been implemented, `verifiable` should become true
-  // once sealed.
-  let verifiable = false;
 
   editor.subscribe((value) => {
     try {
@@ -22,7 +19,6 @@
   });
 
   $: buildEnabled = Boolean($keypair) && buildable;
-  $: verifyEnabled = Boolean($keypair) && $envelope && verifiable;
 
   function encodeUTF8ToBase64(value: string): string {
     return base64.encode(utf8.encode(value));
@@ -82,30 +78,8 @@
       goblError.set(parseGOBLError(e));
     }
   }
-
-  async function handleVerifyClick() {
-    const envelopeValue = $envelope;
-    envelopeValue.doc = JSON.parse($editor);
-
-    const payload = {
-      data: encodeUTF8ToBase64(JSON.stringify(envelopeValue)),
-      publickey: $keypair.public,
-    };
-
-    try {
-      await GOBL.verify({ payload, indent: true });
-      goblError.set(null);
-      createNotification({
-        severity: Severity.Success,
-        message: "Document successfully verified.",
-      });
-    } catch (e) {
-      goblError.set(parseGOBLError(e));
-    }
-  }
 </script>
 
 <div class="flex gap-2">
   <Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
-  <Button on:click={handleVerifyClick} disabled={!verifyEnabled}>Verify</Button>
 </div>
