@@ -99,7 +99,7 @@
       {$draft ? "Draft" : "Signed"}
     </div>
     <div>Ln {lineNumber}, Col {column}</div>
-    <span class="cursor-pointer" on:click={handleDrawerToggle}>{drawerClosed ? "🔼" : "⬇️"}</span>
+    <button class="cursor-pointer" on:click={handleDrawerToggle}>{drawerClosed ? "🔼" : "🔽"}</button>
   </div>
 
   {#if !drawerClosed}
