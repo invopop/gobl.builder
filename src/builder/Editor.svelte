@@ -30,7 +30,7 @@
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: true,
-      schemaValidation: "error",
+      schemaValidation: "warning",
     });
 
     monacoEditor = monaco.editor.create(editorEl, {
@@ -92,7 +92,7 @@
     <div>
       <span class="mr-1">{problems.length > 0 ? "❌" : "✅"}</span>
       {problems.length}
-      {problems.length === 1 ? "error" : "errors"}
+      {problems.length === 1 ? "problem" : "problems"}
     </div>
     <div class="flex-1">
       <span class="mr-1">{$draft ? "✍️" : "🔏"}</span>

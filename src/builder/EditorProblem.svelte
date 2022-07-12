@@ -16,7 +16,7 @@
 
   const classes = classNames({
     "text-red-400": problem.severity === monaco.MarkerSeverity.Error,
-    "text-amber-600": problem.severity === monaco.MarkerSeverity.Warning,
+    "text-amber-400": problem.severity === monaco.MarkerSeverity.Warning,
   });
 </script>
 
