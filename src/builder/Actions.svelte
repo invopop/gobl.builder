@@ -1,4 +1,7 @@
 <script lang="ts">
+  import utf8 from "utf8";
+  import base64 from "base-64";
+
   import * as GOBL from "../lib/gobl";
   import { keypair, editor, envelope } from "./stores";
   import Button from "../ui/Button.svelte";
@@ -21,6 +24,10 @@
   $: buildEnabled = Boolean($keypair) && buildable;
   $: verifyEnabled = Boolean($keypair) && $envelope && verifiable;
 
+  function encodeUTF8ToBase64(value: string): string {
+    return base64.encode(utf8.encode(value));
+  }
+
   async function handleBuildClick() {
     let envelopeValue = $envelope;
 
@@ -30,7 +37,7 @@
         // contents.
         const result = await GOBL.envelop({
           payload: {
-            data: btoa($editor),
+            data: encodeUTF8ToBase64($editor),
             privatekey: $keypair.private,
             draft: true,
           },
@@ -43,7 +50,7 @@
         envelopeValue.doc = JSON.parse($editor);
 
         const payload = {
-          data: btoa(JSON.stringify(envelopeValue)),
+          data: encodeUTF8ToBase64(JSON.stringify(envelopeValue)),
           privatekey: $keypair.private,
           draft: true,
         };
@@ -74,7 +81,7 @@
     envelopeValue.doc = JSON.parse($editor);
 
     const payload = {
-      data: btoa(JSON.stringify(envelopeValue)),
+      data: encodeUTF8ToBase64(JSON.stringify(envelopeValue)),
       publickey: $keypair.public,
     };
 

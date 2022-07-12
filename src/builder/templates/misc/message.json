@@ -1,0 +1,5 @@
+{
+  "$schema": "https://gobl.org/draft-0/note/message",
+  "title": "Test Message",
+  "content": "This is an example of a message."
+}

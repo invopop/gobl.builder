@@ -1,19 +1,55 @@
 <script lang="ts">
-  import invoice from "./templates/invoice.json";
+  import esInvoice from "./templates/es/invoice.json";
+  import esInvoiceRevCharge from "./templates/es/invoice-rev-charge.json";
+  import esInvoiceFreelance from "./templates/es/invoice-freelance.json";
+
+  import message from "./templates/misc/message.json";
+
   import { editor } from "./stores";
 
   type Template = {
     name: string;
-    value: Record<string, unknown>;
+    value: Record<string, any>;
   };
 
-  const templates: Map<string, Template> = new Map([
+  const templateGroups: Map<string, Map<string, Template>> = new Map([
     [
-      "invoice",
-      {
-        name: "Invoice",
-        value: invoice,
-      },
+      "Spain",
+      new Map([
+        [
+          "es-invoice",
+          {
+            name: "Invoice",
+            value: esInvoice as unknown,
+          },
+        ],
+        [
+          "es-invoice-rev-charge",
+          {
+            name: "Invoice (reverse charge)",
+            value: esInvoiceRevCharge as unknown,
+          },
+        ],
+        [
+          "es-invoice-freelance",
+          {
+            name: "Invoice (freelance)",
+            value: esInvoiceFreelance as unknown,
+          },
+        ],
+      ]),
+    ],
+    [
+      "Miscellaneous",
+      new Map([
+        [
+          "misc-message",
+          {
+            name: "Message",
+            value: message as unknown,
+          },
+        ],
+      ]),
     ],
   ]);
 
@@ -25,7 +61,12 @@
 
   function handleTemplatePick(event) {
     selectedId = event.target.value;
-    const template = templates.get(event.target.value);
+    let template: Template;
+    templateGroups.forEach((group) => {
+      if (group.has(event.target.value)) {
+        template = group.get(event.target.value);
+      }
+    });
     if (!template) {
       return;
     }
@@ -35,15 +76,25 @@
   editor.subscribe((value) => {
     // If the current editor contents matches a template, set this template as
     // selected.
-    templates.forEach((template, key) => {
-      selectedId = value === parsedTemplateJSON(template.value) ? key : "";
-    });
+    for (const [_, templates] of [...templateGroups]) {
+      for (const [key, template] of [...templates]) {
+        if (value === parsedTemplateJSON(template.value)) {
+          selectedId = key;
+          return;
+        }
+      }
+    }
+    selectedId = "";
   });
 </script>
 
 <select class="form-select border-gray-300 border rounded-lg text-sm shadow-sm" on:change={handleTemplatePick}>
   <option value="" selected={selectedId === ""}>Choose a template</option>
-  {#each [...templates] as [key, template]}
-    <option value={key} selected={selectedId === key}>{template.name}</option>
+  {#each [...templateGroups] as [groupKey, group]}
+    <optgroup label={groupKey}>
+      {#each [...group] as [templateKey, template]}
+        <option value={templateKey} selected={selectedId === templateKey}>{template.name}</option>
+      {/each}
+    </optgroup>
   {/each}
 </select>
