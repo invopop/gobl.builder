@@ -21,6 +21,21 @@ export const draft = writable(true);
 
 type Envelope = {
   doc: Record<string, unknown>;
+  head: {
+    uuid?: string;
+    dig: {
+      alg: string;
+      val: string;
+    };
+    stamps?: Array<{
+      prv: string;
+      val: string;
+    }>;
+    tags?: string[];
+    meta?: Record<string, unknown>;
+    notes?: string;
+    draft?: boolean;
+  };
 };
 
 export const envelope = writable<Envelope>(null);
