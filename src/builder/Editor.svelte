@@ -5,7 +5,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, draft } from "./stores";
+  import { editor, draft, goblError } from "./stores";
   import EditorProblem from "./EditorProblem.svelte";
 
   let editorEl: HTMLElement;
@@ -42,6 +42,24 @@
       },
       scrollBeyondLastLine: false,
       automaticLayout: true,
+    });
+
+    goblError.subscribe((goblErr) => {
+      if (!goblErr) {
+        monaco.editor.setModelMarkers(monacoEditor.getModel(), "gobl", []);
+        return;
+      }
+
+      monaco.editor.setModelMarkers(monacoEditor.getModel(), "gobl", [
+        {
+          message: `${goblErr.message} (code: ${goblErr.code})`,
+          severity: monaco.MarkerSeverity.Error,
+          startLineNumber: 1,
+          startColumn: 1,
+          endLineNumber: 1,
+          endColumn: 1,
+        },
+      ]);
     });
 
     editor.subscribe((value) => {

@@ -39,3 +39,19 @@ type Envelope = {
 };
 
 export const envelope = writable<Envelope>(null);
+
+export type GOBLError = {
+  message: string;
+  code: number;
+};
+
+function createGOBLErrorStore() {
+  const { subscribe, set } = writable<GOBLError>(null);
+
+  return {
+    subscribe,
+    set,
+  };
+}
+
+export const goblError = createGOBLErrorStore();

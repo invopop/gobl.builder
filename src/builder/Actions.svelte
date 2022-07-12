@@ -3,7 +3,7 @@
   import base64 from "base-64";
 
   import * as GOBL from "../lib/gobl";
-  import { keypair, editor, envelope } from "./stores";
+  import { keypair, editor, envelope, goblError, GOBLError } from "./stores";
   import Button from "../ui/Button.svelte";
   import { createNotification, Severity } from "./notifications";
 
@@ -26,6 +26,16 @@
 
   function encodeUTF8ToBase64(value: string): string {
     return base64.encode(utf8.encode(value));
+  }
+
+  const goblErrorRegexp = /^code=(\d+), message=(.+)$/;
+
+  function parseGOBLError(err: string): GOBLError {
+    const result = err.match(goblErrorRegexp);
+    return {
+      message: result[2] || err,
+      code: +result[1] || 0,
+    };
   }
 
   async function handleBuildClick() {
@@ -63,16 +73,13 @@
       envelope.set(envelopeValue);
       editor.set(JSON.stringify(envelopeValue.doc, null, 4));
 
+      goblError.set(null);
       createNotification({
         severity: Severity.Success,
         message: "Document successfully built.",
       });
     } catch (e) {
-      createNotification({
-        severity: Severity.Error,
-        message: "Failed to build document.",
-        context: e,
-      });
+      goblError.set(parseGOBLError(e));
     }
   }
 
@@ -87,16 +94,13 @@
 
     try {
       await GOBL.verify({ payload, indent: true });
+      goblError.set(null);
       createNotification({
         severity: Severity.Success,
         message: "Document successfully verified.",
       });
     } catch (e) {
-      createNotification({
-        severity: Severity.Error,
-        message: "Document verification failed.",
-        context: e,
-      });
+      goblError.set(parseGOBLError(e));
     }
   }
 </script>
