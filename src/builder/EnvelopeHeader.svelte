@@ -4,5 +4,5 @@
 </script>
 
 {#if head}
-  <pre>{JSON.stringify(head, null, 4)}</pre>
+  <pre class="text-sm text-sky-600">{JSON.stringify(head, null, 4)}</pre>
 {/if}

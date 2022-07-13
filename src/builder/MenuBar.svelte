@@ -4,7 +4,7 @@
   import logo from "../static/logo-dark.svg";
 </script>
 
-<div class="flex gap-2 items-center">
+<div class="flex gap-2 items-center px-4 py-2">
   <img src={logo} class="w-8 h-8" alt="GOBL logo" />
   <h1 class="w-32">GOBL Builder</h1>
   <TemplatePicker />

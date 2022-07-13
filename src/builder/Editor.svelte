@@ -5,7 +5,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, draft, goblError } from "./stores";
+  import { editor, goblError } from "./stores";
   import EditorProblem from "./EditorProblem.svelte";
 
   let editorEl: HTMLElement;
@@ -116,14 +116,10 @@
       {errorCount}
       {errorCount === 1 ? "error" : "errors"}
     </div>
-    <div>
+    <div class="flex-1">
       <span class="mr-1">{warningCount > 0 ? "⚠️" : "✅"}</span>
       {warningCount}
       {warningCount === 1 ? "warning" : "warnings"}
-    </div>
-    <div class="flex-1">
-      <span class="mr-1">{$draft ? "✍️" : "🔏"}</span>
-      {$draft ? "Draft" : "Signed"}
     </div>
     <div>Ln {lineNumber}, Col {column}</div>
     <button class="cursor-pointer" on:click={handleDrawerToggle}>{drawerClosed ? "🔼" : "🔽"}</button>
