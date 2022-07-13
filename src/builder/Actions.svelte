@@ -35,6 +35,10 @@
   }
 
   async function handleBuildClick() {
+    if (!buildEnabled) {
+      return;
+    }
+
     let envelopeValue = $envelope;
 
     try {
@@ -81,5 +85,17 @@
 </script>
 
 <div class="flex gap-2">
-  <Button on:click={handleBuildClick} disabled={!buildEnabled}>Build</Button>
+  <div
+    id="tooltip-build"
+    role="tooltip"
+    class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+  >
+    {#if buildEnabled}
+      Build the GOBL document.
+    {:else}
+      To build, first ensure the document is valid.
+    {/if}
+    <div class="tooltip-arrow" data-popper-arrow />
+  </div>
+  <Button on:click={handleBuildClick} data-tooltip-target="tooltip-build" disabled={!buildEnabled}>Build</Button>
 </div>

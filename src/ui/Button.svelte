@@ -9,6 +9,6 @@
   });
 </script>
 
-<button on:click class={classes} {...$$props} {disabled}>
+<button on:click class={classes} {...$$props} disabled={false}>
   <slot />
 </button>
