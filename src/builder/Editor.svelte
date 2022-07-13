@@ -15,6 +15,9 @@
   let column = 1;
   let drawerClosed = false;
 
+  $: warningCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
+  $: errorCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
+
   onMount(() => {
     self.MonacoEnvironment = {
       getWorker: function (_: string, label: string) {
@@ -95,6 +98,7 @@
       monacoEditor.revealLineInCenter(problem.startLineNumber);
     };
   }
+
   function handleDrawerToggle() {
     drawerClosed = !drawerClosed;
   }
@@ -108,9 +112,14 @@
     on:dblclick={handleDrawerToggle}
   >
     <div>
-      <span class="mr-1">{problems.length > 0 ? "❌" : "✅"}</span>
-      {problems.length}
-      {problems.length === 1 ? "problem" : "problems"}
+      <span class="mr-1">{errorCount > 0 ? "❌" : "✅"}</span>
+      {errorCount}
+      {errorCount === 1 ? "error" : "errors"}
+    </div>
+    <div>
+      <span class="mr-1">{warningCount > 0 ? "⚠️" : "✅"}</span>
+      {warningCount}
+      {warningCount === 1 ? "warning" : "warnings"}
     </div>
     <div class="flex-1">
       <span class="mr-1">{$draft ? "✍️" : "🔏"}</span>
