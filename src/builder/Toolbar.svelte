@@ -5,14 +5,10 @@
   import { draft, envelope } from "./stores";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
 
-  $: headerButtonEnabled = Boolean($envelope);
+  $: envelopeExists = Boolean($envelope);
   let signaturesButtonEnabled = false;
 
   function handleHeaderClick() {
-    if (!headerButtonEnabled) {
-      return;
-    }
-
     const modal = new Modal({
       target: document.body,
       props: {
@@ -33,7 +29,7 @@
   }
 </script>
 
-<div class="flex items-center gap-2 bg-gray-200 px-4 py-2 text-xs shadow-inner">
+<div class="flex items-center gap-4 bg-gray-200 px-4 py-2 text-xs shadow-inner">
   <div class="flex-1">
     <span class="mr-1">{$draft ? "✍️" : "🔏"}</span>
     {$draft ? "Draft" : "Sealed document"}
@@ -42,29 +38,24 @@
     <div
       id="tooltip-header"
       role="tooltip"
-      class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+      class="inline-block absolute invisible z-10 py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip"
     >
-      {#if headerButtonEnabled}
-        View the header of the built document.
-      {:else}
-        There is no document header yet. Please use "Build" first.
-      {/if}
+      View the header of the built document.
       <div class="tooltip-arrow" data-popper-arrow />
     </div>
     <button
       data-tooltip-target="tooltip-header"
-      class={classNames("px-3 py-1 rounded-full", {
-        "text-white bg-slate-500": headerButtonEnabled,
-        "cursor-not-allowed text-slate-500 bg-slate-300": !headerButtonEnabled,
+      class={classNames({
+        hidden: !envelopeExists,
       })}
-      on:click={handleHeaderClick}>View header</button
+      on:click={handleHeaderClick}>Header</button
     >
   </div>
   <div>
     <div
       id="tooltip-signatures"
       role="tooltip"
-      class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip dark:bg-gray-700"
+      class="inline-block absolute invisible z-10 py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip"
     >
       {#if signaturesButtonEnabled}
         View the signatures of the sealed document.
@@ -75,13 +66,10 @@
     </div>
     <button
       data-tooltip-target="tooltip-signatures"
-      class={classNames("px-3 py-1 rounded-full", {
-        "text-white bg-slate-500": signaturesButtonEnabled,
-        "cursor-not-allowed text-slate-500 bg-slate-300": !signaturesButtonEnabled,
-      })}>View signatures</button
+      class={classNames({
+        hidden: !envelopeExists,
+        "cursor-not-allowed text-gray-500": !signaturesButtonEnabled,
+      })}>Signatures</button
     >
-  </div>
-  <div>
-    <button>...</button>
   </div>
 </div>
