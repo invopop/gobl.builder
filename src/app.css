@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  textarea {
+    @apply focus:ring-0
+  }
+}
+
 html,
 body,
 #app {

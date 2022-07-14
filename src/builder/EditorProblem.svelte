@@ -2,15 +2,18 @@
   import classNames from "classnames";
 
   import * as monaco from "monaco-editor";
+  import type { SvelteComponent } from "svelte";
+  import WarningIcon from "../ui/WarningIcon.svelte";
+  import ErrorIcon from "../ui/ErrorIcon.svelte";
 
   export let problem: monaco.editor.IMarker;
 
-  function problemIcon(): string {
+  function problemIcon(): typeof SvelteComponent {
     switch (problem.severity) {
       case monaco.MarkerSeverity.Error:
-        return "⨯";
+        return ErrorIcon;
       case monaco.MarkerSeverity.Warning:
-        return "⚠️";
+        return WarningIcon;
     }
   }
 
@@ -21,7 +24,9 @@
 </script>
 
 <div class={classes}>
-  {problemIcon()}
-  {problem.message}
-  <span class="opacity-60">{problem.owner} [Ln {problem.startLineNumber}, Col {problem.startColumn}]</span>
+  <svelte:component this={problemIcon()} />
+  <div class="align-middle inline">
+    {problem.message}
+    <span class="opacity-60">{problem.owner} [Ln {problem.startLineNumber}, Col {problem.startColumn}]</span>
+  </div>
 </div>
