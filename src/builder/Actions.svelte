@@ -111,7 +111,6 @@
       }
 
       const data = await res.blob();
-      previewLoading = false;
       window.open(URL.createObjectURL(data));
     } catch (e) {
       createNotification({
@@ -119,6 +118,8 @@
         message: "Failed to fetch PDF.",
         context: e,
       });
+    } finally {
+      previewLoading = false;
     }
   }
 
