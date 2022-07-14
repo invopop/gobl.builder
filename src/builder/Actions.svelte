@@ -107,14 +107,7 @@
         return;
       }
 
-      const filename = res.headers
-        .get("content-disposition")
-        .split(";")
-        .find((n) => n.includes("filename="))
-        .replace("filename=", "")
-        .trim();
-      // TODO: Make filename meaningful.
-      fileSaver.saveAs(await res.blob(), filename);
+      fileSaver.saveAs(await res.blob(), "download.pdf");
 
       createNotification({
         severity: Severity.Success,
