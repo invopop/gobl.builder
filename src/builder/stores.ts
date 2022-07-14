@@ -22,7 +22,7 @@ export const draft = writable(true);
 type Envelope = {
   doc: Record<string, unknown>;
   head: {
-    uuid?: string;
+    uuid: string;
     dig: {
       alg: string;
       val: string;
