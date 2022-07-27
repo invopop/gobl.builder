@@ -19,7 +19,7 @@
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside on:close>
       <!-- Modal header -->
-      <div class="flex items-start justify-between p-6 border-b rounded-">
+      <div class="flex items-center justify-between p-6 border-b rounded-">
         <h3 class="text-xl font-semibold text-gray-900">{title}</h3>
         <button
           type="button"
@@ -36,8 +36,8 @@
         </button>
       </div>
       <!-- Modal body -->
-      <div class="p-6 space-y-6">
-        <svelte:component this={content} />
+      <div class="p-6 text-sm">
+        <svelte:component this={content} on:close />
       </div>
     </div>
   </div>
