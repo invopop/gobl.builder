@@ -37,7 +37,7 @@
     <div class="tooltip-arrow" data-popper-arrow />
   </div>
   <button
-    class="font-medium border hover:bg-gray-100 text-sm px-4 py-2 rounded-lg inline-flex"
+    class="font-medium text-white bg-sky-400 hover:bg-sky-500 text-sm px-4 py-2 rounded-lg inline-flex"
     on:click={handleLoadClick}
     data-tooltip-target="tooltip-load"
   >
