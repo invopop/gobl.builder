@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { editor } from "./stores";
+  import { editor, envelope } from "./stores";
 
   import esInvoice from "./templates/es/invoice.json";
   import esInvoiceRevCharge from "./templates/es/invoice-rev-charge.json";
@@ -100,6 +100,7 @@
     }
 
     editor.set(parsedTemplateJSON(template.value));
+    envelope.set(null);
     dispatch("close");
   }
 
