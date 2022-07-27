@@ -6,11 +6,16 @@
 
   import * as GOBL from "../lib/gobl";
   import { keypair, editor, envelope, goblError, GOBLError } from "./stores";
-  import Button from "../ui/Button.svelte";
   import { createNotification, Severity } from "./notifications";
 
   const pdfApiBaseUrl = import.meta.env.VITE_PDF_API_BASE_URL;
 
+  function iconButtonClasses(disabled: boolean): string {
+    return classNames("p-2 rounded-lg", {
+      "text-gray-700 hover:bg-gray-200": !disabled,
+      "text-gray-300 cursor-not-allowed": disabled,
+    });
+  }
   let buildable = false;
   let previewLoading = false;
 
@@ -90,6 +95,10 @@
   }
 
   async function handlePreviewPDFClick() {
+    if (!envelopeExists) {
+      return;
+    }
+
     const formData = new FormData();
     formData.append("envelope", new Blob([JSON.stringify($envelope)]));
 
@@ -124,6 +133,10 @@
   }
 
   function handleDownloadEnvelopeJSON() {
+    if (!envelopeExists) {
+      return;
+    }
+
     const filename = $envelope.head.uuid + ".json";
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
 
@@ -132,9 +145,41 @@
       message: "Downloaded JSON file of GOBL document.",
     });
   }
+
+  function handleClearEditor() {
+    if ($editor === "") {
+      return;
+    }
+
+    editor.set("");
+    envelope.set(null);
+  }
 </script>
 
-<div class="flex gap-2">
+<div class="flex">
+  <div>
+    <div
+      id="tooltip-clear-editor"
+      role="tooltip"
+      class="inline-block absolute invisible z-10 py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm opacity-0 transition-opacity duration-300 tooltip"
+    >
+      Clear the editor.
+      <div class="tooltip-arrow" data-popper-arrow />
+    </div>
+    <button
+      data-tooltip-target="tooltip-clear-editor"
+      on:click={handleClearEditor}
+      class={iconButtonClasses($editor === "")}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
+  </div>
   <div>
     <div
       id="tooltip-preview-pdf"
@@ -146,12 +191,7 @@
     </div>
     <button
       data-tooltip-target="tooltip-preview-pdf"
-      class={classNames(
-        "p-2 bg-gray-100 hover:bg-sky-200 focus:ring-4 focus:ring-sky-300 focus:outline-none rounded-lg",
-        {
-          hidden: !envelopeExists,
-        }
-      )}
+      class={iconButtonClasses(!envelopeExists)}
       on:click={handlePreviewPDFClick}
     >
       {#if previewLoading}
@@ -193,21 +233,17 @@
     </div>
     <button
       data-tooltip-target="tooltip-download-json"
-      class={classNames(
-        "p-2 bg-gray-100 hover:bg-sky-200 focus:ring-4 focus:ring-sky-300 focus:outline-none rounded-lg",
-        {
-          hidden: !envelopeExists,
-        }
-      )}
       on:click={handleDownloadEnvelopeJSON}
-      ><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      class={iconButtonClasses(!envelopeExists)}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
         <path
           fill-rule="evenodd"
           d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
           clip-rule="evenodd"
         />
-      </svg></button
-    >
+      </svg>
+    </button>
   </div>
   <div>
     <div
@@ -222,6 +258,14 @@
       {/if}
       <div class="tooltip-arrow" data-popper-arrow />
     </div>
-    <Button on:click={handleBuildClick} data-tooltip-target="tooltip-build" disabled={!buildEnabled}>Build</Button>
+    <button class={iconButtonClasses(!buildEnabled)} on:click={handleBuildClick} data-tooltip-target="tooltip-build">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path
+          fill-rule="evenodd"
+          d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"
+          clip-rule="evenodd"
+        />
+      </svg>
+    </button>
   </div>
 </div>
