@@ -8,6 +8,7 @@
 
   export let title = "Title";
   export let content: typeof SvelteComponent;
+  export let contentProps: Record<string, unknown> = {};
 </script>
 
 <!-- Main modal -->
@@ -37,7 +38,7 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 text-sm">
-        <svelte:component this={content} on:close />
+        <svelte:component this={content} on:close {...contentProps} />
       </div>
     </div>
   </div>

@@ -5,8 +5,12 @@
   import fileSaver from "file-saver";
 
   import * as GOBL from "../lib/gobl";
+  import Modal from "../ui/Modal.svelte";
+  import ModalBackdrop from "../ui/ModalBackdrop.svelte";
+
   import { keypair, editor, envelope, goblError, GOBLError } from "./stores";
   import { createNotification, Severity } from "./notifications";
+  import ClearEditor from "./ClearEditor.svelte";
 
   const pdfApiBaseUrl = import.meta.env.VITE_PDF_API_BASE_URL;
 
@@ -151,8 +155,36 @@
       return;
     }
 
-    editor.set("");
-    envelope.set(null);
+    const modal = new Modal({
+      target: document.body,
+      props: {
+        title: "Clear editor?",
+        content: ClearEditor,
+      },
+    });
+    const backdrop = new ModalBackdrop({
+      target: document.body,
+    });
+
+    function destroyModal() {
+      modal.$destroy();
+      backdrop.$destroy();
+    }
+
+    modal.$set({
+      contentProps: {
+        onClose: destroyModal,
+        onClearEditor: () => {
+          editor.set("");
+          envelope.set(null);
+
+          modal.$destroy();
+          backdrop.$destroy();
+        },
+      },
+    });
+
+    modal.$on("close", destroyModal);
   }
 </script>
 
