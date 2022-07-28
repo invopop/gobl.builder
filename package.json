@@ -14,6 +14,7 @@
     "postinstall": "npm run install-gobl-wasm"
   },
   "devDependencies": {
+    "@fontsource/fira-code": "^4.5.10",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tailwindcss/forms": "^0.5.2",
     "@tsconfig/svelte": "^2.0.1",
