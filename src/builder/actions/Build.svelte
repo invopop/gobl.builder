@@ -6,6 +6,7 @@
   import { keypair, editor, envelope, goblError, GOBLError } from "../stores";
   import { createNotification, Severity } from "../notifications";
   import { iconButtonClasses } from "../ui/iconButtonClasses";
+  import type { BuildRequest } from "../../lib/gobl";
 
   let buildable = false;
 
@@ -40,35 +41,25 @@
     }
 
     let envelopeValue = $envelope;
+    let sendData: string;
+
+    // If a (previously set) envelope exists, replace its `doc` property with
+    // the editor contents. If not, send the editor contents as-is. In either case,
+    // the GOBL command response will be an an enveloped document.
+    if (envelopeValue) {
+      envelopeValue.doc = JSON.parse($editor);
+      sendData = JSON.stringify(envelopeValue);
+    } else {
+      sendData = $editor;
+    }
 
     try {
-      if (!envelopeValue) {
-        // If no envelope exists yet, create one with the current editor
-        // contents.
-        const result = await GOBL.envelop({
-          payload: {
-            data: encodeUTF8ToBase64($editor),
-            privatekey: $keypair.private,
-            draft: true,
-          },
-          indent: true,
-        });
-        envelopeValue = JSON.parse(result);
-      } else {
-        // If envelope already exists, replace the `doc` property with the
-        // current editor contents.
-        envelopeValue.doc = JSON.parse($editor);
-
-        const payload = {
-          data: encodeUTF8ToBase64(JSON.stringify(envelopeValue)),
-          privatekey: $keypair.private,
-          draft: true,
-        };
-
-        // Do a "build" operation with the updated envelope.
-        const result = await GOBL.build({ payload, indent: true });
-        envelopeValue = JSON.parse(result);
-      }
+      const payload: BuildRequest["payload"] = {
+        data: encodeUTF8ToBase64(sendData),
+        privatekey: $keypair.private,
+      };
+      const result = await GOBL.build({ payload, indent: true });
+      envelopeValue = JSON.parse(result);
 
       envelope.set(envelopeValue);
       editor.set(JSON.stringify(envelopeValue.doc, null, 4));

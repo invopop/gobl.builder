@@ -8,7 +8,7 @@ type BaseBulkRequest = {
 
 type BulkRequest = VerifyRequest | BuildRequest | EnvelopRequest | KeygenRequest | PingRequest | SleepRequest;
 
-type VerifyRequest = BaseBulkRequest & {
+export type VerifyRequest = BaseBulkRequest & {
   action: "verify";
   payload: {
     data: string;
@@ -16,48 +16,36 @@ type VerifyRequest = BaseBulkRequest & {
   };
 };
 
-type BuildRequest = BaseBulkRequest & {
+export type BuildRequest = BaseBulkRequest & {
   action: "build";
   payload: {
     template?: string;
     data: string;
     privatekey: Keypair["private"];
     type?: string;
-    draft?: boolean;
   };
 };
 
-type EnvelopRequest = BaseBulkRequest & {
-  action: "envelop";
-  payload: {
-    template?: string;
-    data: string;
-    privatekey: Keypair["private"];
-    type?: string;
-    draft?: boolean;
-  };
-};
-
-type KeygenRequest = BaseBulkRequest & {
+export type KeygenRequest = BaseBulkRequest & {
   action: "keygen";
 };
 
-type PingRequest = BaseBulkRequest & {
+export type PingRequest = BaseBulkRequest & {
   action: "ping";
 };
 
-type SleepRequest = BaseBulkRequest & {
+export type SleepRequest = BaseBulkRequest & {
   action: "sleep";
   payload: string; // Go `time` duration string. See: https://pkg.go.dev/time#ParseDuration
 };
 
-type BulkResponse = {
+export type BulkResponse = {
   req_id: string;
   error: string;
   payload: string;
 };
 
-type ReadyMessage = {
+export type ReadyMessage = {
   ready: true;
 };
 
@@ -97,6 +85,7 @@ worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkRes
   }
 
   if (data.error) {
+    console.error(data.error);
     waiting.reject(data.error);
     return true;
   }
@@ -126,7 +115,7 @@ async function sendMessage<T>(data: BulkRequest): Promise<T> {
   return promise;
 }
 
-async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent">) {
+export async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
   return sendMessage<string>({
     action: "build",
@@ -135,19 +124,10 @@ async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent
   });
 }
 
-async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "indent">) {
+export async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
   return sendMessage<string>({
     action: "verify",
-    payload,
-    indent,
-  });
-}
-
-async function envelop({ payload, indent }: Pick<EnvelopRequest, "payload" | "indent">) {
-  // TODO(?): Parse JSON response before returning.
-  return sendMessage<string>({
-    action: "envelop",
     payload,
     indent,
   });
@@ -158,7 +138,7 @@ export type Keypair = {
   public: Omit<JsonWebKey, "d">;
 };
 
-async function keygen(opts?: { indent: KeygenRequest["indent"] }): Promise<Keypair> {
+export async function keygen(opts?: { indent: KeygenRequest["indent"] }): Promise<Keypair> {
   return JSON.parse(
     await sendMessage({
       action: "keygen",
@@ -167,19 +147,23 @@ async function keygen(opts?: { indent: KeygenRequest["indent"] }): Promise<Keypa
   );
 }
 
-async function ping(opts?: { indent: PingRequest["indent"] }) {
+export async function ping(opts?: { indent: PingRequest["indent"] }) {
   return sendMessage({
     action: "ping",
     indent: opts?.indent,
   });
 }
 
-async function sleep({ duration, indent }: { duration: SleepRequest["payload"]; indent?: SleepRequest["indent"] }) {
+export async function sleep({
+  duration,
+  indent,
+}: {
+  duration: SleepRequest["payload"];
+  indent?: SleepRequest["indent"];
+}) {
   return sendMessage({
     action: "sleep",
     payload: duration,
     indent,
   });
 }
-
-export { build, verify, envelop, keygen, ping, sleep };
