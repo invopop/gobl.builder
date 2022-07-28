@@ -17,6 +17,8 @@ function createKeypairStore() {
 
 export const keypair = createKeypairStore();
 export const editor = writable("");
+export const undoAvailable = writable(false);
+export const redoAvailable = writable(false);
 export const draft = writable(true);
 
 interface Envelope {

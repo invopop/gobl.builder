@@ -5,7 +5,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError } from "./stores";
+  import { editor, goblError, redoAvailable, undoAvailable } from "./stores";
   import EditorProblem from "./EditorProblem.svelte";
   import WarningIcon from "./ui/WarningIcon.svelte";
   import ErrorIcon from "./ui/ErrorIcon.svelte";
@@ -41,7 +41,7 @@
     });
 
     monacoEditor = monaco.editor.create(editorEl, {
-      value: "Foobar",
+      value: "",
       language: "json",
       theme: "vs-dark",
       minimap: {
@@ -58,6 +58,10 @@
         bottom: 14,
       },
     });
+
+    const initialVersion = monacoEditor.getModel().getAlternativeVersionId();
+    let currentVersion = initialVersion;
+    let lastVersion = initialVersion;
 
     goblError.subscribe((goblErr) => {
       if (!goblErr) {
@@ -81,13 +85,48 @@
       // To keep undo/redo in the editor working, only overwrite the model
       // contents when the current editor model value isn't the same as the new
       // store value.
-      if (monacoEditor.getValue() !== value) {
-        monacoEditor.setValue(value);
+      if (monacoEditor.getValue() === value) {
+        return;
       }
+
+      const model = monacoEditor.getModel();
+      monacoEditor.executeEdits("gobl", [
+        {
+          range: model.getFullModelRange(),
+          text: value,
+          forceMoveMarkers: true,
+        },
+      ]);
     });
 
     monacoEditor.onDidChangeModelContent(() => {
       editor.set(monacoEditor.getValue());
+
+      const versionId = monacoEditor.getModel().getAlternativeVersionId();
+      if (versionId < currentVersion) {
+        // Undo occured.
+        redoAvailable.set(true);
+        if (versionId === initialVersion) {
+          // No more undo items.
+          undoAvailable.set(false);
+        }
+      } else {
+        if (versionId <= lastVersion) {
+          // Redo occured.
+          if (versionId == lastVersion) {
+            // Redo of last change occured.
+            redoAvailable.set(false);
+          }
+        } else {
+          // New operation pushed. Disable redo.
+          redoAvailable.set(false);
+          if (currentVersion > lastVersion) {
+            lastVersion = currentVersion;
+          }
+        }
+        undoAvailable.set(true);
+      }
+      currentVersion = versionId;
     });
 
     monaco.editor.onDidChangeMarkers(() => {
@@ -98,11 +137,24 @@
       lineNumber = event.position.lineNumber;
       column = event.position.column;
     });
+
+    document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
+    document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
 
   onDestroy(() => {
     monacoEditor.dispose();
+    document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
+    document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
+
+  function handleUndoButtonClick() {
+    monacoEditor.trigger("undoButton", "undo", null);
+  }
+
+  function handleRedoButtonClick() {
+    monacoEditor.trigger("redoButton", "redo", null);
+  }
 
   function handleProblemClick(problem: monaco.editor.IMarker) {
     return function () {
