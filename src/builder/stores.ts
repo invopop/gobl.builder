@@ -19,8 +19,18 @@ export const keypair = createKeypairStore();
 export const editor = writable("");
 export const draft = writable(true);
 
-type Envelope = {
-  doc: Record<string, unknown>;
+interface Envelope {
+  doc: {
+    $schema: string;
+    supplier?: {
+      tax_id?: {
+        country: string;
+        [key: string]: unknown;
+      };
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
   head: {
     uuid: string;
     dig: {
@@ -36,7 +46,7 @@ type Envelope = {
     notes?: string;
     draft?: boolean;
   };
-};
+}
 
 export const envelope = writable<Envelope>(null);
 

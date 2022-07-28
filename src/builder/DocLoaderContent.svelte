@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
+
   import { editor, envelope } from "./stores";
+  import { schemaIconMap } from "./schemaIconMap.svelte";
 
   import esInvoice from "./templates/es/invoice.json";
   import esInvoiceRevCharge from "./templates/es/invoice-rev-charge.json";
@@ -7,9 +10,6 @@
   import nlInvoice from "./templates/nl/invoice.json";
 
   import message from "./templates/misc/message.json";
-  import { createEventDispatcher, SvelteComponent } from "svelte";
-  import InvoiceIcon from "../ui/InvoiceIcon.svelte";
-  import MessageIcon from "../ui/MessageIcon.svelte";
   import classNames from "classnames";
 
   const dispatch = createEventDispatcher();
@@ -17,13 +17,7 @@
   type Template = {
     name: string;
     value: Record<string, any>;
-    type: "invoice" | "message";
   };
-
-  const templateTypeIconMap = new Map<Template["type"], typeof SvelteComponent>([
-    ["invoice", InvoiceIcon],
-    ["message", MessageIcon],
-  ]);
 
   const templateGroups = new Map<string, Map<string, Template>>([
     [
@@ -34,7 +28,6 @@
           {
             name: "Invoice",
             value: esInvoice as unknown,
-            type: "invoice",
           },
         ],
         [
@@ -42,7 +35,6 @@
           {
             name: "Invoice (reverse charge)",
             value: esInvoiceRevCharge as unknown,
-            type: "invoice",
           },
         ],
         [
@@ -50,7 +42,6 @@
           {
             name: "Invoice (freelance)",
             value: esInvoiceFreelance as unknown,
-            type: "invoice",
           },
         ],
       ]),
@@ -63,7 +54,6 @@
           {
             name: "Invoice",
             value: nlInvoice as unknown,
-            type: "invoice",
           },
         ],
       ]),
@@ -76,7 +66,6 @@
           {
             name: "Message",
             value: message as unknown,
-            type: "message",
           },
         ],
       ]),
@@ -154,9 +143,9 @@
             class="inline-flex gap-2 items-center hover:text-sky-500"
             on:click={() => handleTemplateClick(templateKey)}
           >
-            <div><svelte:component this={templateTypeIconMap.get(template.type)} /></div>
-            {template.name}</button
-          >
+            <svelte:component this={schemaIconMap.get(template.value.$schema)} />
+            {template.name}
+          </button>
         </li>
       {/each}
     </ul>
