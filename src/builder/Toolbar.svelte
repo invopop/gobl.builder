@@ -1,7 +1,7 @@
 <script lang="ts">
   import classNames from "classnames";
-  import ModalBackdrop from "../ui/ModalBackdrop.svelte";
-  import Modal from "../ui/Modal.svelte";
+  import ModalBackdrop from "./ui/ModalBackdrop.svelte";
+  import Modal from "./ui/Modal.svelte";
   import { draft, envelope } from "./stores";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
 

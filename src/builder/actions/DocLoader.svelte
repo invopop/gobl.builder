@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { editor } from "./stores";
+  import { editor } from "../stores";
   import Modal from "../ui/Modal.svelte";
   import ModalBackdrop from "../ui/ModalBackdrop.svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";

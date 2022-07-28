@@ -1,15 +1,15 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import { editor, envelope } from "./stores";
-  import { schemaIconMap } from "./schemaIconMap.svelte";
+  import { editor, envelope } from "../stores";
+  import { schemaIconMap } from "../schemaIconMap.svelte";
 
-  import esInvoice from "./templates/es/invoice.json";
-  import esInvoiceRevCharge from "./templates/es/invoice-rev-charge.json";
-  import esInvoiceFreelance from "./templates/es/invoice-freelance.json";
-  import nlInvoice from "./templates/nl/invoice.json";
+  import esInvoice from "../templates/es/invoice.json";
+  import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";
+  import esInvoiceFreelance from "../templates/es/invoice-freelance.json";
+  import nlInvoice from "../templates/nl/invoice.json";
 
-  import message from "./templates/misc/message.json";
+  import message from "../templates/misc/message.json";
   import classNames from "classnames";
 
   const dispatch = createEventDispatcher();

@@ -3,8 +3,8 @@
 
   import * as monaco from "monaco-editor";
   import type { SvelteComponent } from "svelte";
-  import WarningIcon from "../ui/WarningIcon.svelte";
-  import ErrorIcon from "../ui/ErrorIcon.svelte";
+  import WarningIcon from "./ui/WarningIcon.svelte";
+  import ErrorIcon from "./ui/ErrorIcon.svelte";
 
   export let problem: monaco.editor.IMarker;
 

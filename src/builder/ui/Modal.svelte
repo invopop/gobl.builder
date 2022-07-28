@@ -2,7 +2,7 @@
   import type { SvelteComponent } from "svelte";
   import { createEventDispatcher } from "svelte";
 
-  import clickOutside from "../builder/clickOutside";
+  import clickOutside from "../clickOutside";
 
   const dispatch = createEventDispatcher();
 

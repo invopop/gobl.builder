@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { envelope } from "./stores";
+  import { envelope } from "../stores";
   import Modal from "../ui/Modal.svelte";
   import ExportDocContent from "./ExportDocContent.svelte";
   import { iconButtonClasses } from "../ui/iconButtonClasses";
