@@ -28,8 +28,10 @@ export async function runBuildCommand(
   const result = JSON.parse(rawResult);
 
   if (result.$schema === "https://gobl.org/draft-0/envelope") {
-    envelope.set(result);
+    // Set new editor value *first*, because when the envelope is set, the Monaco
+    // editor if the envelope contains signatures.
     editor.set(JSON.stringify(result.doc, null, 4));
+    envelope.set(result);
   } else {
     editor.set(JSON.stringify(result, null, 4));
   }
