@@ -97,6 +97,7 @@
           forceMoveMarkers: true,
         },
       ]);
+      monacoEditor.pushUndoStop();
     });
 
     monacoEditor.onDidChangeModelContent(() => {
@@ -121,11 +122,13 @@
           // New operation pushed. Disable redo.
           redoAvailable.set(false);
           if (currentVersion > lastVersion) {
+            console.log("lastVersion = currentVersion");
             lastVersion = currentVersion;
           }
         }
         undoAvailable.set(true);
       }
+      console.log("currentVersion", versionId);
       currentVersion = versionId;
     });
 
