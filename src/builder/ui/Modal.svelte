@@ -37,7 +37,7 @@
         </button>
       </div>
       <!-- Modal body -->
-      <div class="p-6 text-sm">
+      <div class="p-6 text-sm overflow-x-auto">
         <svelte:component this={content} on:close {...contentProps} />
       </div>
     </div>

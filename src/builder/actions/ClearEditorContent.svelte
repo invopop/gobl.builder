@@ -1,6 +1,6 @@
 <script lang="ts">
-  export let onClose: () => void;
-  export let onClearEditor: () => void;
+  export let onClose: () => void = undefined;
+  export let onClearEditor: () => void = undefined;
 </script>
 
 <p class="mb-6">

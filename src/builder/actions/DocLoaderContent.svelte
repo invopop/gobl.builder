@@ -98,17 +98,23 @@
   const tabs = new Set<{ title: string; onClick(): void; disabled: boolean }>([
     {
       title: "Templates",
-      onClick: () => {},
+      onClick: () => {
+        // Not implemented yet.
+      },
       disabled: false,
     },
     {
       title: "Upload",
-      onClick: () => {},
+      onClick: () => {
+        // Not implemented yet.
+      },
       disabled: true,
     },
     {
       title: "Library",
-      onClick: () => {},
+      onClick: () => {
+        // Not implemented yet.
+      },
       disabled: true,
     },
   ]);

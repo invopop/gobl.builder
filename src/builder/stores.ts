@@ -1,4 +1,4 @@
-import { writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 import * as GOBL from "../lib/gobl";
 
 function createKeypairStore() {
@@ -19,9 +19,20 @@ export const keypair = createKeypairStore();
 export const editor = writable("");
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
-export const draft = writable(true);
 
-interface Envelope {
+export const validEditor = derived([keypair, editor], ([$keypair, $editor]) => {
+  if (!$keypair) {
+    return false;
+  }
+  try {
+    JSON.parse($editor);
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+export interface Envelope {
   doc: {
     $schema: string;
     supplier?: {
@@ -48,9 +59,12 @@ interface Envelope {
     notes?: string;
     draft?: boolean;
   };
+  sigs?: string[];
 }
 
 export const envelope = writable<Envelope>(null);
+export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
+export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
 export type GOBLError = {
   message: string;

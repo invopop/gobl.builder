@@ -4,19 +4,29 @@
   import DocLoader from "./actions/DocLoader.svelte";
   import ClearEditor from "./actions/ClearEditor.svelte";
   import ExportDoc from "./actions/ExportDoc.svelte";
-  import Build from "./actions/Build.svelte";
   import Undo from "./actions/Undo.svelte";
   import Redo from "./actions/Redo.svelte";
+  import Build from "./actions/Build.svelte";
+  import Validate from "./actions/Validate.svelte";
+  import Sign from "./actions/Sign.svelte";
 </script>
 
 <div class="flex gap-4 items-center px-4 py-3.5 h-14">
   <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
   <DocLoader />
   <div class="flex-1 flex justify-end">
-    <Undo />
-    <Redo />
-    <ClearEditor />
-    <ExportDoc />
-    <Build />
+    <div class="border-r-2 pr-2 mr-2">
+      <Undo />
+      <Redo />
+      <ClearEditor />
+    </div>
+    <div class="border-r-2 pr-2 mr-2">
+      <Build />
+      <Sign />
+      <Validate />
+    </div>
+    <div>
+      <ExportDoc />
+    </div>
   </div>
 </div>

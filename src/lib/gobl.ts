@@ -1,12 +1,31 @@
 import GoblWorker from "./worker?worker";
 import { createNotification, Notification } from "../builder/notifications";
+import type { GOBLError } from "src/builder/stores";
 
 type BaseBulkRequest = {
   req_id?: string;
   indent?: boolean;
 };
 
-type BulkRequest = VerifyRequest | BuildRequest | EnvelopRequest | KeygenRequest | PingRequest | SleepRequest;
+type BulkRequest =
+  | VerifyRequest
+  | ValidateRequest
+  | BuildRequest
+  | SignRequest
+  | KeygenRequest
+  | PingRequest
+  | SleepRequest;
+
+export type BuildPayload = {
+  template?: string;
+  data: string;
+  privatekey: Keypair["private"];
+  type?: string;
+};
+
+export type ValidatePayload = {
+  data: string;
+};
 
 export type VerifyRequest = BaseBulkRequest & {
   action: "verify";
@@ -16,14 +35,19 @@ export type VerifyRequest = BaseBulkRequest & {
   };
 };
 
+export type ValidateRequest = BaseBulkRequest & {
+  action: "validate";
+  payload: ValidatePayload;
+};
+
 export type BuildRequest = BaseBulkRequest & {
   action: "build";
-  payload: {
-    template?: string;
-    data: string;
-    privatekey: Keypair["private"];
-    type?: string;
-  };
+  payload: BuildPayload;
+};
+
+export type SignRequest = BaseBulkRequest & {
+  action: "sign";
+  payload: BuildPayload;
 };
 
 export type KeygenRequest = BaseBulkRequest & {
@@ -124,6 +148,24 @@ export async function build({ payload, indent }: Pick<BuildRequest, "payload" | 
   });
 }
 
+export async function sign({ payload, indent }: Pick<SignRequest, "payload" | "indent">) {
+  // TODO(?): Parse JSON response before returning.
+  return sendMessage<string>({
+    action: "sign",
+    payload,
+    indent,
+  });
+}
+
+export async function validate({ payload, indent }: Pick<ValidateRequest, "payload" | "indent">) {
+  // TODO(?): Parse JSON response before returning.
+  return sendMessage<string>({
+    action: "validate",
+    payload,
+    indent,
+  });
+}
+
 export async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
   return sendMessage<string>({
@@ -166,4 +208,17 @@ export async function sleep({
     payload: duration,
     indent,
   });
+}
+
+const goblErrorRegexp = /^code=(\d+), message=(.+)$/;
+
+export function parseGOBLError(err: unknown): GOBLError {
+  if (typeof err !== "string") {
+    throw err;
+  }
+  const result = err.match(goblErrorRegexp);
+  return {
+    message: result[2] || err,
+    code: +result[1] || 0,
+  };
 }

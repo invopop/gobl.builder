@@ -4,7 +4,7 @@
 
 @layer utilities {
   textarea {
-    @apply focus:ring-0
+    @apply focus:ring-0;
   }
 }
 

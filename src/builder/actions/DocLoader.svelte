@@ -4,7 +4,7 @@
   import ModalBackdrop from "../ui/ModalBackdrop.svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
 
-  $: editorIsEmpty = !Boolean($editor);
+  $: editorIsEmpty = !$editor;
 
   function handleLoadClick() {
     const modal = new Modal({
