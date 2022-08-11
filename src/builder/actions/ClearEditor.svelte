@@ -1,45 +1,14 @@
 <script lang="ts">
   import { editor, envelope } from "../stores";
-  import Modal from "../ui/Modal.svelte";
   import { iconButtonClasses } from "../ui/iconButtonClasses";
-  import ModalBackdrop from "../ui/ModalBackdrop.svelte";
-  import ClearEditorContent from "./ClearEditorContent.svelte";
 
   function handleClearEditor() {
     if ($editor === "") {
       return;
     }
 
-    const modal = new Modal({
-      target: document.body,
-      props: {
-        title: "Clear editor?",
-        content: ClearEditorContent,
-      },
-    });
-    const backdrop = new ModalBackdrop({
-      target: document.body,
-    });
-
-    function destroyModal() {
-      modal.$destroy();
-      backdrop.$destroy();
-    }
-
-    modal.$set({
-      contentProps: {
-        onClose: destroyModal,
-        onClearEditor: () => {
-          editor.set("");
-          envelope.set(null);
-
-          modal.$destroy();
-          backdrop.$destroy();
-        },
-      },
-    });
-
-    modal.$on("close", destroyModal);
+    editor.set("");
+    envelope.set(null);
   }
 </script>
 
