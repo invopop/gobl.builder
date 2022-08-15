@@ -14,6 +14,8 @@
         return ErrorIcon;
       case monaco.MarkerSeverity.Warning:
         return WarningIcon;
+      default:
+        throw new Error(`Unmapped problem severity "${problem.severity}".`);
     }
   }
 

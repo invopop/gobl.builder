@@ -2,6 +2,7 @@
   import * as monaco from "monaco-editor";
   import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+  import type { Environment } from "monaco-editor";
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
@@ -23,7 +24,7 @@
   $: errorCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
 
   onMount(() => {
-    self.MonacoEnvironment = {
+    (<Environment>(self as any).MonacoEnvironment) = {
       getWorker: function (_: string, label: string) {
         switch (label) {
           case "json":
@@ -59,17 +60,22 @@
       },
     });
 
-    const initialVersion = monacoEditor.getModel().getAlternativeVersionId();
+    const model = monacoEditor.getModel();
+    if (!model) {
+      return;
+    }
+
+    const initialVersion = model.getAlternativeVersionId();
     let currentVersion = initialVersion;
     let lastVersion = initialVersion;
 
     goblError.subscribe((goblErr) => {
       if (!goblErr) {
-        monaco.editor.setModelMarkers(monacoEditor.getModel(), "gobl", []);
+        monaco.editor.setModelMarkers(model, "gobl", []);
         return;
       }
 
-      monaco.editor.setModelMarkers(monacoEditor.getModel(), "gobl", [
+      monaco.editor.setModelMarkers(model, "gobl", [
         {
           message: `${goblErr.message} (code: ${goblErr.code})`,
           severity: monaco.MarkerSeverity.Error,
@@ -89,7 +95,6 @@
         return;
       }
 
-      const model = monacoEditor.getModel();
       monacoEditor.executeEdits("gobl", [
         {
           range: model.getFullModelRange(),
@@ -103,7 +108,7 @@
     monacoEditor.onDidChangeModelContent(() => {
       editor.set(monacoEditor.getValue());
 
-      const versionId = monacoEditor.getModel().getAlternativeVersionId();
+      const versionId = model.getAlternativeVersionId();
       if (versionId < currentVersion) {
         // Undo occured.
         redoAvailable.set(true);
@@ -122,13 +127,11 @@
           // New operation pushed. Disable redo.
           redoAvailable.set(false);
           if (currentVersion > lastVersion) {
-            console.log("lastVersion = currentVersion");
             lastVersion = currentVersion;
           }
         }
         undoAvailable.set(true);
       }
-      console.log("currentVersion", versionId);
       currentVersion = versionId;
     });
 

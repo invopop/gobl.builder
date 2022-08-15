@@ -16,7 +16,12 @@
 
   type Template = {
     name: string;
-    value: Record<string, any>;
+    value: TemplateValue;
+  };
+
+  type TemplateValue = {
+    $schema: string;
+    [field: string]: unknown;
   };
 
   const templateGroups = new Map<string, Map<string, Template>>([
@@ -27,21 +32,21 @@
           "es-invoice",
           {
             name: "Invoice",
-            value: esInvoice as unknown,
+            value: esInvoice as TemplateValue,
           },
         ],
         [
           "es-invoice-rev-charge",
           {
             name: "Invoice (reverse charge)",
-            value: esInvoiceRevCharge as unknown,
+            value: esInvoiceRevCharge as TemplateValue,
           },
         ],
         [
           "es-invoice-freelance",
           {
             name: "Invoice (freelance)",
-            value: esInvoiceFreelance as unknown,
+            value: esInvoiceFreelance as TemplateValue,
           },
         ],
       ]),
@@ -53,7 +58,7 @@
           "nl-invoice",
           {
             name: "Invoice",
-            value: nlInvoice as unknown,
+            value: nlInvoice as TemplateValue,
           },
         ],
       ]),
@@ -65,7 +70,7 @@
           "misc-message",
           {
             name: "Message",
-            value: message as unknown,
+            value: message as TemplateValue,
           },
         ],
       ]),
@@ -77,7 +82,7 @@
   }
 
   function handleTemplateClick(templateKey: string) {
-    let template: Template;
+    let template: Template | undefined;
 
     templateGroups.forEach((group) => {
       if (group.has(templateKey)) {
@@ -144,15 +149,17 @@
     <h3 class="uppercase font-semibold mb-3">{groupKey}</h3>
     <ul>
       {#each [...group] as [templateKey, template]}
-        <li>
-          <button
-            class="inline-flex gap-2 items-center hover:text-sky-500"
-            on:click={() => handleTemplateClick(templateKey)}
-          >
-            <svelte:component this={schemaIconMap.get(template.value.$schema)} />
-            {template.name}
-          </button>
-        </li>
+        {#if template.value.$schema}
+          <li>
+            <button
+              class="inline-flex gap-2 items-center hover:text-sky-500"
+              on:click={() => handleTemplateClick(templateKey)}
+            >
+              <svelte:component this={schemaIconMap.get(template.value.$schema)} />
+              {template.name}
+            </button>
+          </li>
+        {/if}
       {/each}
     </ul>
   </div>

@@ -3,7 +3,7 @@ import type * as GOBL from "../../lib/gobl";
 import { envelope, editor, goblError, Envelope } from "../stores";
 
 export async function runBuildCommand(
-  envelopeValue: Envelope,
+  envelopeValue: Envelope | null,
   editorValue: string,
   keypair: GOBL.Keypair,
   goblFn: (params: { payload: GOBL.BuildPayload; indent: boolean }) => Promise<string>

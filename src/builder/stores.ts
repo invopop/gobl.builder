@@ -2,7 +2,7 @@ import { derived, writable } from "svelte/store";
 import * as GOBL from "../lib/gobl";
 
 function createKeypairStore() {
-  const { subscribe, set } = writable<GOBL.Keypair>(null, function start(set) {
+  const { subscribe, set } = writable<GOBL.Keypair | null>(null, function start(set) {
     GOBL.keygen().then((value) => {
       set(value);
       console.log("Created keypair.", value);
@@ -62,7 +62,7 @@ export interface Envelope {
   sigs?: string[];
 }
 
-export const envelope = writable<Envelope>(null);
+export const envelope = writable<Envelope | null>(null);
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
@@ -72,7 +72,7 @@ export type GOBLError = {
 };
 
 function createGOBLErrorStore() {
-  const { subscribe, set } = writable<GOBLError>(null);
+  const { subscribe, set } = writable<GOBLError | null>(null);
 
   return {
     subscribe,

@@ -74,7 +74,7 @@ export type ReadyMessage = {
 };
 
 type InFlightBulkRequest = {
-  resolve: (value: unknown) => void;
+  resolve: (value: string | PromiseLike<string>) => void;
   reject: (reason?: unknown) => void;
 };
 
@@ -117,13 +117,13 @@ worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkRes
   waiting.resolve(data.payload);
 };
 
-async function sendMessage<T>(data: BulkRequest): Promise<T> {
+async function sendMessage(data: BulkRequest): Promise<string> {
   if (!data.req_id) {
     data.req_id = `req${++reqId}`;
   }
 
-  const promise = new Promise<T>((resolve, reject) => {
-    inFlight[data.req_id] = {
+  const promise = new Promise<string>((resolve, reject) => {
+    inFlight[data.req_id as string] = {
       resolve,
       reject,
     };
@@ -141,7 +141,7 @@ async function sendMessage<T>(data: BulkRequest): Promise<T> {
 
 export async function build({ payload, indent }: Pick<BuildRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
-  return sendMessage<string>({
+  return sendMessage({
     action: "build",
     payload,
     indent,
@@ -150,7 +150,7 @@ export async function build({ payload, indent }: Pick<BuildRequest, "payload" | 
 
 export async function sign({ payload, indent }: Pick<SignRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
-  return sendMessage<string>({
+  return sendMessage({
     action: "sign",
     payload,
     indent,
@@ -159,7 +159,7 @@ export async function sign({ payload, indent }: Pick<SignRequest, "payload" | "i
 
 export async function validate({ payload, indent }: Pick<ValidateRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
-  return sendMessage<string>({
+  return sendMessage({
     action: "validate",
     payload,
     indent,
@@ -168,7 +168,7 @@ export async function validate({ payload, indent }: Pick<ValidateRequest, "paylo
 
 export async function verify({ payload, indent }: Pick<VerifyRequest, "payload" | "indent">) {
   // TODO(?): Parse JSON response before returning.
-  return sendMessage<string>({
+  return sendMessage({
     action: "verify",
     payload,
     indent,
@@ -218,7 +218,7 @@ export function parseGOBLError(err: unknown): GOBLError {
   }
   const result = err.match(goblErrorRegexp);
   return {
-    message: result[2] || err,
-    code: +result[1] || 0,
+    message: (result && result[2]) || err,
+    code: (result && +result[1]) || 0,
   };
 }

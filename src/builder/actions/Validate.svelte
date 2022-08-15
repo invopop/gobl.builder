@@ -2,7 +2,7 @@
   import * as GOBL from "../../lib/gobl";
   import { encodeUTF8ToBase64 } from "../../lib/encodeUTF8ToBase64";
   import { createNotification, Severity } from "../notifications";
-  import { envelope, envelopeIsDraft, editor, keypair, validEditor, goblError } from "../stores";
+  import { envelope, envelopeIsDraft, editor, validEditor, goblError } from "../stores";
   import { iconButtonClasses } from "../ui/iconButtonClasses";
 
   async function handleValidate() {

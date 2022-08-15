@@ -6,7 +6,7 @@
   import { runBuildCommand } from "./runBuildCommand";
 
   async function handleBuild() {
-    if (!$validEditor) {
+    if (!$validEditor || !$keypair) {
       return;
     }
 

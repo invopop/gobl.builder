@@ -42,7 +42,7 @@
       createNotification({
         severity: Severity.Error,
         message: "Failed to fetch PDF.",
-        context: e,
+        context: e as string,
       });
     } finally {
       previewLoading = false;
@@ -50,6 +50,10 @@
   }
 
   function handleDownloadEnvelopeJSON() {
+    if (!$envelope) {
+      return;
+    }
+
     const filename = $envelope.head.uuid + ".json";
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
 
@@ -73,7 +77,7 @@
   </button>
 
   <div>
-    {#if countryName}
+    {#if countryName && invoiceCountryCode}
       <h3 class="uppercase font-semibold flex gap-2 items-center mb-3">
         <img src={`${flagsBaseUrl}${invoiceCountryCode.toLowerCase()}.svg`} class="h-4" alt="Country flag" />
         <span>{countryName}</span>
@@ -97,8 +101,10 @@
             fill="currentFill"
           />
         </svg>
+      {:else if $envelope}
+        <svelte:component this={schemaIconMap.get($envelope.doc.$schema)} />
       {:else}
-        <svelte:component this={schemaIconMap.get($envelope.doc.$schema) || DocIcon} />
+        <svelte:component this={DocIcon} />
       {/if}
       PDF Preview
     </button>

@@ -6,6 +6,10 @@
   import { runBuildCommand } from "./runBuildCommand";
 
   async function handleSign() {
+    if (!$keypair) {
+      return;
+    }
+
     try {
       await runBuildCommand($envelope, $editor, $keypair, GOBL.sign);
       goblError.set(null);
