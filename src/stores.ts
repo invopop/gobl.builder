@@ -1,5 +1,5 @@
 import { derived, writable } from "svelte/store";
-import * as GOBL from "../lib/gobl";
+import * as GOBL from "./lib/gobl";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null, function start(set) {

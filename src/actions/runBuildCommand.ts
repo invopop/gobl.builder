@@ -1,5 +1,5 @@
-import { encodeUTF8ToBase64 } from "../../lib/encodeUTF8ToBase64";
-import type * as GOBL from "../../lib/gobl";
+import { encodeUTF8ToBase64 } from "../lib/encodeUTF8ToBase64";
+import type * as GOBL from "../lib/gobl";
 import { envelope, editor, goblError, Envelope } from "../stores";
 
 export async function runBuildCommand(

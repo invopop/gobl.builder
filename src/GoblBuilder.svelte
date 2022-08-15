@@ -1,8 +1,7 @@
 <script lang="ts">
-  import "./app.css";
-  import MenuBar from "./builder/MenuBar.svelte";
-  import Toolbar from "./builder/Toolbar.svelte";
-  import Editor from "./builder/Editor.svelte";
+  import MenuBar from "./ui/MenuBar.svelte";
+  import Toolbar from "./toolbar/Toolbar.svelte";
+  import Editor from "./editor/Editor.svelte";
 </script>
 
 <div class="flex flex-col h-full">

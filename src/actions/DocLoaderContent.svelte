@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   import { editor, envelope } from "../stores";
-  import { schemaIconMap } from "../schemaIconMap.svelte";
+  import { schemaIconMap } from "../ui/schemaIconMap.svelte";
 
   import esInvoice from "../templates/es/invoice.json";
   import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";

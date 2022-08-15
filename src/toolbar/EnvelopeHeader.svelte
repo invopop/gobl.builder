@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { envelope } from "./stores";
+  import { envelope } from "../stores";
   $: head = $envelope?.head;
 </script>
 

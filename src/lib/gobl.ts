@@ -1,6 +1,6 @@
 import GoblWorker from "./worker?worker";
-import { createNotification, Notification } from "../builder/notifications";
-import type { GOBLError } from "src/builder/stores";
+import { createNotification, Notification } from "../notifications";
+import type { GOBLError } from "../stores";
 
 type BaseBulkRequest = {
   req_id?: string;

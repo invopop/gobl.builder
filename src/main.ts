@@ -1,6 +1,7 @@
-import App from "./App.svelte";
+import GoblBuilder from "./GoblBuilder.svelte";
+import "./index.css";
 
-const app = new App({
+const app = new GoblBuilder({
   target: document.getElementById("app") as HTMLElement,
 });
 

@@ -6,12 +6,12 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "./stores";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "../stores";
   import EditorProblem from "./EditorProblem.svelte";
-  import WarningIcon from "./ui/WarningIcon.svelte";
-  import ErrorIcon from "./ui/ErrorIcon.svelte";
-  import SuccessIcon from "./ui/SuccessIcon.svelte";
-  import LightbulbIcon from "./ui/LightbulbIcon.svelte";
+  import WarningIcon from "../ui/WarningIcon.svelte";
+  import ErrorIcon from "../ui/ErrorIcon.svelte";
+  import SuccessIcon from "../ui/SuccessIcon.svelte";
+  import LightbulbIcon from "../ui/LightbulbIcon.svelte";
 
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;

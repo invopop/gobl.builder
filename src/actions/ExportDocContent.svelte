@@ -4,7 +4,7 @@
 
   import { envelope } from "../stores";
   import { createNotification, Severity } from "../notifications";
-  import { schemaIconMap } from "../schemaIconMap.svelte";
+  import { schemaIconMap } from "../ui/schemaIconMap.svelte";
   import DocIcon from "../ui/DocIcon.svelte";
 
   const pdfApiBaseUrl = import.meta.env.VITE_PDF_API_BASE_URL;

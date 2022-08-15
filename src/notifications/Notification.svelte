@@ -1,6 +1,6 @@
 <script lang="ts">
   import classNames from "classnames";
-  import { Severity } from "./notifications";
+  import { Severity } from "../notifications";
 
   export let severity: Severity = Severity.Info;
   export let message: string;
