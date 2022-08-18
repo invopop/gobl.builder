@@ -21,6 +21,15 @@ export type BuildPayload = {
   data: string;
   privatekey: Keypair["private"];
   type?: string;
+  draft?: boolean;
+  envelop: boolean;
+};
+
+export type SignPayload = {
+  template?: string;
+  data: string;
+  privatekey: Keypair["private"];
+  type?: string;
 };
 
 export type ValidatePayload = {
@@ -47,7 +56,7 @@ export type BuildRequest = BaseBulkRequest & {
 
 export type SignRequest = BaseBulkRequest & {
   action: "sign";
-  payload: BuildPayload;
+  payload: SignPayload;
 };
 
 export type KeygenRequest = BaseBulkRequest & {

@@ -1,9 +1,9 @@
 <script lang="ts">
   import * as GOBL from "../lib/gobl";
+  import { encodeUTF8ToBase64 } from "../lib/encodeUTF8ToBase64";
   import { createNotification, Severity } from "../notifications";
   import { envelope, editor, keypair, validEditor, goblError } from "../stores";
   import { iconButtonClasses } from "../ui/iconButtonClasses";
-  import { runBuildCommand } from "./runBuildCommand";
 
   async function handleBuild() {
     if (!$validEditor || !$keypair) {
@@ -11,7 +11,37 @@
     }
 
     try {
-      await runBuildCommand($envelope, $editor, $keypair, GOBL.build);
+      let sendData: string;
+      let envelopeValue = $envelope;
+
+      // If a (previously set) envelope exists, replace its `doc` property with
+      // the editor contents. If not, send the editor contents as-is. In either case,
+      // the GOBL command response will be an an enveloped document.
+      if (envelopeValue) {
+        envelopeValue.doc = JSON.parse($editor);
+        sendData = JSON.stringify(envelopeValue);
+      } else {
+        sendData = $editor;
+      }
+
+      const payload: GOBL.BuildPayload = {
+        data: encodeUTF8ToBase64(sendData),
+        privatekey: $keypair.private,
+        draft: true,
+        envelop: true,
+      };
+      const rawResult = await GOBL.build({ payload, indent: true });
+      const result = JSON.parse(rawResult);
+
+      if (result.$schema === "https://gobl.org/draft-0/envelope") {
+        // Set new editor value *first*, because when the envelope is set, the Monaco
+        // editor if the envelope contains signatures.
+        editor.set(JSON.stringify(result.doc, null, 4));
+        envelope.set(result);
+      } else {
+        editor.set(JSON.stringify(result, null, 4));
+      }
+
       goblError.set(null);
       createNotification({
         severity: Severity.Success,
