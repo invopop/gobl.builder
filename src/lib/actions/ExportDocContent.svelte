@@ -7,7 +7,7 @@
   import { schemaIconMap } from "$lib/ui/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
 
-  const pdfApiBaseUrl = import.meta.env.VITE_PDF_API_BASE_URL;
+  const pdfApiBaseUrl = "https://pdf.invopop.com";
   const flagsBaseUrl = "https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.4/flags/4x3/";
 
   let previewLoading = false;
