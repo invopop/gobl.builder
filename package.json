@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "prebuild": "npm run install-gobl-wasm",
     "build": "vite build",
     "build:package": "svelte-kit sync && svelte-package",
     "preview": "vite preview",
@@ -13,9 +12,7 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "clean": "rimraf node_modules .svelte-kit build package",
     "lint": "prettier --check . && eslint .",
-    "format": "prettier --write .",
-    "install-gobl-wasm": "node scripts/install-gobl-wasm.js",
-    "postinstall": "npm run install-gobl-wasm"
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
