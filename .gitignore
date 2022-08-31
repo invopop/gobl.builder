@@ -1,7 +1,5 @@
 /node_modules
-/dist
-/public/*.wasm
-
-.vscode/*
-!.vscode/settings.json
-!.vscode/extensions.json
+/.svelte-kit
+/package
+/build
+/static/*.wasm

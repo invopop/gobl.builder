@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const goblVersion = process.env.VITE_GOBL_VERSION;
-const path = `public/gobl.v${goblVersion}.wasm`;
+const path = `static/gobl.v${goblVersion}.wasm`;
 
 if (fs.existsSync(path)) {
   console.log(`Skipping GOBL WASM download: path "${path}" already exists.`);
