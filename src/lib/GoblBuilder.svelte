@@ -14,3 +14,7 @@
     <Editor />
   </div>
 </div>
+
+<style>
+  @import "@fontsource/fira-code";
+</style>
