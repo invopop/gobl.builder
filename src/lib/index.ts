@@ -1,4 +1,4 @@
-import GoblBuilderSvelte from "./GoblBuilder.svelte";
+import GoblBuilder from "./GoblBuilder.svelte";
 
-export { GoblBuilderSvelte };
-export default GoblBuilderSvelte;
+export { GoblBuilder };
+export default GoblBuilder;

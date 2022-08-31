@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "./GoblBuilder.css";
   import MenuBar from "./ui/MenuBar.svelte";
   import Toolbar from "./toolbar/Toolbar.svelte";
   import Editor from "./editor/Editor.svelte";
