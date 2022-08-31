@@ -7,7 +7,9 @@ const config = {
   // for more information about preprocessors
   preprocess: preprocess(),
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      fallback: true,
+    }),
     trailingSlash: "always",
   },
 };
