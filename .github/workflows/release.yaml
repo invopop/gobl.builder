@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - ${{ github.event.repository.default_branch }}
+      - main
 
 jobs:
   release:
@@ -21,7 +21,7 @@ jobs:
         id: bump_version
         uses: anothrNick/github-tag-action@1.36.0
         env:
-          RELEASE_BRANCHES: ${{ github.event.repository.default_branch }}
+          RELEASE_BRANCHES: main
 
       # Skip if `new_tag` != `tag` (means no bump)
       - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
