@@ -4,15 +4,15 @@
 
 **GOBL Builder** is an interactive, low code tool for building GOBL documents.
 
-This repository contains a [`GoblBuilder`](src/lib/GoblBuilder.svelte) Svelte component in the `src/lib`
+This repository contains a [`GOBLBuilder`](src/lib/GOBLBuilder.svelte) Svelte component in the `src/lib`
 directory. This component is packaged via [SvelteKit](https://kit.svelte.dev/),
 to be imported and used from another Svelte project (e.g. `console-ui`).
 
-The main Svelte component, [`GoblBuilder`](src/GoblBuilder.svelte), is used to
+The main Svelte component, [`GOBLBuilder`](src/GOBLBuilder.svelte), is used to
 render a self-contained UI with menu bar, toolbar, code editor and bottom drawer
 for showing errors, warnings and more.
 
-A standalone wrapper for `GoblBuilder` is included in this repository in `src` (not part of the packaged library). It's available at https://build.gobl.org.
+A standalone wrapper for `GOBLBuilder` is included in this repository in `src` (not part of the packaged library). It's available at https://build.gobl.org.
 
 ## Installation
 
