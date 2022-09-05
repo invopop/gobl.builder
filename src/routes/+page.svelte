@@ -1,5 +1,5 @@
 <script lang="ts">
-  import GoblBuilder from "$lib/GoblBuilder.svelte";
+  import GOBLBuilder from "$lib/GOBLBuilder.svelte";
 </script>
 
-<GoblBuilder />
+<GOBLBuilder />

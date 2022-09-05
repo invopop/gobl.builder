@@ -1,4 +1,4 @@
-import GoblWorker from "./worker?worker";
+import GOBLWorker from "./worker?worker";
 import { createNotification, type Notification } from "$lib/notifications/index.js";
 import type { GOBLError } from "$lib/stores.js";
 
@@ -89,14 +89,14 @@ type InFlightBulkRequest = {
 
 const queue: BulkRequest[] = [];
 const inFlight: Record<string, InFlightBulkRequest> = {};
-const worker = new GoblWorker();
+const worker = new GOBLWorker();
 
 let reqId = 0;
 let ready = false;
 
 worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkResponse>) => {
   if ("ready" in data) {
-    console.log("GoblWorker is ready ...");
+    console.log("GOBLWorker is ready ...");
     ready = true;
     for (let i = 0; i < queue.length; i++) {
       worker.postMessage(queue[i]);
