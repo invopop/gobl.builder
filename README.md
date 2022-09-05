@@ -72,7 +72,7 @@ http://localhost:4173.
 
 ## License
 
-[Apache License, Version 2.0](LICENSE)
+GOBL Builder is licensed under the [Apache-2.0 License](LICENSE).
 
 ---
 
