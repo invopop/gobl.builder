@@ -56,7 +56,7 @@
 </script>
 
 {#if $envelope}
-  <div class="flex items-center gap-4 bg-gray-200 px-4 py-2 text-xs shadow-inner">
+  <div class="flex items-center gap-4 bg-slate-200 px-4 py-2 text-xs">
     <div class="flex-1 inline-flex items-center gap-2 text-gray-700">
       {#if $envelopeIsDraft}
         <span>

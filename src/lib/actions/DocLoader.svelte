@@ -37,10 +37,10 @@
   >
   <button
     id="tooltip-load"
-    class="font-medium text-white bg-sky-400 hover:bg-sky-500 text-sm px-4 py-2 rounded-lg inline-flex"
+    class="font-medium text-white bg-sky-600 hover:bg-sky-500 text-xs px-4 py-2 rounded-md inline-flex items-center"
     on:click={handleLoadClick}
   >
-    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 -ml-1 w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+    <svg xmlns="http://www.w3.org/2000/svg" class="mr-2 -ml-1 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"
         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"

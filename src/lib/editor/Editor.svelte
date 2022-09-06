@@ -44,7 +44,6 @@
     monacoEditor = monaco.editor.create(editorEl, {
       value: "",
       language: "json",
-      theme: "vs-dark",
       minimap: {
         enabled: false,
       },
@@ -54,9 +53,11 @@
       scrollbar: {
         useShadows: false,
       },
+      renderLineHighlight: "line",
+      renderLineHighlightOnlyWhenFocus: true,
       padding: {
-        top: 14,
-        bottom: 14,
+        top: 12,
+        bottom: 12,
       },
     });
 
@@ -179,7 +180,7 @@
   }
 </script>
 
-<div class="flex flex-col h-full bg-black">
+<div class="flex flex-col h-full border-t-2 border-t-slate-200">
   <div class="flex-1 overflow-hidden" bind:this={editorEl} />
 
   <div
@@ -263,3 +264,10 @@
     </div>
   {/if}
 </div>
+
+<style>
+  :global([class^="codicon-"]),
+  :global([class*="codicon-"]) {
+    font-family: "codicon" !important;
+  }
+</style>
