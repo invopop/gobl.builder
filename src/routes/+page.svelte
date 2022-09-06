@@ -2,4 +2,6 @@
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
 </script>
 
-<GOBLBuilder />
+<div class="h-screen">
+  <GOBLBuilder />
+</div>
