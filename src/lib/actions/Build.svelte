@@ -4,11 +4,30 @@
   import * as GOBL from "$lib/gobl.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { envelope, editor, keypair, validEditor, goblError } from "$lib/stores.js";
+  import { envelope, editor, keypair, goblError } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
 
+  export let jsonSchemaURL: string;
+
+  $: validEditor = (function (): boolean {
+    if (!$keypair) {
+      return false;
+    }
+
+    try {
+      const parsed = JSON.parse($editor);
+      if (parsed.$schema !== jsonSchemaURL) {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+
+    return true;
+  })();
+
   async function handleBuild() {
-    if (!$validEditor || !$keypair) {
+    if (validEditor || !$keypair) {
       return;
     }
 
@@ -65,7 +84,7 @@
     To build, first ensure the document is valid.
   {/if}
 </Tooltip>
-<button id="tooltip-build" on:click={handleBuild} class={iconButtonClasses(!$validEditor)}>
+<button id="tooltip-build" on:click={handleBuild} class={iconButtonClasses(!validEditor)}>
   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
     <path
       fill-rule="evenodd"

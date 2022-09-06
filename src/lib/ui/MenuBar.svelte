@@ -9,6 +9,8 @@
   import Build from "$lib/actions/Build.svelte";
   import Validate from "$lib/actions/Validate.svelte";
   import Sign from "$lib/actions/Sign.svelte";
+
+  export let jsonSchemaURL: string;
 </script>
 
 <div class="flex gap-4 items-center pl-4 pr-2 py-3 bg-slate-100">
@@ -21,9 +23,9 @@
       <ClearEditor />
     </div>
     <div class="border-r-2 pr-2 mr-2">
-      <Build />
-      <Sign />
-      <Validate />
+      <Build {jsonSchemaURL} />
+      <Sign {jsonSchemaURL} />
+      <Validate {jsonSchemaURL} />
     </div>
     <div>
       <ExportDoc />
