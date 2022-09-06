@@ -4,7 +4,7 @@
   import Editor from "./editor/Editor.svelte";
 </script>
 
-<div class="flex flex-col h-screen">
+<div class="flex flex-col h-full">
   <div class="flex-none">
     <MenuBar />
     <Toolbar />
