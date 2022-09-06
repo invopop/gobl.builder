@@ -264,10 +264,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  :global([class^="codicon-"]),
-  :global([class*="codicon-"]) {
-    font-family: "codicon" !important;
-  }
-</style>
