@@ -13,10 +13,13 @@
   import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
 
+  const modelUri = monaco.Uri.parse("gobl://doc.json");
+
   export let jsonSchemaURL: string;
 
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
+  let model: monaco.editor.ITextModel;
   let problems: monaco.editor.IMarker[] = [];
   let lineNumber = 1;
   let column = 1;
@@ -24,6 +27,28 @@
 
   $: warningCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
   $: errorCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
+
+  $: {
+    setSchemaURI(jsonSchemaURL);
+  }
+
+  function setSchemaURI(uri: string) {
+    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+      validate: true,
+      enableSchemaRequest: true,
+      schemaValidation: "warning",
+      schemas: [
+        {
+          fileMatch: [modelUri.toString()],
+          uri,
+        },
+      ],
+    });
+    if (monacoEditor) {
+      const value = monacoEditor.getValue();
+      validateSchema(value);
+    }
+  }
 
   onMount(() => {
     (<Environment>(self as any).MonacoEnvironment) = {
@@ -37,20 +62,9 @@
       },
     };
 
-    const modelUri = monaco.Uri.parse("gobl://doc.json");
-    const model = monaco.editor.createModel("", "json", modelUri);
+    model = monaco.editor.createModel("", "json", modelUri);
 
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      validate: true,
-      enableSchemaRequest: true,
-      schemaValidation: "warning",
-      schemas: [
-        {
-          fileMatch: [modelUri.toString()],
-          uri: jsonSchemaURL,
-        },
-      ],
-    });
+    setSchemaURI(jsonSchemaURL);
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
@@ -141,25 +155,7 @@
       }
       currentVersion = versionId;
 
-      try {
-        const parsed: Record<string, unknown> = JSON.parse(value);
-        if (parsed.$schema !== jsonSchemaURL) {
-          monaco.editor.setModelMarkers(model, "gobl-builder", [
-            {
-              message: `Property "$schema" must be \`${jsonSchemaURL}\`.`,
-              severity: monaco.MarkerSeverity.Error,
-              startLineNumber: 1,
-              startColumn: 1,
-              endLineNumber: 1,
-              endColumn: 1,
-            },
-          ]);
-        } else {
-          monaco.editor.setModelMarkers(model, "gobl-builder", []);
-        }
-      } catch (e) {
-        monaco.editor.setModelMarkers(model, "gobl-builder", []);
-      }
+      validateSchema(value);
     });
 
     monaco.editor.onDidChangeMarkers(() => {
@@ -184,6 +180,28 @@
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
+
+  function validateSchema(value: string) {
+    try {
+      const parsed: Record<string, unknown> = JSON.parse(value);
+      if (parsed.$schema !== jsonSchemaURL) {
+        monaco.editor.setModelMarkers(model, "gobl-builder", [
+          {
+            message: `Property "$schema" must be \`${jsonSchemaURL}\`.`,
+            severity: monaco.MarkerSeverity.Error,
+            startLineNumber: 1,
+            startColumn: 1,
+            endLineNumber: 1,
+            endColumn: 1,
+          },
+        ]);
+      } else {
+        monaco.editor.setModelMarkers(model, "gobl-builder", []);
+      }
+    } catch (e) {
+      monaco.editor.setModelMarkers(model, "gobl-builder", []);
+    }
+  }
 
   function handleUndoButtonClick() {
     monacoEditor.updateOptions({ readOnly: false });

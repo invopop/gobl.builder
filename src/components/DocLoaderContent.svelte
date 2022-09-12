@@ -2,15 +2,15 @@
   import { createEventDispatcher } from "svelte";
   import { clsx } from "clsx";
 
-  import { editor, envelope } from "$lib/stores.js";
+  // import { editor, envelope } from "$lib/stores.js";
   import { schemaIconMap } from "$lib/ui/schemaIconMap.svelte";
   import MessageIcon from "$lib/ui/MessageIcon.svelte";
 
-  import esInvoice from "$lib/templates/es/invoice.json";
-  import esInvoiceRevCharge from "$lib/templates/es/invoice-rev-charge.json";
-  import esInvoiceFreelance from "$lib/templates/es/invoice-freelance.json";
-  import nlInvoice from "$lib/templates/nl/invoice.json";
-  import message from "$lib/templates/misc/message.json";
+  import esInvoice from "../templates/es/invoice.json";
+  import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";
+  import esInvoiceFreelance from "../templates/es/invoice-freelance.json";
+  import nlInvoice from "../templates/nl/invoice.json";
+  import message from "../templates/misc/message.json";
 
   const dispatch = createEventDispatcher();
 
@@ -93,8 +93,7 @@
       return;
     }
 
-    editor.set(parsedTemplateJSON(template.value));
-    envelope.set(null);
+    document.dispatchEvent(new CustomEvent("docLoaded", { detail: template.value }));
     dispatch("close");
   }
 

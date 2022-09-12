@@ -56,12 +56,11 @@ TypeScript:
   import GOBLBuilder from "@invopop/gobl-builder";
 </script>
 
-<GOBLBuilder />
+<GOBLBuilder value="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
 ```
 
-ℹ️ The component library is still under development. There will soon be
-component props to interface with your own application (e.g. working with
-document data).
+For further example usage, see
+[src/routes/+page.svelte](src/routes/+page.svelte).
 
 ## Development
 
