@@ -27,7 +27,7 @@
   })();
 
   async function handleBuild() {
-    if (validEditor || !$keypair) {
+    if (!validEditor || !$keypair) {
       return;
     }
 
