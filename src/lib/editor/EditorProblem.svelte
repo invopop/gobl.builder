@@ -19,7 +19,7 @@
     }
   }
 
-  const classes = clsx({
+  $: classes = clsx({
     "text-red-400": problem.severity === monaco.MarkerSeverity.Error,
     "text-amber-400": problem.severity === monaco.MarkerSeverity.Warning,
   });

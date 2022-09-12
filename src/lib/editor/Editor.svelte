@@ -13,6 +13,8 @@
   import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
 
+  export let jsonSchemaURL: string;
+
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
   let problems: monaco.editor.IMarker[] = [];
@@ -35,15 +37,23 @@
       },
     };
 
+    const modelUri = monaco.Uri.parse("gobl://doc.json");
+    const model = monaco.editor.createModel("", "json", modelUri);
+
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: true,
       schemaValidation: "warning",
+      schemas: [
+        {
+          fileMatch: [modelUri.toString()],
+          uri: jsonSchemaURL,
+        },
+      ],
     });
 
     monacoEditor = monaco.editor.create(editorEl, {
-      value: "",
-      language: "json",
+      model,
       minimap: {
         enabled: false,
       },
@@ -60,11 +70,6 @@
         bottom: 12,
       },
     });
-
-    const model = monacoEditor.getModel();
-    if (!model) {
-      return;
-    }
 
     const initialVersion = model.getAlternativeVersionId();
     let currentVersion = initialVersion;
@@ -107,7 +112,8 @@
     });
 
     monacoEditor.onDidChangeModelContent(() => {
-      editor.set(monacoEditor.getValue());
+      const value = monacoEditor.getValue();
+      editor.set(value);
 
       const versionId = model.getAlternativeVersionId();
       if (versionId < currentVersion) {
@@ -134,6 +140,26 @@
         undoAvailable.set(true);
       }
       currentVersion = versionId;
+
+      try {
+        const parsed: Record<string, unknown> = JSON.parse(value);
+        if (parsed.$schema !== jsonSchemaURL) {
+          monaco.editor.setModelMarkers(model, "gobl-builder", [
+            {
+              message: `Property "$schema" must be \`${jsonSchemaURL}\`.`,
+              severity: monaco.MarkerSeverity.Error,
+              startLineNumber: 1,
+              startColumn: 1,
+              endLineNumber: 1,
+              endColumn: 1,
+            },
+          ]);
+        } else {
+          monaco.editor.setModelMarkers(model, "gobl-builder", []);
+        }
+      } catch (e) {
+        monaco.editor.setModelMarkers(model, "gobl-builder", []);
+      }
     });
 
     monaco.editor.onDidChangeMarkers(() => {
@@ -264,10 +290,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  :global([class^="codicon-"]),
-  :global([class*="codicon-"]) {
-    font-family: "codicon" !important;
-  }
-</style>

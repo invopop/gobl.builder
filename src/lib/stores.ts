@@ -20,18 +20,6 @@ export const editor = writable("");
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 
-export const validEditor = derived([keypair, editor], ([$keypair, $editor]) => {
-  if (!$keypair) {
-    return false;
-  }
-  try {
-    JSON.parse($editor);
-    return true;
-  } catch (e) {
-    return false;
-  }
-});
-
 export interface Envelope {
   doc: {
     $schema: string;
