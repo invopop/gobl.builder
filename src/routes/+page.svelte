@@ -10,7 +10,7 @@
     [key: string]: unknown;
   }
 
-  let value: string = "";
+  let value = "";
   let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {

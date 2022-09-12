@@ -10,11 +10,13 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    document.addEventListener("docLoaded", handleDocLoaded as EventListener, true);
+    // TODO: Figure out how to type `as EventListener` without breaking linting.
+    document.addEventListener("docLoaded", handleDocLoaded as any, true);
   });
 
   onDestroy(() => {
-    document.removeEventListener("docLoaded", handleDocLoaded as EventListener, true);
+    // TODO: Figure out how to type `as EventListener` without breaking linting.
+    document.removeEventListener("docLoaded", handleDocLoaded as any, true);
   });
 
   function handleDocLoaded(event: CustomEvent<string>) {

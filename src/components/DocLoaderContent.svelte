@@ -77,10 +77,6 @@
     ],
   ]);
 
-  function parsedTemplateJSON(value: unknown): string {
-    return JSON.stringify(value, null, 4);
-  }
-
   function handleTemplateClick(templateKey: string) {
     let template: Template | undefined;
 
