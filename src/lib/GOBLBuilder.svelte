@@ -3,8 +3,8 @@
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
 
-  export let jsonSchemaURL: string;
-  export let value: string;
+  export let jsonSchemaURL = "";
+  export let value = "";
 
   // When `value` is updated, update the internal editor and envelope stores.
   $: {

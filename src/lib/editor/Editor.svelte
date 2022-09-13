@@ -37,12 +37,14 @@
       validate: true,
       enableSchemaRequest: true,
       schemaValidation: "warning",
-      schemas: [
-        {
-          fileMatch: [modelUri.toString()],
-          uri,
-        },
-      ],
+      schemas: uri
+        ? [
+            {
+              fileMatch: [modelUri.toString()],
+              uri,
+            },
+          ]
+        : [],
     });
     if (monacoEditor) {
       const value = monacoEditor.getValue();
@@ -182,6 +184,10 @@
   });
 
   function validateSchema(value: string) {
+    if (!jsonSchemaURL) {
+      return;
+    }
+
     try {
       const parsed: Record<string, unknown> = JSON.parse(value);
       if (parsed.$schema !== jsonSchemaURL) {
