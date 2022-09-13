@@ -7,9 +7,24 @@
   export let value = "";
 
   // When `value` is updated, update the internal editor and envelope stores.
+  // If `value` is JSON and it's a GOBL envelope, parse and store its contents
+  // and the envelope separately.
   $: {
-    $editor = value;
-    $envelope = null;
+    try {
+      const parsedValue = JSON.parse(value);
+      if (parsedValue.$schema === "https://gobl.org/draft-0/envelope") {
+        // Set new editor value *first*, because when the envelope is set, the Monaco
+        // editor if the envelope contains signatures.
+        $editor = JSON.stringify(parsedValue.doc, null, 4);
+        $envelope = parsedValue;
+      } else {
+        $editor = JSON.stringify(parsedValue, null, 4);
+        $envelope = null;
+      }
+    } catch (e) {
+      $editor = value;
+      $envelope = null;
+    }
   }
 </script>
 
