@@ -22,6 +22,8 @@
   let column = 1;
   let drawerClosed = false;
 
+  // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
+  $: sortedProblems = problems.sort((a, b) => b.severity - a.severity);
   $: warningCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
   $: errorCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
 
@@ -281,7 +283,7 @@
         </p>
       {/if}
       <ul>
-        {#each problems as problem}
+        {#each sortedProblems as problem}
           <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
             <EditorProblem {problem} />
           </li>
