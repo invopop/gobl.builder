@@ -13,8 +13,8 @@
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
   import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
-  import EnvelopeHeader from "./EnvelopeHeader.svelte";
-  import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
+  import EnvelopeHeader from "$lib/menubar/EnvelopeHeader.svelte";
+  import EnvelopeSignatures from "$lib/menubar/EnvelopeSignatures.svelte";
 
   export let jsonSchemaURL: string;
   $: envelopeHasSigs = Boolean($envelope?.sigs);
