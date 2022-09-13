@@ -1,7 +1,7 @@
 <script lang="ts">
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import DocLoader from "../components/DocLoader.svelte";
-  import logo from "../static/logo-dark.svg";
+  import logo from "../static/logo-light.svg";
 
   const DEFAULT_JSON_SCHEMA_URL = "https://gobl.org/draft-0/bill/invoice";
 
@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex flex-col h-screen">
-  <div class="flex-none flex gap-4 items-center pl-4 pr-2 py-2">
+  <div class="flex-none flex gap-4 items-center pl-4 pr-2 py-2.5 bg-gray-800">
     <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
     <DocLoader on:load={handleDocLoad} />
   </div>

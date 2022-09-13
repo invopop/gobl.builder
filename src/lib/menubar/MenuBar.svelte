@@ -2,11 +2,21 @@
   import { Tooltip } from "flowbite-svelte";
   import { clsx } from "clsx";
 
+  import ClearEditor from "$lib/actions/ClearEditor.svelte";
+  import ExportDoc from "$lib/actions/ExportDoc.svelte";
+  import Undo from "$lib/actions/Undo.svelte";
+  import Redo from "$lib/actions/Redo.svelte";
+  import Build from "$lib/actions/Build.svelte";
+  import Validate from "$lib/actions/Validate.svelte";
+  import Sign from "$lib/actions/Sign.svelte";
+
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
   import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
+
+  export let jsonSchemaURL: string;
 
   $: envelopeHasSigs = Boolean($envelope?.sigs);
 
@@ -55,9 +65,9 @@
   }
 </script>
 
-{#if $envelope}
-  <div class="flex items-center gap-4 bg-slate-200 px-4 py-2 text-xs">
-    <div class="flex-1 inline-flex items-center gap-2 text-gray-700">
+<div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
+  {#if $envelope}
+    <div class="flex gap-2 text-gray-700">
       {#if $envelopeIsDraft}
         <span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -84,7 +94,7 @@
         <span>Signed document</span>
       {/if}
     </div>
-    <div>
+    <div class="border-l-2 pl-4 py-2">
       <Tooltip
         triggeredBy="#tooltip-header"
         tipClass="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm transition-opacity duration-300"
@@ -112,5 +122,20 @@
         on:click={handleSigsClick}>Signatures</button
       >
     </div>
+  {/if}
+  <div class="flex-1 flex justify-end">
+    <div class="border-r-2 pr-2 mr-2">
+      <Undo />
+      <Redo />
+      <ClearEditor />
+    </div>
+    <div class="border-r-2 pr-2 mr-2">
+      <Build {jsonSchemaURL} />
+      <Sign {jsonSchemaURL} />
+      <Validate {jsonSchemaURL} />
+    </div>
+    <div>
+      <ExportDoc />
+    </div>
   </div>
-{/if}
+</div>
