@@ -173,6 +173,10 @@
       column = event.position.column;
     });
 
+    document.fonts.ready.then(() => {
+      monaco.editor.remeasureFonts();
+    });
+
     envelope.subscribe((value) => {
       monacoEditor.updateOptions({ readOnly: Boolean(value?.sigs) });
     });
