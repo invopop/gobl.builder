@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { Tooltip } from "flowbite-svelte";
   import { clsx } from "clsx";
 
   import ClearEditor from "$lib/actions/ClearEditor.svelte";
@@ -15,6 +14,7 @@
   import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
+  import Tooltip from "$lib/ui/Tooltip.svelte";
 
   export let jsonSchemaURL: string;
 
@@ -63,6 +63,10 @@
 
     modal.$on("close", handleClose);
   }
+
+  $: envelopeTooltip = envelopeHasSigs
+    ? "View the signatures of the sealed document."
+    : "There are no signatures. They are generated when signing a document.";
 </script>
 
 <div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
@@ -95,32 +99,20 @@
       {/if}
     </div>
     <div class="border-l-2 pl-4 py-2">
-      <Tooltip
-        triggeredBy="#tooltip-header"
-        tipClass="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm transition-opacity duration-300"
-      >
-        View the header of the built document.
+      <Tooltip label="View the header of the built document.">
+        <button on:click={handleHeaderClick}>Header</button>
       </Tooltip>
-      <button id="tooltip-header" on:click={handleHeaderClick}>Header</button>
     </div>
     <div>
-      <Tooltip
-        triggeredBy="#tooltip-signatures"
-        tipClass="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg shadow-sm transition-opacity duration-300"
-      >
-        {#if envelopeHasSigs}
-          View the signatures of the sealed document.
-        {:else}
-          There are no signatures. They are generated when signing a document.
-        {/if}
+      <Tooltip label={envelopeTooltip}>
+        <button
+          id="tooltip-signatures"
+          class={clsx({
+            "cursor-not-allowed text-gray-500": !envelopeHasSigs,
+          })}
+          on:click={handleSigsClick}>Signatures</button
+        >
       </Tooltip>
-      <button
-        id="tooltip-signatures"
-        class={clsx({
-          "cursor-not-allowed text-gray-500": !envelopeHasSigs,
-        })}
-        on:click={handleSigsClick}>Signatures</button
-      >
     </div>
   {/if}
   <div class="flex-1 flex justify-end">

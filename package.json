@@ -51,8 +51,8 @@
     "clsx": "^1.2.1",
     "country-list": "^2.2.0",
     "file-saver": "^2.0.5",
-    "flowbite-svelte": "^0.26.2",
     "monaco-editor": "^0.34.0",
+    "svelte-floating-ui": "^0.3.2",
     "utf8": "^3.0.0"
   }
 }
