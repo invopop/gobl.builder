@@ -231,3 +231,7 @@ export function parseGOBLError(err: unknown): GOBLError {
     code: (result && +result[1]) || 0,
   };
 }
+
+export function isEnvelope(data: Record<string, unknown>): boolean {
+  return data.$schema === "https://gobl.org/draft-0/envelope";
+}

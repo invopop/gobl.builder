@@ -2,6 +2,7 @@
   import { editor, envelope } from "$lib/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
+  import { isEnvelope } from "./gobl.js";
 
   export let jsonSchemaURL = "";
   export let data = "";
@@ -12,7 +13,7 @@
   $: {
     try {
       const parsedValue = JSON.parse(data);
-      if (parsedValue.$schema === "https://gobl.org/draft-0/envelope") {
+      if (isEnvelope(parsedValue)) {
         // Set new editor value *first*, because when the envelope is set, the Monaco
         // editor if the envelope contains signatures.
         $editor = JSON.stringify(parsedValue.doc, null, 4);
