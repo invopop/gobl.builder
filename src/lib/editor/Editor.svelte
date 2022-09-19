@@ -3,6 +3,7 @@
   import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { Environment } from "monaco-editor";
+  import type { Unsubscriber } from "svelte/store";
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
@@ -24,6 +25,8 @@
   let lineNumber = 1;
   let column = 1;
   let drawerClosed = false;
+
+  let unsubscribeEditor: Unsubscriber;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = problems.sort((a, b) => b.severity - a.severity);
@@ -111,7 +114,7 @@
       ]);
     });
 
-    editor.subscribe((value) => {
+    unsubscribeEditor = editor.subscribe((value) => {
       // To keep undo/redo in the editor working, only overwrite the model
       // contents when the current editor model value isn't the same as the new
       // store value.
@@ -184,6 +187,8 @@
   });
 
   onDestroy(() => {
+    unsubscribeEditor();
+    model.dispose();
     monacoEditor.dispose();
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
