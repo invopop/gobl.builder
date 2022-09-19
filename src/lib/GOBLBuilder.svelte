@@ -31,7 +31,7 @@
 
 <div class="flex flex-col h-full">
   <div class="flex-none">
-    <MenuBar {jsonSchemaURL} />
+    <MenuBar {jsonSchemaURL} on:undo on:redo on:clear on:build on:sign on:validate on:preview on:download />
   </div>
   <div class="flex-1 overflow-hidden">
     <Editor {jsonSchemaURL} />

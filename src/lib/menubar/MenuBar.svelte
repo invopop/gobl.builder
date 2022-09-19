@@ -125,17 +125,17 @@
   {/if}
   <div class="flex-1 flex justify-end">
     <div class="border-r-2 pr-2 mr-2">
-      <Undo />
-      <Redo />
-      <ClearEditor />
+      <Undo on:undo />
+      <Redo on:redo />
+      <ClearEditor on:clear />
     </div>
     <div class="border-r-2 pr-2 mr-2">
-      <Build {jsonSchemaURL} />
-      <Sign {jsonSchemaURL} />
-      <Validate {jsonSchemaURL} />
+      <Build {jsonSchemaURL} on:build />
+      <Sign {jsonSchemaURL} on:sign />
+      <Validate {jsonSchemaURL} on:validate />
     </div>
     <div>
-      <ExportDoc />
+      <ExportDoc on:preview on:download />
     </div>
   </div>
 </div>

@@ -59,7 +59,7 @@ TypeScript:
 <GOBLBuilder data="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
 ```
 
-For further example usage, see
+For further example usage, including directives for event handling, see
 [src/routes/+page.svelte](src/routes/+page.svelte).
 
 ## Development

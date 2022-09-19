@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Tooltip } from "flowbite-svelte";
 
   import { editor, envelope } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
 
+  const dispatch = createEventDispatcher();
+
   function handleClearEditor() {
+    dispatch("clear");
     if ($editor === "") {
       return;
     }
