@@ -16,7 +16,7 @@
 
     try {
       const parsed = JSON.parse($editor);
-      if (parsed.$schema !== jsonSchemaURL) {
+      if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
         return false;
       }
     } catch (e) {
