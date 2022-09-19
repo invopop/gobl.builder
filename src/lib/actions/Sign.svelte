@@ -85,7 +85,7 @@
 </script>
 
 <Tooltip label="Sign document.">
-  <button id="tooltip-sign" on:click={handleSign} class={iconButtonClasses(!validEditor)}>
+  <button on:click={handleSign} class={iconButtonClasses(!validEditor)}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
       <path

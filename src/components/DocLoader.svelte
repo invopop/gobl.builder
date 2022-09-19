@@ -46,7 +46,6 @@
 
 <Tooltip label="Load a GOBL document from a template, file upload or your library.">
   <button
-    id="tooltip-load"
     class="font-medium text-white bg-sky-600 hover:bg-sky-500 text-xs px-4 py-2 rounded-md inline-flex items-center"
     on:click={handleLoadClick}
   >

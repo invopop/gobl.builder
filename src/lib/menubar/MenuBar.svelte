@@ -106,7 +106,6 @@
     <div>
       <Tooltip label={envelopeTooltip}>
         <button
-          id="tooltip-signatures"
           class={clsx({
             "cursor-not-allowed text-gray-500": !envelopeHasSigs,
           })}
