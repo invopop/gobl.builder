@@ -56,7 +56,7 @@ TypeScript:
   import GOBLBuilder from "@invopop/gobl-builder";
 </script>
 
-<GOBLBuilder value="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
+<GOBLBuilder data="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
 ```
 
 For further example usage, see

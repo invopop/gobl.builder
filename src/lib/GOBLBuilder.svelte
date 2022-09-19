@@ -4,14 +4,14 @@
   import Editor from "./editor/Editor.svelte";
 
   export let jsonSchemaURL = "";
-  export let value = "";
+  export let data = "";
 
-  // When `value` is updated, update the internal editor and envelope stores.
-  // If `value` is JSON and it's a GOBL envelope, parse and store its contents
+  // When `data` is updated, update the internal editor and envelope stores.
+  // If `data` is JSON and it's a GOBL envelope, parse and store its contents
   // and the envelope separately.
   $: {
     try {
-      const parsedValue = JSON.parse(value);
+      const parsedValue = JSON.parse(data);
       if (parsedValue.$schema === "https://gobl.org/draft-0/envelope") {
         // Set new editor value *first*, because when the envelope is set, the Monaco
         // editor if the envelope contains signatures.
@@ -22,7 +22,7 @@
         $envelope = null;
       }
     } catch (e) {
-      $editor = value;
+      $editor = data;
       $envelope = null;
     }
   }

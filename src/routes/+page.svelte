@@ -10,11 +10,11 @@
     [key: string]: unknown;
   }
 
-  let value = "";
+  let data = "";
   let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
-    value = JSON.stringify(event.detail, null, 4);
+    data = JSON.stringify(event.detail, null, 4);
     jsonSchemaURL = event.detail.$schema;
   }
 </script>
@@ -25,6 +25,6 @@
     <DocLoader on:load={handleDocLoad} />
   </div>
   <div class="flex-1 h-full overflow-hidden">
-    <GOBLBuilder {value} {jsonSchemaURL} />
+    <GOBLBuilder {data} {jsonSchemaURL} />
   </div>
 </div>
