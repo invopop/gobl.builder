@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as monaco from "monaco-editor";
-  import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+  import JSONWorker from "$lib/monaco-editor/json.worker?worker";
   import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { Environment } from "monaco-editor";
   import type { Unsubscriber } from "svelte/store";
