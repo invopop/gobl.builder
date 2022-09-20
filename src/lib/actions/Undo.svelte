@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Tooltip } from "flowbite-svelte";
 
   import { undoAvailable } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
 
+  const dispatch = createEventDispatcher();
+
   function handleUndo() {
+    dispatch("undo");
     document.dispatchEvent(new Event("undoButtonClick"));
   }
 </script>

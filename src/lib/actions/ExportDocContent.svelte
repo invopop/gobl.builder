@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import fileSaver from "file-saver";
   import * as CountryList from "country-list";
 
@@ -9,6 +10,16 @@
 
   const pdfApiBaseUrl = "https://pdf.invopop.com";
   const flagsBaseUrl = "https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.6.4/flags/4x3/";
+
+  const dispatch = createEventDispatcher<{
+    download: {
+      error?: Error;
+    };
+    preview: {
+      url?: string;
+      error?: Error;
+    };
+  }>();
 
   let previewLoading = false;
 
@@ -28,16 +39,25 @@
       });
 
       if (!res.ok) {
+        const message = "The PDF service returned an error:";
+        const context = `${await res.text()} (HTTP status: ${res.status})`;
+        dispatch("preview", {
+          error: new Error(`${message} ${context}`),
+        });
         createNotification({
           severity: Severity.Error,
-          message: "The PDF service returned an error:",
-          context: `${await res.text()} (HTTP status: ${res.status})`,
+          message,
+          context,
         });
         return;
       }
 
       const data = await res.blob();
-      window.open(URL.createObjectURL(data));
+      const url = URL.createObjectURL(data);
+      dispatch("preview", {
+        url,
+      });
+      window.open(url);
     } catch (e) {
       createNotification({
         severity: Severity.Error,
@@ -57,6 +77,7 @@
     const filename = $envelope.head.uuid + ".json";
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
 
+    dispatch("download");
     createNotification({
       severity: Severity.Success,
       message: "Downloaded JSON file of GOBL document.",

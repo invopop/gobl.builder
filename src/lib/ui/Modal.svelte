@@ -36,7 +36,7 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 text-sm overflow-x-auto">
-        <svelte:component this={content} on:close {...contentProps} />
+        <svelte:component this={content} on:close on:preview on:download {...contentProps} />
       </div>
     </div>
   </div>

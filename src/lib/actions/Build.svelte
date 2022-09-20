@@ -1,11 +1,16 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Tooltip } from "flowbite-svelte";
 
   import * as GOBL from "$lib/gobl.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { envelope, editor, keypair, goblError } from "$lib/stores.js";
+  import { envelope, editor, keypair, goblError, type GOBLError } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
+
+  const dispatch = createEventDispatcher<{
+    build: { result?: unknown; error?: GOBLError };
+  }>();
 
   export let jsonSchemaURL: string;
 
@@ -64,12 +69,19 @@
       }
 
       goblError.set(null);
+      dispatch("build", {
+        result,
+      });
       createNotification({
         severity: Severity.Success,
         message: "Document successfully built.",
       });
     } catch (e) {
-      goblError.set(GOBL.parseGOBLError(e));
+      const goblErr = GOBL.parseGOBLError(e);
+      goblError.set(goblErr);
+      dispatch("build", {
+        error: goblErr,
+      });
     }
   }
 </script>

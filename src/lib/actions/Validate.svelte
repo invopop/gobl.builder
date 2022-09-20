@@ -4,8 +4,13 @@
   import * as GOBL from "$lib/gobl.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { envelope, envelopeIsDraft, editor, keypair, goblError } from "$lib/stores.js";
+  import { envelope, envelopeIsDraft, editor, keypair, goblError, type GOBLError } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher<{
+    validate: { isValid: boolean; error?: GOBLError };
+  }>();
 
   export let jsonSchemaURL: string;
 
@@ -51,12 +56,20 @@
       await GOBL.validate({ payload });
 
       goblError.set(null);
+      dispatch("validate", {
+        isValid: true,
+      });
       createNotification({
         severity: Severity.Success,
         message: "Document successfully validated.",
       });
     } catch (e) {
-      goblError.set(GOBL.parseGOBLError(e));
+      const goblErr = GOBL.parseGOBLError(e);
+      goblError.set(goblErr);
+      dispatch("validate", {
+        isValid: false,
+        error: goblErr,
+      });
     }
   }
 </script>

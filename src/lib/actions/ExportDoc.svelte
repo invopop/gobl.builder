@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Tooltip } from "flowbite-svelte";
 
   import { envelope } from "$lib/stores.js";
@@ -6,6 +7,8 @@
   import ExportDocContent from "./ExportDocContent.svelte";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
+
+  const dispatch = createEventDispatcher();
 
   $: envelopeExists = Boolean($envelope);
 
@@ -31,6 +34,8 @@
     }
 
     modal.$on("close", handleClose);
+    modal.$on("preview", (event) => dispatch("preview", event.detail));
+    modal.$on("download", (event) => dispatch("download", event.detail));
   }
 </script>
 

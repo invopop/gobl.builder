@@ -25,6 +25,33 @@
     <DocLoader on:load={handleDocLoad} />
   </div>
   <div class="flex-1 h-full overflow-hidden">
-    <GOBLBuilder {data} {jsonSchemaURL} />
+    <GOBLBuilder
+      {data}
+      {jsonSchemaURL}
+      on:undo={() => {
+        console.log("User clicked `Undo`.");
+      }}
+      on:redo={() => {
+        console.log("User clicked `Redo`.");
+      }}
+      on:clear={() => {
+        console.log("User cleared editor.");
+      }}
+      on:build={(event) => {
+        console.log("Received build result.", event.detail);
+      }}
+      on:sign={(event) => {
+        console.log("Received sign result.", event.detail);
+      }}
+      on:validate={(event) => {
+        console.log("Received validate result.", event.detail);
+      }}
+      on:preview={(event) => {
+        console.log("User attempted preview.", event.detail);
+      }}
+      on:download={(event) => {
+        console.log("User attempted download.", event.detail);
+      }}
+    />
   </div>
 </div>

@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { createEventDispatcher } from "svelte";
   import { Tooltip } from "flowbite-svelte";
 
   import { redoAvailable } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
 
+  const dispatch = createEventDispatcher();
+
   function handleRedo() {
+    dispatch("redo");
     document.dispatchEvent(new Event("redoButtonClick"));
   }
 </script>
