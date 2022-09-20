@@ -55,6 +55,39 @@ class JSONWorker {
         },
       },
       schemaRequestService: createData.enableSchemaRequest ? defaultSchemaRequestService : undefined,
+      contributions: [
+        {
+          async getInfoContribution() {
+            return [];
+          },
+          async collectDefaultCompletions() {
+            return;
+          },
+          async collectPropertyCompletions(uri, location, currentWord, addValue, isLast, result) {
+            if (location.length === 0 || location[0] !== "customer") {
+              return;
+            }
+            result.add({
+              label: "Acme, Inc.",
+              insertText: JSON.stringify(
+                {
+                  name: "Acme, Inc.",
+                  tax_id: {
+                    country: "ES",
+                    code: "54387763P",
+                  },
+                },
+                null,
+                4
+              ).slice(1, -1), // Strip the surrounding JSON object braces.
+            });
+            return;
+          },
+          async collectValueCompletions() {
+            return;
+          },
+        },
+      ],
     });
     this._languageService.configure(this._languageSettings);
   }
