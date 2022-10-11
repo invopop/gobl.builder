@@ -17,7 +17,7 @@ function createKeypairStore() {
 }
 
 export const keypair = createKeypairStore();
-export const editor = writable("");
+export const editor = writable<string | null>(null);
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 
@@ -55,36 +55,34 @@ export const envelope = writable<Envelope | null>(null);
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
-export const envelopeOrDocJSON = derived<[typeof envelope, typeof editor], string>(
-  [envelope, editor],
-  ([$envelope, $editor]) => {
+export const envelopeOrDocJSON = derived([envelope, editor], ([$envelope, $editor]) => {
+  if ($envelope) {
     let editorParsed: unknown;
 
     try {
-      editorParsed = JSON.parse($editor);
+      editorParsed = JSON.parse($editor || "");
     } catch (e) {
-      // If editor contains invalid JSON, we return the editor contents as-is.
-      return $editor;
+      // If editor contains invalid JSON, we cannot return an envelope with that
+      // invalid JSON, so we return `null`, which isn't bound to the parent
+      // component.
+      return null;
     }
-
-    if ($envelope) {
-      // If there's an envelope, we return the existing envelope with its `doc`
-      // property replaced by the current editor contents.
-      return JSON.stringify(
-        {
-          ...$envelope,
-          doc: editorParsed,
-        },
-        null,
-        4
-      );
-    }
-
-    // If there's no envelope, we return the editor contents as-is (either valid
-    // or invalid JSON).
-    return $editor;
+    // If there's an envelope, we return the existing envelope with its `doc`
+    // property replaced by the current editor contents.
+    return JSON.stringify(
+      {
+        ...$envelope,
+        doc: editorParsed,
+      },
+      null,
+      4
+    );
   }
-);
+
+  // If there's no envelope, we return the editor contents as-is (either valid
+  // or invalid JSON).
+  return $editor;
+});
 
 export type GOBLError = {
   message: string;
