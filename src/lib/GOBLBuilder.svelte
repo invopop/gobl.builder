@@ -41,7 +41,11 @@
 
   // This ensures envelope or editor changes are bound to the `data` property.
   envelopeOrDocJSON.subscribe((value) => {
-    data = value;
+    // Null means we cannot safely propagate the data to the parent component,
+    // i.e. there's an envelope but the editor contains invalid JSON.
+    if (value !== null) {
+      data = value;
+    }
   });
 
   // This ensures the current error state of the editor is bound to the
