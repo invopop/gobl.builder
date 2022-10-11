@@ -1,4 +1,5 @@
 import { derived, writable } from "svelte/store";
+import type * as monaco from "monaco-editor";
 import * as GOBL from "$lib/gobl.js";
 
 function createKeypairStore() {
@@ -54,6 +55,37 @@ export const envelope = writable<Envelope | null>(null);
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
+export const envelopeOrDocJSON = derived<[typeof envelope, typeof editor], string>(
+  [envelope, editor],
+  ([$envelope, $editor]) => {
+    let editorParsed: unknown;
+
+    try {
+      editorParsed = JSON.parse($editor);
+    } catch (e) {
+      // If editor contains invalid JSON, we return the editor contents as-is.
+      return $editor;
+    }
+
+    if ($envelope) {
+      // If there's an envelope, we return the existing envelope with its `doc`
+      // property replaced by the current editor contents.
+      return JSON.stringify(
+        {
+          ...$envelope,
+          doc: editorParsed,
+        },
+        null,
+        4
+      );
+    }
+
+    // If there's no envelope, we return the editor contents as-is (either valid
+    // or invalid JSON).
+    return $editor;
+  }
+);
+
 export type GOBLError = {
   message: string;
   code: number;
@@ -67,5 +99,7 @@ function createGOBLErrorStore() {
     set,
   };
 }
+
+export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
 export const goblError = createGOBLErrorStore();
