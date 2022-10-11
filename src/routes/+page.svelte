@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { EditorProblemSeverity, type EditorProblem } from "$lib/editor/EditorProblem.js";
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
-  import type * as monaco from "monaco-editor";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
 
@@ -12,7 +12,9 @@
   }
 
   let data = "";
-  let problems: monaco.editor.IMarker[] = [];
+  let problems: EditorProblem[] = [];
+  $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
+  $: console.log({ hasErrors });
   let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {

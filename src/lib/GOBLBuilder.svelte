@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type * as monaco from "monaco-editor";
   import { editor, editorProblems, envelope, envelopeOrDocJSON } from "$lib/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl.js";
+  import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
   // Used for JSON Schema validation within Monaco Editor. When set, this should
   // be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
@@ -16,7 +16,7 @@
 
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
-  export let problems: monaco.editor.IMarker[];
+  export let problems: EditorProblem[] = [];
 
   // When `data` is updated, update the internal editor and envelope stores.
   // If `data` is JSON and it's a GOBL envelope, parse and store its contents
@@ -46,8 +46,11 @@
 
   // This ensures the current error state of the editor is bound to the
   // `hasErrors` property.
-  editorProblems.subscribe((value) => {
-    problems = value;
+  editorProblems.subscribe((items) => {
+    problems = items.map((problem) => ({
+      message: problem.message,
+      severity: problemSeverityMap[problem.severity],
+    }));
   });
 </script>
 
