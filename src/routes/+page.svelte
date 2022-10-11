@@ -1,5 +1,6 @@
 <script lang="ts">
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
+  import type * as monaco from "monaco-editor";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
 
@@ -11,6 +12,7 @@
   }
 
   let data = "";
+  let problems: monaco.editor.IMarker[] = [];
   let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
@@ -26,7 +28,8 @@
   </div>
   <div class="flex-1 h-full overflow-hidden">
     <GOBLBuilder
-      {data}
+      bind:data
+      bind:problems
       {jsonSchemaURL}
       on:undo={() => {
         console.log("User clicked `Undo`.");

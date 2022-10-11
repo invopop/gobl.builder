@@ -7,7 +7,14 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/stores.js";
+  import {
+    editor,
+    editorProblems as problems,
+    goblError,
+    redoAvailable,
+    undoAvailable,
+    envelope,
+  } from "$lib/stores.js";
   import EditorProblem from "./EditorProblem.svelte";
   import WarningIcon from "$lib/ui/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
@@ -21,7 +28,6 @@
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
   let model: monaco.editor.ITextModel;
-  let problems: monaco.editor.IMarker[] = [];
   let lineNumber = 1;
   let column = 1;
   let drawerClosed = false;
@@ -29,9 +35,9 @@
   let unsubscribeEditor: Unsubscriber;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
-  $: sortedProblems = problems.sort((a, b) => b.severity - a.severity);
-  $: warningCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
-  $: errorCount = problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
+  $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
+  $: warningCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
+  $: errorCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
 
   $: {
     setSchemaURI(jsonSchemaURL);
@@ -166,7 +172,7 @@
     });
 
     monaco.editor.onDidChangeMarkers(() => {
-      problems = monaco.editor.getModelMarkers({});
+      problems.set(monaco.editor.getModelMarkers({}));
     });
 
     monacoEditor.onDidChangeCursorPosition((event) => {
@@ -308,7 +314,7 @@
           >
         </p>
       {/if}
-      {#if $editor !== "" && problems.length === 0}
+      {#if $editor !== "" && $problems.length === 0}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
             >Use the action buttons in the menu bar.</span
