@@ -20,7 +20,7 @@
     }
 
     try {
-      const parsed = JSON.parse($editor);
+      const parsed = JSON.parse($editor || "");
       if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
         return false;
       }
@@ -44,10 +44,10 @@
       // the editor contents. If not, send the editor contents as-is. In either case,
       // the GOBL command response will be an an enveloped document.
       if (envelopeValue) {
-        envelopeValue.doc = JSON.parse($editor);
+        envelopeValue.doc = JSON.parse($editor || "");
         sendData = JSON.stringify(envelopeValue);
       } else {
-        sendData = $editor;
+        sendData = $editor || "";
       }
 
       const payload: GOBL.SignPayload = {
