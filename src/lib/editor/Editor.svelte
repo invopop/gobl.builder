@@ -304,7 +304,7 @@
       {#if $editor === ""}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
-            >To get started, choose a template from the menu bar.</span
+            >Warnings, errors and tips are shown in this area.</span
           >
         </p>
       {/if}
