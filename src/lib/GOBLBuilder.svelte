@@ -1,17 +1,21 @@
 <script lang="ts">
-  import { editor, editorProblems, envelope, envelopeOrDocJSON } from "$lib/stores.js";
+  import { createEventDispatcher } from "svelte";
+  import { editor, editorProblems, envelope, envelopeAndEditorJSON } from "$lib/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl.js";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
+  const dispatch = createEventDispatcher();
+
   // Used for JSON Schema validation within Monaco Editor. When set, this should
   // be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   export let jsonSchemaURL = "";
 
-  // Data is used for setting editor contents. It allows for two way component
-  // binding. E.g. when the editor contents are changed, this property is also
-  // updated.
+  // Data is used for setting editor contents. Note: there is "one way" binding;
+  // e.g. you can set data but changes are not bound to the parent. Use the
+  // `change` event, to receive changes to the editor contents and GOBL
+  // envelope.
   export let data = "";
 
   // Problems is an array of Monaco Editor problem markers. It can be used
@@ -30,7 +34,7 @@
         $editor = JSON.stringify(parsedValue.doc, null, 4);
         $envelope = parsedValue;
       } else {
-        $editor = JSON.stringify(parsedValue, null, 4);
+        $editor = data;
         $envelope = null;
       }
     } catch (e) {
@@ -39,13 +43,14 @@
     }
   }
 
-  // This ensures envelope or editor changes are bound to the `data` property.
-  envelopeOrDocJSON.subscribe((value) => {
-    // Null means we cannot safely propagate the data to the parent component,
-    // i.e. there's an envelope but the editor contains invalid JSON.
-    if (value !== null) {
-      data = value;
-    }
+  // The `change` event is dispatched when the envelope or editor is updated.
+  // When the editor contains invalid JSON, envelope is always `null`. The editor
+  // value is always passed along as-is; e.g. without any parsing.
+  envelopeAndEditorJSON.subscribe(([envelope, editor]) => {
+    dispatch("change", {
+      envelope,
+      editor,
+    });
   });
 
   // This ensures the current error state of the editor is bound to the
@@ -60,7 +65,7 @@
 
 <div class="flex flex-col h-full">
   <div class="flex-none">
-    <MenuBar {jsonSchemaURL} on:undo on:redo on:clear on:build on:sign on:validate on:preview on:download />
+    <MenuBar {jsonSchemaURL} on:change on:undo on:redo on:clear on:build on:sign on:validate on:preview on:download />
   </div>
   <div class="flex-1 overflow-hidden">
     <Editor {jsonSchemaURL} />
