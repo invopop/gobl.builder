@@ -33,6 +33,9 @@
       bind:data
       bind:problems
       {jsonSchemaURL}
+      on:change={(event) => {
+        console.log("Received change event.", event.detail);
+      }}
       on:undo={() => {
         console.log("User clicked `Undo`.");
       }}

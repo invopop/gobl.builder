@@ -55,33 +55,26 @@ export const envelope = writable<Envelope | null>(null);
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
-export const envelopeOrDocJSON = derived([envelope, editor], ([$envelope, $editor]) => {
-  if ($envelope) {
-    let editorParsed: unknown;
+export const envelopeAndEditorJSON = derived([envelope, editor], ([$envelope, $editor]) => {
+  let envelopeValue: string | null = null;
 
+  if ($envelope) {
     try {
-      editorParsed = JSON.parse($editor || "");
+      envelopeValue = JSON.stringify(
+        {
+          ...$envelope,
+          doc: JSON.parse($editor || ""),
+        },
+        null,
+        4
+      );
     } catch (e) {
-      // If editor contains invalid JSON, we cannot return an envelope with that
-      // invalid JSON, so we return `null`, which isn't bound to the parent
-      // component.
-      return null;
+      // If the editor doesn't contain valid JSON, envelope is `null`.
+      envelopeValue = null;
     }
-    // If there's an envelope, we return the existing envelope with its `doc`
-    // property replaced by the current editor contents.
-    return JSON.stringify(
-      {
-        ...$envelope,
-        doc: editorParsed,
-      },
-      null,
-      4
-    );
   }
 
-  // If there's no envelope, we return the editor contents as-is (either valid
-  // or invalid JSON).
-  return $editor;
+  return [envelopeValue, $editor];
 });
 
 export type GOBLError = {
