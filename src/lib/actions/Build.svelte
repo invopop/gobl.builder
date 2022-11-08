@@ -4,7 +4,7 @@
   import * as GOBL from "$lib/gobl.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { envelope, editor, keypair, goblError, type GOBLError } from "$lib/stores.js";
+  import { envelope, editor, goblError, type GOBLError } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -15,10 +15,6 @@
   export let jsonSchemaURL: string;
 
   $: validEditor = (function (): boolean {
-    if (!$keypair) {
-      return false;
-    }
-
     try {
       const parsed = JSON.parse($editor || "");
       if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
@@ -32,7 +28,7 @@
   })();
 
   async function handleBuild() {
-    if (!validEditor || !$keypair) {
+    if (!validEditor) {
       return;
     }
 
@@ -52,7 +48,6 @@
 
       const payload: GOBL.BuildPayload = {
         data: encodeUTF8ToBase64(sendData),
-        privatekey: $keypair.private,
         draft: true,
         envelop: true,
       };

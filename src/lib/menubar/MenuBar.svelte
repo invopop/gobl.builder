@@ -17,6 +17,7 @@
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
   export let jsonSchemaURL: string;
+  export let signEnabled: boolean;
 
   $: envelopeHasSigs = Boolean($envelope?.sigs);
 
@@ -122,7 +123,9 @@
     </div>
     <div class="border-r-2 pr-2 mr-2">
       <Build {jsonSchemaURL} on:build />
-      <Sign {jsonSchemaURL} on:sign />
+      {#if signEnabled}
+        <Sign {jsonSchemaURL} on:sign />
+      {/if}
       <Validate {jsonSchemaURL} on:validate />
     </div>
     <div>

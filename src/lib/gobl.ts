@@ -19,7 +19,6 @@ type BulkRequest =
 export type BuildPayload = {
   template?: string;
   data: string;
-  privatekey: Keypair["private"];
   type?: string;
   draft?: boolean;
   envelop: boolean;

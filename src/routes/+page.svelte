@@ -33,6 +33,7 @@
       bind:data
       bind:problems
       {jsonSchemaURL}
+      signEnabled={true}
       on:change={(event) => {
         console.log("Received change event.", event.detail);
       }}
