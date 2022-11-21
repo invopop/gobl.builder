@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { editor, editorProblems, envelope, envelopeAndEditorJSON } from "$lib/stores.js";
+  import { editor, editorProblems, envelope, envelopeAndEditorJSON, keypair } from "$lib/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl.js";
@@ -21,6 +21,16 @@
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
   export let problems: EditorProblem[] = [];
+
+  // When enabled, a "Sign" action is available. A client-only keypair is
+  // generated and used for signing GOBL documents.
+  export let signEnabled = true;
+
+  if (signEnabled) {
+    keypair.create().then((keypair) => {
+      console.log("Created keypair.", keypair);
+    });
+  }
 
   // When `data` is updated, update the internal editor and envelope stores.
   // If `data` is JSON and it's a GOBL envelope, parse and store its contents
@@ -65,7 +75,19 @@
 
 <div class="flex flex-col h-full">
   <div class="flex-none">
-    <MenuBar {jsonSchemaURL} on:change on:undo on:redo on:clear on:build on:sign on:validate on:preview on:download />
+    <MenuBar
+      {jsonSchemaURL}
+      {signEnabled}
+      on:change
+      on:undo
+      on:redo
+      on:clear
+      on:build
+      on:sign
+      on:validate
+      on:preview
+      on:download
+    />
   </div>
   <div class="flex-1 overflow-hidden">
     <Editor {jsonSchemaURL} />

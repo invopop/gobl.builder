@@ -3,16 +3,15 @@ import type * as monaco from "monaco-editor";
 import * as GOBL from "$lib/gobl.js";
 
 function createKeypairStore() {
-  const { subscribe, set } = writable<GOBL.Keypair | null>(null, function start(set) {
-    GOBL.keygen().then((value) => {
-      set(value);
-      console.log("Created keypair.", value);
-    });
-  });
+  const { subscribe, set } = writable<GOBL.Keypair | null>(null);
 
   return {
     subscribe,
-    renew: async () => set(await GOBL.keygen()),
+    create: async () => {
+      const keypair = await GOBL.keygen();
+      set(keypair);
+      return keypair;
+    },
   };
 }
 

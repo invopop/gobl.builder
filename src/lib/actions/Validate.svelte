@@ -4,7 +4,7 @@
   import * as GOBL from "$lib/gobl.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { envelope, envelopeIsDraft, editor, keypair, goblError, type GOBLError } from "$lib/stores.js";
+  import { envelope, envelopeIsSigned, editor, goblError, type GOBLError } from "$lib/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -15,10 +15,6 @@
   export let jsonSchemaURL: string;
 
   $: validEditor = (function (): boolean {
-    if (!$keypair) {
-      return false;
-    }
-
     try {
       const parsed = JSON.parse($editor || "");
       if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
@@ -32,7 +28,7 @@
   })();
 
   async function handleValidate() {
-    if (!validEditor || $envelopeIsDraft) {
+    if (!validEditor || !$envelopeIsSigned) {
       return;
     }
 
@@ -75,7 +71,7 @@
 </script>
 
 <Tooltip label="Validate a signed GOBL document.">
-  <button on:click={handleValidate} class={iconButtonClasses(!validEditor || $envelopeIsDraft)}>
+  <button on:click={handleValidate} class={iconButtonClasses(!validEditor || !$envelopeIsSigned)}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"
