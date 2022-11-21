@@ -28,6 +28,7 @@
   let editorEl: HTMLElement;
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
   let model: monaco.editor.ITextModel;
+  let readOnlyEditHandler: monaco.IDisposable;
   let lineNumber = 1;
   let column = 1;
   let drawerClosed = false;
@@ -96,6 +97,12 @@
         top: 12,
         bottom: 12,
       },
+    });
+
+    const messageContribution = monacoEditor.getContribution("editor.contrib.messageController");
+    readOnlyEditHandler = monacoEditor.onDidAttemptReadOnlyEdit(() => {
+      // eslint-disable-next-line -- MessageController class TS typing is not exported.
+      (messageContribution as any).showMessage("Cannot edit already signed document", monacoEditor.getPosition());
     });
 
     const initialVersion = model.getAlternativeVersionId();
@@ -196,6 +203,7 @@
     unsubscribeEditor();
     model.dispose();
     monacoEditor.dispose();
+    readOnlyEditHandler.dispose();
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
