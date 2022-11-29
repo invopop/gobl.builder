@@ -8,7 +8,7 @@ import "./wasm_exec.js";
 // - Using `replace` from `svelte-preprocess` is not a solution here, as it only
 //   works with Svelte component markup, *not* sufficient for this non-Svelte TS
 //   file.
-const goblCliVersion = "0.46.0";
+const goblCliVersion = "0.47.0";
 
 const wasmUrl = `https://cdn.gobl.org/cli/gobl.${goblCliVersion}.wasm`;
 
