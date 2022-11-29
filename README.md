@@ -113,6 +113,22 @@ npm run preview
 This uses `vite` to serve a previously built `build` folder on
 http://localhost:4173.
 
+### GOBL WASM binary
+
+GOBL Builder makes use of [gobl.cli](https://github.com/invopop/gobl.cli) for
+validating, calculating and building GOBL documents. This is done via a
+versioned WASM binary, distributed on `cdn.gobl.org`.
+
+The of `gobl.cli` that is used is defined in
+[src/lib/worker.ts](https://github.com/invopop/gobl.builder/blob/main/src/lib/worker.ts)
+in the variable `goblCliVersion`.
+
+To bump the version, update the value of `goblCliVersion` (e.g. based on the
+[latest release of
+`gobl.cli`](https://github.com/invopop/gobl.cli/releases/latest)), then commit
+the changes to GitHub to trigger a new release of `@invopop/gobl-builder` on
+NPM.
+
 ## License
 
 GOBL Builder is licensed under the [Apache-2.0 License](LICENSE).
