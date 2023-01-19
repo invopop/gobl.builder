@@ -119,7 +119,7 @@ GOBL Builder makes use of [gobl.cli](https://github.com/invopop/gobl.cli) for
 validating, calculating and building GOBL documents. This is done via a
 versioned WASM binary, distributed on `cdn.gobl.org`.
 
-The of `gobl.cli` that is used is defined in
+The version of `gobl.cli` that is used is defined in
 [src/lib/worker.ts](https://github.com/invopop/gobl.builder/blob/main/src/lib/worker.ts)
 in the variable `goblCliVersion`.
 
