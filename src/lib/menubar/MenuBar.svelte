@@ -70,9 +70,9 @@
     : "There are no signatures. They are generated when signing a document.";
 </script>
 
-<div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
+<div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 dark:bg-zinc-900 text-xs text-black dark:text-white">
   {#if $envelope}
-    <div class="flex gap-2 text-gray-700">
+    <div class="flex gap-2 text-gray-700 dark:text-gray-300">
       {#if $envelopeIsDraft}
         <span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

@@ -20,6 +20,7 @@
   import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
+  import { theme } from "$lib/stores.js";
 
   const modelUri = monaco.Uri.parse("gobl://doc.json");
 
@@ -39,9 +40,11 @@
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
   $: warningCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
   $: errorCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
+  $: monacoTheme = $theme === "dark" ? "vs-dark" : "light";
 
   $: {
     setSchemaURI(jsonSchemaURL);
+    setTheme(monacoTheme);
   }
 
   function setSchemaURI(uri: string) {
@@ -62,6 +65,10 @@
       const value = monacoEditor.getValue();
       validateSchema(value);
     }
+  }
+
+  function setTheme(newTheme: string) {
+    monaco.editor.setTheme(newTheme);
   }
 
   onMount(() => {
@@ -85,6 +92,7 @@
       minimap: {
         enabled: false,
       },
+      theme: monacoTheme,
       scrollBeyondLastLine: false,
       automaticLayout: true,
       fontFamily: `ui-monospace, "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
@@ -255,7 +263,7 @@
   }
 </script>
 
-<div class="flex flex-col h-full border-t-2 border-t-slate-200">
+<div class="flex flex-col h-full border-t-2 border-t-slate-200 dark:border-t-slate-800">
   <div class="flex-1 overflow-hidden" bind:this={editorEl} />
 
   <div

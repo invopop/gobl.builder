@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  textarea {
+    @apply focus:ring-0;
+  }
+}
+
+@layer components {
+  /* Tailwind default border-color for all items is gray-200 (table) */
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
+}

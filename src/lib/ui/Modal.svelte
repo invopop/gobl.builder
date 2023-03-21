@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, SvelteComponent } from "svelte";
   import clickOutside from "$lib/clickOutside.js";
+  import { theme } from "$lib/stores.js";
 
   const dispatch = createEventDispatcher();
 
@@ -13,16 +14,21 @@
 <div
   tabindex="-1"
   class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center items-center flex"
+  class:theme-dark={$theme === "dark"}
 >
   <div class="relative w-full lg:w-3/5 h-full p-4 md:h-auto">
     <!-- Modal content -->
-    <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside on:close>
+    <div
+      class="relative bg-white dark:bg-gray-900 rounded-lg shadow overflow-auto text-black dark:text-white"
+      use:clickOutside
+      on:close
+    >
       <!-- Modal header -->
       <div class="flex items-center justify-between p-6 border-b rounded-">
-        <h3 class="text-xl font-semibold text-gray-900">{title}</h3>
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-gray-100">{title}</h3>
         <button
           type="button"
-          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+          class="text-gray-400 dark:text-gray-600 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
           on:click={() => dispatch("close")}
         >
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"

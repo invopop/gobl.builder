@@ -5,6 +5,8 @@
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl.js";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
+  import type { EditorTheme } from "./types.js";
+  import { theme as themeStore } from "$lib/stores.js";
 
   const dispatch = createEventDispatcher();
 
@@ -17,6 +19,9 @@
   // `change` event, to receive changes to the editor contents and GOBL
   // envelope.
   export let data = "";
+
+  export let theme: EditorTheme = "light";
+  $: $themeStore = theme;
 
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
@@ -73,7 +78,7 @@
   });
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full" class:theme-dark={$themeStore === "dark"}>
   <div class="flex-none">
     <MenuBar
       {jsonSchemaURL}

@@ -120,7 +120,7 @@
   ]);
 </script>
 
-<div class="font-medium text-center text-gray-500 border-b border-gray-200 mb-6 -mt-3">
+<div class="font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-800 mb-6 -mt-3">
   <ul class="flex flex-wrap -mb-px">
     {#each [...tabs] as tab}
       <li>
@@ -128,7 +128,10 @@
           class={clsx(
             "inline-block p-4 rounded-t-lg border-b-2 border-transparent",
             { "text-sky-500 border-b-2 border-sky-500": tab.title === activeTab },
-            { "hover:text-gray-600 hover:border-gray-300": tab.title !== activeTab },
+            {
+              "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-400 dark:hover:border-gray-700":
+                tab.title !== activeTab,
+            },
             { "cursor-not-allowed": tab.disabled }
           )}
           on:click={tab.onClick}

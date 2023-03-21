@@ -2,6 +2,7 @@
   import { EditorProblemSeverity, type EditorProblem } from "$lib/editor/EditorProblem.js";
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import DocLoader from "../components/DocLoader.svelte";
+  import ThemeSwitch from "../components/ThemeSwitch.svelte";
   import logo from "../static/logo-light.svg";
 
   const DEFAULT_JSON_SCHEMA_URL = "https://gobl.org/draft-0/bill/invoice";
@@ -27,6 +28,8 @@
   <div class="flex-none flex gap-4 items-center pl-4 pr-2 py-2.5 bg-gray-800">
     <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
     <DocLoader on:load={handleDocLoad} />
+    <div class="m-auto" />
+    <ThemeSwitch />
   </div>
   <div class="flex-1 h-full overflow-hidden">
     <GOBLBuilder
