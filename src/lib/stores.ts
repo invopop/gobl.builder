@@ -1,7 +1,7 @@
 import { derived, writable } from "svelte/store";
 import type * as monaco from "monaco-editor";
 import * as GOBL from "$lib/gobl.js";
-import type { EditorTheme } from "./types";
+import type { EditorTheme } from "./types.js";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null);
