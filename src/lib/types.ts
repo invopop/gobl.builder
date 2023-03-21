@@ -1,1 +1,1 @@
-export type EditorTheme = 'dark' | 'light'
+export type EditorTheme = "dark" | "light";

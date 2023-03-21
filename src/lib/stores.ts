@@ -95,4 +95,4 @@ export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
 export const goblError = createGOBLErrorStore();
 
-export const theme = writable<EditorTheme>('light');
+export const theme = writable<EditorTheme>("light");
