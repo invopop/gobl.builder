@@ -8,13 +8,14 @@
   import Build from "$lib/actions/Build.svelte";
   import Validate from "$lib/actions/Validate.svelte";
   import Sign from "$lib/actions/Sign.svelte";
-
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
-  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
+  import EditorViewCode from "$lib/actions/EditorViewCode.svelte";
+  import EditorViewForm from "$lib/actions/EditorViewForm.svelte";
+  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
 
   export let jsonSchemaURL: string;
   export let signEnabled: boolean;
@@ -71,6 +72,12 @@
 </script>
 
 <div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
+  <div class="flex-1 flex">
+    <div class="border-r-2 pr-2 mr-2">
+      <EditorViewForm on:viewForm />
+      <EditorViewCode on:viewCode />
+    </div>
+  </div>
   {#if $envelope}
     <div class="flex gap-2 text-gray-700">
       {#if $envelopeIsDraft}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EditorProblemSeverity, type EditorProblem } from "$lib/editor/EditorProblem.js";
+  import { EditorProblemSeverity, type EditorProblem } from "$lib/editor/code/EditorProblem.js";
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";

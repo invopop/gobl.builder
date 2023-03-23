@@ -9,7 +9,7 @@
     placement: "top",
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
     onComputed({ placement, middlewareData }) {
-      const { x, y } = middlewareData.arrow!;
+      const { x, y } = middlewareData.arrow || { x: undefined, y: undefined };
       const staticSide = {
         top: "bottom",
         right: "left",
@@ -18,8 +18,8 @@
       }[placement.split("-")[0]];
 
       Object.assign($arrowRef.style, {
-        left: x != null ? `${x}px` : "",
-        top: y != null ? `${y}px` : "",
+        left: x !== undefined ? `${x}px` : "",
+        top: y !== undefined ? `${y}px` : "",
         [staticSide as string]: "-4px",
       });
     },

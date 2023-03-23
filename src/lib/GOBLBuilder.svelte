@@ -4,7 +4,7 @@
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl.js";
-  import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
+  import { problemSeverityMap, type EditorProblem } from "./editor/code/EditorProblem.js";
 
   const dispatch = createEventDispatcher();
 
