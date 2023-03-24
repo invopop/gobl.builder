@@ -3,19 +3,17 @@
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
-  import { editor, editorProblems as problems } from "$lib/stores.js";
+  import { editor, editorProblems as problems, editorCursor } from "$lib/stores.js";
   import EditorProblem from "./EditorProblem.svelte";
   import WarningIcon from "$lib/ui/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
+  import ExpandButton from "$lib/ui/ExpandButton.svelte";
 
   const dispatch = createEventDispatcher();
 
-  export let lineNumber = 1;
-  export let column = 1;
-
-  let drawerClosed = false;
+  export let open = true;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -23,11 +21,14 @@
   $: errorCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
 
   function handleProblemClick(problem: monaco.editor.IMarker) {
-    return () => dispatch("problemClick", problem);
+    return () => {
+      dispatch("problemClick", problem);
+      document.dispatchEvent(new CustomEvent("problemClick", { detail: problem }));
+    };
   }
 
   function handleDrawerToggle() {
-    drawerClosed = !drawerClosed;
+    open = !open;
   }
 </script>
 
@@ -62,29 +63,11 @@
         {warningCount === 1 ? "warning" : "warnings"}
       </span>
     </div>
-    <div>Ln {lineNumber}, Col {column}</div>
-    <button class="align-middle" on:click={handleDrawerToggle}>
-      {#if drawerClosed}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fill-rule="evenodd"
-            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      {:else}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      {/if}
-    </button>
+    <div>Ln {$editorCursor.line}, Col {$editorCursor.column}</div>
+    <ExpandButton open={!open} on:click={handleDrawerToggle} />
   </div>
 
-  {#if !drawerClosed}
+  {#if open}
     <div class="h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800" transition:slide={{ duration: 300 }}>
       {#if $editor === ""}
         <p class="m-4">

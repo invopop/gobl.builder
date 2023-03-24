@@ -1,7 +1,7 @@
 import { derived, writable } from "svelte/store";
 import type * as monaco from "monaco-editor";
 import * as GOBL from "$lib/gobl.js";
-import type { EditorViewType } from "./types.js";
+import type { EditorCursorPosition, EditorViewType } from "./types.js";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null);
@@ -17,7 +17,17 @@ function createKeypairStore() {
 }
 
 export const keypair = createKeypairStore();
+
 export const editor = writable<string | null>(null);
+export const editorJSON = derived(editor, ($editor) => {
+  try {
+    if (!$editor) return null
+    return JSON.parse($editor)
+  } catch {
+    return null
+  }
+})
+
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 
@@ -96,3 +106,5 @@ export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 export const goblError = createGOBLErrorStore();
 
 export const editorViewType = writable<EditorViewType>("form");
+
+export const editorCursor = writable<EditorCursorPosition>({line: 1, column: 1});

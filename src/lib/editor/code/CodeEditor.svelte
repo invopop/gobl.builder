@@ -13,8 +13,8 @@
     redoAvailable,
     undoAvailable,
     envelope,
+    editorCursor,
   } from "$lib/stores.js";
-  import EditorToolbar from "./EditorToolbar.svelte";
 
   const modelUri = monaco.Uri.parse("gobl://doc.json");
 
@@ -24,9 +24,6 @@
   let monacoEditor: monaco.editor.IStandaloneCodeEditor;
   let model: monaco.editor.ITextModel;
   let readOnlyEditHandler: monaco.IDisposable;
-  let lineNumber = 1;
-  let column = 1;
-
   let unsubscribeEditor: Unsubscriber;
 
   $: {
@@ -172,8 +169,8 @@
     });
 
     monacoEditor.onDidChangeCursorPosition((event) => {
-      lineNumber = event.position.lineNumber;
-      column = event.position.column;
+      const { lineNumber: line, column } = event.position;
+      $editorCursor = { line, column };
     });
 
     document.fonts.ready.then(() => {
@@ -186,6 +183,7 @@
 
     document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
+    document.addEventListener("problemClick", handleProblemClick as any, true);
   });
 
   onDestroy(() => {
@@ -195,6 +193,7 @@
     readOnlyEditHandler.dispose();
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
+    document.removeEventListener("problemClick", handleProblemClick as any, true);
   });
 
   function validateSchema(value: string) {
@@ -238,7 +237,4 @@
   }
 </script>
 
-<div class="h-full flex flex-col">
-  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
-  <EditorToolbar {lineNumber} {column} on:problemClick={handleProblemClick} />
-</div>
+<div class="flex-1 h-full overflow-hidden" bind:this={editorEl} />

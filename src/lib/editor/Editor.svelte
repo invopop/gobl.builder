@@ -2,6 +2,7 @@
   import { editorViewType } from "$lib/stores.js";
   import CodeEditor from "./code/CodeEditor.svelte";
   import FormEditor from "./form/FormEditor.svelte";
+  import EditorToolbar from "./EditorToolbar.svelte";
 
   export let jsonSchemaURL: string;
 </script>
@@ -12,7 +13,8 @@
       <CodeEditor {jsonSchemaURL} />
     </div>
     <div class="h-full absolute inset-0" class:invisible={$editorViewType !== "form"}>
-      <FormEditor />
+      <FormEditor {jsonSchemaURL} />
     </div>
   </div>
+  <EditorToolbar open={$editorViewType === "code"} />
 </div>
