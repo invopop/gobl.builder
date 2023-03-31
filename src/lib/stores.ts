@@ -21,12 +21,12 @@ export const keypair = createKeypairStore();
 export const editor = writable<string | null>(null);
 export const editorJSON = derived(editor, ($editor) => {
   try {
-    if (!$editor) return null
-    return JSON.parse($editor) 
+    if (!$editor) return null;
+    return JSON.parse($editor);
   } catch {
-    return null
+    return null;
   }
-})
+});
 
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
@@ -108,4 +108,3 @@ export const goblError = createGOBLErrorStore();
 export const editorViewType = writable<EditorViewType>("form");
 
 export const editorCursor = writable<EditorCursorPosition>({ line: 1, column: 1 });
-

@@ -1,13 +1,15 @@
 export default function hover(node: HTMLElement) {
   function handleHover(isHover: boolean) {
-    node.dispatchEvent(new CustomEvent("hover", {
-      detail: isHover
-    }))
+    node.dispatchEvent(
+      new CustomEvent("hover", {
+        detail: isHover,
+      })
+    );
   }
 
   function handleMouseOver(e: MouseEvent) {
     e.stopPropagation();
-    handleHover(true)
+    handleHover(true);
   }
 
   function handleMouseOut(e: MouseEvent) {
