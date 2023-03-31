@@ -3,8 +3,9 @@
   import type { SchemaValue } from "./utils/schema.js";
   $: props = $$props as any;
 
-  function handleParseValue(value: SchemaValue): string {
-    return `${value}`;
+  function handleParseValue(value: SchemaValue): number {
+    const n = Number.parseInt(`${value || "0"}`, 10);
+    return n;
   }
 </script>
 

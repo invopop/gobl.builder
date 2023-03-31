@@ -1,41 +1,35 @@
 <script lang="ts">
-  import { editorJSON } from "$lib/stores.js";
-  import { getParsedSchemaRegistry, getUIModel, type UIModelField } from "$lib/schema.js";
-  import AbstractField from "./AbstractField.svelte";
+  import RootField from "./RootField.svelte";
+  import { createFormEditorContext, getFormEditorContext } from "./context/formEditor.js";
+  import { writable } from "svelte/store";
 
   export let jsonSchemaURL: string;
 
-  let buildUISchema: UIModelField | undefined;
+  let schemaURLStore = writable(jsonSchemaURL);
+  $: schemaURLStore.set(jsonSchemaURL);
 
-  async function loadSchema(schema: string, instance: JSON) {
-    buildUISchema = await getUIModel({
-      schema,
-      instance,
-    });
-  }
+  createFormEditorContext(schemaURLStore);
 
-  $: loadSchema(jsonSchemaURL, $editorJSON);
-  $: {
-    console.log(getParsedSchemaRegistry(), jsonSchemaURL);
-  }
+  const { uiModel } = getFormEditorContext() || {};
 </script>
 
-<div class="h-full px-6 py-4 text-xs overflow-scroll">
-  {#if buildUISchema}
-    <AbstractField field={buildUISchema} />
+<div class="h-full px-16 py-8 pb-80 text-xs overflow-scroll">
+  {#if $uiModel}
+    <RootField field={$uiModel} />
   {/if}
 
-  <br />
+  <!-- <br />
 
   ----
   <br />
 
-  <!-- <NewBlockButtons /> -->
   <pre>
     {JSON.stringify(buildUISchema, null, 2)}
   </pre>
+
   ----
+
   <pre>
     {JSON.stringify($editorJSON, null, 2)}
-  </pre>
+  </pre> -->
 </div>

@@ -22,7 +22,7 @@ export const editor = writable<string | null>(null);
 export const editorJSON = derived(editor, ($editor) => {
   try {
     if (!$editor) return null
-    return JSON.parse($editor)
+    return JSON.parse($editor) 
   } catch {
     return null
   }
@@ -107,4 +107,5 @@ export const goblError = createGOBLErrorStore();
 
 export const editorViewType = writable<EditorViewType>("form");
 
-export const editorCursor = writable<EditorCursorPosition>({line: 1, column: 1});
+export const editorCursor = writable<EditorCursorPosition>({ line: 1, column: 1 });
+

@@ -1,0 +1,44 @@
+<script lang="ts">
+  import type { SchemaValue, UIModelField } from "$lib/editor/form/utils/schema.js";
+  import { getFormEditorContext } from "./context/formEditor.js";
+
+  export let parseValue: (value: SchemaValue) => SchemaValue;
+  export let field: UIModelField<string>;
+
+  const { changeField } = getFormEditorContext() || {};
+
+  function handleChange(e: Event & { currentTarget: HTMLSelectElement | HTMLInputElement }) {
+    const value = e.currentTarget?.value;
+    if (!value) return;
+
+    const parsedValue = parseValue(value);
+    changeField(field, parsedValue);
+  }
+</script>
+
+<div class="flex gap-2">
+  <span class="mr-1 font-bold capitalize">{field.name}:</span>
+  {#if field.schema.format === "date"}
+    <input
+      type="date"
+      id={field.id}
+      value={field.value}
+      on:change={handleChange}
+      class="outline-none bg-transparent w-24"
+    />
+  {:else if field.schema.oneOf}
+    <select id={field.id} value={field.value} on:change={handleChange} class="outline-none bg-transparent">
+      {#each field.schema.oneOf as opt (opt.const)}
+        <option value={opt.const} selected={field.value === opt.const}>{opt.const}</option>
+      {/each}
+    </select>
+  {:else}
+    <input
+      type="text"
+      id={field.id}
+      value={field.value}
+      on:change={handleChange}
+      class="outline-none min-w-full bg-transparent"
+    />
+  {/if}
+</div>
