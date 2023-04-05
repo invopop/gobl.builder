@@ -1,5 +1,5 @@
 <script lang="ts">
-  import EditableField from "./EditableField.svelte";
+  import LeafField from "./LeafField.svelte";
   import type { SchemaValue } from "./utils/schema.js";
   $: props = $$props as any;
 
@@ -8,4 +8,4 @@
   }
 </script>
 
-<EditableField {...props} parseValue={handleParseValue} />
+<LeafField {...props} parseValue={handleParseValue} />

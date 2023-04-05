@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import { editorViewType } from "$lib/stores.js";
-  import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
+  import { editorViewButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
   const dispatch = createEventDispatcher();
@@ -14,7 +14,7 @@
 </script>
 
 <Tooltip label="Swap to code editor view.">
-  <button on:click={handleViewForm} class={iconButtonClasses($editorViewType === "code")}>
+  <button on:click={handleViewForm} class={editorViewButtonClasses($editorViewType === "code")}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"

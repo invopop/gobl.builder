@@ -1,15 +1,13 @@
 <script lang="ts">
-  import type { UIModel } from "$lib/editor/form/utils/schema.js";
+  import type { UIModelRootField, UIModelField } from "$lib/editor/form/utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import AbstractField from "./AbstractField.svelte";
 
-  export let field: UIModel;
-  $: childs = Object.entries(field.children || {});
+  export let field: UIModelRootField;
+  $: childs = field.children || ([] as UIModelField[]);
 </script>
 
-<div class="p-2 relative">
-  {#each childs as [k, field] (k)}
-    <AbstractField {field} />
-  {/each}
-  <AddFieldMenu {field} />
-</div>
+{#each childs as field (field.key)}
+  <AbstractField {field} />
+{/each}
+<AddFieldMenu {field} />

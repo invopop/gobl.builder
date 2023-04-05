@@ -17,37 +17,49 @@
         left: "right",
       }[placement.split("-")[0]];
 
-      Object.assign($arrowRef.style, {
-        left: x !== undefined ? `${x}px` : "",
-        top: y !== undefined ? `${y}px` : "",
-        [staticSide as string]: "-4px",
-      });
+      if ($arrowRef) {
+        Object.assign($arrowRef.style, {
+          left: x !== undefined ? `${x}px` : "",
+          top: y !== undefined ? `${y}px` : "",
+          [staticSide as string]: "-4px",
+        });
+      }
     },
   });
 
-  export let label: string;
+  export let label: string | undefined;
+  export let delay: number | undefined = undefined;
+
+  $: delayClasses = delay ? `transition-all ease-in-out duration-300 delay-[${delay}ms]` : "";
+
   let showTooltip = false;
 </script>
 
-<div
-  class="inline-block"
-  use:floatingRef
-  on:mouseenter={() => {
-    showTooltip = true;
-  }}
-  on:mouseleave={() => {
-    showTooltip = false;
-  }}
->
+{#if !label}
   <slot />
-</div>
+{:else}
+  <div
+    class="inline-block"
+    use:floatingRef
+    on:mouseenter={() => {
+      showTooltip = true;
+    }}
+    on:mouseleave={() => {
+      showTooltip = false;
+    }}
+  >
+    <slot />
+  </div>
 
-<div
-  class="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg"
-  class:visible={showTooltip}
-  class:invisible={!showTooltip}
-  use:floatingContent
->
-  {label}
-  <div class="bg-gray-900 w-2 h-2 absolute rotate-45" bind:this={$arrowRef} />
-</div>
+  <div
+    class="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg {delayClasses}"
+    class:visible={showTooltip}
+    class:invisible={!showTooltip}
+    class:opacity-100={showTooltip}
+    class:opacity-0={!showTooltip}
+    use:floatingContent
+  >
+    {label}
+    <div class="bg-gray-900 w-2 h-2 absolute rotate-45" bind:this={$arrowRef} />
+  </div>
+{/if}

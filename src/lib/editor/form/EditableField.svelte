@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { SchemaValue, UIModelField } from "$lib/editor/form/utils/schema.js";
+  import type { SchemaValue } from "$lib/editor/form/utils/schema.js";
+  import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import { getFormEditorContext } from "./context/formEditor.js";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
@@ -16,29 +17,33 @@
   }
 </script>
 
-<div class="flex gap-2">
-  <span class="mr-1 font-bold capitalize">{field.name}:</span>
-  {#if field.schema.format === "date"}
-    <input
-      type="date"
-      id={field.id}
-      value={field.value}
-      on:change={handleChange}
-      class="outline-none bg-transparent w-24"
-    />
-  {:else if field.schema.oneOf}
-    <select id={field.id} value={field.value} on:change={handleChange} class="outline-none bg-transparent">
-      {#each field.schema.oneOf as opt (opt.const)}
-        <option value={opt.const} selected={field.value === opt.const}>{opt.const}</option>
-      {/each}
-    </select>
-  {:else}
-    <input
-      type="text"
-      id={field.id}
-      value={field.value}
-      on:change={handleChange}
-      class="outline-none min-w-full bg-transparent"
-    />
-  {/if}
-</div>
+{#if field.schema.format === "date"}
+  <input
+    type="date"
+    id={field.id}
+    value={field.value}
+    on:change={handleChange}
+    class="outline-none bg-transparent w-24 text-gray-500"
+  />
+{:else if field.schema.oneOf}
+  <select
+    id={field.id}
+    value={field.value || field.schema.oneOf[0].const}
+    on:change={handleChange}
+    class="text-ellipsis w-20 outline-none bg-transparent text-gray-500"
+  >
+    {#each field.schema.oneOf as opt, i (opt.const)}
+      <option value={opt.const} selected={field.value ? field.value === opt.const : i === 0}
+        >{opt.description || opt.const}</option
+      >
+    {/each}
+  </select>
+{:else}
+  <input
+    type="text"
+    id={field.id}
+    value={field.value}
+    on:change={handleChange}
+    class="outline-none min-w-full bg-transparent text-gray-500"
+  />
+{/if}

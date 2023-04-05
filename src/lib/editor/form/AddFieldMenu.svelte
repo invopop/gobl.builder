@@ -4,10 +4,10 @@
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import hover from "./action/hover.js";
   import { DocumentDuplicate, Document, Icon } from "svelte-hero-icons";
-  import type { SchemaOption, UIModelField } from "./utils/schema.js";
   import { getFormEditorContext } from "./context/formEditor.js";
   import { createEventDispatcher } from "svelte";
   import { sleep } from "./utils/sleep.js";
+  import type { SchemaOption, UIModelField } from "./utils/model.js";
 
   export let field: UIModelField;
   export let inputRef: HTMLElement | undefined = undefined;
@@ -21,10 +21,10 @@
   const { addField } = getFormEditorContext() || {};
 
   $: options = (field.options || [])
-    .filter((opt) => opt.name.toLowerCase().includes(filterStr.toLocaleLowerCase()))
+    .filter((opt) => opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase()))
     .sort((a, b) => {
       return (a.required && b.required) || (!a.required && !b.required)
-        ? a.name.localeCompare(b.name)
+        ? a.key.localeCompare(b.key)
         : a.required
         ? -1
         : 1;
@@ -91,7 +91,7 @@
         class="grow-0 flex flex-col list-none bg-white border rounded-lg rounded-t-none h-40 overflow-scroll"
         role="menu"
       >
-        {#each options as opt, i (opt.name)}
+        {#each options as opt, i (opt.key)}
           <li>
             <button
               class="flex items-center justify-start w-full p-2 gap-2 hover:bg-gray-200 capitalize"
@@ -100,7 +100,7 @@
               on:click|stopPropagation={() => handleAddField(field, opt)}
             >
               <Icon src={opt.schema.type === "string" ? Document : DocumentDuplicate} class="h-4 w-4" />
-              {opt.name}{opt.required ? "*" : ""} ({opt.schema.type})
+              {opt.schema.title || opt.key}{opt.required ? "*" : ""} ({opt.schema.type})
             </button>
           </li>
         {/each}
@@ -117,10 +117,11 @@
 
   .placeholder-focus,
   .focus {
-    @apply text-gray-600 bg-gray-200;
+    @apply text-gray-500 bg-transparent;
   }
 
   .placeholder-focus::before {
     content: "Select a new type of field to add";
+    @apply text-gray-300;
   }
 </style>

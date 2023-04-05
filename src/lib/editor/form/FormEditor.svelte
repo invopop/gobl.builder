@@ -13,12 +13,14 @@
   const { uiModel } = getFormEditorContext() || {};
 </script>
 
-<div class="h-full px-16 py-8 pb-80 text-xs overflow-scroll">
-  {#if $uiModel}
-    <RootField field={$uiModel} />
-  {/if}
+<div class="h-full overflow-scroll">
+  <div class="flex justify-center px-16 py-8 pb-40 text-sm">
+    <div class="w-full max-w-2xl">
+      {#if $uiModel}
+        <RootField field={$uiModel} />
+      {/if}
 
-  <!-- <br />
+      <!-- <br />
 
   ----
   <br />
@@ -32,4 +34,6 @@
   <pre>
     {JSON.stringify($editorJSON, null, 2)}
   </pre> -->
+    </div>
+  </div>
 </div>

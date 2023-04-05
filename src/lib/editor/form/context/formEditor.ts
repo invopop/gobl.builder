@@ -1,25 +1,20 @@
 import { getContext, setContext } from "svelte";
 import { derived, type Readable } from "svelte/store";
 import { editor, editorJSON } from "$lib/stores.js";
-import {
-  fieldIsArray,
-  fieldIsObject,
-  getJSONFromUIModel,
-  getUIModel,
-  type SchemaValue,
-} from "$lib/editor/form/utils/schema.js";
-import type { UIModel, UIModelField, SchemaOption } from "$lib/editor/form/utils/schema.js";
+import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
 import { sleep } from "../utils/sleep.js";
+import type { SchemaValue } from "../utils/schema.js";
 
 export const FormEditorContextId = Symbol("form-editor");
 
 export type FormEditorContextType = {
-  uiModel: Readable<UIModel | undefined>;
+  uiModel: Readable<UIModelRootField | undefined>;
   changeField(field: UIModelField, value: SchemaValue): void;
   deleteField(field: UIModelField): void;
   duplicateField(field: UIModelField): void;
   addField(parentField: UIModelField, option: SchemaOption): void;
+  sortField(field: UIModelField, position: number): void;
 };
 
 export function getFormEditorContext(): FormEditorContextType {
@@ -27,26 +22,25 @@ export function getFormEditorContext(): FormEditorContextType {
 }
 
 export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEditorContextType {
-  const uiModel = derived<Readable<any>[], UIModel | undefined>(
+  const uiModel = derived<Readable<any>[], UIModelRootField | undefined>(
     [jsonSchemaURL, editorJSON],
     ([$schema, $value], set) => {
-      (async () => {
-        const model = await getUIModel({ schema: $schema, value: $value });
+      async function getModel() {
+        const model = await getUIModel($schema, $value);
 
         console.log("uiModel", model);
         console.log("$schema", $schema);
 
         set(model);
-      })();
+      }
+
+      getModel()
     }
   );
 
-  function updateEditor(model: UIModel) {
-    const newEditor = getJSONFromUIModel(model);
-    const newEditorStr = JSON.stringify(newEditor, null, 4);
-
+  function updateEditor(model: UIModelRootField) {
+    const newEditorStr = model.toJSON();
     console.log("EDITOR UPDATED!", newEditorStr.length);
-
     editor.set(newEditorStr);
   }
 
@@ -62,22 +56,8 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (field.is.root) return;
     if (!field.parent) return;
 
-    if (fieldIsObject(field.parent)) {
-      // delete field.parent.value[field.name as string]
-      const newChildrens = { ...field.parent.children };
-      delete newChildrens[field.name as string];
-      field.parent.children = newChildrens;
-
-      console.log("FIELD DELETED!", field.name, " from parent ", field.parent.name, field.parent);
-    } else if (fieldIsArray(field.parent)) {
-      // const index = Number(field.name)
-      // field.parent.value.splice(index, 1)
-      const newChildrens = { ...field.parent.children };
-      delete newChildrens[field.name as string];
-      field.parent.children = newChildrens;
-
-      console.log("FIELD DELETED!", field.name, " from parent ", field.parent.name, field.parent);
-    }
+    field.parent.deleteChildFieldByKey(field.key)
+    console.log("FIELD DELETED!", field.key, " from parent ", field.parent.key, field.parent);
 
     updateEditor(field.root);
   }
@@ -86,29 +66,31 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (field.is.root) return;
     if (!field.parent) return;
 
-    const newField = { ...field };
+    console.log("FIEL22D DUPLICATED!", field);
 
-    if (fieldIsObject(field.parent)) {
+    const newField = field.clone()
+    const childs = field.parent.children || [] as UIModelField[]
+
+    // @todo: move to UIModel class
+    if (field.parent.isObject()) {
+      const keyMap = childs.reduce((acc, curr) => {
+        acc[curr.key] = curr
+        return acc
+      }, {} as Record<string, unknown>)
+
       let n = 0,
-        name;
+        key;
       do {
-        name = `${newField.name}_${++n}`;
-      } while ((field.parent.children || {})[name]);
+        key = `${newField.key}_${++n}`;
+      } while (keyMap[key]);
 
-      newField.name = name;
+      newField.key = key;
+      field.parent.children = [...childs, newField]
 
-      field.parent.children = {
-        ...field.parent.children,
-        [name]: newField,
-      };
-    } else if (fieldIsArray(field.parent)) {
-      const name = Object.keys(field.parent.children || {}).length + "";
-      newField.name = name;
-
-      field.parent.children = {
-        ...field.parent.children,
-        [name]: newField,
-      };
+    } else if (field.parent.isArray()) {
+      const key = childs.length + "";
+      newField.key = key;
+      field.parent.children = [...childs, newField]
     }
 
     console.log("FIELD DUPLICATED!", field);
@@ -117,71 +99,23 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   }
 
   function addField(parentField: UIModelField, option: SchemaOption) {
-    console.log(parentField.type);
-    if (parentField.type !== "object" && parentField.type !== "array") return;
+    console.log('ADDING FIELD ON', parentField.type);
 
-    let value;
+    const newField = parentField.addChildField(option)
+    if (!newField) return
 
-    switch (option.schema.type) {
-      case "object": {
-        value = {};
-        break;
-      }
-      case "array": {
-        value = [];
-        break;
-      }
-      case "null": {
-        value = null;
-        break;
-      }
-      case "string": {
-        value = "";
-        break;
-      }
-      case "integer":
-      case "number": {
-        value = 0;
-        break;
-      }
-      case "boolean": {
-        value = true;
-        break;
-      }
-      case "": {
-        value = [];
-        break;
-      }
-    }
+    console.log("ADD FIELD !", option, newField);
 
-    (async () => {
-      const childLength = Object.values(parentField.children || {}).length || 0;
+    updateEditor(parentField.root);
 
-      const newChild = await getUIModel({
-        schema: option.schema,
-        value,
-        index: childLength,
-        level: parentField.level + 1,
-        name: option.name,
-        parent: parentField,
-        root: parentField.root,
-      });
+    tryQuickFocus(newField.id);
+  }
 
-      if (!newChild) return;
+  function sortField(field: UIModelField, position: number) {
+    console.log('SORTING FIELD', field.key, position);
 
-      console.log("ADD FIELD !", option, newChild);
-
-      const index = fieldIsArray(parentField) ? childLength : option.name;
-
-      parentField.children = {
-        ...parentField.children,
-        [index]: newChild,
-      };
-
-      updateEditor(parentField.root);
-
-      await tryQuickFocus(newChild.id);
-    })();
+    field.sortField(position)
+    updateEditor(field.root);
   }
 
   async function tryQuickFocus(id: string, retries = 5) {
@@ -209,6 +143,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     deleteField,
     duplicateField,
     addField,
+    sortField,
   };
 
   return setContext<FormEditorContextType>(FormEditorContextId, initialState);

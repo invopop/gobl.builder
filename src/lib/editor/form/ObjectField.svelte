@@ -1,14 +1,15 @@
 <script lang="ts">
-  import type { UIModelField } from "$lib/editor/form/utils/schema.js";
+  import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import AbstractField from "./AbstractField.svelte";
   import AddFieldMenu from "./AddFieldMenu.svelte";
+  import FieldTitle from "./FieldTitle.svelte";
 
   export let field: UIModelField;
   export let showAddMenu: string;
   let addMenuRef: HTMLElement;
 
-  $: childs = Object.entries(field.children || {});
+  $: childs = field.children || ([] as UIModelField[]);
 
   let open = true;
   function handleOpenChange() {
@@ -24,11 +25,11 @@
 </script>
 
 <div class="flex items-center justify-start cursor-pointer" on:click={handleOpenChange}>
-  <span class="text-black font-bold capitalize mr-1">{field.name}</span>
+  <FieldTitle>{field.schema.title || field.key}</FieldTitle>
   <ExpandButton {open} />
 </div>
 <div class="pl-2 border-l max-h-0" class:max-h-max={open} class:overflow-hidden={!open}>
-  {#each childs as [k, field] (k)}
+  {#each childs as field (field.key)}
     <AbstractField {field} />
   {/each}
   {#if showAddMenu || !childs.length}

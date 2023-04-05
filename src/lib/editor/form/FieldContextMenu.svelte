@@ -2,9 +2,9 @@
   import { fade } from "svelte/transition";
   import { Icon, Trash, DocumentDuplicate } from "svelte-hero-icons";
   import { getFormEditorContext } from "./context/formEditor.js";
-  import type { UIModelField } from "./utils/schema.js";
   import { createEventDispatcher } from "svelte";
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
+  import type { UIModelField } from "./utils/model.js";
 
   const dispatch = createEventDispatcher();
 
@@ -33,6 +33,7 @@
 </script>
 
 <FieldButtons
+  {field}
   showAdd={(field.options?.length || 0) > 0}
   showOptions={field.is.duplicable || field.is.disposable}
   on:add={handleClickAddButton}
@@ -40,7 +41,7 @@
 />
 
 {#if showOptionsMenu}
-  <div class="absolute top-8 -left-14 z-10 w-28" transition:fade={{ duration: 200 }}>
+  <div class="absolute top-9 -left-6 z-10 w-28" transition:fade={{ duration: 200 }}>
     <ul class="grow-0 flex flex-col list-none bg-white border rounded-lg overflow-hidden" role="menu">
       {#if field.is.duplicable}
         <li>
