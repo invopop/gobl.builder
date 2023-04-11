@@ -34,7 +34,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
         set(model);
       }
 
-      getModel()
+      getModel();
     }
   );
 
@@ -56,7 +56,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (field.is.root) return;
     if (!field.parent) return;
 
-    field.parent.deleteChildFieldByKey(field.key)
+    field.parent.deleteChildFieldByKey(field.key);
     console.log("FIELD DELETED!", field.key, " from parent ", field.parent.key, field.parent);
 
     updateEditor(field.root);
@@ -68,15 +68,15 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
 
     console.log("FIEL22D DUPLICATED!", field);
 
-    const newField = field.clone()
-    const childs = field.parent.children || [] as UIModelField[]
+    const newField = field.clone();
+    const childs = field.parent.children || ([] as UIModelField[]);
 
     // @todo: move to UIModel class
     if (field.parent.isObject()) {
       const keyMap = childs.reduce((acc, curr) => {
-        acc[curr.key] = curr
-        return acc
-      }, {} as Record<string, unknown>)
+        acc[curr.key] = curr;
+        return acc;
+      }, {} as Record<string, unknown>);
 
       let n = 0,
         key;
@@ -85,12 +85,11 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
       } while (keyMap[key]);
 
       newField.key = key;
-      field.parent.children = [...childs, newField]
-
+      field.parent.children = [...childs, newField];
     } else if (field.parent.isArray()) {
       const key = childs.length + "";
       newField.key = key;
-      field.parent.children = [...childs, newField]
+      field.parent.children = [...childs, newField];
     }
 
     console.log("FIELD DUPLICATED!", field);
@@ -99,10 +98,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   }
 
   function addField(parentField: UIModelField, option: SchemaOption) {
-    console.log('ADDING FIELD ON', parentField.type);
+    console.log("ADDING FIELD ON", parentField.type);
 
-    const newField = parentField.addChildField(option)
-    if (!newField) return
+    const newField = parentField.addChildField(option);
+    if (!newField) return;
 
     console.log("ADD FIELD !", option, newField);
 
@@ -112,9 +111,9 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   }
 
   function sortField(field: UIModelField, position: number) {
-    console.log('SORTING FIELD', field.key, position);
+    console.log("SORTING FIELD", field.key, position);
 
-    field.sortField(position)
+    field.sortField(position);
     updateEditor(field.root);
   }
 

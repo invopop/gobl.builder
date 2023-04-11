@@ -7,8 +7,8 @@ export const SchemaRegistry: Record<string, Schema> = {};
 // export const ParsedSchemaRegistry: Record<string, Schema> = {};
 
 function getRelativeSchema(parentSchema: Schema, id: string, del = "/"): Schema {
-  id = id.replace(/#\//, '')
-  return path(parentSchema, id, del)
+  id = id.replace(/#\//, "");
+  return path(parentSchema, id, del);
 }
 
 async function fetchExternalSchema(id: string): Promise<Schema> {
@@ -36,11 +36,11 @@ async function fetchSchema(id: string): Promise<Schema> {
 }
 
 async function parseSchema(id: string, schema: Schema): Promise<Schema> {
-  const pSchema = { ...schema, $id: id }
+  const pSchema = { ...schema, $id: id };
   delete pSchema.$ref;
   delete pSchema.$defs;
 
-  const ref = schema.$ref
+  const ref = schema.$ref;
 
   if (ref) {
     const relId = ref.startsWith("#") ? `${id.split("#")[0]}${ref}` : ref;
@@ -49,7 +49,7 @@ async function parseSchema(id: string, schema: Schema): Promise<Schema> {
     return {
       ...refSchema,
       ...pSchema,
-    }
+    };
   }
 
   // Object type
