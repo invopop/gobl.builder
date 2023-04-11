@@ -10,13 +10,15 @@
   export let field: UIModelField<string>;
 </script>
 
-<Tooltip label={field.schema.description} delay={300}>
-  <div class="flex gap-2">
-    <FieldTitle>{field.schema.title || field.key}:</FieldTitle>
-    {#if field.is.editable}
-      <EditableField {field} {parseValue} />
-    {:else if field.is.calculated}
-      <CalculatedField {field} />
-    {/if}
+<Tooltip label={field.schema.description} delay={300} containerClass="block w-full">
+  <div class="flex justify-between items-center w-full gap-2">
+    <FieldTitle>{field.schema.title || field.key}</FieldTitle>
+    <div class="w-96">
+      {#if field.is.editable}
+        <EditableField {field} {parseValue} />
+      {:else if field.is.calculated}
+        <CalculatedField {field} />
+      {/if}
+    </div>
   </div>
 </Tooltip>

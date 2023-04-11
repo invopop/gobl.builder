@@ -136,14 +136,14 @@
   on:dragenter|preventDefault
   on:drop={handleDrop}
   draggable="true"
-  class="relative border-transparent border-t border-b"
+  class="relative border-transparent border-t-4 border-b-4"
   use:hover
   on:hover={handleHover}
 >
   {#if showContextMenu}
     <FieldContextMenu {field} on:addField={handleAddField} />
   {/if}
-  <div class="relative p-2" draggable="true" on:dragstart|preventDefault|stopPropagation>
+  <div class="relative p-2" class:pr-0={!!field.children} draggable="true" on:dragstart|preventDefault|stopPropagation>
     <svelte:component
       this={componentsMap[field.type] || FallbackField}
       {field}

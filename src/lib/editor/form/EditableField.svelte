@@ -23,14 +23,14 @@
     id={field.id}
     value={field.value}
     on:change={handleChange}
-    class="outline-none bg-transparent w-24 text-gray-500"
+    class="outline-none w-full bg-white border py-1 px-2 text-gray-500 "
   />
 {:else if field.schema.oneOf}
   <select
     id={field.id}
     value={field.value || field.schema.oneOf[0].const}
     on:change={handleChange}
-    class="text-ellipsis w-20 outline-none bg-transparent text-gray-500"
+    class="text-ellipsis outline-none w-full bg-white border py-1 px-2 text-gray-500 appearance-none"
   >
     {#each field.schema.oneOf as opt, i (opt.const)}
       <option value={opt.const} selected={field.value ? field.value === opt.const : i === 0}
@@ -44,6 +44,6 @@
     id={field.id}
     value={field.value}
     on:change={handleChange}
-    class="outline-none min-w-full bg-transparent text-gray-500"
+    class="outline-none w-full bg-white border py-1 px-2 text-gray-500"
   />
 {/if}

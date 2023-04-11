@@ -15,7 +15,7 @@
 
 <div class="h-full overflow-scroll">
   <div class="flex justify-center px-16 py-8 pb-40 text-sm">
-    <div class="w-full max-w-2xl">
+    <div class="w-full max-w-2xl bg-gray-100 p-6 rounded">
       {#if $uiModel}
         <RootField field={$uiModel} />
       {/if}

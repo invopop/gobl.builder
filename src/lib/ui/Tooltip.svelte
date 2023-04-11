@@ -29,6 +29,7 @@
 
   export let label: string | undefined;
   export let delay: number | undefined = undefined;
+  export let containerClass = "inline-block";
 
   $: delayClasses = delay ? `transition-all ease-in-out duration-300 delay-[${delay}ms]` : "";
 
@@ -39,7 +40,7 @@
   <slot />
 {:else}
   <div
-    class="inline-block"
+    class={containerClass}
     use:floatingRef
     on:mouseenter={() => {
       showTooltip = true;
