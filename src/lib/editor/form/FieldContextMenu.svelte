@@ -13,8 +13,9 @@
 
   const { deleteField, duplicateField } = getFormEditorContext() || {};
 
-  function handleClickAddButton() {
-    dispatch("addField");
+  function handleClickAddButton(e: CustomEvent<boolean>) {
+    showOptionsMenu = false;
+    dispatch("addField", e.detail);
   }
 
   function handleToggleOptionMenu() {
@@ -34,14 +35,14 @@
 
 <FieldButtons
   {field}
-  showAdd={(field.options?.length || 0) > 0}
+  showAdd={(field.options?.length || field.parent?.options?.length || 0) > 0}
   showOptions={field.is.duplicable || field.is.disposable}
   on:add={handleClickAddButton}
   on:options={handleToggleOptionMenu}
 />
 
 {#if showOptionsMenu}
-  <div class="absolute top-9 -left-6 z-10 w-28" transition:fade={{ duration: 200 }}>
+  <div class="absolute top-11 -left-9 z-10 w-28" transition:fade={{ duration: 200 }}>
     <ul class="grow-0 flex flex-col list-none bg-white border rounded-lg overflow-hidden" role="menu">
       {#if field.is.duplicable}
         <li>

@@ -11,8 +11,10 @@
 </script>
 
 <Tooltip label={field.schema.description} delay={300} containerClass="block w-full">
-  <div class="flex justify-between items-center w-full gap-2">
-    <FieldTitle>{field.schema.title || field.key}</FieldTitle>
+  <div class="flex justify-between items-start w-full gap-2">
+    <div class="py-1.5">
+      <FieldTitle {field} />
+    </div>
     <div class="w-96">
       {#if field.is.editable}
         <EditableField {field} {parseValue} />

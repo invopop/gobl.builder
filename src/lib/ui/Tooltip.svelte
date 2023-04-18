@@ -27,7 +27,7 @@
     },
   });
 
-  export let label: string | undefined;
+  export let label: string | undefined = undefined;
   export let delay: number | undefined = undefined;
   export let containerClass = "inline-block";
 
@@ -36,7 +36,7 @@
   let showTooltip = false;
 </script>
 
-{#if !label}
+{#if !label && !$$slots.content}
   <slot />
 {:else}
   <div
@@ -60,7 +60,11 @@
     class:opacity-0={!showTooltip}
     use:floatingContent
   >
-    {label}
+    {#if label}
+      {label}
+    {:else}
+      <slot name="content" />
+    {/if}
     <div class="bg-gray-900 w-2 h-2 absolute rotate-45" bind:this={$arrowRef} />
   </div>
 {/if}

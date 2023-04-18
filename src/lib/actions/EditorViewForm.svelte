@@ -1,16 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { editorViewType } from "$lib/stores.js";
   import { editorViewButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
+  import { getChangeViewHandler } from "$lib/editor/form/utils/tab.js";
 
-  const dispatch = createEventDispatcher();
-
-  function handleViewForm() {
-    $editorViewType = "form";
-    dispatch("viewForm");
-    document.dispatchEvent(new Event("viewFormButtonClick"));
-  }
+  const handleViewForm = getChangeViewHandler("form");
 </script>
 
 <Tooltip label="Swap to visual editor view.">

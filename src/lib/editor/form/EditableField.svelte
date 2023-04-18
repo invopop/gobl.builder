@@ -2,48 +2,53 @@
   import type { SchemaValue } from "$lib/editor/form/utils/schema.js";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import { getFormEditorContext } from "./context/formEditor.js";
+  import EditableSelectField from "./EditableSelectField.svelte";
+  import EditableInputField from "./EditableInputField.svelte";
+  import EditableDateField from "./EditableDateField.svelte";
+  import FieldError from "./FieldError.svelte";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
+  let pristine = true;
+  $: showError = !pristine && field.is.error;
 
   const { changeField } = getFormEditorContext() || {};
 
-  function handleChange(e: Event & { currentTarget: HTMLSelectElement | HTMLInputElement }) {
-    const value = e.currentTarget?.value;
+  function handleEdit(e: CustomEvent<SchemaValue>) {
+    const value = e.detail;
     if (!value) return;
 
     const parsedValue = parseValue(value);
+    console.log(parsedValue);
     changeField(field, parsedValue);
+  }
+
+  function handleBlur() {
+    pristine = false;
   }
 </script>
 
 {#if field.schema.format === "date"}
-  <input
-    type="date"
-    id={field.id}
-    value={field.value}
-    on:change={handleChange}
-    class="outline-none w-full bg-white border py-1 px-2 text-gray-500 "
-  />
+  <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
 {:else if field.schema.oneOf}
-  <select
-    id={field.id}
-    value={field.value || field.schema.oneOf[0].const}
-    on:change={handleChange}
-    class="text-ellipsis outline-none w-full bg-white border py-1 px-2 text-gray-500 appearance-none"
-  >
-    {#each field.schema.oneOf as opt, i (opt.const)}
-      <option value={opt.const} selected={field.value ? field.value === opt.const : i === 0}
-        >{opt.description || opt.const}</option
-      >
-    {/each}
-  </select>
-{:else}
-  <input
-    type="text"
-    id={field.id}
-    value={field.value}
-    on:change={handleChange}
-    class="outline-none w-full bg-white border py-1 px-2 text-gray-500"
+  <EditableSelectField
+    {field}
+    {showError}
+    options={field.schema.oneOf.map((v) => ({ key: v.description, value: v.const }))}
+    on:edit={handleEdit}
+    on:blur={handleBlur}
   />
+{:else if field.schema.anyOf}
+  <EditableSelectField
+    {field}
+    {showError}
+    options={field.schema.anyOf.map((v) => ({ key: v.description, value: v.const }))}
+    on:edit={handleEdit}
+    on:blur={handleBlur}
+  />
+{:else}
+  <EditableInputField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
+{/if}
+{#if showError}
+  <FieldError {field} />
 {/if}

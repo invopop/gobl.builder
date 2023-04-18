@@ -7,3 +7,18 @@
     @apply focus:ring-0;
   }
 }
+
+/** This is a trick for increasing the drag and drop and hover area of each row*/
+.expanded-area {
+  position: relative;
+}
+
+.expanded-area::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -25%;
+  width: 125%;
+  height: 100%;
+  z-index: 0;
+}

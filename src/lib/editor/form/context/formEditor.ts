@@ -13,7 +13,7 @@ export type FormEditorContextType = {
   changeField(field: UIModelField, value: SchemaValue): void;
   deleteField(field: UIModelField): void;
   duplicateField(field: UIModelField): void;
-  addField(parentField: UIModelField, option: SchemaOption): void;
+  addField(parentField: UIModelField, option: SchemaOption, position?: number): void;
   sortField(field: UIModelField, position: number): void;
 };
 
@@ -26,7 +26,19 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     [jsonSchemaURL, editorJSON],
     ([$schema, $value], set) => {
       async function getModel() {
+
+        const noSchema = $value && $schema && !$value.$schema
+
+        if (noSchema) {
+          delete $value.$schema
+          $value = { $schema, ...$value }
+        }
+
         const model = await getUIModel($schema, $value);
+
+        if (model && noSchema) {
+          updateEditor(model.root)
+        }
 
         console.log("uiModel", model);
         console.log("$schema", $schema);
@@ -56,7 +68,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (field.is.root) return;
     if (!field.parent) return;
 
-    field.parent.deleteChildFieldByKey(field.key);
+    field.parent.deleteChildFieldById(field.id);
     console.log("FIELD DELETED!", field.key, " from parent ", field.parent.key, field.parent);
 
     updateEditor(field.root);
@@ -97,17 +109,17 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     updateEditor(field.root);
   }
 
-  function addField(parentField: UIModelField, option: SchemaOption) {
-    console.log("ADDING FIELD ON", parentField.type);
+  function addField(parentField: UIModelField, option: SchemaOption, position?: number) {
+    console.log("ADDING FIELD ON", parentField.type, 'POSITION', position);
 
-    const newField = parentField.addChildField(option);
+    const newField = parentField.addChildField(option, position);
     if (!newField) return;
 
     console.log("ADD FIELD !", option, newField);
 
     updateEditor(parentField.root);
 
-    tryQuickFocus(newField.id);
+    tryQuickFocus(newField);
   }
 
   function sortField(field: UIModelField, position: number) {
@@ -117,14 +129,20 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     updateEditor(field.root);
   }
 
-  async function tryQuickFocus(id: string, retries = 5) {
+  async function tryQuickFocus(field: UIModelField, retries = 5) {
     // @todo: Refactor this
     // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
+
+
+    if (field.isObject() || field.isArray()) {
+      const [firstChild] = field.children || []
+      return tryQuickFocus(firstChild)
+    }
 
     while (--retries > 0) {
       await sleep(200);
 
-      const selector = `#${id}`;
+      const selector = `#${field.id}`;
       const el = document.querySelector(selector) as HTMLElement;
 
       if (!el) continue;

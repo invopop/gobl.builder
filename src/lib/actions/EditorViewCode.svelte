@@ -1,20 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
   import { editorViewType } from "$lib/stores.js";
   import { editorViewButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
+  import { getChangeViewHandler } from "$lib/editor/form/utils/tab.js";
 
-  const dispatch = createEventDispatcher();
-
-  function handleViewForm() {
-    $editorViewType = "code";
-    dispatch("viewForm");
-    document.dispatchEvent(new Event("viewFormButtonClick"));
-  }
+  const handleViewCode = getChangeViewHandler("code");
 </script>
 
 <Tooltip label="Swap to code editor view.">
-  <button on:click={handleViewForm} class={editorViewButtonClasses($editorViewType === "code")}>
+  <button on:click={handleViewCode} class={editorViewButtonClasses($editorViewType === "code")}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"
