@@ -3,6 +3,7 @@
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
   import Sign from "$lib/actions/Sign.svelte";
   import Validate from "$lib/actions/Validate.svelte";
+  import clickOutside from "$lib/clickOutside.js";
   import { Icon, ChevronDown } from "svelte-hero-icons";
   import { fade } from "svelte/transition";
 
@@ -14,6 +15,10 @@
   function handleToggleActions() {
     showActions = !showActions;
   }
+
+  function handleClickOutside() {
+    showActions = false;
+  }
 </script>
 
 <div class="relative">
@@ -22,7 +27,12 @@
     <Icon src={ChevronDown} class="h-4 w-4 p-0.5 text-gray-400" />
   </button>
   {#if showActions}
-    <div class="absolute top-full mt-4 -left-4 z-10 w-48" transition:fade={{ duration: 200 }}>
+    <div
+      class="absolute top-full mt-4 -left-4 z-10 w-48"
+      transition:fade={{ duration: 200 }}
+      use:clickOutside
+      on:clickOutside={handleClickOutside}
+    >
       <ul
         class="flex flex-col gap-2 list-none bg-white border border-slate-200 rounded overflow-hidden py-2 shadow-md"
         role="menu"

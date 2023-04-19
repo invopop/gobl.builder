@@ -16,7 +16,11 @@
 >
   <div class="relative w-full lg:w-3/5 h-full p-4 md:h-auto">
     <!-- Modal content -->
-    <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside on:close>
+    <div
+      class="relative bg-white rounded-lg shadow overflow-auto"
+      use:clickOutside
+      on:clickOutside={() => dispatch("close")}
+    >
       <!-- Modal header -->
       <div class="flex items-center justify-between p-6 border-b rounded-">
         <h3 class="text-xl font-semibold text-gray-900">{title}</h3>
