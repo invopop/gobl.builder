@@ -4,5 +4,9 @@
 </script>
 
 <span class="text-gray-700 font-medium mr-1 whitespace-nowrap" class:capitalize={!field.schema.title}>
-  {field.schema.title || field.key}
+  {#if field.parent?.isArray()}
+    # {field.key}
+  {:else}
+    {field.schema.title || field.key}
+  {/if}
 </span>

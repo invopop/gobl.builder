@@ -5,7 +5,7 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
   import { envelope, envelopeIsSigned, editor, goblError, type GOBLError } from "$lib/stores.js";
-  import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
+  import { actionButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
   const dispatch = createEventDispatcher<{
@@ -70,8 +70,8 @@
   }
 </script>
 
-<Tooltip label="Validate a signed GOBL document.">
-  <button on:click={handleValidate} class={iconButtonClasses(!validEditor || !$envelopeIsSigned)}>
+<Tooltip label="Validate a signed GOBL document" containerClass="block">
+  <button on:click={handleValidate} class={actionButtonClasses(!validEditor || !$envelopeIsSigned)}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"
@@ -79,5 +79,6 @@
         clip-rule="evenodd"
       />
     </svg>
+    Validate document
   </button>
 </Tooltip>

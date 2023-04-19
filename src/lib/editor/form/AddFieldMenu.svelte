@@ -160,8 +160,8 @@
           {/each}
         {:else}
           <li>
-            <span class="flex items-center justify-start w-full p-2 gap-2 capitalize h-8">
-              No items found matching filter: "{filterStr}"
+            <span class="flex items-center justify-start w-full p-2 gap-2 h-8">
+              No items found matching filter: <strong>"{filterStr}"</strong>
             </span>
           </li>
         {/if}

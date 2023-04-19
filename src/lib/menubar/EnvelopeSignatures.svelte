@@ -4,5 +4,5 @@
 </script>
 
 {#if sigs}
-  <pre class="text-sm text-sky-600">{JSON.stringify(sigs, null, 4)}</pre>
+  <pre class="text-xs text-sky-600">{JSON.stringify(sigs, null, 4)}</pre>
 {/if}

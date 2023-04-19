@@ -32,6 +32,7 @@
   $: addMenuEmptyItem = field.isContainer() && (!field.children || field.children.length === 0) && !field.is.complete;
   $: addMenuTop = !addMenuEmptyItem && showAddMenuTop && !field.parent?.is.complete;
   $: addMenuBot = !addMenuEmptyItem && showAddMenuBot && !field.parent?.is.complete;
+  $: parentField = field.parent as UIModelField;
 
   $: {
     if (addMenuRef) {
@@ -48,8 +49,11 @@
     showContextMenu = e.detail;
   }
 
-  function handleAddField(e: CustomEvent<boolean>) {
-    if (e.detail) {
+  function handleAddField(e?: CustomEvent<boolean>) {
+    showAddMenuTop = false;
+    showAddMenuBot = false;
+
+    if (e?.detail) {
       showAddMenuTop = true;
     } else {
       showAddMenuBot = true;
@@ -191,7 +195,7 @@
 
 {#if addMenuTop}
   <AddFieldMenu
-    field={field.parent}
+    field={parentField}
     position={field.index}
     bind:inputRef={addMenuRef}
     on:closeAddFieldMenu={handleAddFieldMenuTopClose}
@@ -227,7 +231,7 @@
 </div>
 {#if addMenuBot}
   <AddFieldMenu
-    field={field.parent}
+    field={parentField}
     position={field.index + 1}
     bind:inputRef={addMenuRef}
     on:closeAddFieldMenu={handleAddFieldMenuBotClose}

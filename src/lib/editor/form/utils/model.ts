@@ -101,8 +101,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         const items = ((value || []) as SchemaValue[]).entries();
         let index = 0;
 
-        for (const [key, value] of items) {
-          const childUISchema = new UIModelField(subSchema, value, key + "", index, level + 1, this, this.root);
+        for (const [k, value] of items) {
+          const key = k + ''
+          const childUISchema = new UIModelField(subSchema, value, key, index, level + 1, this, this.root);
 
           if (!childUISchema) continue;
           index++;
@@ -274,6 +275,12 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         value = [];
         break;
       }
+    }
+
+    // @note: Handle default values for select types
+    const selectOptions = option.schema.oneOf || option.schema.anyOf
+    if (selectOptions) {
+      value = (selectOptions[0] as any).const;
     }
 
     return value;

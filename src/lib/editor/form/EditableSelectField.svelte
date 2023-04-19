@@ -17,7 +17,7 @@
 
 <select
   id={field.id}
-  value={field.value || options[0].value}
+  value={field.value}
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur
@@ -26,9 +26,7 @@
   class:focus:border-rose-500={showError}
 >
   {#each options as opt, i (opt.value)}
-    <option value={opt.value} selected={field.value ? field.value === opt.value : i === 0}
-      >{opt.key || opt.value}</option
-    >
+    <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
   {/each}
 </select>
 

@@ -25,7 +25,7 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div class="flex flex-col h-full border-t-2 border-t-slate-200">
+<div class="flex flex-col h-full">
   <div class="relative flex-1 overflow-hidden">
     <div class="h-full absolute inset-0" class:invisible={$editorViewType !== "code"}>
       <CodeEditor {jsonSchemaURL} />

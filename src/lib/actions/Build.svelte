@@ -5,8 +5,8 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
   import { envelope, editor, goblError, type GOBLError } from "$lib/stores.js";
-  import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
+  import { clsx } from "clsx";
 
   const dispatch = createEventDispatcher<{
     build: { result?: unknown; error?: GOBLError };
@@ -81,16 +81,15 @@
   }
 
   $: tooltip = validEditor ? "Build the GOBL document." : "To build, first ensure the document is valid.";
+
+  function buttonClasses(disabled: boolean): string {
+    return clsx("rounded bg-slate-100 border border-slate-200 py-2 px-4", {
+      "text-gray-700 hover:bg-slate-200": !disabled,
+      "text-gray-400 cursor-not-allowed": disabled,
+    });
+  }
 </script>
 
 <Tooltip label={tooltip}>
-  <button on:click={handleBuild} class={iconButtonClasses(!validEditor)}>
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-      <path
-        fill-rule="evenodd"
-        d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z"
-        clip-rule="evenodd"
-      />
-    </svg>
-  </button>
+  <button on:click={handleBuild} class={buttonClasses(!validEditor)}>Build</button>
 </Tooltip>
