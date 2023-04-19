@@ -13,6 +13,8 @@ export async function getUIModel<V extends SchemaValue>(
 export class UIModelField<V extends SchemaValue | unknown = unknown> {
   public id: string;
   public type: string;
+  public controlType?: ControlType;
+  public controlMeta?: any;
   public root!: UIModelRootField;
   public children?: UIModelField[];
   public childrenMap?: Record<string, UIModelField>;
@@ -31,6 +33,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   ) {
     this.id = `${parent?.id ? `${parent.id}-` : ""}${this.key}`.replace(/[^a-zA-Z0-9-_]/g, "");
     this.type = schema.type as string;
+    this.controlType = this.getControlType(schema)
+    this.controlMeta = this.getControlMeta(schema)
     this.root = !root ? (this as UIModelRootField) : root;
     this.error = value instanceof Error ? value : undefined
 
@@ -229,6 +233,65 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return JSON.stringify(this.toValue(), null, 4);
   }
 
+  sortField(position: number) {
+    if (!this.parent) return;
+
+    // @note: Field position hasn't changed
+    if (this.index === position) return;
+
+    const newChilds = (this.parent.children || ([] as UIModelField[]))
+      .sort((a, b) => a.index - b.index)
+      .filter((child) => child.index !== this.index);
+    // .map(child => {
+    //   const newIndex = child.index + (child.index < this.index ? 0 : -1)
+    //   child.index = newIndex
+    //   return child
+    // })
+
+    position += position <= this.index ? 0 : -1;
+
+    console.log("oldChilds", this.parent.children);
+    console.log("newChilds", newChilds);
+
+    const prev = newChilds.slice(0, position);
+    const next = newChilds.slice(position);
+
+    const newChildren = [...prev, this, ...next]
+    this.parent.updateChildren(newChildren);
+  }
+
+  getNextFocusableField(): UIModelField | undefined {
+    const nextItem = this.parent?.children?.[this.index + 1];
+    if (nextItem) return nextItem
+
+    return
+  }
+
+  getControlType(schema: Schema): ControlType | undefined {
+    const isSelect = 'oneOf' in schema || 'anyOf' in schema
+    if (isSelect) return 'select'
+
+    const isDate = schema.format === 'date'
+    if (isDate) return 'date'
+
+    const isText = schema.type === 'string'
+    if (isText) return 'text'
+  }
+
+  getControlMeta(schema: Schema): unknown | undefined {
+    const controlType = this.getControlType(schema)
+
+    if (controlType === 'select') {
+      if ('oneOf' in schema) {
+        return (schema.oneOf || []).map((v: any) => ({ key: v.description, value: v.const }))
+      }
+
+      if ('anyOf' in schema) {
+        return (schema.anyOf || []).map((v: any) => ({ key: v.description, value: v.const }))
+      }
+    }
+  }
+
   getEmptyFieldValue(option: SchemaOption): any {
     let value;
 
@@ -285,41 +348,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     return value;
   }
-
-  sortField(position: number) {
-    if (!this.parent) return;
-
-    // @note: Field position hasn't changed
-    if (this.index === position) return;
-
-    const newChilds = (this.parent.children || ([] as UIModelField[]))
-      .sort((a, b) => a.index - b.index)
-      .filter((child) => child.index !== this.index);
-    // .map(child => {
-    //   const newIndex = child.index + (child.index < this.index ? 0 : -1)
-    //   child.index = newIndex
-    //   return child
-    // })
-
-    position += position <= this.index ? 0 : -1;
-
-    console.log("oldChilds", this.parent.children);
-    console.log("newChilds", newChilds);
-
-    const prev = newChilds.slice(0, position);
-    const next = newChilds.slice(position);
-
-    const newChildren = [...prev, this, ...next]
-    this.parent.updateChildren(newChildren);
-  }
-
-  getNextFocusableField(): UIModelField | undefined {
-    const nextItem = this.parent?.children?.[this.index + 1];
-    if (nextItem) return nextItem
-
-    return
-  }
 }
+
+export type ControlType = 'text' | 'number' | 'select' | 'date'
 
 export type SchemaOption = {
   key: string;
@@ -353,7 +384,3 @@ export type UIModelFieldArray<T = unknown> = UIModelField<Array<T>> & {
 };
 
 export type UIModelRootField = UIModelField<Record<string, any>>;
-
-// export function getParsedSchemaRegistry(): any {
-//   return ParsedSchemaRegistry
-// }

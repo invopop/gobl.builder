@@ -129,7 +129,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     updateEditor(field.root);
   }
 
-  async function tryQuickFocus(field: UIModelField, retries = 5) {
+  async function tryQuickFocus(field: UIModelField, retries = 5): Promise<void> {
     // @todo: Refactor this
     // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
 

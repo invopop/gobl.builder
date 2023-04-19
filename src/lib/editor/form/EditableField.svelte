@@ -28,24 +28,10 @@
   }
 </script>
 
-{#if field.schema.format === "date"}
+{#if field.controlType === "date"}
   <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
-{:else if field.schema.oneOf}
-  <EditableSelectField
-    {field}
-    {showError}
-    options={field.schema.oneOf.map((v) => ({ key: v.description, value: v.const }))}
-    on:edit={handleEdit}
-    on:blur={handleBlur}
-  />
-{:else if field.schema.anyOf}
-  <EditableSelectField
-    {field}
-    {showError}
-    options={field.schema.anyOf.map((v) => ({ key: v.description, value: v.const }))}
-    on:edit={handleEdit}
-    on:blur={handleBlur}
-  />
+{:else if field.controlType === "select"}
+  <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={handleBlur} />
 {:else}
   <EditableInputField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
 {/if}
