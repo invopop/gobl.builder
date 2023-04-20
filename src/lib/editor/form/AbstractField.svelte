@@ -29,10 +29,10 @@
   let showAddMenuBot = false;
   let addMenuRef: HTMLElement;
 
-  $: addMenuEmptyItem = field.isContainer() && (!field.children || field.children.length === 0) && !field.is.complete;
-  $: addMenuTop = !addMenuEmptyItem && showAddMenuTop && !field.parent?.is.complete;
-  $: addMenuBot = !addMenuEmptyItem && showAddMenuBot && !field.parent?.is.complete;
   $: parentField = field.parent as UIModelField;
+  $: addMenuEmptyItem = field.isContainer() && (!field.children || field.children.length === 0) && !field.is.complete;
+  $: addMenuTop = !addMenuEmptyItem && showAddMenuTop && !parentField.is.complete;
+  $: addMenuBot = !addMenuEmptyItem && showAddMenuBot && !parentField.is.complete;
 
   $: {
     if (addMenuRef) {
@@ -50,11 +50,14 @@
   }
 
   function handleAddField(e?: CustomEvent<boolean>) {
+    if (parentField.is.complete) return;
+
     showAddMenuTop = false;
     showAddMenuBot = false;
 
     const addBefore = e?.detail;
 
+    // @note: Add field directly instead of showing the dropdown option list
     if (parentField.type === "array" || parentField.controlType === "dictionary") {
       const position = field.index + (addBefore ? 0 : 1);
       const [childOption] = parentField.options || [];
@@ -141,8 +144,8 @@
   }
 
   function handleDragOverWindow(e: DragEvent) {
-    e.stopPropagation();
     e.preventDefault();
+    e.stopPropagation();
   }
 
   function handleDragOver(e: DragEvent) {
@@ -195,8 +198,10 @@
         return;
       }
 
-      handleAddField();
-      e.stopPropagation();
+      if (!parentField.is.complete) {
+        handleAddField();
+        e.stopPropagation();
+      }
 
       return;
     }

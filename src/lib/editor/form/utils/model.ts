@@ -146,7 +146,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
     }
 
-    this.is.complete = this.controlType !== 'dictionary' && (this.options || []).length === 0
+    this.is.complete = (this.options || []).length === 0
   }
 
   isObject(this: UIModelField<unknown>): this is UIModelFieldObject {
@@ -209,12 +209,12 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     if (this.is.root) return
     if (!this.parent) return
     if (!this.parent.isContainer()) return
-    
+
     const key = this.parent.getNextChildFieldKey(this.key)
     return this.parent.addChildField({ key, required: this.is.required, schema: this.schema }, this.value)
   }
 
-  getNextChildFieldKey(key:string): string {
+  getNextChildFieldKey(key: string): string {
     if (!this.isContainer()) return key
 
     const childs = this.children || ([] as UIModelField[])
@@ -241,6 +241,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
   addChildField(option: SchemaOption, defaultValue?: any, position?: number): UIModelField | undefined {
     if (!(this.isContainer())) return
+    if (this.is.complete) return
 
     const value = defaultValue || this.getEmptyFieldValue(option)
 
