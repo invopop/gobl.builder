@@ -19,17 +19,17 @@ function createKeypairStore() {
 export const keypair = createKeypairStore();
 
 export const editor: Writable<{
-  updatedAt: number,
-  value: string
+  updatedAt: number;
+  value: string;
 }> = writable({ updatedAt: 0, value: "" });
 
 export const editorJSON: Readable<{
-  updatedAt: number,
-  value: Record<string, unknown> | Error
+  updatedAt: number;
+  value: Record<string, unknown> | Error;
 }> = derived(editor, ($editor) => {
-  if (!$editor.value) return $editor
+  if (!$editor.value) return $editor;
 
-  let value
+  let value;
 
   try {
     value = JSON.parse($editor.value);
@@ -39,8 +39,8 @@ export const editorJSON: Readable<{
 
   return {
     ...$editor,
-    value
-  }
+    value,
+  };
 });
 
 export const undoAvailable = writable(false);

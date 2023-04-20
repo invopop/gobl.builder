@@ -97,13 +97,13 @@ export async function getRootSchema(id: string) {
     $id: id,
     title: schemaKey,
     type: "string",
-    calculated: true
+    calculated: true,
   };
 
   schema.properties = {
     [schemaKey]: schemaValue,
-    ...schema.properties
-  } as any
+    ...schema.properties,
+  } as any;
 
   if (schema.required) {
     schema.required.unshift(schemaKey);

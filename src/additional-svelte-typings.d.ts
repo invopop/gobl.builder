@@ -4,16 +4,16 @@ declare namespace svelteHTML {
   //     'my-custom-element': { someattribute: string; 'on:event': (e: CustomEvent<any>) => void };
   // }
 
-  // enhance attributes                                                 
+  // enhance attributes
   interface HTMLAttributes<T> {
-    'on:hover'?: (event: CustomEvent<boolean>) => void;
-    'on:clickOutside'?: (event: CustomEvent<void>) => void;
+    "on:hover"?: (event: CustomEvent<boolean>) => void;
+    "on:clickOutside"?: (event: CustomEvent<void>) => void;
   }
 }
 
 declare namespace svelte.JSX {
   interface HTMLAttributes<T> {
-    'onhover'?: (event: CustomEvent<boolean>) => void;
-    'onclickOutside'?: (event: CustomEvent<void>) => void;
+    onhover?: (event: CustomEvent<boolean>) => void;
+    onclickOutside?: (event: CustomEvent<void>) => void;
   }
 }

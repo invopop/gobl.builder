@@ -1,4 +1,4 @@
-import type { ActionReturn } from 'svelte/action';
+import type { ActionReturn } from "svelte/action";
 
 export default function hover(node: HTMLElement): ActionReturn {
   function handleHover(isHover: boolean) {
