@@ -4,7 +4,7 @@
   import { getFormEditorContext } from "./context/formEditor.js";
   import EditableTextField from "./EditableTextField.svelte";
 
-  export let parseKey: (key: SchemaValue) => string = (key) => key + "";
+  export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_]/g, "");
   export let field: UIModelField<string>;
 
   let pristine = true;

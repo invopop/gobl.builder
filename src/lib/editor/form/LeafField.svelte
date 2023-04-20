@@ -8,7 +8,7 @@
   import CalculatedField from "./CalculatedField.svelte";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
-  export let parseKey: ((key: SchemaValue) => SchemaValue) | undefined = undefined;
+  export let parseKey: ((key: SchemaValue) => string) | undefined = undefined;
   export let field: UIModelField<string>;
 </script>
 

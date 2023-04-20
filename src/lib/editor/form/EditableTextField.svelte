@@ -5,7 +5,7 @@
   export let field: UIModelField<string>;
   export let showError = false;
   export let classes = "";
-  export let value: string;
+  export let value = "";
 
   $: val = value || field.value;
 
