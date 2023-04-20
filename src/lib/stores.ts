@@ -1,4 +1,4 @@
-import { derived, writable, type Writable } from "svelte/store";
+import { derived, writable, type Readable, type Writable } from "svelte/store";
 import type * as monaco from "monaco-editor";
 import * as GOBL from "$lib/gobl.js";
 import type { EditorCursorPosition, EditorViewType } from "./types.js";
@@ -18,17 +18,28 @@ function createKeypairStore() {
 
 export const keypair = createKeypairStore();
 
-export const editor = writable<string | null>(null);
+export const editor: Writable<{
+  updatedAt: number,
+  value: string
+}> = writable({ updatedAt: 0, value: "" });
 
-export const editorJSON = derived<
-  Writable<string | null>,
-  Record<string, unknown> | Error | null
->(editor, ($editor) => {
+export const editorJSON: Readable<{
+  updatedAt: number,
+  value: Record<string, unknown> | Error
+}> = derived(editor, ($editor) => {
+  if (!$editor.value) return $editor
+
+  let value
+
   try {
-    if (!$editor) return null;
-    return JSON.parse($editor);
+    value = JSON.parse($editor.value);
   } catch (e) {
-    return e as Error;
+    value = e as Error;
+  }
+
+  return {
+    ...$editor,
+    value
   }
 });
 
@@ -77,7 +88,7 @@ export const envelopeAndEditorJSON = derived([envelope, editor], ([$envelope, $e
       envelopeValue = JSON.stringify(
         {
           ...$envelope,
-          doc: JSON.parse($editor || ""),
+          doc: JSON.parse($editor.value),
         },
         null,
         4

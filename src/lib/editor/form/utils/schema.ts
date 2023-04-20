@@ -93,17 +93,23 @@ export async function getRootSchema(id: string) {
   schema.properties = schema.properties || {};
 
   const schemaKey = "$schema";
-
-  schema.properties[schemaKey] = {
+  const schemaValue = {
+    $id: id,
     title: schemaKey,
     type: "string",
+    calculated: true
   };
 
+  schema.properties = {
+    [schemaKey]: schemaValue,
+    ...schema.properties
+  } as any
+
   if (schema.required) {
-    schema.required.push(schemaKey);
+    schema.required.unshift(schemaKey);
   }
 
   return schema;
 }
 
-export type SchemaValue = JSON | string | number | boolean | any[] | Record<string, unknown> | null | undefined;
+export type SchemaValue = JSON | string | number | boolean | any[] | Record<string, unknown> | null | undefined | Error;

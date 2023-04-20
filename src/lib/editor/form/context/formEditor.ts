@@ -1,167 +1,173 @@
-import { getContext, setContext } from "svelte";
-import { derived, type Readable } from "svelte/store";
-import { editor, editorJSON } from "$lib/stores.js";
-import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
-import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
-import { sleep } from "../utils/sleep.js";
-import type { SchemaValue } from "../utils/schema.js";
+import { getContext, onDestroy, setContext } from "svelte"
+import { editor, editorJSON } from "$lib/stores.js"
+import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js"
+import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js"
+import { sleep } from "../utils/sleep.js"
+import type { SchemaValue } from "../utils/schema.js"
+import { writableDerived } from "$lib/store/writableDerived.js"
+import type { Readable, Writable } from "svelte/store"
 
-export const FormEditorContextId = Symbol("form-editor");
+export const FormEditorContextId = Symbol("form-editor")
 
 export type FormEditorContextType = {
-  uiModel: Readable<UIModelRootField | undefined>;
-  changeField(field: UIModelField, value: SchemaValue): void;
-  deleteField(field: UIModelField): void;
-  duplicateField(field: UIModelField): void;
-  addField(parentField: UIModelField, option: SchemaOption, position?: number): void;
-  sortField(field: UIModelField, position: number): void;
-};
+  uiModel: Readable<{ value: UIModelRootField | undefined, updatedAt: number }>
+  changeFieldKey(field: UIModelField, value: SchemaValue): void
+  changeFieldValue(field: UIModelField, value: SchemaValue): void
+  deleteField(field: UIModelField): void
+  duplicateField(field: UIModelField): void
+  addField(parentField: UIModelField, option: SchemaOption, position?: number): void
+  sortField(field: UIModelField, position: number): string | undefined
+  refreshUI(): void
+  updateEditor(): void
+}
 
 export function getFormEditorContext(): FormEditorContextType {
-  return getContext<FormEditorContextType>(FormEditorContextId);
+  return getContext<FormEditorContextType>(FormEditorContextId)
 }
 
 export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEditorContextType {
-  const uiModel = derived<Readable<any>[], UIModelRootField | undefined>(
+  const uiModel: Writable<{
+    value: UIModelRootField | undefined
+    updatedAt: number
+  }> = writableDerived(
     [jsonSchemaURL, editorJSON],
-    ([$schema, $value], set) => {
-      async function getModel() {
+    ([$schema, $editor], set) => {
+      debouncedRecreateUIModel($schema, $editor.value, set)
+    },
+    { value: undefined as UIModelRootField | undefined, updatedAt: 0 }
+  )
 
-        const noSchema = $value && $schema && !$value.$schema
+  const debouncedUpdateEditor = getDebouncedFunction(500, updateEditor)
+  const debouncedRecreateUIModel = getDebouncedFunction(200, recreateUIModel as any) 
 
-        if (noSchema) {
-          delete $value.$schema
-          $value = { $schema, ...$value }
-        }
+  let uiModelValue: UIModelRootField | undefined
+  const unsubscribeUiModelValue = uiModel.subscribe(({ value }) => {
+    uiModelValue = value
+  })
 
-        const model = await getUIModel($schema, $value);
+  async function recreateUIModel(
+    schema: string,
+    editor: SchemaValue,
+    set: (value: { value: UIModelRootField | undefined, updatedAt: number }) => void
+  ) {
+    const model = await getUIModel(schema, editor) as UIModelRootField | undefined
 
-        if (model && noSchema) {
-          updateEditor(model.root)
-        }
-
-        console.log("uiModel", model);
-        console.log("$schema", $schema);
-
-        set(model);
-      }
-
-      getModel();
+    if (model && model?.value !== editor) {
+      updateEditor(model)
     }
-  );
 
-  function updateEditor(model: UIModelRootField) {
-    const newEditorStr = model.toJSON();
-    console.log("EDITOR UPDATED!", newEditorStr.length);
-    editor.set(newEditorStr);
+    console.log("uiModel", model)
+    console.log("$schema", schema)
+
+    set({ value: model, updatedAt: Date.now() })
   }
 
-  const debouncedUpdateEditor = getDebouncedFunction(200, updateEditor);
+  function updateEditor(model: UIModelField | undefined = uiModelValue) {
+    if (!model) return
 
-  function changeField(field: UIModelField, value: SchemaValue) {
-    console.log("FIELD CHANGED!", field);
-    field.value = value;
-    debouncedUpdateEditor(field.root);
+    const value = model.root.toJSON()
+    console.log("EDITOR UPDATED!", value.length)
+    editor.set({ value, updatedAt: Date.now() })
+  }
+
+  function refreshUI() {
+    console.log("UI UPDATED!")
+    uiModel.update(({ value }) => ({ value, updatedAt: Date.now() }))
+  }
+
+  function changeFieldKey(field: UIModelField, key: string) {
+    const result = field.setKey(key)
+    if (!result) return
+
+    debouncedUpdateEditor(field.root)
+  }
+
+  function changeFieldValue(field: UIModelField, value: SchemaValue) {
+    const result = field.setValue(value)
+    if (!result) return
+
+    debouncedUpdateEditor(field.root)
   }
 
   function deleteField(field: UIModelField) {
-    if (field.is.root) return;
-    if (!field.parent) return;
+    const result = field.delete()
+    if (!result) return
 
-    field.parent.deleteChildFieldById(field.id);
-    console.log("FIELD DELETED!", field.key, " from parent ", field.parent.key, field.parent);
-
-    updateEditor(field.root);
+    updateEditor()
   }
 
   function duplicateField(field: UIModelField) {
-    if (field.is.root) return;
-    if (!field.parent) return;
+    const newField = field.duplicate()
+    if (!newField) return
 
-    console.log("FIEL22D DUPLICATED!", field);
-
-    const newField = field.clone();
-    const childs = field.parent.children || ([] as UIModelField[]);
-
-    // @todo: move to UIModel class
-    if (field.parent.isObject()) {
-      const keyMap = childs.reduce((acc, curr) => {
-        acc[curr.key] = curr;
-        return acc;
-      }, {} as Record<string, unknown>);
-
-      let n = 0,
-        key;
-      do {
-        key = `${newField.key}_${++n}`;
-      } while (keyMap[key]);
-
-      newField.key = key;
-      field.parent.children = [...childs, newField];
-    } else if (field.parent.isArray()) {
-      const key = childs.length + "";
-      newField.key = key;
-      field.parent.children = [...childs, newField];
-    }
-
-    console.log("FIELD DUPLICATED!", field);
-
-    updateEditor(field.root);
+    updateEditor()
+    tryQuickFocus(newField)
   }
 
   function addField(parentField: UIModelField, option: SchemaOption, position?: number) {
-    console.log("ADDING FIELD ON", parentField.type, 'POSITION', position);
+    const newField = parentField.addChildField(option, undefined, position)
+    if (!newField) return
 
-    const newField = parentField.addChildField(option, position);
-    if (!newField) return;
-
-    console.log("ADD FIELD !", option, newField);
-
-    updateEditor(parentField.root);
-
-    tryQuickFocus(newField);
+    updateEditor()
+    tryQuickFocus(newField)
   }
 
-  function sortField(field: UIModelField, position: number) {
-    console.log("SORTING FIELD", field.key, position);
+  function sortField(field: UIModelField, position: number, update = false): string | undefined {
+    const result = field.sortField(position)
+    if (!result) return
 
-    field.sortField(position);
-    updateEditor(field.root);
+    if (update) {
+      updateEditor()
+    } else {
+      refreshUI()
+    }
+
+    return result
   }
 
-  async function tryQuickFocus(field: UIModelField, retries = 5): Promise<void> {
+  async function tryQuickFocus(field: UIModelField, retries = 5): Promise<boolean> {
     // @todo: Refactor this
     // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
 
-
     if (field.isObject() || field.isArray()) {
       const [firstChild] = field.children || []
+      if (!firstChild) return false
+
       return tryQuickFocus(firstChild)
     }
 
     while (--retries > 0) {
-      await sleep(200);
+      await sleep(200)
 
-      const selector = `#${field.id}`;
-      const el = document.querySelector(selector) as HTMLElement;
+      const selector = `#${field.id}`
+      const el = document.querySelector(selector) as HTMLElement
 
-      if (!el) continue;
-      console.log("FOCUS ", selector, el);
+      if (!el) continue
 
-      el.scrollIntoView({ behavior: "auto", block: "center" });
-      el.focus();
-      break;
+      el.scrollIntoView({ behavior: "auto", block: "center" })
+      el.focus()
+
+      return true
     }
+
+    return false
   }
 
   const initialState: FormEditorContextType = {
     uiModel,
-    changeField,
+    changeFieldKey,
+    changeFieldValue,
     deleteField,
     duplicateField,
     addField,
     sortField,
-  };
+    refreshUI,
+    updateEditor,
+  }
 
-  return setContext<FormEditorContextType>(FormEditorContextId, initialState);
+  onDestroy(() => {
+    unsubscribeUiModelValue()
+  })
+
+  return setContext<FormEditorContextType>(FormEditorContextId, initialState)
 }

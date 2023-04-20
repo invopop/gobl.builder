@@ -10,15 +10,15 @@
 
   function handleClearEditor() {
     dispatch("clear");
-    if ($editor === "") {
+    if (!$editor.value) {
       return;
     }
 
-    editor.set("");
+    editor.set({ value: "", updatedAt: Date.now() });
     envelope.set(null);
   }
 
-  $: disabled = $editor === "";
+  $: disabled = !$editor.value;
 </script>
 
 <Tooltip label="Clear the editor" containerClass="block">

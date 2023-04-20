@@ -4,6 +4,10 @@
 
   export let field: UIModelField<string>;
   export let showError = false;
+  export let classes = "";
+  export let value: string;
+
+  $: val = value || field.value;
 
   const dispatch = createEventDispatcher();
 
@@ -16,11 +20,11 @@
 <input
   type="text"
   id={field.id}
-  value={field.value}
+  value={val}
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur
-  class="outline-none w-full bg-white rounded border h-8 py-1.5 px-2 text-gray-700 focus:border-gray-400"
+  class="outline-none w-full bg-white rounded border h-8 py-1.5 px-2 text-gray-700 focus:border-gray-400 {classes}"
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
 />

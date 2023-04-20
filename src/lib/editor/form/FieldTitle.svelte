@@ -3,7 +3,7 @@
   export let field: UIModelField<unknown>;
 </script>
 
-<span class="text-gray-700 font-medium mr-1 whitespace-nowrap" class:capitalize={!field.schema.title}>
+<span class="text-gray-700 font-medium whitespace-nowrap" class:capitalize={!field.schema.title}>
   {#if field.parent?.isArray()}
     # {field.key}
   {:else}

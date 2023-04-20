@@ -22,13 +22,13 @@
 </script>
 
 <div class="relative">
-  <button class="text-xs flex items-center gap-2 " on:click={handleToggleActions}>
+  <button class="text-xs flex items-center gap-2 p-2 pr-1 rounded hover:bg-gray-200" on:click={handleToggleActions}>
     Actions
     <Icon src={ChevronDown} class="h-4 w-4 p-0.5 text-gray-400" />
   </button>
   {#if showActions}
     <div
-      class="absolute top-full mt-4 -left-4 z-10 w-48"
+      class="absolute top-full left-0 mt-2 z-10 w-48 -translate-x-1/2"
       transition:fade={{ duration: 200 }}
       use:clickOutside
       on:clickOutside={handleClickOutside}

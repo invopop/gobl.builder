@@ -35,7 +35,7 @@
 
 <FieldButtons
   {field}
-  showAdd={(field.options?.length || field.parent?.options?.length || 0) > 0}
+  showAdd={!field.parent?.is.complete}
   showOptions={field.is.duplicable || field.is.disposable}
   on:add={handleClickAddButton}
   on:options={handleToggleOptionMenu}

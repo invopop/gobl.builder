@@ -113,7 +113,9 @@
       ]);
     });
 
-    unsubscribeEditor = editor.subscribe((value) => {
+    let lastEditorValue = "";
+    unsubscribeEditor = editor.subscribe(({ value }) => {
+      lastEditorValue = value;
       // To keep undo/redo in the editor working, only overwrite the model
       // contents when the current editor model value isn't the same as the new
       // store value.
@@ -133,7 +135,11 @@
 
     monacoEditor.onDidChangeModelContent(() => {
       const value = monacoEditor.getValue();
-      editor.set(value);
+
+      // @note: Only update editor store if the monaco editor value is not the same
+      if (lastEditorValue !== value) {
+        editor.set({ value, updatedAt: Date.now() });
+      }
 
       const versionId = model.getAlternativeVersionId();
       if (versionId < currentVersion) {

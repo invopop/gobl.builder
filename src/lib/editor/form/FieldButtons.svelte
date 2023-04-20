@@ -12,7 +12,6 @@
 
   function handleClickAddButton(e: MouseEvent) {
     e.ctrlKey;
-    console.log(e.ctrlKey, e.altKey, e.metaKey, e.shiftKey);
     dispatch("add", e.ctrlKey || e.altKey || e.metaKey || e.shiftKey);
   }
 
@@ -27,7 +26,7 @@
   class="absolute flex w-full h-full top-0 right-0 z-0 rounded rounded-tl-none rounded-bl-none {clasess}"
   transition:fade={{ duration: 200 }}
 >
-  <div class="flex-shrink-0 absolute right-full top-0 bg-gray-200 rounded rounded-tr-none rounded-br-none">
+  <div class="flex-shrink-0 absolute right-full top-0 rounded rounded-tr-none rounded-br-none {clasess}">
     <div class="flex align-middle text-gray-500">
       {#if showAdd}
         <Tooltip>

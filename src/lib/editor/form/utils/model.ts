@@ -1,26 +1,26 @@
-import { getRootSchema, type Schema, type SchemaValue } from "./schema.js";
+import { getRootSchema, type Schema, type SchemaValue } from "./schema.js"
 
 export async function getUIModel<V extends SchemaValue>(
   schema: Schema | string,
   value: V
 ): Promise<UIModelField<V> | undefined> {
-  schema = typeof schema === "string" ? await getRootSchema(schema) : schema;
-  if (!schema) return;
+  schema = typeof schema === "string" ? await getRootSchema(schema) : schema
+  if (!schema) return
 
-  return new UIModelField<V>(schema, value);
+  return new UIModelField<V>(schema, value)
 }
 
 export class UIModelField<V extends SchemaValue | unknown = unknown> {
-  public id: string;
-  public type: string;
-  public controlType?: ControlType;
-  public controlMeta?: any;
-  public root!: UIModelRootField;
-  public children?: UIModelField[];
-  public childrenMap?: Record<string, UIModelField>;
-  public options?: SchemaOption[];
+  public id: string
+  public type: string
+  public controlType?: ControlType
+  public controlMeta?: any
+  public root!: UIModelRootField
+  public children?: UIModelField[]
+  public childrenMap?: Record<string, UIModelField>
+  public options?: SchemaOption[]
   public error?: Error
-  public is: UIModelFieldFlags;
+  public is: UIModelFieldFlags
 
   constructor(
     public schema: Schema,
@@ -31,25 +31,35 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     public parent?: UIModelField,
     root?: UIModelRootField
   ) {
-    this.id = `${parent?.id ? `${parent.id}-` : ""}${this.key}`.replace(/[^a-zA-Z0-9-_]/g, "");
-    this.type = schema.type as string;
-    this.controlType = this.getControlType(schema)
-    this.controlMeta = this.getControlMeta(schema)
-    this.root = !root ? (this as UIModelRootField) : root;
+    this.id = `${this.parent?.id ? `${this.parent.id}-` : ""}${this.key}`.replace(/[^a-zA-Z0-9-_\\$]/g, "")
+    this.type = this.schema.type as string
+    this.controlType = this.getControlType()
+    this.controlMeta = this.getControlMeta()
+    this.root = !root ? (this as UIModelRootField) : root
     this.error = value instanceof Error ? value : undefined
 
-    const calculated = (schema as any).calculated || parent?.is.calculated;
+    const calculated = (this.schema as any).calculated || this.parent?.is.calculated
 
     this.is = {
-      required: !!this.key && (parent?.schema.required || []).includes(this.key),
+      required: !!this.key && (this.parent?.schema.required || []).includes(this.key),
       root: !root,
-      disposable: !!root,
-      duplicable: parent?.type === "array",
+      disposable: !!root && this.key !== '$schema',
+      duplicable: this.parent?.type === "array" || this.parent?.controlType === 'dictionary',
       calculated: calculated,
       editable: !calculated,
+      editableKey: !calculated && this.parent?.controlType === 'dictionary',
       error: (value instanceof Error),
       complete: false
-    };
+    }
+
+    if (this.is.root && !this.value) {
+      const emptyValue = this.getEmptyFieldValue({ key: this.key, schema: this.schema, required: true })
+
+      this.value = {
+        $schema: this.schema.$id,
+        ...emptyValue
+      }
+    }
 
     if (!this.is.error && this.schema.pattern) {
       const pattern = new RegExp(this.schema.pattern)
@@ -66,208 +76,261 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       this.error = new Error(`Required field`)
     }
 
-    switch (schema.type) {
+    switch (this.schema.type) {
       case "object": {
-        const items = Object.entries((value || {}) as Record<string, SchemaValue>);
-        let index = 0;
+        const items = Object.entries((this.value || {}) as Record<string, SchemaValue>)
+        let index = 0
 
         for (const [key, value] of items) {
-          const subSchema = schema.properties?.[key] as Schema | undefined;
-          if (!subSchema) continue;
+          const subSchema = this.controlType === 'dictionary'
+            ? this.controlMeta.schema
+            : this.schema.properties?.[key] as Schema | undefined
 
-          const childUISchema = new UIModelField(subSchema, value, key, index, level + 1, this, this.root);
+          if (!subSchema) continue
 
-          if (!childUISchema) continue;
-          index++;
+          const childUIModelField = new UIModelField(subSchema, value, key, index, this.level + 1, this, this.root)
 
-          this.children = this.children || [];
-          this.childrenMap = this.childrenMap || {};
-          this.children.push(childUISchema);
-          this.childrenMap[key] = childUISchema;
+          if (!childUIModelField) continue
+          index++
+
+          this.children = this.children || []
+          this.childrenMap = this.childrenMap || {}
+          this.children.push(childUIModelField)
+          this.childrenMap[key] = childUIModelField
         }
 
-        this.options = Object.entries(schema.properties || {})
-          .map<SchemaOption>(([key, subSchema]) => ({
-            key,
-            required: ((schema as Schema).required || []).includes(key),
-            schema: subSchema as Schema,
-          }))
-          .filter((opt) => !(opt.schema as any).calculated)
-          .filter((opt) => (value as Record<string, unknown>)?.[opt.key] === undefined);
+        this.options = this.controlType === 'dictionary' ? [
+          this.controlMeta
+        ] :
+          Object.entries(this.schema.properties || {})
+            .map<SchemaOption>(([key, subSchema]) => ({
+              key,
+              required: ((this.schema as Schema).required || []).includes(key),
+              schema: subSchema as Schema,
+            }))
+            .filter((opt) => !(opt.schema as any).calculated)
+            .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined)
 
-        break;
+        break
       }
       case "array": {
         // @todo: Support multiple types (Schema[])
-        const subSchema = schema.items as Schema | undefined;
-        if (!subSchema) break;
+        const subSchema = this.schema.items as Schema | undefined
+        if (!subSchema) break
 
-        const items = ((value || []) as SchemaValue[]).entries();
-        let index = 0;
+        const items = ((this.value || []) as SchemaValue[]).entries()
+        let index = 0
 
         for (const [k, value] of items) {
           const key = k + ''
-          const childUISchema = new UIModelField(subSchema, value, key, index, level + 1, this, this.root);
+          const childUIModelField = new UIModelField(subSchema, value, key, index, this.level + 1, this, this.root)
 
-          if (!childUISchema) continue;
-          index++;
+          if (!childUIModelField) continue
+          index++
 
-          this.children = this.children || [];
-          this.childrenMap = this.childrenMap || {};
-          this.children.push(childUISchema);
-          this.childrenMap[key] = childUISchema;
+          this.children = this.children || []
+          this.childrenMap = this.childrenMap || {}
+          this.children.push(childUIModelField)
+          this.childrenMap[key] = childUIModelField
         }
 
         this.options = [
           {
-            key: `${this.key} item`,
-            required: (schema.required || []).includes(this.key),
+            key: `item`,
+            required: (this.schema.required || []).includes(this.key),
             schema: subSchema,
           },
-        ];
+        ]
 
-        break;
+        break
       }
     }
 
-    this.is.complete = (this.options || []).length === 0
+    this.is.complete = this.controlType !== 'dictionary' && (this.options || []).length === 0
   }
 
   isObject(this: UIModelField<unknown>): this is UIModelFieldObject {
-    return this.type === "object";
+    return this.type === "object"
   }
 
   isArray(this: UIModelField<unknown>): this is UIModelFieldArray {
-    return this.type === "array";
+    return this.type === "array"
   }
 
   isContainer(this: UIModelField<unknown>): this is UIModelFieldArray | UIModelFieldObject {
     return this.isArray() || this.isObject()
   }
 
-  clone(): UIModelField<V> {
-    const clone = new UIModelField(this.schema, this.value, this.key, this.index, this.level, this.parent, this.root);
-
-    clone.id = this.id;
-    clone.type = this.type;
-    clone.root = this.root;
-    clone.children = this.children;
-    clone.childrenMap = this.childrenMap;
-    clone.options = this.options;
-    clone.is = this.is;
-
-    return clone;
-  }
-
   findFieldById(this: UIModelField<unknown>, id: string): UIModelField<unknown> | undefined {
     return id
       .split("-")
       .slice(1)
-      .reduce((acc, curr) => acc?.childrenMap?.[curr], this.root as UIModelField<unknown> | undefined);
+      .reduce((acc, curr) => acc?.childrenMap?.[curr], this.root as UIModelField<unknown> | undefined)
   }
 
-  deleteChildFieldById(id: string): void {
-    if (!(this.isContainer())) return;
-    if (!this.children) return;
+  setKey(key: string): boolean {
+    if (!this.is.editableKey) return false
+    if (!this.parent) return false
+    if (this.key === key) return false
+
+    this.parent.deleteChildFieldById(this.id)
+    this.parent.addChildField({ key, required: this.is.required, schema: this.schema }, this.value)
+
+    return true
+  }
+
+  setValue(value: V): boolean {
+    if (!this.is.editable) return false
+    if (this.value === value) return false
+
+    this.value = value
+    return true
+  }
+
+  delete(): boolean {
+    if (this.is.root) return false
+    if (!this.parent) return false
+
+    return this.parent.deleteChildFieldById(this.id)
+  }
+
+  deleteChildFieldById(id: string): boolean {
+    if (!(this.isContainer())) return false
+    if (!this.children) return false
 
     const newChildren = this.children.filter((f) => f.id !== id)
-    this.updateChildren(newChildren);
+    if (this.children.length <= newChildren.length) return false
+
+    this.updateChildren(newChildren)
+    return true
   }
 
-  addChildField(option: SchemaOption, position?: number): UIModelField | undefined {
-    if (!(this.isContainer())) return;
+  duplicate(): UIModelField | undefined {
+    if (this.is.root) return
+    if (!this.parent) return
+    if (!this.parent.isContainer()) return
+    
+    const key = this.parent.getNextChildFieldKey(this.key)
+    return this.parent.addChildField({ key, required: this.is.required, schema: this.schema }, this.value)
+  }
 
-    const value = this.getEmptyFieldValue(option);
+  getNextChildFieldKey(key:string): string {
+    if (!this.isContainer()) return key
 
-    const childs = this.children || ([] as UIModelField[]);
-    const childLength = childs.length;
-    const key = this.isArray() ? childLength + "" : option.key;
+    const childs = this.children || ([] as UIModelField[])
+    let newKey = key
 
-    const newField = new UIModelField(option.schema, value, key, childLength, this.level + 1, this, this.root);
+    if (this.isObject()) {
+      const keyMap = childs.reduce((acc, curr) => {
+        acc[curr.key] = curr
+        return acc
+      }, {} as Record<string, unknown>)
 
-    if (!newField) return;
+      let n = 0
+      while (keyMap[newKey]) {
+        newKey = `${key}${++n}`
+      }
+    }
+
+    if (this.isArray()) {
+      newKey = childs.length + ""
+    }
+
+    return newKey
+  }
+
+  addChildField(option: SchemaOption, defaultValue?: any, position?: number): UIModelField | undefined {
+    if (!(this.isContainer())) return
+
+    const value = defaultValue || this.getEmptyFieldValue(option)
+
+    const childs = this.children || ([] as UIModelField[])
+    const childLength = childs.length
+    const key = this.getNextChildFieldKey(option.key)
+
+    const newField = new UIModelField(option.schema, value, key, childLength, this.level + 1, this, this.root)
+
+    if (!newField) return
 
     position = position !== undefined ? position : childs.length
 
-    const prev = childs.slice(0, position);
-    const next = childs.slice(position);
+    const prev = childs.slice(0, position)
+    const next = childs.slice(position)
 
     const newChildren = [...prev, newField, ...next]
-    this.updateChildren(newChildren);
+    this.updateChildren(newChildren)
 
-    return newField;
+    return newField
   }
 
   updateChildren(children: UIModelField[]): void {
     this.children = children
       .map((child, i) => {
-        child.index = i;
-        return child;
+        child.index = i
+        return child
       })
-      .sort((a, b) => a.index - b.index);
+      .sort((a, b) => a.index - b.index)
 
     this.childrenMap = this.children.reduce((acc, curr) => {
-      acc[curr.key] = curr;
-      return acc;
-    }, {} as Record<string, UIModelField>);
+      acc[curr.key] = curr
+      return acc
+    }, {} as Record<string, UIModelField>)
   }
 
   toValue(): SchemaValue {
     switch (this.type) {
       case "object": {
         return (this.children || []).reduce((acc, field) => {
-          acc[field.key] = field.toValue();
-          return acc;
-        }, {} as Record<string, any>);
+          acc[field.key] = field.toValue()
+          return acc
+        }, {} as Record<string, any>)
       }
       case "array": {
-        return (this.children || []).map((field) => field.toValue());
+        return (this.children || []).map((field) => field.toValue())
       }
       default: {
-        return this.value as SchemaValue;
+        return this.value as SchemaValue
       }
     }
   }
 
   toJSON(): string {
-    return JSON.stringify(this.toValue(), null, 4);
+    return JSON.stringify(this.toValue(), null, 4)
   }
 
-  sortField(position: number) {
-    if (!this.parent) return;
+  sortField(position: number): string | undefined {
+    if (!this.parent) return
 
     // @note: Field position hasn't changed
-    if (this.index === position) return;
+    if (this.index === position) return
 
-    const newChilds = (this.parent.children || ([] as UIModelField[]))
+    const sortedChilds = (this.parent.children || ([] as UIModelField[]))
       .sort((a, b) => a.index - b.index)
-      .filter((child) => child.index !== this.index);
-    // .map(child => {
-    //   const newIndex = child.index + (child.index < this.index ? 0 : -1)
-    //   child.index = newIndex
-    //   return child
-    // })
 
-    position += position <= this.index ? 0 : -1;
+    const newChilds = sortedChilds
+      .filter((child) => child.index !== this.index)
 
-    console.log("oldChilds", this.parent.children);
-    console.log("newChilds", newChilds);
+    position += position <= this.index ? 0 : -1
 
-    const prev = newChilds.slice(0, position);
-    const next = newChilds.slice(position);
+    const prev = newChilds.slice(0, position)
+    const next = newChilds.slice(position)
 
     const newChildren = [...prev, this, ...next]
-    this.parent.updateChildren(newChildren);
+    this.parent.updateChildren(newChildren)
+
+    return (this.parent.type === 'array')
+      ? sortedChilds[position].id
+      : this.id
   }
 
   getNextFocusableField(): UIModelField | undefined {
-    const nextItem = this.parent?.children?.[this.index + 1];
+    const nextItem = this.parent?.children?.[this.index + 1]
     if (nextItem) return nextItem
 
     return
   }
 
-  getControlType(schema: Schema): ControlType | undefined {
+  getControlType(schema: Schema = this.schema): ControlType | undefined {
     const isSelect = 'oneOf' in schema || 'anyOf' in schema
     if (isSelect) return 'select'
 
@@ -276,9 +339,12 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     const isText = schema.type === 'string'
     if (isText) return 'text'
+
+    const isDictionary = 'patternProperties' in schema
+    if (isDictionary) return 'dictionary'
   }
 
-  getControlMeta(schema: Schema): unknown | undefined {
+  getControlMeta(schema: Schema = this.schema): unknown | undefined {
     const controlType = this.getControlType(schema)
 
     if (controlType === 'select') {
@@ -290,97 +356,117 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         return (schema.anyOf || []).map((v: any) => ({ key: v.description, value: v.const }))
       }
     }
+
+    if (controlType === 'dictionary' && !!schema.patternProperties?.['.*']) {
+      const subSchema = schema.patternProperties['.*']
+      return { key: `key`, required: false, schema: subSchema }
+    }
   }
 
-  getEmptyFieldValue(option: SchemaOption): any {
-    let value;
+  getEmptyFieldValue(option: SchemaOption, nestingLevel: number = Number.POSITIVE_INFINITY): any {
+    let value
 
     switch (option.schema.type) {
       case "object": {
-        const requiredFields = option.schema.required || [];
+        const requiredFields = option.schema.required || []
 
         value = requiredFields.reduce((acc, key) => {
-          const schema = (option.schema.properties || {})[key] as Schema;
-          if ((schema as any).calculated) return acc;
+          const schema = (option.schema.properties || {})[key] as Schema
+          if ((schema as any).calculated) return acc
 
-          acc[key] = this.getEmptyFieldValue({ key, schema, required: true });
-          return acc;
-        }, {} as Record<string, SchemaValue>);
+          acc[key] = this.getEmptyFieldValue({ key, schema, required: true }, --nestingLevel)
+          return acc
+        }, {} as Record<string, SchemaValue>)
 
-        break;
+        break
       }
       case "array": {
-        const schema = option.schema.items as Schema;
-        const firstItem = this.getEmptyFieldValue({ key: "0", schema, required: false });
+        const schema = option.schema.items as Schema
+        const firstItem = this.getEmptyFieldValue({ key: "0", schema, required: false }, --nestingLevel)
 
-        value = [firstItem];
+        value = [firstItem]
 
-        break;
+        break
       }
       case "null": {
-        value = null;
-        break;
+        value = null
+        break
       }
       case "string": {
-        value = "";
-        break;
+        value = ""
+        break
       }
       case "integer":
       case "number": {
-        value = 0;
-        break;
+        value = 0
+        break
       }
       case "boolean": {
-        value = true;
-        break;
+        value = true
+        break
       }
       case "": {
-        value = [];
-        break;
+        value = []
+        break
       }
     }
 
-    // @note: Handle default values for select types
-    const selectOptions = option.schema.oneOf || option.schema.anyOf
-    if (selectOptions) {
-      value = (selectOptions[0] as any).const;
+    // @note: Override default values of specific form control types
+    const controlType = this.getControlType(option.schema)
+
+    switch (controlType) {
+      case 'date': {
+        value = (new Date()).toISOString().split('T')[0]
+        break
+      }
+      case 'select': {
+        const [firstOption] = this.getControlMeta(option.schema) as { key: string, value: string }[]
+        value = firstOption.value
+        break
+      }
+      case 'dictionary': {
+        const childOption = this.getControlMeta(option.schema) as SchemaOption
+        value = { key: this.getEmptyFieldValue(childOption) }
+        break
+      }
     }
 
-    return value;
+    return value
   }
 }
 
-export type ControlType = 'text' | 'number' | 'select' | 'date'
+export type ControlType = 'text' | 'select' | 'date' | 'dictionary'
 
 export type SchemaOption = {
-  key: string;
-  required: boolean;
-  schema: Schema;
-};
+  key: string
+  required: boolean
+  schema: Schema
+}
 
 export type UIModelFieldFlags = {
-  root: boolean;
-  required: boolean;
-  disposable: boolean;
-  duplicable: boolean;
-  calculated: boolean;
-  editable: boolean;
-  error: boolean;
+  root: boolean
+  required: boolean
+  disposable: boolean
+  duplicable: boolean
+  calculated: boolean
+  editableKey: boolean
+  editable: boolean
+  error: boolean
   complete: boolean
-};
+}
 
 export type UIModelFieldObject<T = unknown> = UIModelField<Record<string, T>> & {
-  type: "object";
-  children?: UIModelField[];
-  childrenMap?: Record<string, UIModelField>;
-  deleteChildFieldById: (key: string) => void;
-};
+  type: "object"
+  children?: UIModelField[]
+  childrenMap?: Record<string, UIModelField>
+  deleteChildFieldById: (key: string) => void
+}
 
 export type UIModelFieldArray<T = unknown> = UIModelField<Array<T>> & {
-  type: "array";
-  children?: UIModelField[];
-  childrenMap?: Record<string, UIModelField>;
-  deleteChildFieldById: (key: string) => void;
-};
+  type: "array"
+  children?: UIModelField[]
+  childrenMap?: Record<string, UIModelField>
+  deleteChildFieldById: (key: string) => void
+}
 
-export type UIModelRootField = UIModelField<Record<string, any>>;
+export type UIModelRootField = UIModelField<Record<string, any> | Error>

@@ -21,7 +21,7 @@
     }
 
     try {
-      const parsed = JSON.parse($editor || "");
+      const parsed = JSON.parse($editor.value);
       if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
         return false;
       }
@@ -45,10 +45,10 @@
       // the editor contents. If not, send the editor contents as-is. In either case,
       // the GOBL command response will be an an enveloped document.
       if (envelopeValue) {
-        envelopeValue.doc = JSON.parse($editor || "");
+        envelopeValue.doc = JSON.parse($editor.value);
         sendData = JSON.stringify(envelopeValue);
       } else {
-        sendData = $editor || "";
+        sendData = $editor.value;
       }
 
       const payload: GOBL.SignPayload = {
@@ -61,10 +61,12 @@
       if (result.$schema === "https://gobl.org/draft-0/envelope") {
         // Set new editor value *first*, because when the envelope is set, the Monaco
         // editor if the envelope contains signatures.
-        editor.set(JSON.stringify(result.doc, null, 4));
+        const value = JSON.stringify(result.doc, null, 4);
+        editor.set({ value, updatedAt: Date.now() });
         envelope.set(result);
       } else {
-        editor.set(JSON.stringify(result, null, 4));
+        const value = JSON.stringify(result, null, 4);
+        editor.set({ value, updatedAt: Date.now() });
       }
 
       goblError.set(null);

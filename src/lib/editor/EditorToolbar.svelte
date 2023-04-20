@@ -69,14 +69,14 @@
 
   {#if open}
     <div class="h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800" transition:slide={{ duration: 300 }}>
-      {#if $editor === ""}
+      {#if $editor.value === ""}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
             >Warnings, errors and tips are shown in this area.</span
           >
         </p>
       {/if}
-      {#if $editor !== "" && $problems.length === 0}
+      {#if $editor.value !== "" && $problems.length === 0}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
             >Use the action buttons in the menu bar.</span

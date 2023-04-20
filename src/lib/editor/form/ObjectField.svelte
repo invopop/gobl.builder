@@ -19,7 +19,7 @@
   <ExpandButton {open} />
 </div>
 <div class="pl-2 border-l max-h-0" class:max-h-max={open} class:overflow-hidden={!open}>
-  {#each childs as field (field.key)}
-    <AbstractField {field} />
+  {#each childs as childField (childField.key)}
+    <AbstractField field={childField} />
   {/each}
 </div>

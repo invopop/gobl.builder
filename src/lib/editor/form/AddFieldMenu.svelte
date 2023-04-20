@@ -63,9 +63,10 @@
   }
 
   function handleAddField(parentField: UIModelField, option: SchemaOption) {
-    addField(parentField, option, position);
-    showAddMenu = false;
     showContextMenu = false;
+    showAddMenu = false;
+    handleCloseMenu();
+    addField(parentField, option, position);
   }
 
   function handleKeyDown(e: KeyboardEvent) {

@@ -15,8 +15,8 @@ export function actionButtonClasses(disabled: boolean): string {
 }
 
 export function editorViewButtonClasses(disabled: boolean): string {
-  return clsx("py-1.5 px-10 rounded-md text-sm font-semibold flex items-center justify-center gap-1", {
-    "text-gray-300": !disabled,
-    "text-gray-700 bg-white cursor-default": disabled,
+  return clsx("py-1.5 px-10 rounded-md text-sm flex items-center justify-center gap-1", {
+    "text-gray-300 font-medium": !disabled,
+    "text-gray-700 bg-white cursor-default font-semibold": disabled,
   });
 }

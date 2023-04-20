@@ -41,7 +41,7 @@
     }
   }
 
-  const { sortField } = getFormEditorContext() || {};
+  const { sortField, addField, updateEditor } = getFormEditorContext() || {};
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -53,7 +53,17 @@
     showAddMenuTop = false;
     showAddMenuBot = false;
 
-    if (e?.detail) {
+    const addBefore = e?.detail;
+
+    if (parentField.type === "array" || parentField.controlType === "dictionary") {
+      const position = field.index + (addBefore ? 0 : 1);
+      const [childOption] = parentField.options || [];
+
+      addField(parentField, childOption, position);
+      return;
+    }
+
+    if (addBefore) {
       showAddMenuTop = true;
     } else {
       showAddMenuBot = true;
@@ -86,6 +96,7 @@
     // and skip from recalculating the UI model
     return !(
       dragField.id === dropField.id ||
+      dragItemPosition === dropItemPosition ||
       (dragItemPosition === dropItemPosition - 1 && isBefore) ||
       (dragItemPosition === dropItemPosition + 1 && !isBefore)
     );
@@ -94,8 +105,6 @@
   function handleDragStart(e: DragEvent) {
     e.stopPropagation();
     if (!e.dataTransfer) return;
-
-    isDragging = true;
 
     const target = e.currentTarget as HTMLDivElement;
     const targetChild = target.firstChild as HTMLDivElement;
@@ -106,8 +115,10 @@
       targetChild.classList.add(...dragChildPlaceholderClasses);
     }, 100);
 
+    isDragging = true;
+
     e.dataTransfer.clearData();
-    e.dataTransfer.setData(`${field.id}:${field.index}`, "");
+    e.dataTransfer.setData(field.id, "");
 
     e.dataTransfer.dropEffect = "move";
     e.dataTransfer.effectAllowed = "move";
@@ -125,6 +136,8 @@
     target.classList.remove(...dragClasses);
     target.classList.remove(...dragPlaceholderClasses);
     targetChild.classList.remove(...dragChildPlaceholderClasses);
+
+    updateEditor();
   }
 
   function handleDragOverWindow(e: DragEvent) {
@@ -136,9 +149,10 @@
     e.preventDefault();
     if (!e.dataTransfer) return;
 
-    const [dragFieldData] = e.dataTransfer.types;
-    const [dragFieldId] = dragFieldData.split(":");
+    const [dragFieldId] = e.dataTransfer.types;
     const dropFieldId = field.id;
+
+    if (!dragFieldId) return;
 
     // @note: Quick check level of nesting (not same item & same nesting level)
     let canDrop = dragFieldId.split("-").length === dropFieldId.split("-").length;
@@ -167,8 +181,6 @@
   }
 
   function handleKeyDown(e: KeyboardEvent) {
-    console.log(e.key);
-
     if (e.key === "Enter") {
       e.preventDefault();
 
@@ -223,7 +235,7 @@
       on:dragstart|preventDefault|stopPropagation
     >
       <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
-      {#if addMenuEmptyItem && !field.is.complete}
+      {#if addMenuEmptyItem}
         <AddFieldMenu {field} bind:inputRef={addMenuRef} />
       {/if}
     </div>

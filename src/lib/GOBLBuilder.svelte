@@ -41,14 +41,15 @@
       if (isEnvelope(parsedValue)) {
         // Set new editor value *first*, because when the envelope is set, the Monaco
         // editor if the envelope contains signatures.
-        $editor = JSON.stringify(parsedValue.doc, null, 4);
+        const value = JSON.stringify(parsedValue.doc, null, 4);
+        $editor = { value, updatedAt: Date.now() };
         $envelope = parsedValue;
       } else {
-        $editor = data;
+        $editor = { value: data, updatedAt: Date.now() };
         $envelope = null;
       }
     } catch (e) {
-      $editor = data;
+      $editor = { value: data, updatedAt: Date.now() };
       $envelope = null;
     }
   }

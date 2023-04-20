@@ -25,7 +25,7 @@
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
 >
-  {#each options as opt, i (opt.value)}
+  {#each options as opt (opt.value)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
   {/each}
 </select>
