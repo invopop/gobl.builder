@@ -5,9 +5,6 @@
 
   import { editor, editorProblems as problems, editorCursor } from "$lib/stores.js";
   import EditorProblem from "./EditorProblem.svelte";
-  import WarningIcon from "$lib/ui/WarningIcon.svelte";
-  import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
-  import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
 

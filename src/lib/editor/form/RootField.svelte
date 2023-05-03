@@ -14,9 +14,9 @@
 {#if field.is.error}
   <CodeError error={field.error} />
 {:else}
-  <div>
+  <div id={field.id}>
     <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
-    {#each childs as field (field.key)}
+    {#each childs as field (field.id)}
       {#if field.key !== "$schema"}
         <AbstractField {field} />
       {/if}

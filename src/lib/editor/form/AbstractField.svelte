@@ -29,7 +29,7 @@
   let addMenuRef: HTMLElement;
 
   $: parentField = field.parent as UIModelField;
-  $: addMenuEmptyItem = field.isContainer() && (!field.children || field.children.length === 0) && !field.is.complete;
+  $: addMenuEmptyItem = field.is.empty;
   $: addMenu = !addMenuEmptyItem && showAddMenu && !parentField.is.complete;
 
   $: {
@@ -39,7 +39,7 @@
     }
   }
 
-  const { sortField, addField, updateEditor } = getFormEditorContext() || {};
+  const { sortField, addField, updateEditor, tryFocusField } = getFormEditorContext() || {};
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -187,71 +187,38 @@
     sortField(dragField, dropPosition);
   }
 
+  function focusNextField(nextField = field.getNextFocusableField()) {
+    if (!nextField) return;
+    tryFocusField(nextField, 5, 0);
+  }
+
+  function focusPrevField(prevField = field.getPrevFocusableField()) {
+    if (!prevField) return;
+    tryFocusField(prevField, 5, 0);
+  }
+
   function handleKeyDown(e: KeyboardEvent) {
+    e.stopPropagation();
+
     const goPrev = e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab");
     const goNext = e.key === "ArrowDown" || (!e.shiftKey && e.key === "Tab");
     const goAdd = e.key === "Enter";
 
-    if (
-      (e.key === "ArrowDown" || e.key === "ArrowUp") &&
-      (field.controlType === "select" || field.controlType === "date")
-    ) {
-      return;
-    }
-
     if (goAdd) {
-      e.preventDefault();
       const nextItem = field.getNextFocusableField();
-      const nextItemEl = document.querySelector(`#${nextItem?.id}`) as HTMLElement;
-      console.log("NEXT ENT", nextItemEl);
-
-      // @note: Focus the next field
-      if (nextItemEl) {
-        nextItemEl.focus();
-        e.stopPropagation();
-        return;
-      }
 
       // @note: Last item but the parent is not complete, show the add field menu
-      if (!parentField.is.complete) {
+      if (nextItem?.isContainer() && !parentField.is.complete) {
         handleAddField();
-        e.stopPropagation();
       }
 
-      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
-      return;
+      return focusNextField(nextItem);
     } else if (goNext) {
       e.preventDefault();
-      const nextItem = field.getNextFocusableField();
-      const nextItemEl = document.querySelector(`#${nextItem?.id}`) as HTMLElement;
-
-      console.log("NEXT", nextItemEl);
-
-      // @note: Focus the next field
-      if (nextItemEl) {
-        nextItemEl.focus();
-        e.stopPropagation();
-        return;
-      }
-
-      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
-      return;
+      return focusNextField();
     } else if (goPrev) {
       e.preventDefault();
-      const prevItem = field.getPrevFocusableField();
-      const prevItemEl = document.querySelector(`#${prevItem?.id}`) as HTMLElement;
-
-      console.log("PREV", prevItemEl);
-
-      // @note: Focus the prev field
-      if (prevItemEl) {
-        prevItemEl.focus();
-        e.stopPropagation();
-        return;
-      }
-
-      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
-      return;
+      return focusPrevField();
     }
   }
 </script>
@@ -281,10 +248,11 @@
       draggable="true"
       on:dragstart|preventDefault|stopPropagation
     >
-      <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
-      {#if addMenuEmptyItem}
-        <AddFieldMenu {field} bind:inputRef={addMenuRef} showModal={false} showButton={true} />
-      {/if}
+      <svelte:component this={componentsMap[field.type] || FallbackField} {field}>
+        {#if addMenuEmptyItem}
+          <AddFieldMenu {field} bind:inputRef={addMenuRef} showModal={false} showButton={true} />
+        {/if}
+      </svelte:component>
     </div>
   </div>
 </div>

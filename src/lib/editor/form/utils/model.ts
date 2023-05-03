@@ -50,6 +50,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       editableKey: !calculated && this.parent?.controlType === "dictionary",
       error: value instanceof Error,
       complete: false,
+      empty: true,
     };
 
     if (this.is.root && !this.value) {
@@ -104,13 +105,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
           this.controlType === "dictionary"
             ? [this.controlMeta]
             : Object.entries(this.schema.properties || {})
-                .map<SchemaOption>(([key, subSchema]) => ({
-                  key,
-                  required: ((this.schema as Schema).required || []).includes(key),
-                  schema: subSchema as Schema,
-                }))
-                .filter((opt) => !(opt.schema as any).calculated)
-                .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
+              .map<SchemaOption>(([key, subSchema]) => ({
+                key,
+                required: ((this.schema as Schema).required || []).includes(key),
+                schema: subSchema as Schema,
+              }))
+              .filter((opt) => !(opt.schema as any).calculated)
+              .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
 
         break;
       }
@@ -148,6 +149,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     }
 
     this.is.complete = (this.options || []).length === 0;
+    this.is.empty = this.isContainer()
+      ? ((this.children || []).length === 0 && !this.is.complete)
+      : this.value === undefined
   }
 
   isObject(this: UIModelField<unknown>): this is UIModelFieldObject {
@@ -337,17 +341,26 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   }
 
   getNextFocusableField(reverse = false): UIModelField | undefined {
-    let nextChilds = this.parent?.children || [];
+    if (this.is.root) {
+      return this.getFirstFocusableChild(reverse)
+    }
 
-    nextChilds = reverse ? nextChilds.slice(0, this.index).reverse() : nextChilds.slice(this.index + 1);
+    if (!this.parent) return this.root
 
-    console.log(nextChilds);
-    for (const item of nextChilds) {
+    let childs = this.parent.children || [];
+    childs = reverse
+      ? childs.slice(0, this.index).reverse()
+      : childs.slice(this.index + 1);
+
+    for (const item of childs) {
+      if (item.is.calculated) continue;
+
       const focusableField = item.getFirstFocusableChild();
       if (focusableField) return focusableField;
     }
 
-    return;
+    if (this.parent.is.root) return this.root
+    return this.parent.getNextFocusableField(reverse)
   }
 
   getPrevFocusableField(): UIModelField | undefined {
@@ -355,12 +368,14 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   }
 
   getFirstFocusableChild(reverse = false): UIModelField | undefined {
-    if (!this.isContainer()) return this;
+    if (!this.isContainer() || this.is.empty) return this;
 
     let childs = this.children || [];
-    childs = reverse ? childs.reverse() : childs;
+    childs = reverse ? childs.slice().reverse() : childs;
 
     for (const item of childs) {
+      if (item.is.calculated) continue;
+
       const focusable = item.getFirstFocusableChild();
       if (focusable) return focusable;
     }
@@ -390,13 +405,17 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const controlType = this.getControlType(schema);
 
     if (controlType === "select") {
+      let options: { key: string, value: string }[] = []
+
       if ("oneOf" in schema) {
-        return (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
+        options = (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
 
       if ("anyOf" in schema) {
-        return (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
+        options = (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
+
+      return options.sort((a, b) => a.key.localeCompare(b.key));
     }
 
     if (controlType === "dictionary" && !!schema.patternProperties?.[".*"]) {
@@ -491,6 +510,7 @@ export type UIModelFieldFlags = {
   editable: boolean;
   error: boolean;
   complete: boolean;
+  empty: boolean
 };
 
 export type UIModelFieldObject<T = unknown> = UIModelField<Record<string, T>> & {

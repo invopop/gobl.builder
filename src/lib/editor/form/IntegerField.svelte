@@ -10,3 +10,4 @@
 </script>
 
 <LeafField {...props} parseValue={handleParseValue} />
+<slot />

@@ -19,7 +19,8 @@ export type FormEditorContextType = {
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
-  tryQuickFocus(field: UIModelField, retries?: number): Promise<boolean>;
+  tryFocusField(field: UIModelField, retries?: number, delay?: number): Promise<boolean>;
+  getFocusableElement(focusField?: UIModelField): HTMLElement | undefined;
 };
 
 export function getFormEditorContext(): FormEditorContextType {
@@ -102,7 +103,9 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (!newField) return;
 
     updateEditor();
-    tryQuickFocus(newField);
+
+    const focusField = newField.getFirstFocusableChild()
+    tryFocusField(focusField);
   }
 
   function addField(parentField: UIModelField, option: SchemaOption) {
@@ -110,7 +113,9 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (!newField) return;
 
     updateEditor();
-    tryQuickFocus(newField);
+
+    const focusField = newField.getFirstFocusableChild()
+    tryFocusField(focusField);
   }
 
   function sortField(field: UIModelField, position: number, update = false): string | undefined {
@@ -126,25 +131,15 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     return result;
   }
 
-  async function tryQuickFocus(field: UIModelField, retries = 5): Promise<boolean> {
-    // @todo: Refactor this
-    // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
+  async function tryFocusField(field?: UIModelField, retries = 5, delay = 200): Promise<boolean> {
+    if (!field) return false
 
     await tick();
 
-    if (field.isObject() || field.isArray()) {
-      const [firstChild] = field.children || [];
-      if (!firstChild) return false;
-
-      return tryQuickFocus(firstChild);
-    }
-
     while (--retries > 0) {
-      await sleep(200);
+      await sleep(delay);
 
-      const selector = `#${field.id}`;
-      const el = document.querySelector(selector) as HTMLElement;
-
+      const el = getFocusableElement(field)
       if (!el) continue;
 
       el.scrollIntoView({ behavior: "auto", block: "center" });
@@ -154,6 +149,16 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     }
 
     return false;
+  }
+
+  function getFocusableElement(focusField?: UIModelField): HTMLElement | undefined {
+    if (!focusField) return;
+
+    if (focusField?.isContainer()) {
+      return document.querySelector(`#${focusField.id} > .add-field-button`) as HTMLElement;
+    } else {
+      return document.querySelector(`#${focusField.id}`) as HTMLElement;
+    }
   }
 
   const initialState: FormEditorContextType = {
@@ -166,7 +171,8 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     sortField,
     refreshUI,
     updateEditor,
-    tryQuickFocus,
+    tryFocusField,
+    getFocusableElement,
   };
 
   onDestroy(() => {

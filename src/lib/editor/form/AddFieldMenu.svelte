@@ -39,6 +39,13 @@
     inputRef?.focus();
   }
 
+  function handleButtonKeyDown(e: KeyboardEvent) {
+    if (e.key === "Enter") {
+      e.stopPropagation();
+      handleAddFieldMenuOpen();
+    }
+  }
+
   function handleAddFieldMenuOpen() {
     showModal = true;
   }
@@ -104,9 +111,17 @@
 </script>
 
 {#if showButton}
-  <div class="cursor-pointer text-sm text-grey-5 py-3 rounded hover:bg-color2 px-2.5" on:click={handleAddFieldMenuOpen}>
+  <button
+    class="w-full text-left cursor-pointer text-sm text-grey-5 py-3 rounded hover:bg-color2 px-2.5 focus:bg-color2 outline-none add-field-button"
+    on:click={handleAddFieldMenuOpen}
+    on:keydown={handleButtonKeyDown}
+    on:mouseover|preventDefault|stopPropagation
+    on:focus|preventDefault|stopPropagation
+    on:focusin|preventDefault|stopPropagation
+    on:focusout|preventDefault|stopPropagation
+  >
     Add field
-  </div>
+  </button>
 {/if}
 
 {#if showModal}
