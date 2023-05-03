@@ -19,7 +19,7 @@ export type FormEditorContextType = {
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
-  tryQuickFocus(field: UIModelField, retries?: number): Promise<boolean>
+  tryQuickFocus(field: UIModelField, retries?: number): Promise<boolean>;
 };
 
 export function getFormEditorContext(): FormEditorContextType {
@@ -130,7 +130,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     // @todo: Refactor this
     // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
 
-    await tick()
+    await tick();
 
     if (field.isObject() || field.isArray()) {
       const [firstChild] = field.children || [];

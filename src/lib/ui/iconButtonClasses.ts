@@ -21,5 +21,4 @@ export function editorViewButtonClasses(disabled: boolean, right: boolean): stri
     "shadow-right": !right && disabled,
     "shadow-left": right && disabled,
   });
-  
 }

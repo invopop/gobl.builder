@@ -4,7 +4,7 @@ const portalHosts = new Map();
 
 export function createPortal(node: HTMLElement, id = "default") {
   const key = `$$portal.${id}`;
-  
+
   if (portalHosts.has(key)) throw `duplicate portal key "${id}"`;
   else portalHosts.set(key, node);
 
