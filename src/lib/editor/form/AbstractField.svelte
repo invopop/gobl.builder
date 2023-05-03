@@ -24,10 +24,12 @@
     integer: IntegerField,
   };
 
-  let showContextMenu = false;
   let showAddMenu = false;
   let addMenuRef: HTMLElement;
+  let isHover = false;
+  let isFocus = false;
 
+  $: showContextMenu = !field.is.root && (isHover || isFocus);
   $: parentField = field.parent as UIModelField;
   $: addMenuEmptyItem = field.is.empty;
   $: addMenu = !addMenuEmptyItem && showAddMenu && !parentField.is.complete;
@@ -44,20 +46,20 @@
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
     if (isDragging) return;
-    showContextMenu = e.detail;
+    isHover = e.detail;
   }
 
   function handleFocusIn(e: FocusEvent) {
     // @note: Prevent undesired hover events on other items while dragging
     if (isDragging) return;
-    showContextMenu = true;
+    isFocus = true;
     e.stopPropagation();
   }
 
   function handleFocusOut(e: FocusEvent) {
     // // @note: Prevent undesired hover events on other items while dragging
     if (isDragging) return;
-    showContextMenu = false;
+    isFocus = false;
     e.stopPropagation();
   }
 
@@ -203,16 +205,19 @@
     const goPrev = e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab");
     const goNext = e.key === "ArrowDown" || (!e.shiftKey && e.key === "Tab");
     const goAdd = e.key === "Enter";
+    const blur = e.key === "Escape";
 
-    if (goAdd) {
+    if (blur) {
+      (e.target as HTMLElement)?.blur();
+    } else if (goAdd) {
       const nextItem = field.getNextFocusableField();
 
       // @note: Last item but the parent is not complete, show the add field menu
       if (nextItem?.isContainer() && !parentField.is.complete) {
-        handleAddField();
+        return handleAddField();
+      } else {
+        return focusNextField(nextItem);
       }
-
-      return focusNextField(nextItem);
     } else if (goNext) {
       e.preventDefault();
       return focusNextField();
