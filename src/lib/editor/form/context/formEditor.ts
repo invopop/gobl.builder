@@ -104,7 +104,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
 
     updateEditor();
 
-    const focusField = newField.getFirstFocusableChild()
+    const focusField = newField.getFirstFocusableChild();
     tryFocusField(focusField);
   }
 
@@ -114,7 +114,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
 
     updateEditor();
 
-    const focusField = newField.getFirstFocusableChild()
+    const focusField = newField.getFirstFocusableChild();
     tryFocusField(focusField);
   }
 
@@ -132,14 +132,14 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   }
 
   async function tryFocusField(field?: UIModelField, retries = 5, delay = 200): Promise<boolean> {
-    if (!field) return false
+    if (!field) return false;
 
     await tick();
 
     while (--retries > 0) {
       await sleep(delay);
 
-      const el = getFocusableElement(field)
+      const el = getFocusableElement(field);
       if (!el) continue;
 
       el.scrollIntoView({ behavior: "auto", block: "center" });

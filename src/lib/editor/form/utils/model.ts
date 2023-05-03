@@ -105,13 +105,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
           this.controlType === "dictionary"
             ? [this.controlMeta]
             : Object.entries(this.schema.properties || {})
-              .map<SchemaOption>(([key, subSchema]) => ({
-                key,
-                required: ((this.schema as Schema).required || []).includes(key),
-                schema: subSchema as Schema,
-              }))
-              .filter((opt) => !(opt.schema as any).calculated)
-              .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
+                .map<SchemaOption>(([key, subSchema]) => ({
+                  key,
+                  required: ((this.schema as Schema).required || []).includes(key),
+                  schema: subSchema as Schema,
+                }))
+                .filter((opt) => !(opt.schema as any).calculated)
+                .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
 
         break;
       }
@@ -150,8 +150,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     this.is.complete = (this.options || []).length === 0;
     this.is.empty = this.isContainer()
-      ? ((this.children || []).length === 0 && !this.is.complete)
-      : this.value === undefined
+      ? (this.children || []).length === 0 && !this.is.complete
+      : this.value === undefined;
   }
 
   isObject(this: UIModelField<unknown>): this is UIModelFieldObject {
@@ -342,15 +342,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
   getNextFocusableField(reverse = false): UIModelField | undefined {
     if (this.is.root) {
-      return this.getFirstFocusableChild(reverse)
+      return this.getFirstFocusableChild(reverse);
     }
 
-    if (!this.parent) return this.root
+    if (!this.parent) return this.root;
 
     let childs = this.parent.children || [];
-    childs = reverse
-      ? childs.slice(0, this.index).reverse()
-      : childs.slice(this.index + 1);
+    childs = reverse ? childs.slice(0, this.index).reverse() : childs.slice(this.index + 1);
 
     for (const item of childs) {
       if (item.is.calculated) continue;
@@ -359,8 +357,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       if (focusableField) return focusableField;
     }
 
-    if (this.parent.is.root) return this.root
-    return this.parent.getNextFocusableField(reverse)
+    if (this.parent.is.root) return this.root;
+    return this.parent.getNextFocusableField(reverse);
   }
 
   getPrevFocusableField(): UIModelField | undefined {
@@ -405,7 +403,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const controlType = this.getControlType(schema);
 
     if (controlType === "select") {
-      let options: { key: string, value: string }[] = []
+      let options: { key: string; value: string }[] = [];
 
       if ("oneOf" in schema) {
         options = (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
@@ -510,7 +508,7 @@ export type UIModelFieldFlags = {
   editable: boolean;
   error: boolean;
   complete: boolean;
-  empty: boolean
+  empty: boolean;
 };
 
 export type UIModelFieldObject<T = unknown> = UIModelField<Record<string, T>> & {
