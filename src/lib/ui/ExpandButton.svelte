@@ -2,7 +2,7 @@
   export let open = true;
 </script>
 
-<button class="align-middle text-grey-3 hover:text-black ml-2" on:click>
+<button class="align-middle text-grey-3 hover:text-black ml-2" tabindex="-1" on:click>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     class="h-4 w-4"

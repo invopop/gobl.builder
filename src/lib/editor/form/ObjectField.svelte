@@ -13,6 +13,7 @@
   }
 
   function handleFocusInner() {
+    console.log("-> ", field.id);
     open = true;
   }
 </script>
@@ -21,7 +22,12 @@
   <FieldTitle {field} />
   <ExpandButton {open} />
 </div>
-<div class="pl-2 border-l max-h-0" class:max-h-max={open} class:overflow-hidden={!open} on:focusin={handleFocusInner}>
+<div
+  class="pl-2 border-l max-h-0"
+  class:max-h-max={open}
+  class:overflow-hidden={!open}
+  on:focusin|capture={handleFocusInner}
+>
   {#each childs as childField (childField.key)}
     <AbstractField field={childField} />
   {/each}

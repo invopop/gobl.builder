@@ -31,7 +31,7 @@
           <svelte:fragment slot="content">
             <p class="font-bold  whitespace-nowrap">Add field</p>
           </svelte:fragment>
-          <button on:click={handleClickAddButton} class="p-2.5 h-full pr-0.5 border border-transparent">
+          <button on:click={handleClickAddButton} class="p-2.5 h-full pr-0.5 border border-transparent" tabindex="-1">
             <svg viewBox="0 0 16 16" class="h-6 w-6 p-1 hover:bg-gray-100 rounded">
               <path
                 fill="currentColor"
@@ -54,6 +54,7 @@
             on:click={handleClickOptionsButton}
             class="p-2.5 h-full border border-transparent"
             class:pl-0.5={showAdd}
+            tabindex="-1"
           >
             <svg viewBox="0 0 10 10" class="h-6 w-6 p-1 hover:bg-gray-100 rounded">
               <path
