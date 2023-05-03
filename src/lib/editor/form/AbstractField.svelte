@@ -47,16 +47,18 @@
     showContextMenu = e.detail;
   }
 
-  function handleFocusIn(e: CustomEvent<boolean>) {
+  function handleFocusIn(e: FocusEvent) {
     // @note: Prevent undesired hover events on other items while dragging
     if (isDragging) return;
-    showContextMenu = e.detail;
+    showContextMenu = true;
+    e.stopPropagation();
   }
 
-  function handleFocusOut(e: CustomEvent<boolean>) {
-    // @note: Prevent undesired hover events on other items while dragging
+  function handleFocusOut(e: FocusEvent) {
+    // // @note: Prevent undesired hover events on other items while dragging
     if (isDragging) return;
-    showContextMenu = e.detail;
+    showContextMenu = false;
+    e.stopPropagation();
   }
 
   function handleAddField() {
