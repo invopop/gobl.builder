@@ -104,13 +104,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
           this.controlType === "dictionary"
             ? [this.controlMeta]
             : Object.entries(this.schema.properties || {})
-                .map<SchemaOption>(([key, subSchema]) => ({
-                  key,
-                  required: ((this.schema as Schema).required || []).includes(key),
-                  schema: subSchema as Schema,
-                }))
-                .filter((opt) => !(opt.schema as any).calculated)
-                .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
+              .map<SchemaOption>(([key, subSchema]) => ({
+                key,
+                required: ((this.schema as Schema).required || []).includes(key),
+                schema: subSchema as Schema,
+              }))
+              .filter((opt) => !(opt.schema as any).calculated)
+              .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
 
         break;
       }
@@ -247,6 +247,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const value = defaultValue || this.getEmptyFieldValue(option);
 
     const childs = this.children || ([] as UIModelField[]);
+    const childsMap = this.childrenMap || ({} as Record<string, UIModelField>);
     const childLength = childs.length;
     const key = this.getNextChildFieldKey(option.key);
 
@@ -254,7 +255,20 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     if (!newField) return;
 
-    position = position !== undefined ? position : childs.length;
+    // @note: If the position is not provided, use the default position inside the container
+    if (position === undefined) {
+      if (this.isArray() || (this.isObject() && this.controlType === 'dictionary')) {
+        position = childs.length;
+      } else if (this.isObject()) {
+        let count = 0
+        const schemaSortedKeys = Object.keys(this.schema.properties || {})
+        for (const key of schemaSortedKeys) {
+          if (key === option.key) break;
+          if (childsMap[key]) count++
+        }
+        position = count
+      }
+    }
 
     const prev = childs.slice(0, position);
     const next = childs.slice(position);
@@ -302,6 +316,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
   sortField(position: number): string | undefined {
     if (!this.parent) return;
+    if ((this.parent.children?.length || 1) === 1) return;
 
     // @note: Field position hasn't changed
     if (this.index === position) return;
@@ -321,12 +336,44 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return this.parent.type === "array" ? sortedChilds[position].id : this.id;
   }
 
-  getNextFocusableField(): UIModelField | undefined {
-    const nextItem = this.parent?.children?.[this.index + 1];
-    if (nextItem) return nextItem;
+  getNextFocusableField(reverse = false): UIModelField | undefined {
+    let nextChilds = (this.parent?.children || [])
+
+    nextChilds = reverse ?
+      nextChilds.slice(0, this.index).reverse()
+      : nextChilds.slice(this.index + 1)
+
+      console.log(nextChilds)
+    for (const item of nextChilds) {
+      const focusableField = item.getFirstFocusableChild()
+      if (focusableField) return focusableField
+    }
 
     return;
   }
+
+  getPrevFocusableField(): UIModelField | undefined {
+    return this.getNextFocusableField(true)
+  }
+
+  getFirstFocusableChild(reverse = false): UIModelField | undefined {
+    if (!this.isContainer()) return this
+
+    let childs = this.children || []
+    childs = reverse ? childs.reverse() : childs
+
+    for (const item of childs) {
+      const focusable = item.getFirstFocusableChild()
+      if (focusable) return focusable
+    }
+
+    return
+  }
+
+  getLastFocusableChild(): UIModelField | undefined {
+    return this.getFirstFocusableChild(true)
+  }
+
 
   getControlType(schema: Schema = this.schema): ControlType | undefined {
     const isSelect = "oneOf" in schema || "anyOf" in schema;
@@ -347,11 +394,11 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     if (controlType === "select") {
       if ("oneOf" in schema) {
-        return (schema.oneOf || []).map((v: any) => ({ key: v.description, value: v.const }));
+        return (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
 
       if ("anyOf" in schema) {
-        return (schema.anyOf || []).map((v: any) => ({ key: v.description, value: v.const }));
+        return (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
     }
 
@@ -401,10 +448,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
       case "boolean": {
         value = true;
-        break;
-      }
-      case "": {
-        value = [];
         break;
       }
     }

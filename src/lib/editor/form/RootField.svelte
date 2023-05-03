@@ -5,18 +5,24 @@
   import CodeError from "./CodeError.svelte";
 
   export let field: UIModelRootField;
+
   $: childs = field.children || ([] as UIModelField[]);
+  // @todo: Add title field to schema object on gobl
+  $: title = field.schema.title || field.id.split("/").slice(-1);
 </script>
 
 {#if field.is.error}
   <CodeError error={field.error} />
 {:else}
-  <div class="bg-slate-100 border border-slate-200 p-8 rounded-md">
+  <div>
+    <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
     {#each childs as field (field.key)}
-      <AbstractField {field} />
+      {#if field.key !== "$schema"}
+        <AbstractField {field} />
+      {/if}
     {/each}
     {#if !field.is.complete}
-      <AddFieldMenu {field} />
+      <AddFieldMenu {field} showModal={false} showButton={true} />
     {/if}
   </div>
 {/if}

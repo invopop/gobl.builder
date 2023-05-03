@@ -1,11 +1,14 @@
 <script lang="ts">
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import { Hashtag, Icon } from "svelte-hero-icons";
   export let field: UIModelField<unknown>;
+
+  $: arrayTitle = field.schema.title || "";
 </script>
 
-<span class="text-gray-700 font-medium whitespace-nowrap" class:capitalize={!field.schema.title}>
+<span class="text-grey-4 font-medium whitespace-nowrap flex items-center py-1.5" class:capitalize={!field.schema.title}>
   {#if field.parent?.isArray()}
-    # {field.key}
+    <Icon src={Hashtag} class="h-3 text-grey-5 mr-1" /> {arrayTitle} {Number(field.key) + 1}
   {:else}
     {field.schema.title || field.key}
   {/if}

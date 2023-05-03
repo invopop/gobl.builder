@@ -1,4 +1,4 @@
-import { getContext, onDestroy, setContext } from "svelte";
+import { getContext, onDestroy, setContext, tick } from "svelte";
 import { editor, editorJSON } from "$lib/stores.js";
 import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
@@ -15,10 +15,11 @@ export type FormEditorContextType = {
   changeFieldValue(field: UIModelField, value: SchemaValue): void;
   deleteField(field: UIModelField): void;
   duplicateField(field: UIModelField): void;
-  addField(parentField: UIModelField, option: SchemaOption, position?: number): void;
+  addField(parentField: UIModelField, option: SchemaOption): void;
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
+  tryQuickFocus(field: UIModelField, retries?: number): Promise<boolean>
 };
 
 export function getFormEditorContext(): FormEditorContextType {
@@ -104,8 +105,8 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     tryQuickFocus(newField);
   }
 
-  function addField(parentField: UIModelField, option: SchemaOption, position?: number) {
-    const newField = parentField.addChildField(option, undefined, position);
+  function addField(parentField: UIModelField, option: SchemaOption) {
+    const newField = parentField.addChildField(option, undefined);
     if (!newField) return;
 
     updateEditor();
@@ -128,6 +129,8 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   async function tryQuickFocus(field: UIModelField, retries = 5): Promise<boolean> {
     // @todo: Refactor this
     // Quick and dirty, use a context state (pendingFocus / nextFocus) store instead
+
+    await tick()
 
     if (field.isObject() || field.isArray()) {
       const [firstChild] = field.children || [];
@@ -163,6 +166,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     sortField,
     refreshUI,
     updateEditor,
+    tryQuickFocus,
   };
 
   onDestroy(() => {

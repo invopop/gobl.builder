@@ -1,23 +1,20 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-
-  import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import hover from "./action/hover.js";
-  import { DocumentDuplicate, Document, Icon } from "svelte-hero-icons";
   import { getFormEditorContext } from "./context/formEditor.js";
   import { createEventDispatcher } from "svelte";
   import { sleep } from "./utils/sleep.js";
   import type { SchemaOption, UIModelField } from "./utils/model.js";
+  import { portal } from "./action/portal.js";
+  import clickOutside from "$lib/clickOutside.js";
 
   export let field: UIModelField;
   export let inputRef: HTMLElement | undefined = undefined;
   export let menuRef: HTMLElement | undefined = undefined;
-  export let position: number | undefined = undefined;
+  export let showModal = false;
+  export let showButton = false;
 
-  let showContextMenu = false;
-  let showAddMenu = false;
   let filterStr = "";
-  let debug = false;
 
   const dispatch = createEventDispatcher();
 
@@ -42,31 +39,30 @@
     inputRef?.focus();
   }
 
+  function handleAddFieldMenuOpen() {
+    showModal = true;
+  }
+
+  function handleAddFieldMenuClose() {
+    showModal = false;
+  }
+
   function handleOpenMenu() {
-    showAddMenu = true;
-    showContextMenu = false;
     inputRef?.focus();
     dispatch("openAddFieldMenu");
   }
 
   async function handleCloseMenu() {
     await sleep(100);
-    showAddMenu = false;
     filterStr = "";
     inputRef?.blur();
     dispatch("closeAddFieldMenu");
-  }
-
-  function handleHover(e: CustomEvent<boolean>) {
-    if (showAddMenu) return;
-    showContextMenu = e.detail;
+    handleAddFieldMenuClose();
   }
 
   function handleAddField(parentField: UIModelField, option: SchemaOption) {
-    showContextMenu = false;
-    showAddMenu = false;
     handleCloseMenu();
-    addField(parentField, option, position);
+    addField(parentField, option);
   }
 
   function handleKeyDown(e: KeyboardEvent) {
@@ -107,66 +103,67 @@
   }
 </script>
 
-<div
-  class="relative cursor-text flex w-full p-2 pl-0 expanded-area"
-  on:click={handleOpenMenu}
-  on:hover={handleHover}
-  use:hover
-  transition:fade={{ duration: 200 }}
->
-  {#if showContextMenu}
-    <FieldButtons showAdd={true} showOptions={false} on:add={handleOpenMenu} on:options={handleOpenMenu} />
-  {/if}
-  <input
-    class="
-      h-8 py-1.5 p-2 relative outline-none w-full bg-transparent placeholder-gray-500 rounded rounded-b-none
-      focus:text-gray-500 focus:border focus:border-gray-400 focus:bg-white focus:placeholder-gray-300
-    "
-    placeholder={!showAddMenu ? "Add field" : "Select a new type of field to add"}
-    bind:value={filterStr}
-    bind:this={inputRef}
-    on:focus={handleOpenMenu}
-    on:blur={handleCloseMenu}
-    on:keydown={handleKeyDown}
-  />
+{#if showButton}
+  <div class="cursor-pointer text-sm text-grey-5 py-3 rounded hover:bg-color2 px-2.5" on:click={handleAddFieldMenuOpen}>
+    Add field
+  </div>
+{/if}
 
-  {#if showAddMenu}
-    <div class="block absolute top-full -mt-4 left-0 z-10 w-full p-2 pl-0" transition:fade={{ duration: 200 }}>
-      <ul
-        class="grow-0 flex flex-col list-none bg-white border border-gray-400 border-t-0 rounded rounded-t-none h-40 overflow-scroll"
-        role="menu"
-        bind:this={menuRef}
-      >
-        {#if options.length}
-          {#each options as opt, i (opt.key)}
-            <li
-              class:bg-gray-200={i === focusedOptionIndex}
-              class:border-b={i < options.length - 1}
-              on:hover={() => handleHoverListItem(i)}
-              use:hover
-            >
-              <button
-                class="flex items-center justify-start w-full p-2 gap-2 capitalize h-8"
-                class:font-bold={opt.required}
-                on:click|stopPropagation={() => handleAddField(field, opt)}
+{#if showModal}
+  <div
+    use:portal={"modal"}
+    transition:fade={{ duration: 200 }}
+    class="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.2)] flex items-center justify-center text-sm"
+  >
+    <div
+      class="cursor-text w-1/2 rounded border overflow-hidden bg-white"
+      use:clickOutside
+      on:clickOutside={handleCloseMenu}
+    >
+      <input
+        class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
+        placeholder="Type field name or select below"
+        bind:value={filterStr}
+        bind:this={inputRef}
+        on:focus={handleOpenMenu}
+        on:keydown={handleKeyDown}
+      />
+      <div transition:fade={{ duration: 200 }}>
+        <ul class="list-none h-80 overflow-auto" role="menu" bind:this={menuRef}>
+          {#if options.length}
+            {#each options as opt, i (opt.key)}
+              <li
+                class:bg-color2={i === focusedOptionIndex}
+                class:border-t={i > 0}
+                on:hover={() => handleHoverListItem(i)}
+                use:hover
               >
-                {#if debug}<Icon
-                    src={opt.schema.type === "string" ? Document : DocumentDuplicate}
-                    class="h-4 w-4"
-                  />{/if}
-                {opt.schema.title || opt.key}
-                {#if debug}{opt.required ? "*" : ""} ({opt.schema.type}){/if}
-              </button>
+                <button
+                  class="flex flex-col w-full py-3 px-6 text-grey-5 text-left"
+                  on:click|stopPropagation={() => handleAddField(field, opt)}
+                >
+                  <div
+                    class="mb-1 text-grey-4 font-medium"
+                    class:font-bold={opt.required}
+                    class:text-black={opt.required}
+                  >
+                    {opt.schema.title || opt.key}
+                  </div>
+                  <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
+                    {opt.schema.description}
+                  </div>
+                </button>
+              </li>
+            {/each}
+          {:else}
+            <li>
+              <span class="block w-full py-3 px-6 text-grey-5 text-left">
+                No items found matching filter: <strong>"{filterStr}"</strong>
+              </span>
             </li>
-          {/each}
-        {:else}
-          <li>
-            <span class="flex items-center justify-start w-full p-2 gap-2 h-8">
-              No items found matching filter: <strong>"{filterStr}"</strong>
-            </span>
-          </li>
-        {/if}
-      </ul>
+          {/if}
+        </ul>
+      </div>
     </div>
-  {/if}
-</div>
+  </div>
+{/if}

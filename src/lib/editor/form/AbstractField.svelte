@@ -1,4 +1,4 @@
-<script context="module">
+<script lang="ts" context="module">
   let isDragging = false;
 </script>
 
@@ -18,21 +18,19 @@
   export let field: UIModelField;
 
   const componentsMap: Record<string, typeof SvelteComponent> = {
-    object: ObjectField,
+    object: ObjectField as typeof SvelteComponent,
     array: ArrayField,
     string: StringField,
     integer: IntegerField,
   };
 
   let showContextMenu = false;
-  let showAddMenuTop = false;
-  let showAddMenuBot = false;
+  let showAddMenu = false;
   let addMenuRef: HTMLElement;
 
   $: parentField = field.parent as UIModelField;
   $: addMenuEmptyItem = field.isContainer() && (!field.children || field.children.length === 0) && !field.is.complete;
-  $: addMenuTop = !addMenuEmptyItem && showAddMenuTop && !parentField.is.complete;
-  $: addMenuBot = !addMenuEmptyItem && showAddMenuBot && !parentField.is.complete;
+  $: addMenu = !addMenuEmptyItem && showAddMenu && !parentField.is.complete;
 
   $: {
     if (addMenuRef) {
@@ -49,36 +47,36 @@
     showContextMenu = e.detail;
   }
 
-  function handleAddField(e?: CustomEvent<boolean>) {
+  function handleFocusIn(e: CustomEvent<boolean>) {
+    // @note: Prevent undesired hover events on other items while dragging
+    if (isDragging) return;
+    showContextMenu = e.detail;
+  }
+
+  function handleFocusOut(e: CustomEvent<boolean>) {
+    // @note: Prevent undesired hover events on other items while dragging
+    if (isDragging) return;
+    showContextMenu = e.detail;
+  }
+
+  function handleAddField() {
     if (parentField.is.complete) return;
 
-    showAddMenuTop = false;
-    showAddMenuBot = false;
-
-    const addBefore = e?.detail;
+    showAddMenu = false;
 
     // @note: Add field directly instead of showing the dropdown option list
     if (parentField.type === "array" || parentField.controlType === "dictionary") {
-      const position = field.index + (addBefore ? 0 : 1);
       const [childOption] = parentField.options || [];
 
-      addField(parentField, childOption, position);
+      addField(parentField, childOption);
       return;
     }
 
-    if (addBefore) {
-      showAddMenuTop = true;
-    } else {
-      showAddMenuBot = true;
-    }
+    showAddMenu = true;
   }
 
-  function handleAddFieldMenuTopClose() {
-    showAddMenuTop = false;
-  }
-
-  function handleAddFieldMenuBotClose() {
-    showAddMenuBot = false;
+  function handleAddFieldMenuClose() {
+    showAddMenu = false;
   }
 
   const dragClasses = ["transform-gpu"];
@@ -108,6 +106,10 @@
   function handleDragStart(e: DragEvent) {
     e.stopPropagation();
     if (!e.dataTransfer) return;
+
+    if (!field.parent?.isArray() || field.parent.children?.length === 1) {
+      return e.preventDefault();
+    }
 
     const target = e.currentTarget as HTMLDivElement;
     const targetChild = target.firstChild as HTMLDivElement;
@@ -184,25 +186,69 @@
   }
 
   function handleKeyDown(e: KeyboardEvent) {
-    if (e.key === "Enter") {
-      e.preventDefault();
+    const goPrev = e.key === "ArrowUp" || (e.shiftKey && e.key === "Tab");
+    const goNext = e.key === "ArrowDown" || (!e.shiftKey && e.key === "Tab");
+    const goAdd = e.key === "Enter";
 
+    if (
+      (e.key === "ArrowDown" || e.key === "ArrowUp") &&
+      (field.controlType === "select" || field.controlType === "date")
+    ) {
+      return;
+    }
+
+    if (goAdd) {
+      e.preventDefault();
       const nextItem = field.getNextFocusableField();
       const nextItemEl = document.querySelector(`#${nextItem?.id}`) as HTMLElement;
+      console.log("NEXT ENT", nextItemEl);
 
-      // @note: Jump to next item
+      // @note: Focus the next field
       if (nextItemEl) {
-        // todo
         nextItemEl.focus();
         e.stopPropagation();
         return;
       }
 
+      // @note: Last item but the parent is not complete, show the add field menu
       if (!parentField.is.complete) {
         handleAddField();
         e.stopPropagation();
       }
 
+      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
+      return;
+    } else if (goNext) {
+      e.preventDefault();
+      const nextItem = field.getNextFocusableField();
+      const nextItemEl = document.querySelector(`#${nextItem?.id}`) as HTMLElement;
+
+      console.log("NEXT", nextItemEl);
+
+      // @note: Focus the next field
+      if (nextItemEl) {
+        nextItemEl.focus();
+        e.stopPropagation();
+        return;
+      }
+
+      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
+      return;
+    } else if (goPrev) {
+      e.preventDefault();
+      const prevItem = field.getPrevFocusableField();
+      const prevItemEl = document.querySelector(`#${prevItem?.id}`) as HTMLElement;
+
+      console.log("PREV", prevItemEl);
+
+      // @note: Focus the prev field
+      if (prevItemEl) {
+        prevItemEl.focus();
+        e.stopPropagation();
+        return;
+      }
+
+      // @note: Dont stop stop propagation here to go up on level in the tree and keep finding
       return;
     }
   }
@@ -210,14 +256,6 @@
 
 <svelte:window on:dragover={handleDragOverWindow} />
 
-{#if addMenuTop}
-  <AddFieldMenu
-    field={parentField}
-    position={field.index}
-    bind:inputRef={addMenuRef}
-    on:closeAddFieldMenu={handleAddFieldMenuTopClose}
-  />
-{/if}
 <div
   on:dragstart={handleDragStart}
   on:dragend={handleDragEnd}
@@ -228,29 +266,32 @@
   use:hover
   on:hover={handleHover}
   on:keydown={handleKeyDown}
+  on:focusin={handleFocusIn}
+  on:focusout={handleFocusOut}
 >
-  <div>
+  <div class:my-6={field.isContainer() && field.level <= 1}>
     {#if showContextMenu}
       <FieldContextMenu {field} on:addField={handleAddField} />
     {/if}
     <div
-      class="relative p-2 pr-0"
+      class="relative p-1.5 pl-2.5 pr-0"
       class:pr-2.5={!field.children}
       draggable="true"
       on:dragstart|preventDefault|stopPropagation
     >
       <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
       {#if addMenuEmptyItem}
-        <AddFieldMenu {field} bind:inputRef={addMenuRef} />
+        <AddFieldMenu {field} bind:inputRef={addMenuRef} showModal={false} showButton={true} />
       {/if}
     </div>
   </div>
 </div>
-{#if addMenuBot}
+{#if addMenu}
   <AddFieldMenu
     field={parentField}
-    position={field.index + 1}
+    showModal={true}
+    showButton={false}
     bind:inputRef={addMenuRef}
-    on:closeAddFieldMenu={handleAddFieldMenuBotClose}
+    on:closeAddFieldMenu={handleAddFieldMenuClose}
   />
 {/if}

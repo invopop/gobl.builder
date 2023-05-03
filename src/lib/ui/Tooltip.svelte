@@ -5,7 +5,7 @@
 
   const arrowRef = writable<HTMLElement>();
   const [floatingRef, floatingContent] = createFloatingActions({
-    strategy: "absolute",
+    strategy: "fixed",
     placement: "top",
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
     onComputed({ placement, middlewareData }) {

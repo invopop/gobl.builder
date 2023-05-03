@@ -13,15 +13,15 @@
 </script>
 
 <Tooltip label={field.schema.description} delay={200} containerClass="block w-full">
-  <div class="flex items-stretch justify-between w-full gap-2 h-8">
-    <div class="flex items-center justify-start">
+  <div class="flex items-stretch justify-between w-full gap-2">
+    <div class="flex items-start justify-start">
       {#if field.is.editableKey}
         <EditableFieldKey {field} {parseKey} />
       {:else}
         <FieldTitle {field} />
       {/if}
     </div>
-    <div class="flex items-center justify-start w-96">
+    <div class="flex items-start justify-start w-[248px]">
       {#if field.is.editable}
         <EditableField {field} {parseValue} />
       {:else if field.is.calculated}

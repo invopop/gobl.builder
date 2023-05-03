@@ -13,7 +13,7 @@
 
   const dispatch = createEventDispatcher();
 
-  export let open = true;
+  export let open = false;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -30,45 +30,33 @@
   function handleDrawerToggle() {
     open = !open;
   }
+
+  $: open = errorCount > 0;
 </script>
 
 <div>
   <div
-    class="px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
-    on:dblclick={handleDrawerToggle}
+    class="px-4 py-2 bg-color5 text-color4 text-xs flex items-center gap-6 cursor-pointer"
+    on:click={handleDrawerToggle}
   >
     <div>
-      <span class="mr-1">
-        {#if errorCount > 0}
-          <ErrorIcon />
-        {:else}
-          <SuccessIcon />
-        {/if}
-      </span>
       <span class="align-middle">
         {errorCount}
         {errorCount === 1 ? "error" : "errors"}
       </span>
     </div>
     <div class="flex-1">
-      <span class="mr-1">
-        {#if warningCount > 0}
-          <WarningIcon />
-        {:else}
-          <SuccessIcon />
-        {/if}
-      </span>
       <span class="align-middle">
         {warningCount}
         {warningCount === 1 ? "warning" : "warnings"}
       </span>
     </div>
     <div>Ln {$editorCursor.line}, Col {$editorCursor.column}</div>
-    <ExpandButton open={!open} on:click={handleDrawerToggle} />
+    <ExpandButton {open} />
   </div>
 
   {#if open}
-    <div class="h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800" transition:slide={{ duration: 300 }}>
+    <div class="h-36 py-2 overflow-auto font-mono text-xs text-color4 bg-grey-4 " transition:slide={{ duration: 300 }}>
       {#if $editor.value === ""}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
@@ -85,7 +73,7 @@
       {/if}
       <ul>
         {#each sortedProblems as problem}
-          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
+          <li class="block cursor-pointer px-4 py-1 hover:bg-color4" on:click={handleProblemClick(problem)}>
             <EditorProblem {problem} />
           </li>
         {/each}

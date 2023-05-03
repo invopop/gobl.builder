@@ -10,5 +10,5 @@
 </script>
 
 <Tooltip containerClass="block" {label}>
-  <button on:click={handleViewForm} class={editorViewButtonClasses(disabled)}>Visual</button>
+  <button on:click={handleViewForm} class={editorViewButtonClasses(disabled, false)}>Visual</button>
 </Tooltip>

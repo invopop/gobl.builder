@@ -6,7 +6,9 @@
   export let showError = false;
   export let classes = "";
   export let value = "";
+  export let id = "";
 
+  $: iid = id || field.id;
   $: val = value || field.value;
 
   const dispatch = createEventDispatcher();
@@ -19,7 +21,7 @@
 
 <input
   type="text"
-  id={field.id}
+  id={iid}
   value={val}
   on:change={handleChange}
   on:keyup={handleChange}

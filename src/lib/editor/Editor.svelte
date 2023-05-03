@@ -34,5 +34,5 @@
       <FormEditor {jsonSchemaURL} />
     </div>
   </div>
-  <EditorToolbar open={$editorViewType === "code"} />
+  <EditorToolbar />
 </div>

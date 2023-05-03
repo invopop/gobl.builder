@@ -15,7 +15,7 @@
 </script>
 
 <Tooltip containerClass="block" {label}>
-  <button on:click={handleViewCode} class={editorViewButtonClasses(disabled) + " relative"}>
+  <button on:click={handleViewCode} class={editorViewButtonClasses(disabled, true) + " relative"}>
     Code
     {#if error}<Icon
         src={InformationCircle}

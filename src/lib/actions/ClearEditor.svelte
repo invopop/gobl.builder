@@ -25,8 +25,8 @@
   <button
     on:click={handleClearEditor}
     class={actionButtonClasses(disabled)}
-    class:text-rose-700={!disabled}
-    class:hover:bg-rose-200={!disabled}
+    class:!text-rose-700={!disabled}
+    class:hover:!bg-rose-200={!disabled}
   >
     <Icon src={XCircle} class="h-5 w-5" solid />
     Clear document

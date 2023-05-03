@@ -19,22 +19,19 @@
     dispatch("options");
   }
 
-  $: clasess = field?.is.calculated ? "bg-blue-100" : "bg-gray-200";
+  $: clasess = field?.is.calculated ? "bg-blue-100" : "bg-color2";
+  $: isDraggable = field?.parent?.isArray();
 </script>
 
-<div
-  class="absolute flex w-full h-full top-0 right-0 z-0 rounded rounded-tl-none rounded-bl-none {clasess}"
-  transition:fade={{ duration: 200 }}
->
-  <div class="flex-shrink-0 absolute right-full top-0 rounded rounded-tr-none rounded-br-none {clasess}">
-    <div class="flex align-middle text-gray-500">
+<div class="absolute flex w-full h-full top-0 right-0 z-0 rounded {clasess}" transition:fade={{ duration: 200 }}>
+  <div class="flex-shrink-0 absolute right-full h-11 mr-1 top-0 rounded {clasess}">
+    <div class="flex align-middle text-grey-5">
       {#if showAdd}
         <Tooltip>
           <svelte:fragment slot="content">
             <p class="font-bold  whitespace-nowrap">Add field</p>
-            <p class="whitespace-nowrap text-xs">(Option + Click to add above)</p>
           </svelte:fragment>
-          <button on:click={handleClickAddButton} class="p-2.5 h-12 pr-0.5 border border-transparent">
+          <button on:click={handleClickAddButton} class="p-2.5 h-full pr-0.5 border border-transparent">
             <svg viewBox="0 0 16 16" class="h-6 w-6 p-1 hover:bg-gray-100 rounded">
               <path
                 fill="currentColor"
@@ -48,9 +45,16 @@
         <Tooltip>
           <svelte:fragment slot="content">
             <p class="font-bold whitespace-nowrap">Options</p>
-            <p class="whitespace-nowrap text-xs">(Drag to sort items)</p>
+            {#if isDraggable}
+              <p class="whitespace-nowrap text-xs">(Click to open menu)</p>
+              <p class="whitespace-nowrap text-xs">(Drag to sort array items)</p>
+            {/if}
           </svelte:fragment>
-          <button on:click={handleClickOptionsButton} class="p-2.5 h-12 pl-0.5 border border-transparent">
+          <button
+            on:click={handleClickOptionsButton}
+            class="p-2.5 h-full border border-transparent"
+            class:pl-0.5={showAdd}
+          >
             <svg viewBox="0 0 10 10" class="h-6 w-6 p-1 hover:bg-gray-100 rounded">
               <path
                 fill="currentColor"

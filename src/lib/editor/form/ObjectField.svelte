@@ -5,20 +5,23 @@
   import FieldTitle from "./FieldTitle.svelte";
 
   export let field: UIModelField;
-
+  let open = field.level >= 2;
   $: childs = field.children || ([] as UIModelField[]);
 
-  let open = true;
-  function handleOpenChange() {
+  function handleExpandChange() {
     open = !open;
+  }
+
+  function handleFocusInner() {
+    open = true;
   }
 </script>
 
-<div class="flex items-center justify-start cursor-pointer h-8" on:click={handleOpenChange}>
+<div class="flex items-center justify-start cursor-pointer h-8" on:click={handleExpandChange}>
   <FieldTitle {field} />
   <ExpandButton {open} />
 </div>
-<div class="pl-2 border-l max-h-0" class:max-h-max={open} class:overflow-hidden={!open}>
+<div class="pl-2 border-l max-h-0" class:max-h-max={open} class:overflow-hidden={!open} on:focusin={handleFocusInner}>
   {#each childs as childField (childField.key)}
     <AbstractField field={childField} />
   {/each}

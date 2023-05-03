@@ -11,7 +11,11 @@
   <div class="my-2">
     <h2 class="font-bold">Headers</h2>
     <div class="p-2">
-      <EnvelopeHeader />
+      {#if head}
+        <EnvelopeHeader />
+      {:else}
+        <p class="text-xs text-gray-500">There are no headers. They are generated after building a document</p>
+      {/if}
     </div>
   </div>
 
@@ -21,7 +25,7 @@
       {#if sigs}
         <EnvelopeSignatures />
       {:else}
-        <p class="text-xs text-gray-500">There are no signatures. They are generated when signing a document</p>
+        <p class="text-xs text-gray-500">There are no signatures. They are generated after signing a document</p>
       {/if}
     </div>
   </div>
