@@ -3,4 +3,6 @@
   $: props = $$props as any;
 </script>
 
-<ObjectField {...props} />
+<ObjectField {...props}>
+  <slot />
+</ObjectField>
