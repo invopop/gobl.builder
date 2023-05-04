@@ -353,7 +353,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     for (const item of childs) {
       if (item.is.calculated) continue;
 
-      const focusableField = item.getFirstFocusableChild();
+      const focusableField = item.getFirstFocusableChild(reverse);
       if (focusableField) return focusableField;
     }
 
@@ -374,7 +374,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     for (const item of childs) {
       if (item.is.calculated) continue;
 
-      const focusable = item.getFirstFocusableChild();
+      const focusable = item.getFirstFocusableChild(reverse);
       if (focusable) return focusable;
     }
 
