@@ -7,7 +7,7 @@
   import clickOutside from "$lib/clickOutside.js";
   import { fade } from "svelte/transition";
   import { actionButtonClasses } from "$lib/ui/iconButtonClasses.js";
-  import { ChevronDown, ChevronRight, Icon } from "svelte-hero-icons";
+  import { ChevronDown, Icon } from "svelte-hero-icons";
 
   function handleHeaderClick() {
     const target = document.body;
@@ -103,16 +103,7 @@
         <li>
           <Tooltip label="View signature" containerClass="block">
             <button on:click={handleHeaderClick} class={actionButtonClasses(false) + " flex justify-between"}>
-              View Signature
-              <Icon src={ChevronRight} class="h-2.5 w-2.5" solid />
-            </button>
-          </Tooltip>
-        </li>
-        <li>
-          <Tooltip label="View signature" containerClass="block">
-            <button on:click={handleHeaderClick} class={actionButtonClasses(false) + " flex justify-between"}>
-              View Header
-              <Icon src={ChevronRight} class="h-2.5 w-2.5" solid />
+              Header & Signature
             </button>
           </Tooltip>
         </li>

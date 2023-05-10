@@ -12,7 +12,6 @@
   export let inputRef: HTMLElement | undefined = undefined;
   export let menuRef: HTMLElement | undefined = undefined;
   export let showModal = false;
-  export let showButton = false;
 
   let filterStr = "";
 
@@ -110,20 +109,6 @@
   }
 </script>
 
-{#if showButton}
-  <button
-    class="w-full text-left cursor-pointer text-sm text-grey-5 py-3 rounded hover:bg-color2 px-2.5 focus:bg-color2 outline-none add-field-button"
-    on:click={handleAddFieldMenuOpen}
-    on:keydown={handleButtonKeyDown}
-    on:mouseover|preventDefault|stopPropagation
-    on:focus|preventDefault|stopPropagation
-    on:focusin|preventDefault|stopPropagation
-    on:focusout|preventDefault|stopPropagation
-  >
-    Add field
-  </button>
-{/if}
-
 {#if showModal}
   <div
     use:portal={"modal"}
@@ -172,7 +157,7 @@
             {/each}
           {:else}
             <li>
-              <span class="block w-full py-3 px-6 text-grey-5 text-left">
+              <span class="emptyFilter">
                 No items found matching filter: <strong>"{filterStr}"</strong>
               </span>
             </li>
@@ -182,3 +167,9 @@
     </div>
   </div>
 {/if}
+
+<style lang="postcss">
+  span.emptyFilter {
+    @apply block w-full py-3 px-6 text-grey-5 text-left;
+  }
+</style>

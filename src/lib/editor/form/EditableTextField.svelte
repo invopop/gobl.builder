@@ -26,7 +26,15 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur
-  class="outline-none w-full bg-white rounded border h-8 py-1.5 px-2 text-gray-700 focus:border-gray-400 {classes}"
+  class="focus:border-gray-400 {classes}"
+  class:bg-white={!field.is.calculated}
+  class:bg-slate-50={field.is.calculated}
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
 />
+
+<style lang="postcss">
+  input {
+    @apply outline-none w-full bg-white rounded border h-8 py-1.5 px-2 text-gray-700;
+  }
+</style>

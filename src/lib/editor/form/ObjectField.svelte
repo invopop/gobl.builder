@@ -6,8 +6,8 @@
   import RootField from "./RootField.svelte";
 
   export let field: UIModelField;
-  let open = field.level >= 2;
-  $: childs = field.children || ([] as UIModelField[]);
+  let open = true; // field.level >= 2;
+  $: children = field.children || ([] as UIModelField[]);
 
   function handleExpandChange() {
     open = !open;
@@ -30,12 +30,12 @@
       <ExpandButton {open} />
     </div>
     <div
-      class="pl-2 border-l max-h-0"
+      class="ml-2 border-l max-h-0"
       class:max-h-max={open}
       class:overflow-hidden={!open}
       on:focusin|capture={handleFocusInner}
     >
-      {#each childs as childField (childField.id)}
+      {#each children as childField (childField.id)}
         <AbstractField field={childField} />
       {/each}
     </div>

@@ -6,7 +6,7 @@
 
   export let field: UIModelRootField;
 
-  $: childs = field.children || ([] as UIModelField[]);
+  $: children = field.children || ([] as UIModelField[]);
   // @todo: Add title field to schema object on gobl
   $: title = field.schema.title || field.id.split("/").slice(-1);
 </script>
@@ -16,7 +16,7 @@
 {:else}
   <div id={field.id}>
     <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
-    {#each childs as field (field.id)}
+    {#each children as field (field.id)}
       {#if field.key !== "$schema"}
         <AbstractField {field} />
       {/if}
