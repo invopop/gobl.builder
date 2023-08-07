@@ -11,16 +11,16 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    // TODO: Figure out how to type `as EventListener` without breaking linting.
-    document.addEventListener("docLoaded", handleDocLoaded as any, true);
+    // eslint-disable-next-line no-undef
+    document.addEventListener("docLoaded", handleDocLoaded as EventListener, true);
   });
 
   onDestroy(() => {
-    // TODO: Figure out how to type `as EventListener` without breaking linting.
-    document.removeEventListener("docLoaded", handleDocLoaded as any, true);
+    // eslint-disable-next-line no-undef
+    document.removeEventListener("docLoaded", handleDocLoaded as EventListener, true);
   });
 
-  function handleDocLoaded(event: CustomEvent<string>) {
+  function handleDocLoaded(event: CustomEvent<string>): void {
     dispatch("load", event.detail);
   }
 

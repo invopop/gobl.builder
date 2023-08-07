@@ -65,7 +65,7 @@
   }
 
   onMount(() => {
-    (<Environment>(self as any).MonacoEnvironment) = {
+    (<Environment>self.MonacoEnvironment) = {
       getWorker: function (_: string, label: string) {
         switch (label) {
           case "json":
