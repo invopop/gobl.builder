@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as monaco from "monaco-editor";
-  import JSONWorker from "$lib/monaco-editor/json.worker.js?worker";
+  import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { Environment } from "monaco-editor";
   import type { Unsubscriber } from "svelte/store";
@@ -78,7 +78,9 @@
 
     model = monaco.editor.createModel("", "json", modelUri);
 
-    setSchemaURI(jsonSchemaURL);
+    if (jsonSchemaURL) {
+      setSchemaURI(jsonSchemaURL);
+    }
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
@@ -208,6 +210,8 @@
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
 
+  // validateSchema is used to ensure the $schema property is set to something
+  // that is expected by the component using the editor.
   function validateSchema(value: string) {
     if (!jsonSchemaURL) {
       return;
