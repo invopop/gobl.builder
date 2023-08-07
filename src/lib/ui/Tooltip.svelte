@@ -17,11 +17,13 @@
         left: "right",
       }[placement.split("-")[0]];
 
-      Object.assign($arrowRef.style, {
-        left: x != null ? `${x}px` : "",
-        top: y != null ? `${y}px` : "",
-        [staticSide as string]: "-4px",
-      });
+      if ($arrowRef != null) {
+        Object.assign($arrowRef.style, {
+          left: x != null ? `${x}px` : "",
+          top: y != null ? `${y}px` : "",
+          [staticSide as string]: "-4px",
+        });
+      }
     },
   });
 
