@@ -3,8 +3,8 @@
   import { clsx } from "clsx";
 
   // import { editor, envelope } from "$lib/stores.js";
-  import { schemaIconMap } from "$lib/ui/schemaIconMap.svelte";
-  import MessageIcon from "$lib/ui/MessageIcon.svelte";
+  import { schemaIconFor } from "$lib/ui/schemaIconMap.svelte";
+  import MessageIcon from "$lib/ui/icons/MessageIcon.svelte";
 
   import esInvoice from "../templates/es/invoice.json";
   import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";
@@ -150,7 +150,7 @@
               class="inline-flex gap-2 items-center hover:text-sky-500"
               on:click={() => handleTemplateClick(templateKey)}
             >
-              <svelte:component this={schemaIconMap.get(template.value.$schema) || MessageIcon} />
+              <svelte:component this={schemaIconFor(template.value.$schema) || MessageIcon} />
               {template.name}
             </button>
           </li>

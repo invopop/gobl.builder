@@ -16,10 +16,10 @@
     envelope,
   } from "$lib/stores.js";
   import EditorProblem from "./EditorProblem.svelte";
-  import WarningIcon from "$lib/ui/WarningIcon.svelte";
-  import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
-  import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
-  import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
+  import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
+  import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
+  import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
+  import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
 
   const modelUri = monaco.Uri.parse("gobl://doc.json");
 
