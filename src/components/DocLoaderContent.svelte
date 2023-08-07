@@ -3,7 +3,7 @@
   import { clsx } from "clsx";
 
   // import { editor, envelope } from "$lib/stores.js";
-  import { schemaIconFor } from "$lib/ui/schemaIconMap.svelte";
+  import { schemaIconFor } from "$lib/ui/icons/schemaIconMap.svelte";
   import MessageIcon from "$lib/ui/icons/MessageIcon.svelte";
 
   import esInvoice from "../templates/es/invoice.json";

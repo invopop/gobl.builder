@@ -1,5 +1,6 @@
 <script lang="ts">
   import { clsx } from "clsx";
+  import type { SvelteComponent } from "svelte";
 
   import ClearEditor from "$lib/actions/ClearEditor.svelte";
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
@@ -26,7 +27,7 @@
       target: document.body,
       props: {
         title: "Header",
-        content: EnvelopeHeader,
+        content: EnvelopeHeader as typeof SvelteComponent,
       },
     });
     const backdrop = new ModalBackdrop({
@@ -50,7 +51,7 @@
       target: document.body,
       props: {
         title: "Signatures",
-        content: EnvelopeSignatures,
+        content: EnvelopeSignatures as typeof SvelteComponent,
       },
     });
     const backdrop = new ModalBackdrop({

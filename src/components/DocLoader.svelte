@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
+  import type { SvelteComponent } from "svelte";
 
   import Modal from "$lib/ui/Modal.svelte";
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
@@ -28,7 +29,7 @@
       target: document.body,
       props: {
         title: "Load document",
-        content: DocLoaderContent,
+        content: DocLoaderContent as typeof SvelteComponent,
       },
     });
     const backdrop = new ModalBackdrop({

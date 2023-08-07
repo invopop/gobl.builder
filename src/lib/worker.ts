@@ -3,6 +3,7 @@ export type {}; // Needed when compiling with `--isolatedModules`.
 import "./wasm_exec.js";
 
 // GOBL CLI version defined in package.json
+declare const GOBL_CLI_VERSION: string;
 const goblCliVersion = GOBL_CLI_VERSION;
 
 const wasmUrl = `https://cdn.gobl.org/cli/gobl.${goblCliVersion}.wasm`;

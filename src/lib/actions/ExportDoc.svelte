@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import type { SvelteComponent } from "svelte";
 
   import { envelope } from "$lib/stores.js";
   import Modal from "$lib/ui/Modal.svelte";
@@ -21,7 +22,7 @@
       target: document.body,
       props: {
         title: "Export document",
-        content: ExportDocContent,
+        content: ExportDocContent as typeof SvelteComponent,
       },
     });
     const backdrop = new ModalBackdrop({

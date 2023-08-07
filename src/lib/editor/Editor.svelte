@@ -265,6 +265,7 @@
   <div
     class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
     on:dblclick={handleDrawerToggle}
+    role="log"
   >
     <div>
       <span class="mr-1">
@@ -335,6 +336,8 @@
       {/if}
       <ul>
         {#each sortedProblems as problem}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
           <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
             <EditorProblem {problem} />
           </li>

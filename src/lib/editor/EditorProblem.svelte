@@ -11,9 +11,9 @@
   function problemIcon(): typeof SvelteComponent {
     switch (problem.severity) {
       case MarkerSeverity.Error:
-        return ErrorIcon;
+        return ErrorIcon as typeof SvelteComponent;
       case MarkerSeverity.Warning:
-        return WarningIcon;
+        return WarningIcon as typeof SvelteComponent;
       default:
         throw new Error(`Unmapped problem severity "${problem.severity}".`);
     }

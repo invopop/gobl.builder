@@ -2,20 +2,22 @@
   import { writable } from "svelte/store";
   import { offset, flip, shift } from "@floating-ui/dom";
   import { createFloatingActions, arrow } from "svelte-floating-ui";
+    import { stringify } from "postcss";
 
   const arrowRef = writable<HTMLElement>();
   const [floatingRef, floatingContent] = createFloatingActions({
     strategy: "absolute",
     placement: "top",
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
-    onComputed({ placement, middlewareData }) {
+    onComputed({ placement, middlewareData }: { placement: string, middlewareData: any }) {
       const { x, y } = middlewareData.arrow!;
-      const staticSide = {
-        top: "bottom",
-        right: "left",
-        bottom: "top",
-        left: "right",
-      }[placement.split("-")[0]];
+      const sides = new Map<string, string>([
+        ["top", "bottom"],
+        ["right", "left"],
+        ["bottom", "left"],
+        ["left", "right"]
+      ]);
+      const staticSide = sides.get(placement.split("-")[0]);
 
       if ($arrowRef != null) {
         Object.assign($arrowRef.style, {
@@ -33,6 +35,7 @@
 
 <div
   class="inline-block"
+  role="tooltip"
   use:floatingRef
   on:mouseenter={() => {
     showTooltip = true;
