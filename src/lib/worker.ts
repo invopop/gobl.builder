@@ -2,13 +2,8 @@ export type {}; // Needed when compiling with `--isolatedModules`.
 
 import "./wasm_exec.js";
 
-// TODO: Find a way to hardcode this value for `vite build` and
-// `svelte-package`. Failed attempts:
-// - `$env/static/public` doesn't work for Workers.
-// - Using `replace` from `svelte-preprocess` is not a solution here, as it only
-//   works with Svelte component markup, *not* sufficient for this non-Svelte TS
-//   file.
-const goblCliVersion = "0.63.0";
+// GOBL CLI version defined in package.json
+const goblCliVersion = GOBL_CLI_VERSION;
 
 const wasmUrl = `https://cdn.gobl.org/cli/gobl.${goblCliVersion}.wasm`;
 

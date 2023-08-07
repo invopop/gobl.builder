@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "license": "Apache-2.0",
   "type": "module",
+  "gobl_cli_version": "0.64.0",
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
