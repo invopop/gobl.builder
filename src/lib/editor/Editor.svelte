@@ -1,8 +1,9 @@
 <script lang="ts">
-  import * as monaco from "monaco-editor";
-  import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
-  import type { Environment } from "monaco-editor";
+  // import * as monaco from "monaco-editor";
+  import loader from "@monaco-editor/loader";
+  import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
+  // import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+  // import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { Unsubscriber } from "svelte/store";
 
   import { onDestroy, onMount } from "svelte";
@@ -21,19 +22,21 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
 
-  const modelUri = monaco.Uri.parse("gobl://doc.json");
+  let monaco: typeof Monaco;
 
   export let jsonSchemaURL: string;
 
   let editorEl: HTMLElement;
-  let monacoEditor: monaco.editor.IStandaloneCodeEditor;
-  let model: monaco.editor.ITextModel;
-  let readOnlyEditHandler: monaco.IDisposable;
+  let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
+  let model: Monaco.editor.ITextModel;
+  let readOnlyEditHandler: Monaco.IDisposable;
   let lineNumber = 1;
   let column = 1;
   let drawerClosed = false;
 
   let unsubscribeEditor: Unsubscriber;
+
+  const goblDocURL = "gobl://doc.json";
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -45,6 +48,9 @@
   }
 
   function setSchemaURI(uri: string) {
+    if (!monaco) {
+      return;
+    }
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: true,
@@ -52,7 +58,7 @@
       schemas: uri
         ? [
             {
-              fileMatch: [modelUri.toString()],
+              fileMatch: [goblDocURL],
               uri,
             },
           ]
@@ -64,23 +70,16 @@
     }
   }
 
-  onMount(() => {
-    (<Environment>self.MonacoEnvironment) = {
-      getWorker: function (_: string, label: string) {
-        switch (label) {
-          case "json":
-            return new JSONWorker();
-          default:
-            return new EditorWorker();
-        }
-      },
-    };
+  onMount(async () => {
+    const monacoEditorImport = await import("monaco-editor");
+    loader.config({ monaco: monacoEditorImport.default });
 
+    monaco = await loader.init();
+
+    let modelUri = monaco.Uri.parse(goblDocURL);
     model = monaco.editor.createModel("", "json", modelUri);
 
-    if (jsonSchemaURL) {
-      setSchemaURI(jsonSchemaURL);
-    }
+    setSchemaURI(jsonSchemaURL);
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
@@ -203,8 +202,9 @@
 
   onDestroy(() => {
     unsubscribeEditor();
-    model.dispose();
-    monacoEditor.dispose();
+    // model.dispose();
+    monaco?.editor.getModels().forEach((m) => m.dispose());
+    // monacoEditor.dispose();
     readOnlyEditHandler.dispose();
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
@@ -247,7 +247,7 @@
     monacoEditor.trigger("redoButton", "redo", null);
   }
 
-  function handleProblemClick(problem: monaco.editor.IMarker) {
+  function handleProblemClick(problem: Monaco.editor.IMarker) {
     return function () {
       monacoEditor.setPosition({ lineNumber: problem.startLineNumber, column: problem.startColumn });
       monacoEditor.revealLineInCenter(problem.startLineNumber);
