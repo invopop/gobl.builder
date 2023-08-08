@@ -32,7 +32,7 @@ jobs:
       # Skip if `new_tag` != `tag` (means no bump)
       - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
         name: Set NPM version to ${{ steps.bump_version.outputs.new_tag }}
-        working-directory: package
+        working-directory: dist
         run: npm version --no-git-tag-version ${{ steps.bump_version.outputs.new_tag }}
 
       # Skip if `new_tag` != `tag` (means no bump)
@@ -41,5 +41,5 @@ jobs:
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
-          package: ./package/package.json
+          package: ./dist/package.json
           access: public

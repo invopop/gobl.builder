@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",
   extends: ["eslint:recommended", "plugin:svelte/recommended", "plugin:@typescript-eslint/recommended", "prettier"],
-  ignorePatterns: ["src/lib/wasm_exec.js", "*.cjs"],
+  ignorePatterns: ["dist", "src/lib/wasm_exec.js", "*.cjs"],
   overrides: [
     {
       files: ["*.svelte"],

@@ -3,3 +3,4 @@
 /package
 /build
 /static/*.wasm
+/dist
