@@ -63,6 +63,9 @@
       "vscode-json-languageservice": "$vscode-json-languageservice"
     }
   },
+  "files": [
+    "dist"
+  ],
   "exports": {
     "./GOBLBuilder.svelte": {
       "types": "./dist/GOBLBuilder.svelte.d.ts",
