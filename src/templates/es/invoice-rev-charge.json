@@ -1,12 +1,13 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
-  "code": "SAMPLE-X-002",
+  "series": "SX2023",
+  "code": "002",
   "currency": "EUR",
   "tax": {
     "prices_include": "VAT",
-    "schemes": ["reverse-charge"]
+    "tags": ["reverse-charge"]
   },
-  "issue_date": "2022-02-01",
+  "issue_date": "2023-08-01",
   "supplier": {
     "tax_id": {
       "country": "ES",
@@ -55,10 +56,7 @@
       "quantity": "50",
       "item": {
         "name": "Branded Mugs",
-        "price": "7.50",
-        "meta": {
-          "product": "goods"
-        }
+        "price": "7.50"
       },
       "taxes": [
         {

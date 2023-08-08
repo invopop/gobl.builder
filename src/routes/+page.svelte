@@ -4,8 +4,6 @@
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
 
-  const DEFAULT_JSON_SCHEMA_URL = "https://gobl.org/draft-0/bill/invoice";
-
   interface GOBLDocument {
     $schema: string;
     [key: string]: unknown;
@@ -15,11 +13,12 @@
   let problems: EditorProblem[] = [];
   $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
   $: console.log({ hasErrors });
-  let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
+  let jsonSchemaURL = "";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     data = JSON.stringify(event.detail, null, 4);
-    jsonSchemaURL = event.detail.$schema;
+    // Ensure that future JSON Schemas match (currently disabled)
+    //jsonSchemaURL = event.detail.$schema;
   }
 </script>
 

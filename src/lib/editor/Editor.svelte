@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as monaco from "monaco-editor";
-  import JSONWorker from "$lib/monaco-editor/json.worker.js?worker";
+  import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import type { Environment } from "monaco-editor";
   import type { Unsubscriber } from "svelte/store";
@@ -16,10 +16,10 @@
     envelope,
   } from "$lib/stores.js";
   import EditorProblem from "./EditorProblem.svelte";
-  import WarningIcon from "$lib/ui/WarningIcon.svelte";
-  import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
-  import SuccessIcon from "$lib/ui/SuccessIcon.svelte";
-  import LightbulbIcon from "$lib/ui/LightbulbIcon.svelte";
+  import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
+  import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
+  import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
+  import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
 
   const modelUri = monaco.Uri.parse("gobl://doc.json");
 
@@ -65,7 +65,7 @@
   }
 
   onMount(() => {
-    (<Environment>(self as any).MonacoEnvironment) = {
+    (<Environment>self.MonacoEnvironment) = {
       getWorker: function (_: string, label: string) {
         switch (label) {
           case "json":
@@ -78,7 +78,9 @@
 
     model = monaco.editor.createModel("", "json", modelUri);
 
-    setSchemaURI(jsonSchemaURL);
+    if (jsonSchemaURL) {
+      setSchemaURI(jsonSchemaURL);
+    }
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
@@ -208,6 +210,8 @@
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
 
+  // validateSchema is used to ensure the $schema property is set to something
+  // that is expected by the component using the editor.
   function validateSchema(value: string) {
     if (!jsonSchemaURL) {
       return;
@@ -261,6 +265,7 @@
   <div
     class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
     on:dblclick={handleDrawerToggle}
+    role="log"
   >
     <div>
       <span class="mr-1">
@@ -331,6 +336,8 @@
       {/if}
       <ul>
         {#each sortedProblems as problem}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
           <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
             <EditorProblem {problem} />
           </li>

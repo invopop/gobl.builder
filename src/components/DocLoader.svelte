@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
+  import type { SvelteComponent } from "svelte";
 
   import Modal from "$lib/ui/Modal.svelte";
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
@@ -10,16 +11,16 @@
   const dispatch = createEventDispatcher();
 
   onMount(() => {
-    // TODO: Figure out how to type `as EventListener` without breaking linting.
-    document.addEventListener("docLoaded", handleDocLoaded as any, true);
+    // eslint-disable-next-line no-undef
+    document.addEventListener("docLoaded", handleDocLoaded as EventListener, true);
   });
 
   onDestroy(() => {
-    // TODO: Figure out how to type `as EventListener` without breaking linting.
-    document.removeEventListener("docLoaded", handleDocLoaded as any, true);
+    // eslint-disable-next-line no-undef
+    document.removeEventListener("docLoaded", handleDocLoaded as EventListener, true);
   });
 
-  function handleDocLoaded(event: CustomEvent<string>) {
+  function handleDocLoaded(event: CustomEvent<string>): void {
     dispatch("load", event.detail);
   }
 
@@ -28,7 +29,7 @@
       target: document.body,
       props: {
         title: "Load document",
-        content: DocLoaderContent,
+        content: DocLoaderContent as typeof SvelteComponent,
       },
     });
     const backdrop = new ModalBackdrop({

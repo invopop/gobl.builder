@@ -193,7 +193,7 @@ export async function keygen(opts?: { indent: KeygenRequest["indent"] }): Promis
     await sendMessage({
       action: "keygen",
       indent: opts?.indent,
-    })
+    }),
   );
 }
 

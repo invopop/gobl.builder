@@ -8,20 +8,23 @@
     strategy: "absolute",
     placement: "top",
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
-    onComputed({ placement, middlewareData }) {
+    onComputed({ placement, middlewareData }: { placement: string, middlewareData: { arrow: void } }) {
       const { x, y } = middlewareData.arrow!;
-      const staticSide = {
-        top: "bottom",
-        right: "left",
-        bottom: "top",
-        left: "right",
-      }[placement.split("-")[0]];
+      const sides = new Map<string, string>([
+        ["top", "bottom"],
+        ["right", "left"],
+        ["bottom", "left"],
+        ["left", "right"]
+      ]);
+      const staticSide = sides.get(placement.split("-")[0]);
 
-      Object.assign($arrowRef.style, {
-        left: x != null ? `${x}px` : "",
-        top: y != null ? `${y}px` : "",
-        [staticSide as string]: "-4px",
-      });
+      if ($arrowRef != null) {
+        Object.assign($arrowRef.style, {
+          left: x != null ? `${x}px` : "",
+          top: y != null ? `${y}px` : "",
+          [staticSide as string]: "-4px",
+        });
+      }
     },
   });
 
@@ -31,6 +34,7 @@
 
 <div
   class="inline-block"
+  role="tooltip"
   use:floatingRef
   on:mouseenter={() => {
     showTooltip = true;

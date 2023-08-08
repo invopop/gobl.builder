@@ -65,7 +65,7 @@ export const envelopeAndEditorJSON = derived([envelope, editor], ([$envelope, $e
           doc: JSON.parse($editor || ""),
         },
         null,
-        4
+        4,
       );
     } catch (e) {
       // If the editor doesn't contain valid JSON, envelope is `null`.

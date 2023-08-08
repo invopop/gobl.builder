@@ -5,7 +5,7 @@
 
   import { envelope } from "$lib/stores.js";
   import { createNotification, Severity } from "$lib/notifications/index.js";
-  import { schemaIconMap } from "$lib/ui/schemaIconMap.svelte";
+  import { schemaIconMap } from "$lib/ui/icons/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
 
   const pdfApiBaseUrl = "https://pdf.invopop.com";
@@ -77,7 +77,7 @@
     const filename = $envelope.head.uuid + ".json";
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
 
-    dispatch("download");
+    dispatch("download", {});
     createNotification({
       severity: Severity.Success,
       message: "Downloaded JSON file of GOBL document.",

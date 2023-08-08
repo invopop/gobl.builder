@@ -1,27 +1,27 @@
 <script lang="ts">
   import { clsx } from "clsx";
 
-  import * as monaco from "monaco-editor";
+  import { MarkerSeverity, editor } from "monaco-editor";
   import type { SvelteComponent } from "svelte";
-  import WarningIcon from "$lib/ui/WarningIcon.svelte";
-  import ErrorIcon from "$lib/ui/ErrorIcon.svelte";
+  import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
+  import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
 
-  export let problem: monaco.editor.IMarker;
+  export let problem: editor.IMarker;
 
   function problemIcon(): typeof SvelteComponent {
     switch (problem.severity) {
-      case monaco.MarkerSeverity.Error:
-        return ErrorIcon;
-      case monaco.MarkerSeverity.Warning:
-        return WarningIcon;
+      case MarkerSeverity.Error:
+        return ErrorIcon as typeof SvelteComponent;
+      case MarkerSeverity.Warning:
+        return WarningIcon as typeof SvelteComponent;
       default:
         throw new Error(`Unmapped problem severity "${problem.severity}".`);
     }
   }
 
   $: classes = clsx({
-    "text-red-400": problem.severity === monaco.MarkerSeverity.Error,
-    "text-amber-400": problem.severity === monaco.MarkerSeverity.Warning,
+    "text-red-400": problem.severity === MarkerSeverity.Error,
+    "text-amber-400": problem.severity === MarkerSeverity.Warning,
   });
 </script>
 

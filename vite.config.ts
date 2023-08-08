@@ -1,8 +1,10 @@
+import { defineConfig } from "vite";
 import { sveltekit } from "@sveltejs/kit/vite";
-import type { UserConfig } from "vite";
+import packageJson from "./package.json";
 
-const config: UserConfig = {
+export default defineConfig({
   plugins: [sveltekit()],
-};
-
-export default config;
+  define: {
+    GOBL_CLI_VERSION: JSON.stringify(packageJson.gobl_cli_version),
+  },
+});
