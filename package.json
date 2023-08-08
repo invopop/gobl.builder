@@ -67,7 +67,7 @@
     "dist"
   ],
   "exports": {
-    ".": {
+    "./gobl-builder": {
       "types": "./dist/GOBLBuilder.svelte.d.ts",
       "svelte": "./dist/GOBLBuilder.svelte"
     }
