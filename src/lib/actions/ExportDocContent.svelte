@@ -3,8 +3,9 @@
   import fileSaver from "file-saver";
   import * as CountryList from "country-list";
 
-  import { envelope } from "$lib/stores.js";
-  import { createNotification, Severity } from "$lib/notifications/index.js";
+  import { envelope } from "$lib/gobl/stores.js";
+  import { createNotification } from "$lib/notifications/index.js";
+  import { Severity } from "$lib/gobl/stores.js";
   import { schemaIconMap } from "$lib/ui/icons/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
 
@@ -108,7 +109,7 @@
       {#if previewLoading}
         <svg
           role="status"
-          class="w-5 h-5 text-gray-500 animate-spin  fill-gray-300"
+          class="w-5 h-5 text-gray-500 animate-spin fill-gray-300"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

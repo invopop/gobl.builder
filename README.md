@@ -119,9 +119,9 @@ GOBL Builder makes use of [gobl.cli](https://github.com/invopop/gobl.cli) for
 validating, calculating and building GOBL documents. This is done via a
 versioned WASM binary, distributed on `cdn.gobl.org`.
 
-The version of `gobl.cli` that is used is defined in the [package.json](./package.json) file under the `gobl_cli_version`.
+The version of `gobl.cli` that is used is defined in the [src/lib/worker.ts](./src/lib/worker.ts) file.
 
-To bump the version, update the value of `gobl_cli_version` (e.g. based on the
+To bump the version, update the value of `goblCliVersion` (e.g. based on the
 [latest release of
 `gobl.cli`](https://github.com/invopop/gobl.cli/releases/latest)), then commit
 the changes to GitHub to trigger a new release of `@invopop/gobl-builder` on
@@ -133,4 +133,4 @@ GOBL Builder is licensed under the [Apache-2.0 License](LICENSE).
 
 ---
 
-© 2022 Invopop, Ltd.
+© 2023 Invopop, S.L.

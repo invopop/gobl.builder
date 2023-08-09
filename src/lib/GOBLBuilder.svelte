@@ -1,10 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { editor, editorProblems, envelope, envelopeAndEditorJSON, keypair } from "$lib/stores.js";
+  import { editor, envelope, envelopeAndEditorJSON, keypair } from "$lib/gobl/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
-  import { isEnvelope } from "./gobl.js";
+  import { isEnvelope } from "./gobl/index.js";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
+  import { editorProblems } from "./editor/store.js";
 
   const dispatch = createEventDispatcher();
 

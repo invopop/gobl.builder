@@ -1,16 +1,5 @@
 import Notifications from "./Notifications.svelte";
-
-export enum Severity {
-  Info = "info",
-  Error = "error",
-  Success = "success",
-}
-
-export type Notification = {
-  severity: Severity;
-  message: string;
-  context?: string;
-};
+import type { Notification } from "$lib/gobl/stores.js";
 
 const notifications = new Set<Notification>();
 

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import { undoAvailable } from "$lib/stores.js";
+  import { undoAvailable } from "$lib/gobl/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 

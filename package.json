@@ -30,6 +30,10 @@
     "./editor/EditorProblem.svelte": {
       "svelte": "./dist/editor/EditorProblem.svelte",
       "types": "./dist/editor/EditorProblem.svelte.d.ts"
+    },
+    "./editor/EditorProblem": {
+      "import": "./dist/editor/EditorProblem.js",
+      "types": "./dist/editor/EditorProblem.d.ts"
     }
   },
   "files": [
@@ -78,7 +82,8 @@
     "svelte": "^4.1.2",
     "svelte-floating-ui": "^1.5.3",
     "utf8": "^3.0.0",
-    "vscode-json-languageservice": "5.3.5"
+    "vscode-json-languageservice": "5.3.5",
+    "web-worker": "^1.2.0"
   },
   "overrides": {
     "monaco-editor": {

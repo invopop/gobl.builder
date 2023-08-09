@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { envelope } from "$lib/stores.js";
+  import { envelope } from "$lib/gobl/stores.js";
   $: head = $envelope?.head;
 </script>
 

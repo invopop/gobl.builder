@@ -12,7 +12,7 @@
 
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
-  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/stores.js";
+  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/gobl/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";

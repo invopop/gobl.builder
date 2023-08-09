@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import type { SvelteComponent } from "svelte";
 
-  import { envelope } from "$lib/stores.js";
+  import { envelope } from "$lib/gobl/stores.js";
   import Modal from "$lib/ui/Modal.svelte";
   import ExportDocContent from "./ExportDocContent.svelte";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";

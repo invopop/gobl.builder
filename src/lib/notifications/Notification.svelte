@@ -1,6 +1,6 @@
 <script lang="ts">
   import { clsx } from "clsx";
-  import { Severity } from "$lib/notifications/index.js";
+  import { Severity } from "$lib/gobl/stores.js";
 
   export let severity: Severity = Severity.Info;
   export let message: string;

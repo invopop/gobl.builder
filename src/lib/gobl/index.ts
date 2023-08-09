@@ -1,6 +1,7 @@
-import GOBLWorker from "./worker?worker";
-import { createNotification, type Notification } from "$lib/notifications/index.js";
-import type { GOBLError } from "$lib/stores.js";
+// import GOBLWorker from "./worker?worker";
+import Worker from "web-worker";
+import type { GOBLError, Notification } from "./stores.js";
+import { notifications } from "./stores.js";
 
 type BaseBulkRequest = {
   req_id?: string;
@@ -88,7 +89,8 @@ type InFlightBulkRequest = {
 
 const queue: BulkRequest[] = [];
 const inFlight: Record<string, InFlightBulkRequest> = {};
-const worker = new GOBLWorker();
+//const worker = new GOBLWorker();
+const worker = new Worker(new URL("./worker", import.meta.url), { type: "module" });
 
 let reqId = 0;
 let ready = false;
@@ -104,7 +106,7 @@ worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkRes
   }
 
   if ("message" in data) {
-    createNotification(data);
+    notifications.set(data);
     return true;
   }
 
