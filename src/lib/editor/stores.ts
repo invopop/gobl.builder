@@ -1,5 +1,7 @@
 import { derived, writable } from "svelte/store";
 import * as GOBL from "$lib/gobl/index.js";
+import type { GOBLError, Notification } from "$lib/gobl/index.js";
+import type * as monaco from "monaco-editor";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null);
@@ -13,6 +15,8 @@ function createKeypairStore() {
     },
   };
 }
+
+export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
 export const keypair = createKeypairStore();
 export const editor = writable<string | null>(null);
@@ -75,20 +79,6 @@ export const envelopeAndEditorJSON = derived([envelope, editor], ([$envelope, $e
   return [envelopeValue, $editor];
 });
 
-// Severity is used for error messages
-export enum Severity {
-  Info = "info",
-  Error = "error",
-  Success = "success",
-}
-
-// Notification is used for communicating error messages
-export type Notification = {
-  severity: Severity;
-  message: string;
-  context?: string;
-};
-
 function createNotificationStore() {
   const { subscribe, set } = writable<Notification | null>(null);
   return {
@@ -96,13 +86,7 @@ function createNotificationStore() {
     set,
   };
 }
-
 export const notifications = createNotificationStore();
-
-export type GOBLError = {
-  message: string;
-  code: number;
-};
 
 function createGOBLErrorStore() {
   const { subscribe, set } = writable<GOBLError | null>(null);

@@ -8,8 +8,8 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/gobl/stores.js";
-  import { editorProblems as problems } from "./store.js";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import { editorProblems as problems } from "./stores.js";
   import EditorProblem from "./EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";

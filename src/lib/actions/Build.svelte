@@ -4,8 +4,9 @@
   import * as GOBL from "$lib/gobl/index.js";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { createNotification } from "$lib/notifications/index.js";
-  import { Severity } from "$lib/gobl/stores.js";
-  import { envelope, editor, goblError, type GOBLError } from "$lib/gobl/stores.js";
+  import { Severity } from "$lib/gobl/index.js";
+  import type { GOBLError } from "$lib/gobl/index.js";
+  import { envelope, editor, goblError } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 

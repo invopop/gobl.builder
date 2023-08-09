@@ -3,9 +3,9 @@
   import fileSaver from "file-saver";
   import * as CountryList from "country-list";
 
-  import { envelope } from "$lib/gobl/stores.js";
+  import { envelope } from "$lib/editor/stores.js";
   import { createNotification } from "$lib/notifications/index.js";
-  import { Severity } from "$lib/gobl/stores.js";
+  import { Severity } from "$lib/gobl/index.js";
   import { schemaIconMap } from "$lib/ui/icons/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
 

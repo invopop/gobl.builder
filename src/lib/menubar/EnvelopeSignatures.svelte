@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { envelope } from "$lib/gobl/stores.js";
+  import { envelope } from "$lib/editor/stores.js";
   $: sigs = $envelope?.sigs;
 </script>
 

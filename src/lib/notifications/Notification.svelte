@@ -1,6 +1,6 @@
 <script lang="ts">
   import { clsx } from "clsx";
-  import { Severity } from "$lib/gobl/stores.js";
+  import { Severity } from "$lib/gobl/index.js";
 
   export let severity: Severity = Severity.Info;
   export let message: string;

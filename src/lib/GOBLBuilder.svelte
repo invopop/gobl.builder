@@ -1,11 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { editor, envelope, envelopeAndEditorJSON, keypair } from "$lib/gobl/stores.js";
+  import { editor, envelope, envelopeAndEditorJSON, keypair } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "./gobl/index.js";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-  import { editorProblems } from "./editor/store.js";
+  import { editorProblems } from "./editor/stores.js";
 
   const dispatch = createEventDispatcher();
 
@@ -74,7 +74,7 @@
   });
 </script>
 
-<div class="flex flex-col h-full">
+<div class="flex flex-col h-full editor">
   <div class="flex-none">
     <MenuBar
       {jsonSchemaURL}
@@ -94,7 +94,3 @@
     <Editor {jsonSchemaURL} />
   </div>
 </div>
-
-<style>
-  @import "@fontsource/fira-code";
-</style>

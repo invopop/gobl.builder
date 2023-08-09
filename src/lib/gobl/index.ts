@@ -1,7 +1,4 @@
-// import GOBLWorker from "./worker?worker";
-import Worker from "web-worker";
-import type { GOBLError, Notification } from "./stores.js";
-import { notifications } from "./stores.js";
+import GOBLWorker from "./worker?worker";
 
 type BaseBulkRequest = {
   req_id?: string;
@@ -82,6 +79,25 @@ export type ReadyMessage = {
   ready: true;
 };
 
+export type GOBLError = {
+  message: string;
+  code: number;
+};
+
+// Severity is used for error messages
+export enum Severity {
+  Info = "info",
+  Error = "error",
+  Success = "success",
+}
+
+// Notification is used for communicating error messages
+export type Notification = {
+  severity: Severity;
+  message: string;
+  context?: string;
+};
+
 type InFlightBulkRequest = {
   resolve: (value: string | PromiseLike<string>) => void;
   reject: (reason?: unknown) => void;
@@ -89,8 +105,7 @@ type InFlightBulkRequest = {
 
 const queue: BulkRequest[] = [];
 const inFlight: Record<string, InFlightBulkRequest> = {};
-//const worker = new GOBLWorker();
-const worker = new Worker(new URL("./worker", import.meta.url), { type: "module" });
+const worker = new GOBLWorker();
 
 let reqId = 0;
 let ready = false;
@@ -106,7 +121,8 @@ worker.onmessage = ({ data }: MessageEvent<ReadyMessage | Notification | BulkRes
   }
 
   if ("message" in data) {
-    notifications.set(data);
+    // TODO: relay messages
+    console.log(data.message);
     return true;
   }
 
