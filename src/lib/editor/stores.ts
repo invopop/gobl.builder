@@ -1,6 +1,6 @@
 import { derived, writable } from "svelte/store";
-import * as GOBL from "$lib/gobl/index.js";
-import type { GOBLError, Notification } from "$lib/gobl/index.js";
+import * as GOBL from "@invopop/gobl-worker";
+import type { GOBLError, Notification } from "@invopop/gobl-worker";
 import type * as monaco from "monaco-editor";
 
 function createKeypairStore() {

@@ -5,7 +5,7 @@
 
   import { envelope } from "$lib/editor/stores.js";
   import { createNotification } from "$lib/notifications/index.js";
-  import { Severity } from "$lib/gobl/index.js";
+  import { Severity } from "@invopop/gobl-worker";
   import { schemaIconMap } from "$lib/ui/icons/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
 

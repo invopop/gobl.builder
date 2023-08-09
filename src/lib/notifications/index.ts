@@ -1,5 +1,5 @@
 import Notifications from "./Notifications.svelte";
-import type { Notification } from "$lib/gobl/stores.js";
+import type { Notification } from "@invopop/gobl-worker";
 
 const notifications = new Set<Notification>();
 

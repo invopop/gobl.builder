@@ -1,7 +1,7 @@
 <script lang="ts">
   import { fly } from "svelte/transition";
 
-  import type { Notification } from "$lib/gobl/index.js";
+  import type { Notification } from "@invopop/gobl-worker";
   import Alert from "./Notification.svelte";
 
   export let notifications = new Set<Notification>();
