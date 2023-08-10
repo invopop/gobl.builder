@@ -7,9 +7,8 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "NodeNext"
+    "moduleResolution": "Bundler"
   }
 }

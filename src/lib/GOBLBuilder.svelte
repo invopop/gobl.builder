@@ -3,7 +3,7 @@
   import { editor, envelope, envelopeAndEditorJSON, keypair } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
-  import { isEnvelope } from "./gobl/index.js";
+  import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import { editorProblems } from "./editor/stores.js";
 

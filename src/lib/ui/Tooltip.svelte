@@ -8,13 +8,13 @@
     strategy: "absolute",
     placement: "top",
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
-    onComputed({ placement, middlewareData }: { placement: string, middlewareData: { arrow: void } }) {
+    onComputed({ placement, middlewareData }) {
       const { x, y } = middlewareData.arrow!;
       const sides = new Map<string, string>([
         ["top", "bottom"],
         ["right", "left"],
         ["bottom", "left"],
-        ["left", "right"]
+        ["left", "right"],
       ]);
       const staticSide = sides.get(placement.split("-")[0]);
 
