@@ -1,9 +1,7 @@
 <script lang="ts">
-  // import * as monaco from "monaco-editor";
   import loader from "@monaco-editor/loader";
-  import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api";
-  // import JSONWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  // import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+  import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js";
+
   import type { Unsubscriber } from "svelte/store";
 
   import { onDestroy, onMount } from "svelte";
