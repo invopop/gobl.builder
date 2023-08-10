@@ -3,7 +3,7 @@
   import fileSaver from "file-saver";
   import * as CountryList from "country-list";
 
-  import { envelope } from "$lib/editor/stores.js";
+  import { envelope, envelopeDocumentSchema } from "$lib/editor/stores.js";
   import { Severity, createNotification } from "$lib/notifications/index.js";
   import { schemaIconMap } from "$lib/ui/icons/schemaIconMap.svelte";
   import DocIcon from "$lib/ui/DocIcon.svelte";
@@ -23,7 +23,7 @@
 
   let previewLoading = false;
 
-  $: invoiceCountryCode = $envelope?.doc.supplier?.tax_id?.country as string | undefined;
+  $: invoiceCountryCode = $envelope?.doc?.supplier?.tax_id?.country as string | undefined;
   $: countryName = CountryList.getName(invoiceCountryCode || "");
 
   async function handlePreviewPDFClick() {
@@ -74,7 +74,7 @@
       return;
     }
 
-    const filename = $envelope.head.uuid + ".json";
+    const filename = ($envelope.head?.uuid || "gob") + ".json";
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
 
     dispatch("download", {});
@@ -122,8 +122,8 @@
             fill="currentFill"
           />
         </svg>
-      {:else if $envelope}
-        <svelte:component this={schemaIconMap.get($envelope.doc.$schema)} />
+      {:else if $envelope && $envelope.doc}
+        <svelte:component this={schemaIconMap.get(envelopeDocumentSchema($envelope))} />
       {:else}
         <svelte:component this={DocIcon} />
       {/if}

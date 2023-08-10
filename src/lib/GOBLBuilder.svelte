@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { editor, envelope, envelopeAndEditorJSON, keypair } from "$lib/editor/stores.js";
+  import { envelope, goblError, keypair, newEnvelope } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -33,35 +33,29 @@
     });
   }
 
-  // When `data` is updated, update the internal editor and envelope stores.
-  // If `data` is JSON and it's a GOBL envelope, parse and store its contents
-  // and the envelope separately.
+  // When `data` is updated, update the internal envelope store.
+  // If required instantiate a new envelope object to use.
   $: {
+    goblError.set(null);
     try {
-      const parsedValue = JSON.parse(data);
-      if (isEnvelope(parsedValue)) {
-        // Set new editor value *first*, because when the envelope is set, the Monaco
-        // editor if the envelope contains signatures.
-        $editor = JSON.stringify(parsedValue.doc, null, 4);
+      let parsedValue = null;
+      if (data != "") {
+        parsedValue = JSON.parse(data);
+      }
+      if (data != "" && isEnvelope(parsedValue)) {
         $envelope = parsedValue;
       } else {
-        $editor = data;
-        $envelope = null;
+        $envelope = newEnvelope(parsedValue);
       }
     } catch (e) {
-      $editor = data;
-      $envelope = null;
+      console.error("invalid document data: ");
+      $envelope = newEnvelope(null);
     }
   }
 
-  // The `change` event is dispatched when the envelope or editor is updated.
-  // When the editor contains invalid JSON, envelope is always `null`. The editor
-  // value is always passed along as-is; e.g. without any parsing.
-  envelopeAndEditorJSON.subscribe(([envelope, editor]) => {
-    dispatch("change", {
-      envelope,
-      editor,
-    });
+  // Dispatch all `change` events when the envelope is modified.
+  envelope.subscribe((envelope) => {
+    dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
   // This ensures the current error state of the editor is bound to the

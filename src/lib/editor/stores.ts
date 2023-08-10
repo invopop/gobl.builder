@@ -17,28 +17,23 @@ function createKeypairStore() {
   };
 }
 
+const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
+
 export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
-export const keypair = createKeypairStore();
+// editor represents the JSON content in the editor
 export const editor = writable<string | null>(null);
+
+export const keypair = createKeypairStore();
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 
 export interface Envelope {
-  doc: {
-    $schema: string;
-    supplier?: {
-      tax_id?: {
-        country: string;
-        [key: string]: unknown;
-      };
-      [key: string]: unknown;
-    };
-    [key: string]: unknown;
-  };
-  head: {
-    uuid: string;
-    dig: {
+  $schema: string;
+  doc?: Document | null;
+  head?: {
+    uuid?: string;
+    dig?: {
       alg: string;
       val: string;
     };
@@ -54,31 +49,22 @@ export interface Envelope {
   sigs?: string[];
 }
 
-export const envelope = writable<Envelope | null>(null);
-export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head.draft === true));
+// Document contains the data to show in the editor
+export interface Document {
+  $schema?: string;
+  supplier?: {
+    tax_id?: {
+      country: string;
+      [key: string]: unknown;
+    };
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
+
+export const envelope = writable<Envelope>(buildNewEnvelope(null));
+export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head?.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
-
-export const envelopeAndEditorJSON = derived([envelope, editor], ([$envelope, $editor]) => {
-  let envelopeValue: string | null = null;
-
-  if ($envelope) {
-    try {
-      envelopeValue = JSON.stringify(
-        {
-          ...$envelope,
-          doc: JSON.parse($editor || ""),
-        },
-        null,
-        4,
-      );
-    } catch (e) {
-      // If the editor doesn't contain valid JSON, envelope is `null`.
-      envelopeValue = null;
-    }
-  }
-
-  return [envelopeValue, $editor];
-});
 
 function createNotificationStore() {
   const { subscribe, set } = writable<Notification | null>(null);
@@ -99,3 +85,29 @@ function createGOBLErrorStore() {
 }
 
 export const goblError = createGOBLErrorStore();
+
+function buildNewEnvelope(doc: Document | null): Envelope {
+  return {
+    $schema: envelopeGOBLSchema,
+    doc: doc,
+    head: {
+      draft: true,
+    },
+  };
+}
+
+export const newEnvelope = buildNewEnvelope;
+
+export function envelopeDocumentJSON(envelope: Envelope | null): string {
+  if (!envelope?.doc) {
+    return "";
+  }
+  return JSON.stringify(envelope.doc, null, 4);
+}
+
+export function envelopeDocumentSchema(envelope: Envelope | null): string {
+  if (!envelope?.doc?.$schema) {
+    return "";
+  }
+  return envelope.doc.$schema;
+}

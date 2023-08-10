@@ -37,15 +37,8 @@
       let envelopeValue = $envelope;
       let sendData: string;
 
-      // If a (previously set) envelope exists, replace its `doc` property with
-      // the editor contents. If not, send the editor contents as-is. In either case,
-      // the GOBL command response will be an an enveloped document.
-      if (envelopeValue) {
-        envelopeValue.doc = JSON.parse($editor || "");
-        sendData = JSON.stringify(envelopeValue);
-      } else {
-        sendData = $editor || "";
-      }
+      envelopeValue.doc = JSON.parse($editor || "");
+      sendData = JSON.stringify(envelopeValue);
 
       const payload: GOBL.ValidatePayload = {
         data: encodeUTF8ToBase64(sendData),

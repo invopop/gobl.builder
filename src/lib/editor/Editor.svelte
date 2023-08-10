@@ -6,7 +6,14 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import {
+    editor,
+    goblError,
+    redoAvailable,
+    undoAvailable,
+    envelope,
+    envelopeDocumentJSON,
+  } from "$lib/editor/stores.js";
   import { editorProblems as problems } from "./stores.js";
   import EditorProblem from "./EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
@@ -30,10 +37,14 @@
 
   const goblDocURL = "gobl://doc.json";
 
+  $: editor.set(envelopeDocumentJSON($envelope));
+
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
-  $: warningCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length;
-  $: errorCount = $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length;
+  $: warningCount = monaco
+    ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length
+    : 0;
+  $: errorCount = monaco ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length : 0;
 
   $: {
     setSchemaURI(jsonSchemaURL);
@@ -193,13 +204,17 @@
   });
 
   onDestroy(() => {
-    unsubscribeEditor();
+    $problems = []; // reset problems
+    if (unsubscribeEditor != null) {
+      unsubscribeEditor();
+    }
     // model.dispose();
     monaco?.editor.getModels().forEach((m) => m.dispose());
-    // monacoEditor.dispose();
-    readOnlyEditHandler.dispose();
+    monacoEditor?.dispose();
+    readOnlyEditHandler?.dispose();
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
+    console.log("destroying editor");
   });
 
   // validateSchema is used to ensure the $schema property is set to something
