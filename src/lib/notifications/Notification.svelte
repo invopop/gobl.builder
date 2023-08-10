@@ -1,6 +1,6 @@
 <script lang="ts">
   import { clsx } from "clsx";
-  import { Severity } from "@invopop/gobl-worker";
+  import { Severity } from "./index.js";
 
   export let severity: Severity = Severity.Info;
   export let message: string;

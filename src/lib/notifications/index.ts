@@ -1,5 +1,18 @@
 import Notifications from "./Notifications.svelte";
-import type { Notification } from "@invopop/gobl-worker";
+
+// Severity is used for error messages
+export enum Severity {
+  Info = "info",
+  Error = "error",
+  Success = "success",
+}
+
+// Notification is used for communicating error messages
+export type Notification = {
+  severity: Severity;
+  message: string;
+  context?: string;
+};
 
 const notifications = new Set<Notification>();
 

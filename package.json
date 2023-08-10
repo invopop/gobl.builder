@@ -8,6 +8,11 @@
     "type": "git",
     "url": "https://github.com/invopop/gobl.builder.git"
   },
+  "author": {
+    "name": "Invopop S.L.",
+    "email": "dev@invopop.com",
+    "url": "https://invopop.com"
+  },
   "scripts": {
     "dev": "vite dev --port 3000",
     "build": "vite build",
@@ -69,10 +74,10 @@
     "tslib": "^2.6.1",
     "typescript": "^5.1.6",
     "vite": ">=4.4.9",
-    "vscode-uri": "^3.0.7",
-    "@invopop/gobl-worker": "file:../gobl.cli/gobl-worker"
+    "vscode-uri": "^3.0.7"
   },
   "dependencies": {
+    "@invopop/gobl-worker": "0.64.0",
     "@monaco-editor/loader": "^1.3.3",
     "monaco-editor": "0.40.0",
     "base-64": "^1.0.0",

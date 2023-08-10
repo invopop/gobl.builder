@@ -3,8 +3,7 @@
 
   import * as GOBL from "@invopop/gobl-worker";
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
-  import { createNotification } from "$lib/notifications/index.js";
-  import { Severity } from "@invopop/gobl-worker";
+  import { Severity, createNotification } from "$lib/notifications/index.js";
   import type { GOBLError } from "@invopop/gobl-worker";
   import { envelope, editor, keypair, goblError } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
