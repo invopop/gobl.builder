@@ -37,34 +37,20 @@
       let sendData: string;
       let envelopeValue = $envelope;
 
-      // If a (previously set) envelope exists, replace its `doc` property with
-      // the editor contents. If not, send the editor contents as-is. In either case,
-      // the GOBL command response will be an an enveloped document.
-      if (envelopeValue) {
-        envelopeValue.doc = JSON.parse($editor || "");
-        sendData = JSON.stringify(envelopeValue);
-      } else {
-        sendData = $editor || "";
-      }
+      envelopeValue.doc = JSON.parse($editor || "");
+      sendData = JSON.stringify(envelopeValue);
 
       const payload: GOBL.BuildPayload = {
         data: encodeUTF8ToBase64(sendData),
         draft: true,
         envelop: true,
       };
-      const rawResult = await GOBL.build({ payload, indent: true });
+      const rawResult = await GOBL.build({ payload });
       const result = JSON.parse(rawResult);
 
-      if (result.$schema === "https://gobl.org/draft-0/envelope") {
-        // Set new editor value *first*, because when the envelope is set, the Monaco
-        // editor if the envelope contains signatures.
-        editor.set(JSON.stringify(result.doc, null, 4));
-        envelope.set(result);
-      } else {
-        editor.set(JSON.stringify(result, null, 4));
-      }
-
+      envelope.set(result);
       goblError.set(null);
+
       dispatch("build", {
         result,
       });

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
 
-  import { editor, envelope } from "$lib/editor/stores.js";
+  import { editor, envelope, goblError, newEnvelope } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -13,8 +13,9 @@
       return;
     }
 
+    goblError.set(null);
     editor.set("");
-    envelope.set(null);
+    envelope.set(newEnvelope(null));
   }
 </script>
 
