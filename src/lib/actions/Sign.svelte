@@ -5,7 +5,7 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { Severity, createNotification } from "$lib/notifications/index.js";
   import type { GOBLError } from "@invopop/gobl-worker";
-  import { envelope, editor, keypair, goblError, envelopeGOBLSchema } from "$lib/editor/stores.js";
+  import { envelope, editor, keypair, goblError } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 

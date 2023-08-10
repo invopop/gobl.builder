@@ -14,7 +14,6 @@
     }
 
     goblError.set(null);
-    editor.set("");
     envelope.set(newEnvelope(null));
   }
 </script>

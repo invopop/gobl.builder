@@ -17,7 +17,7 @@ function createKeypairStore() {
   };
 }
 
-export const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
+const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
 
 export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
@@ -90,7 +90,9 @@ function buildNewEnvelope(doc: Document | null): Envelope {
   return {
     $schema: envelopeGOBLSchema,
     doc: doc,
-    head: {},
+    head: {
+      draft: true,
+    },
   };
 }
 
