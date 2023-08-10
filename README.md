@@ -116,16 +116,9 @@ http://localhost:4173.
 ### GOBL WASM binary
 
 GOBL Builder makes use of [gobl.cli](https://github.com/invopop/gobl.cli) for
-validating, calculating and building GOBL documents. This is done via a
-versioned WASM binary, distributed on `cdn.gobl.org`.
+validating, calculating and building GOBL documents. This is done using the [@invopop/gobl-worker](https://www.npmjs.com/package/@invopop/gobl-worker) package that prepares a Worker and uses the WASM binary distributed on `cdn.gobl.org`.
 
-The version of `gobl.cli` that is used is defined in the [src/lib/worker.ts](./src/lib/worker.ts) file.
-
-To bump the version, update the value of `goblCliVersion` (e.g. based on the
-[latest release of
-`gobl.cli`](https://github.com/invopop/gobl.cli/releases/latest)), then commit
-the changes to GitHub to trigger a new release of `@invopop/gobl-builder` on
-NPM.
+To upgrade the version of the GOBL worker currently in use, simply update the [package.json](./package.json) file to reflect the new version.
 
 ## License
 
