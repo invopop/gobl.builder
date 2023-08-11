@@ -17,7 +17,7 @@ function createKeypairStore() {
   };
 }
 
-const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
+export const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
 
 export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
