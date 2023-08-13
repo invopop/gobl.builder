@@ -5,7 +5,7 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { Severity, createNotification } from "$lib/notifications/index.js";
   import type { GOBLError } from "@invopop/gobl-worker";
-  import { envelope, envelopeIsSigned, editor, goblError } from "$lib/editor/stores.js";
+  import { envelope, envelopeIsSigned, editor, goblError, envelopeGOBLSchema } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -37,8 +37,13 @@
       let envelopeValue = $envelope;
       let sendData: string;
 
-      envelopeValue.doc = JSON.parse($editor || "");
-      sendData = JSON.stringify(envelopeValue);
+      let doc = JSON.parse($editor || "");
+      if (doc.$schema == envelopeGOBLSchema) {
+        sendData = $editor || ""; // send as-is
+      } else {
+        envelopeValue.doc = doc;
+        sendData = JSON.stringify(envelopeValue);
+      }
 
       const payload: GOBL.ValidatePayload = {
         data: encodeUTF8ToBase64(sendData),
