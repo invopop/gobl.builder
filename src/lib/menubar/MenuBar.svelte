@@ -17,10 +17,18 @@
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
-  export let jsonSchemaURL: string;
   export let signEnabled: boolean;
+  export let hideActionButtons: boolean;
+
+  // Menu item instances to be able to perform the action from outside
+  let buildAction: Build;
+  let signAction: Sign;
+  let validateAction: Validate;
 
   $: envelopeHasSigs = Boolean($envelope?.sigs);
+  $: envelopeTooltip = envelopeHasSigs
+    ? "View the signatures of the sealed document."
+    : "There are no signatures. They are generated when signing a document.";
 
   function handleHeaderClick() {
     const modal = new Modal({
@@ -66,9 +74,10 @@
     modal.$on("close", handleClose);
   }
 
-  $: envelopeTooltip = envelopeHasSigs
-    ? "View the signatures of the sealed document."
-    : "There are no signatures. They are generated when signing a document.";
+  // Exposed functions to perform the actions from outside
+  export const build = () => buildAction.doAction();
+  export const sign = () => signAction.doAction();
+  export const validate = () => validateAction.doAction();
 </script>
 
 <div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
@@ -122,12 +131,12 @@
       <Redo on:redo />
       <ClearEditor on:clear />
     </div>
-    <div class="border-r-2 pr-2 mr-2">
-      <Build {jsonSchemaURL} on:build />
+    <div class="border-r-2 pr-2 mr-2 {hideActionButtons ? 'hidden' : ''}">
+      <Build bind:this={buildAction} on:build />
       {#if signEnabled}
-        <Sign {jsonSchemaURL} on:sign />
+        <Sign bind:this={signAction} on:sign />
       {/if}
-      <Validate {jsonSchemaURL} on:validate />
+      <Validate bind:this={validateAction} on:validate />
     </div>
     <div>
       <ExportDoc on:preview on:download />

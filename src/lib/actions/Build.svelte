@@ -5,7 +5,7 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { Severity, createNotification } from "$lib/notifications/index.js";
   import type { GOBLError } from "@invopop/gobl-worker";
-  import { envelope, editor, goblError, envelopeGOBLSchema } from "$lib/editor/stores.js";
+  import { envelope, editor, goblError, envelopeGOBLSchema, validEditor } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -13,23 +13,10 @@
     build: { result?: unknown; error?: GOBLError };
   }>();
 
-  export let jsonSchemaURL: string;
-
-  $: validEditor = (function (): boolean {
-    try {
-      const parsed = JSON.parse($editor || "");
-      if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-
-    return true;
-  })();
+  $: tooltip = $validEditor ? "Build the GOBL document." : "To build, first ensure the document is valid.";
 
   async function handleBuild() {
-    if (!validEditor) {
+    if (!$validEditor) {
       return;
     }
 
@@ -72,11 +59,12 @@
     }
   }
 
-  $: tooltip = validEditor ? "Build the GOBL document." : "To build, first ensure the document is valid.";
+  // Exposed function to perform the action from outside
+  export const doAction = () => handleBuild();
 </script>
 
 <Tooltip label={tooltip}>
-  <button on:click={handleBuild} class={iconButtonClasses(!validEditor)}>
+  <button on:click={handleBuild} class={iconButtonClasses(!$validEditor)}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"

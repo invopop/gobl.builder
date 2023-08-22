@@ -5,7 +5,14 @@
   import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
   import { Severity, createNotification } from "$lib/notifications/index.js";
   import type { GOBLError } from "@invopop/gobl-worker";
-  import { envelope, envelopeIsSigned, editor, goblError, envelopeGOBLSchema } from "$lib/editor/stores.js";
+  import {
+    envelope,
+    envelopeIsSigned,
+    editor,
+    goblError,
+    envelopeGOBLSchema,
+    validEditor,
+  } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
@@ -13,23 +20,8 @@
     validate: { isValid: boolean; error?: GOBLError };
   }>();
 
-  export let jsonSchemaURL: string;
-
-  $: validEditor = (function (): boolean {
-    try {
-      const parsed = JSON.parse($editor || "");
-      if (jsonSchemaURL && parsed.$schema !== jsonSchemaURL) {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-
-    return true;
-  })();
-
   async function handleValidate() {
-    if (!validEditor || !$envelopeIsSigned) {
+    if (!$validEditor || !$envelopeIsSigned) {
       return;
     }
 
@@ -67,10 +59,13 @@
       });
     }
   }
+
+  // Exposed function to perform the action from outside
+  export const doAction = () => handleValidate();
 </script>
 
 <Tooltip label="Validate a signed GOBL document.">
-  <button on:click={handleValidate} class={iconButtonClasses(!validEditor || !$envelopeIsSigned)}>
+  <button on:click={handleValidate} class={iconButtonClasses(!$validEditor || !$envelopeIsSigned)}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"
