@@ -58,7 +58,6 @@
   // If required instantiate a new envelope object to use.
   $: {
     goblError.set(null);
-    // isValid = $validEditor;
     try {
       let parsedValue = null;
       if (data != "") {
