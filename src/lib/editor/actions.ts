@@ -12,6 +12,8 @@ import {
   envelopeGOBLSchema,
 } from "$lib/editor/stores";
 
+// Send a request to the GOBL worker to run the "build" operation using the current
+// editor window contents and update with the results.
 export async function build() {
   if (!get(validEditor)) {
     return;
@@ -47,6 +49,8 @@ export async function build() {
   }
 }
 
+// Send a request to the GOBL worker to run the "sign" operation using the current
+// editor window contents and update with the results.
 export async function sign() {
   const keypairValue = get(keypair);
 
@@ -83,6 +87,8 @@ export async function sign() {
   }
 }
 
+// Send a request to the GOBL worker to run the "validate" operation using the current
+// editor window contents and update with the results.
 export async function validate() {
   if (!get(validEditor) || !get(envelopeIsSigned)) {
     return;
