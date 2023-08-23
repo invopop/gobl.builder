@@ -94,7 +94,6 @@
       bind:problems
       {jsonSchemaURL}
       signEnabled={true}
-      hideActionButtons={true}
       on:change={(event) => {
         console.log("Received change event.", event.detail);
       }}

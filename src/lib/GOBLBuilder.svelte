@@ -5,7 +5,15 @@
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-  import { editorProblems, jsonSchema, validEditor, envelopeIsSigned } from "./editor/stores.js";
+  import {
+    editorProblems,
+    jsonSchema,
+    validEditor,
+    envelopeIsSigned,
+    handleBuild,
+    handleSign,
+    handleValidate,
+  } from "./editor/stores.js";
 
   const dispatch = createEventDispatcher();
 
@@ -35,13 +43,6 @@
   // When enabled, a "Sign" action is available. A client-only keypair is
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
-
-  // When enabled, actions buttons such as Build, Sign and Validate are hidden. The underlying actions
-  // that they fire can be still executed from outside.
-  export let hideActionButtons = false;
-
-  // Menu instance to be able to call functions from outside
-  let menu: MenuBar;
 
   if (signEnabled) {
     keypair.create().then((keypair) => {
@@ -89,30 +90,26 @@
   });
 
   // Exposed functions to perform the actions from outside
-  export const build = () => menu.build();
-  export const sign = () => {
-    if (!signEnabled) return;
-    menu.sign();
+  export const build = async () => {
+    const result = await handleBuild();
+    dispatch("build", result);
   };
-  export const validate = () => menu.validate();
+
+  export const sign = async () => {
+    if (!signEnabled) return;
+    const result = await handleSign();
+    dispatch("sign", result);
+  };
+
+  export const validate = async () => {
+    const result = await handleValidate();
+    dispatch("validate", result);
+  };
 </script>
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar
-      bind:this={menu}
-      {signEnabled}
-      {hideActionButtons}
-      on:change
-      on:undo
-      on:redo
-      on:clear
-      on:build
-      on:sign
-      on:validate
-      on:preview
-      on:download
-    />
+    <MenuBar on:change on:undo on:redo on:clear on:preview on:download />
   </div>
   <div class="flex-1 overflow-hidden">
     <Editor {jsonSchemaURL} />
