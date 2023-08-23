@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from "svelte";
   import loader from "@monaco-editor/loader";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js";
 
@@ -195,8 +196,15 @@
       monaco.editor.remeasureFonts();
     });
 
-    envelope.subscribe((value) => {
-      monacoEditor.updateOptions({ readOnly: Boolean(value?.sigs) });
+    envelope.subscribe(async (value) => {
+      const isSigned = Boolean(value?.sigs);
+      if (!isSigned) {
+        monacoEditor.updateOptions({ readOnly: false });
+        return;
+      }
+
+      await tick();
+      monacoEditor.updateOptions({ readOnly: true });
     });
 
     document.addEventListener("undoButtonClick", handleUndoButtonClick, true);

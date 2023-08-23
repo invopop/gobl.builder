@@ -5,15 +5,9 @@
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-  import {
-    editorProblems,
-    jsonSchema,
-    validEditor,
-    envelopeIsSigned,
-    handleBuild,
-    handleSign,
-    handleValidate,
-  } from "./editor/stores.js";
+  import { editorProblems, jsonSchema, validEditor, envelopeIsSigned } from "./editor/stores.js";
+
+  import * as actions from "./editor/actions";
 
   const dispatch = createEventDispatcher();
 
@@ -91,18 +85,18 @@
 
   // Exposed functions to perform the actions from outside
   export const build = async () => {
-    const result = await handleBuild();
+    const result = await actions.build();
     dispatch("build", result);
   };
 
   export const sign = async () => {
     if (!signEnabled) return;
-    const result = await handleSign();
+    const result = await actions.sign();
     dispatch("sign", result);
   };
 
   export const validate = async () => {
-    const result = await handleValidate();
+    const result = await actions.validate();
     dispatch("validate", result);
   };
 </script>
