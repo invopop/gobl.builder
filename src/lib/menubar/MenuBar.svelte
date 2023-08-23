@@ -6,9 +6,6 @@
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
-  import Build from "$lib/actions/Build.svelte";
-  import Validate from "$lib/actions/Validate.svelte";
-  import Sign from "$lib/actions/Sign.svelte";
 
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
@@ -17,10 +14,9 @@
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
-  export let jsonSchemaURL: string;
-  export let signEnabled: boolean;
-
-  $: envelopeHasSigs = Boolean($envelope?.sigs);
+  $: envelopeTooltip = $envelopeIsSigned
+    ? "View the signatures of the sealed document."
+    : "There are no signatures. They are generated when signing a document.";
 
   function handleHeaderClick() {
     const modal = new Modal({
@@ -43,7 +39,7 @@
   }
 
   function handleSigsClick() {
-    if (!envelopeHasSigs) {
+    if (!$envelopeIsSigned) {
       return;
     }
 
@@ -65,10 +61,6 @@
 
     modal.$on("close", handleClose);
   }
-
-  $: envelopeTooltip = envelopeHasSigs
-    ? "View the signatures of the sealed document."
-    : "There are no signatures. They are generated when signing a document.";
 </script>
 
 <div class="flex gap-4 items-center pl-4 pr-2 py-1 bg-slate-100 text-xs">
@@ -109,7 +101,7 @@
       <Tooltip label={envelopeTooltip}>
         <button
           class={clsx({
-            "cursor-not-allowed text-gray-500": !envelopeHasSigs,
+            "cursor-not-allowed text-gray-500": !$envelopeIsSigned,
           })}
           on:click={handleSigsClick}>Signatures</button
         >
@@ -121,13 +113,6 @@
       <Undo on:undo />
       <Redo on:redo />
       <ClearEditor on:clear />
-    </div>
-    <div class="border-r-2 pr-2 mr-2">
-      <Build {jsonSchemaURL} on:build />
-      {#if signEnabled}
-        <Sign {jsonSchemaURL} on:sign />
-      {/if}
-      <Validate {jsonSchemaURL} on:validate />
     </div>
     <div>
       <ExportDoc on:preview on:download />

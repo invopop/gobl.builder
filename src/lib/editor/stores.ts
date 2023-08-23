@@ -24,9 +24,22 @@ export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 // editor represents the JSON content in the editor
 export const editor = writable<string | null>(null);
 
+export const jsonSchema = writable<string | null>(null);
 export const keypair = createKeypairStore();
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
+export const validEditor = derived([jsonSchema, editor], ([$jsonSchema, $editor]) => {
+  try {
+    const parsed = JSON.parse($editor || "");
+    if ($jsonSchema && parsed.$schema !== $jsonSchema) {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
+
+  return true;
+});
 
 export interface Envelope {
   $schema: string;

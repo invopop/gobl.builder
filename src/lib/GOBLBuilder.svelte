@@ -5,7 +5,9 @@
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-  import { editorProblems } from "./editor/stores.js";
+  import { editorProblems, jsonSchema, validEditor, envelopeIsSigned } from "./editor/stores.js";
+
+  import * as actions from "./editor/actions";
 
   const dispatch = createEventDispatcher();
 
@@ -13,11 +15,20 @@
   // be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   export let jsonSchemaURL = "";
 
+  // Schema is stored for validation
+  $jsonSchema = jsonSchemaURL;
+
   // Data is used for setting editor contents. Note: there is "one way" binding;
   // e.g. you can set data but changes are not bound to the parent. Use the
   // `change` event, to receive changes to the editor contents and GOBL
   // envelope.
   export let data = "";
+
+  // Binding this prop from outside will show if the editor is valid
+  export let isValid = false;
+
+  // Binding this prop from outside will show if the envelope is signed
+  export let isSigned = false;
 
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
@@ -31,6 +42,11 @@
     keypair.create().then((keypair) => {
       console.log("Created keypair.", keypair);
     });
+  }
+
+  $: {
+    isValid = $validEditor;
+    isSigned = $envelopeIsSigned;
   }
 
   // When `data` is updated, update the internal envelope store.
@@ -66,23 +82,28 @@
       severity: problemSeverityMap[problem.severity],
     }));
   });
+
+  // Exposed functions to perform the actions from outside
+  export const build = async () => {
+    const result = await actions.build();
+    dispatch("build", result);
+  };
+
+  export const sign = async () => {
+    if (!signEnabled) return;
+    const result = await actions.sign();
+    dispatch("sign", result);
+  };
+
+  export const validate = async () => {
+    const result = await actions.validate();
+    dispatch("validate", result);
+  };
 </script>
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar
-      {jsonSchemaURL}
-      {signEnabled}
-      on:change
-      on:undo
-      on:redo
-      on:clear
-      on:build
-      on:sign
-      on:validate
-      on:preview
-      on:download
-    />
+    <MenuBar on:change on:undo on:redo on:clear on:preview on:download />
   </div>
   <div class="flex-1 overflow-hidden">
     <Editor {jsonSchemaURL} />
