@@ -203,7 +203,7 @@
         return;
       }
 
-      // Svelte updates the DOM in batchets and not immediately. We need to wait until svelte
+      // Svelte updates the DOM in batches and not immediately. We need to wait until svelte
       // has finished updating the DOM to set the readOnly status. Otherwise the editor content
       // update would be blocked
       await tick();
