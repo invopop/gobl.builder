@@ -1,11 +1,18 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { envelope, goblError, keypair, newEnvelope } from "$lib/editor/stores.js";
+  import {
+    envelope,
+    goblError,
+    keypair,
+    newEnvelope,
+    editorProblems,
+    jsonSchema,
+    validEditor,
+  } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-  import { editorProblems, jsonSchema, validEditor, envelopeIsSigned } from "./editor/stores.js";
 
   import * as actions from "./editor/actions";
 
@@ -44,10 +51,7 @@
     });
   }
 
-  $: {
-    isValid = $validEditor;
-    isSigned = $envelopeIsSigned;
-  }
+  $: isValid = $validEditor;
 
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
@@ -71,6 +75,7 @@
 
   // Dispatch all `change` events when the envelope is modified.
   envelope.subscribe((envelope) => {
+    isSigned = Boolean(envelope?.sigs);
     dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
