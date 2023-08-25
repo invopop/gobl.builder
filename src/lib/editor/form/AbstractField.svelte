@@ -117,7 +117,7 @@
 
 <svelte:window />
 
-<button
+<div
   class="relative rounded expanded-area"
   use:hover
   on:hover={handleHover}
@@ -133,7 +133,7 @@
       <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
     </div>
   </div>
-</button>
+</div>
 {#if addMenu}
   <AddFieldMenu
     field={parentField}

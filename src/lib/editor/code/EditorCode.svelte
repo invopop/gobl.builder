@@ -7,14 +7,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import {
-    editor,
-    goblError,
-    redoAvailable,
-    undoAvailable,
-    envelope,
-    envelopeDocumentJSON,
-  } from "$lib/editor/stores.js";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
   import { editorProblems as problems } from "../stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
@@ -37,8 +30,6 @@
   let unsubscribeEditor: Unsubscriber;
 
   const goblDocURL = "gobl://doc.json";
-
-  $: editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() });
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -75,6 +66,7 @@
   }
 
   onMount(async () => {
+    console.log("eh tu");
     const monacoEditorImport = await import("monaco-editor");
     loader.config({ monaco: monacoEditorImport.default });
 

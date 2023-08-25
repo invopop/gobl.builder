@@ -24,7 +24,6 @@
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     data = JSON.stringify(event.detail, null, 4);
-    // Ensure that future JSON Schemas match (currently disabled)
     jsonSchemaURL = event.detail.$schema;
   }
 </script>

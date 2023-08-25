@@ -89,7 +89,7 @@ class JSONWorker {
   async format(
     uri: string,
     range: jsonService.Range | null,
-    options: jsonService.FormattingOptions
+    options: jsonService.FormattingOptions,
   ): Promise<jsonService.TextEdit[]> {
     const document = this._getTextDocument(uri);
     if (!document) {
@@ -122,7 +122,7 @@ class JSONWorker {
   async getColorPresentations(
     uri: string,
     color: jsonService.Color,
-    range: jsonService.Range
+    range: jsonService.Range,
   ): Promise<jsonService.ColorPresentation[]> {
     const document = this._getTextDocument(uri);
     if (!document) {

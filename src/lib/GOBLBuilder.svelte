@@ -8,6 +8,8 @@
     editorProblems,
     jsonSchema,
     validEditor,
+    envelopeDocumentJSON,
+    editor,
   } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
@@ -54,6 +56,8 @@
       console.log("Created keypair.", keypair);
     });
   }
+
+  $: editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() });
 
   $: isValid = $validEditor;
 

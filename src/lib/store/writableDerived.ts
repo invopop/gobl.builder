@@ -28,7 +28,7 @@ export function writableDerived<S extends Stores, T>(
   const ref = {
     value: initial_value as T,
     set: (v: T) => {
-      console.log(v)
+      console.log(v);
       // noop
     },
   };
