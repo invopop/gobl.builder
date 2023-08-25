@@ -15,8 +15,8 @@
     envelope,
     envelopeDocumentJSON,
   } from "$lib/editor/stores.js";
-  import { editorProblems as problems } from "./stores.js";
-  import EditorProblem from "./EditorProblem.svelte";
+  import { editorProblems as problems } from "../stores.js";
+  import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
@@ -354,10 +354,10 @@
       {/if}
       <ul>
         {#each sortedProblems as problem}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
-            <EditorProblem {problem} />
+          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
+            <button on:click={handleProblemClick(problem)}>
+              <EditorProblem {problem} />
+            </button>
           </li>
         {/each}
       </ul>

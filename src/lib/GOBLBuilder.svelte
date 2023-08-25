@@ -10,7 +10,7 @@
     validEditor,
   } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
-  import Editor from "./editor/Editor.svelte";
+  import EditorCode from "./editor/code/EditorCode.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
@@ -44,6 +44,9 @@
   // When enabled, a "Sign" action is available. A client-only keypair is
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
+
+  // Whether shows the code or the form editor
+  let editorView = "code";
 
   if (signEnabled) {
     keypair.create().then((keypair) => {
@@ -108,9 +111,19 @@
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar on:change on:undo on:redo on:clear on:preview on:download />
+    <MenuBar bind:editorView on:change on:undo on:redo on:clear on:preview on:download />
   </div>
   <div class="flex-1 overflow-hidden">
-    <Editor {jsonSchemaURL} />
+    <div class="flex flex-col h-full">
+      <div class="relative flex-1 overflow-hidden">
+        <div class="h-full absolute inset-0">
+          {#if editorView === "code"}
+            <EditorCode {jsonSchemaURL} />
+          {:else}
+            <!-- <FormEditor {jsonSchemaURL} /> -->
+          {/if}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
