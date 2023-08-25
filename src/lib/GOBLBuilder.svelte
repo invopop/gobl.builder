@@ -11,6 +11,7 @@
   } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
+  import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
@@ -120,7 +121,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} />
           {:else}
-            <!-- <FormEditor {jsonSchemaURL} /> -->
+            <EditorForm {jsonSchemaURL} />
           {/if}
         </div>
       </div>

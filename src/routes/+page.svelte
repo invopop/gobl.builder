@@ -6,6 +6,8 @@
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
 
+  const DEFAULT_JSON_SCHEMA_URL = "https://gobl.org/draft-0/bill/invoice";
+
   interface GOBLDocument {
     $schema: string;
     [key: string]: unknown;
@@ -15,7 +17,7 @@
   let problems: EditorProblem[] = [];
   $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
   $: console.log({ hasErrors });
-  let jsonSchemaURL = "";
+  let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
   let builder: GOBLBuilder;
   let isValid = false;
   let isSigned = false;
