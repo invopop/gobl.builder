@@ -9,7 +9,7 @@
 
   function handleClearEditor() {
     dispatch("clear");
-    if ($editor === "") {
+    if ($editor.value === "") {
       return;
     }
 
@@ -19,7 +19,7 @@
 </script>
 
 <Tooltip label="Clear the editor.">
-  <button on:click={handleClearEditor} class={iconButtonClasses($editor === "")}>
+  <button on:click={handleClearEditor} class={iconButtonClasses($editor.value === "")}>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
       <path
         fill-rule="evenodd"

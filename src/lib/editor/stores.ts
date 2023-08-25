@@ -53,7 +53,7 @@ export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 export const validEditor = derived([jsonSchema, editor], ([$jsonSchema, $editor]) => {
   try {
-    const parsed = JSON.parse($editor || "");
+    const parsed = JSON.parse($editor.value || "");
     if ($jsonSchema && parsed.$schema !== $jsonSchema) {
       return false;
     }
@@ -147,3 +147,5 @@ export function envelopeDocumentSchema(envelope: Envelope | null): string {
   }
   return envelope.doc.$schema;
 }
+
+export const editorCursor = writable({ line: 1, column: 1 });
