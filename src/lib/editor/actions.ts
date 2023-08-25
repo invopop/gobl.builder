@@ -124,9 +124,9 @@ export async function validate() {
 function getGOBLPayload() {
   const editorValue = get(editor);
   const envelopeValue = get(envelope);
-  const doc = JSON.parse(editorValue || "");
+  const doc = JSON.parse(editorValue.value || "");
   if (doc.$schema == envelopeGOBLSchema) {
-    return editorValue || ""; // send as-is
+    return editorValue.value || ""; // send as-is
   }
   envelopeValue.doc = doc;
 
