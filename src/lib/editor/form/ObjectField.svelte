@@ -30,7 +30,7 @@
       <ExpandButton {open} />
     </button>
     <div
-      class="ml-2 border-l max-h-0"
+      class="pl-6 border-l max-h-0"
       class:max-h-max={open}
       class:overflow-hidden={!open}
       on:focusin|capture={handleFocusInner}

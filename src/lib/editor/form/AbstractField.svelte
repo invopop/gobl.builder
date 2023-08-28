@@ -15,9 +15,9 @@
 
   const componentsMap: Record<string, typeof SvelteComponent> = {
     object: ObjectField as typeof SvelteComponent,
-    array: ArrayField,
-    string: StringField,
-    integer: IntegerField,
+    array: ArrayField as typeof SvelteComponent,
+    string: StringField as typeof SvelteComponent,
+    integer: IntegerField as typeof SvelteComponent,
   };
 
   let showAddMenu = false;
@@ -126,13 +126,15 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="flex">
-    <div class="flex-1 p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children}>
-      <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
+  <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-200={showContextMenu}>
+    <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
+  </div>
+  <div class="absolute top-0 right-0">
+    <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-200={showContextMenu}>
+      <span class:invisible={!showContextMenu}>
+        <FieldContextMenu {field} on:addField={handleAddField} />
+      </span>
     </div>
-    <span class={!showContextMenu ? "invisible" : ""}>
-      <FieldContextMenu {field} on:addField={handleAddField} />
-    </span>
   </div>
 </div>
 {#if addMenu}
