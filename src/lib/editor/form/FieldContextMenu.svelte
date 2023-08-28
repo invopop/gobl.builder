@@ -12,7 +12,7 @@
 
 <FieldButtons
   {field}
-  showAdd={!field.parent?.is.complete}
+  showAdd={["object", "array"].includes(field.type)}
   on:add={() => dispatch("addField")}
   on:duplicate={() => duplicateField(field)}
   on:remove={() => deleteField(field)}

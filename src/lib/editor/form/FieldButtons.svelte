@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from "svelte-hero-icons";
+  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus, Minus } from "svelte-hero-icons";
   import { createEventDispatcher } from "svelte";
   import type { UIModelField } from "./utils/model.js";
   import FieldButton from "./FieldButton.svelte";
@@ -30,7 +30,13 @@
       {/if}
       {#if field?.is.disposable}
         <li>
-          <FieldButton icon={Trash} tooltipText="Remove" isDestructive={true} on:click={() => dispatch("remove")} />
+          <FieldButton
+            icon={Minus}
+            confirmationIcon={Trash}
+            tooltipText="Remove"
+            isDestructive={true}
+            on:click={() => dispatch("remove")}
+          />
         </li>
       {/if}
       {#if canMoveUp}

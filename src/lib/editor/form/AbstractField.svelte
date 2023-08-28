@@ -25,10 +25,9 @@
   let isHover = false;
   let isFocus = false;
 
-  $: showContextMenu = !field.is.root && (isHover || isFocus);
-  $: parentField = field.parent as UIModelField;
+  $: showContextMenu = isHover || isFocus;
   $: addMenuEmptyItem = field.is.empty;
-  $: addMenu = !addMenuEmptyItem && showAddMenu && !parentField.is.complete;
+  $: addMenu = !addMenuEmptyItem && showAddMenu && !field.is.complete;
 
   $: {
     if (addMenuRef) {
@@ -41,7 +40,6 @@
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
-    console.log(e.detail);
     isHover = e.detail;
   }
 
@@ -58,15 +56,16 @@
   }
 
   function handleAddField() {
-    if (parentField.is.complete) return;
+    if (field.is.complete) return;
 
     showAddMenu = false;
 
     // @note: Add field directly instead of showing the dropdown option list
-    if (parentField.type === "array" || parentField.controlType === "dictionary") {
-      const [childOption] = parentField.options || [];
+    if (field.type === "array" || field.controlType === "dictionary") {
+      console.log(field.options);
+      const [childOption] = field.options || [];
 
-      addField(parentField, childOption);
+      addField(field, childOption);
       return;
     }
 
@@ -101,7 +100,7 @@
       const nextItem = field.getNextFocusableField();
 
       // @note: Last item but the parent is not complete, show the add field menu
-      if (nextItem?.isContainer() && !parentField.is.complete) {
+      if (nextItem?.isContainer() && !field.is.complete) {
         return handleAddField();
       } else {
         return focusNextField(nextItem);
@@ -126,22 +125,17 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-200={showContextMenu}>
+  <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
     <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
   </div>
   <div class="absolute top-0 right-0">
-    <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-200={showContextMenu}>
-      <span class:invisible={!showContextMenu}>
+    <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
+      <span class:invisible={!field.is.root && !showContextMenu}>
         <FieldContextMenu {field} on:addField={handleAddField} />
       </span>
     </div>
   </div>
 </div>
 {#if addMenu}
-  <AddFieldMenu
-    field={parentField}
-    showModal={true}
-    bind:inputRef={addMenuRef}
-    on:closeAddFieldMenu={handleAddFieldMenuClose}
-  />
+  <AddFieldMenu {field} showModal={true} bind:inputRef={addMenuRef} on:closeAddFieldMenu={handleAddFieldMenuClose} />
 {/if}
