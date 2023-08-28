@@ -41,6 +41,7 @@
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
+    console.log(e.detail);
     isHover = e.detail;
   }
 
@@ -125,13 +126,13 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div>
-    {#if showContextMenu}
-      <FieldContextMenu {field} on:addField={handleAddField} />
-    {/if}
-    <div class="relative p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children}>
+  <div class="flex">
+    <div class="flex-1 p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children}>
       <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
     </div>
+    <span class={!showContextMenu ? "invisible" : ""}>
+      <FieldContextMenu {field} on:addField={handleAddField} />
+    </span>
   </div>
 </div>
 {#if addMenu}
