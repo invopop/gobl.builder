@@ -14,7 +14,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   public id: string;
   public type: string;
   public controlType?: ControlType;
-  public controlMeta?: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public controlMeta?: any; 
   public root!: UIModelRootField;
   public children?: UIModelField[];
   public childrenMap?: Record<string, UIModelField>;
@@ -38,6 +39,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     this.root = !root ? (this as UIModelRootField) : root;
     this.error = value instanceof Error ? value : undefined;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const calculated = (this.schema as any).calculated || this.parent?.is.calculated;
 
     this.is = {
@@ -110,6 +112,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
                   required: ((this.schema as Schema).required || []).includes(key),
                   schema: subSchema as Schema,
                 }))
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 .filter((opt) => !(opt.schema as any).calculated)
                 .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
 
@@ -247,6 +250,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return newKey;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addChildField(option: SchemaOption, defaultValue?: any, position?: number): UIModelField | undefined {
     if (!this.isContainer()) return;
     if (this.is.complete) return;
@@ -311,6 +315,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
             acc[field.key] = field.toValue();
             return acc;
           },
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           {} as Record<string, any>,
         );
       }
@@ -415,10 +420,12 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       let options: { key: string; value: string }[] = [];
 
       if ("oneOf" in schema) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         options = (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
 
       if ("anyOf" in schema) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         options = (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
 
@@ -429,8 +436,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       const subSchema = schema.patternProperties[".*"];
       return { key: `key`, required: false, schema: subSchema };
     }
+
+    if (controlType === "dictionary") {
+      return { key: `keyssss`, required: false, schema: { type: 'string' } };
+    }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getEmptyFieldValue(option: SchemaOption, nestingLevel: number = Number.POSITIVE_INFINITY): any {
     let value;
 
@@ -441,6 +453,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         value = requiredFields.reduce(
           (acc, key) => {
             const schema = (option.schema.properties || {})[key] as Schema;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if ((schema as any).calculated) return acc;
 
             acc[key] = this.getEmptyFieldValue({ key, schema, required: true }, --nestingLevel);
@@ -493,7 +506,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
       case "dictionary": {
         const childOption = this.getControlMeta(option.schema) as SchemaOption;
-        value = { key: this.getEmptyFieldValue(childOption) };
+        value = { key: childOption ? this.getEmptyFieldValue(childOption) : '' };
         break;
       }
     }
@@ -537,4 +550,5 @@ export type UIModelFieldArray<T = unknown> = UIModelField<Array<T>> & {
   deleteChildFieldById: (key: string) => void;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type UIModelRootField = UIModelField<Record<string, any> | Error>;

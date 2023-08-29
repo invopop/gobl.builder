@@ -31,8 +31,8 @@
   }
 </script>
 
-<span class="flex items-center justify-start ">
-  <Icon src={PencilSquare} solid class="h-5 w-5 mr-2" />
+<span class="flex items-center justify-start">
+  <Icon src={PencilSquare} solid class="h-4 w-4 mr-2 text-grey-5" />
   <EditableTextField
     {field}
     id={`${field.id}-key`}
@@ -40,6 +40,5 @@
     {showError}
     on:edit={handleEdit}
     on:blur={handleBlur}
-    classes="!border-0 !bg-transparent !text-gray-700 !font-medium !mr-1 !whitespace-nowrap !p-0 !py-1.5 !rounded-none focus:!border-b"
   />
 </span>

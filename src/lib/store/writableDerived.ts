@@ -2,6 +2,7 @@ import type { Readable, Unsubscriber, Writable } from "svelte/store";
 import { derived } from "svelte/store";
 
 // @todo: Imported this types from svelte instead
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Stores = Readable<any> | [Readable<any>, ...Array<Readable<any>>] | Array<Readable<any>>;
 type StoresValues<T> = T extends Readable<infer U>
   ? U
