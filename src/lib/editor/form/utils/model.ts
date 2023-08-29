@@ -15,7 +15,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   public type: string;
   public controlType?: ControlType;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public controlMeta?: any; 
+  public controlMeta?: any;
   public root!: UIModelRootField;
   public children?: UIModelField[];
   public childrenMap?: Record<string, UIModelField>;
@@ -438,7 +438,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     }
 
     if (controlType === "dictionary") {
-      return { key: `keyssss`, required: false, schema: { type: 'string' } };
+      return { key: `keyssss`, required: false, schema: { type: "string" } };
     }
   }
 
@@ -506,7 +506,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
       case "dictionary": {
         const childOption = this.getControlMeta(option.schema) as SchemaOption;
-        value = { key: childOption ? this.getEmptyFieldValue(childOption) : '' };
+        value = { key: childOption ? this.getEmptyFieldValue(childOption) : "" };
         break;
       }
     }
