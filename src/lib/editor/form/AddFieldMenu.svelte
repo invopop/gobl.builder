@@ -23,11 +23,11 @@
     return options
       .filter((opt) => opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase()))
       .sort((a, b) => {
-        return (a.required && b.required) || (!a.required && !b.required)
-          ? a.key.localeCompare(b.key)
-          : a.required
-          ? -1
-          : 1;
+        if ((a.required && b.required) || (!a.required && !b.required)) {
+          return 0;
+        }
+
+        return a.required ? -1 : 1;
       });
   }
 
@@ -48,7 +48,6 @@
   }
 
   async function handleCloseMenu() {
-    console.log("handleCloseMenu");
     await sleep(100);
     filterStr = "";
     inputRef?.blur();

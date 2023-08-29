@@ -26,8 +26,7 @@
   let isFocus = false;
 
   $: showContextMenu = isHover || isFocus;
-  $: addMenuEmptyItem = field.is.empty;
-  $: addMenu = !addMenuEmptyItem && showAddMenu && !field.is.complete;
+  $: addMenu = showAddMenu && !field.is.complete;
 
   $: {
     if (addMenuRef) {
@@ -62,7 +61,6 @@
 
     // @note: Add field directly instead of showing the dropdown option list
     if (field.type === "array" || field.controlType === "dictionary") {
-      console.log(field.options);
       const [childOption] = field.options || [];
 
       addField(field, childOption);
