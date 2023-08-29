@@ -66,7 +66,6 @@
   }
 
   onMount(async () => {
-    console.log("eh tu");
     const monacoEditorImport = await import("monaco-editor");
     loader.config({ monaco: monacoEditorImport.default });
 

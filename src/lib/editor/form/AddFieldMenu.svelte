@@ -48,6 +48,7 @@
   }
 
   async function handleCloseMenu() {
+    console.log("handleCloseMenu");
     await sleep(100);
     filterStr = "";
     inputRef?.blur();
@@ -104,11 +105,7 @@
     transition:fade={{ duration: 200 }}
     class="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.2)] flex items-center justify-center text-sm"
   >
-    <div
-      class="cursor-text w-1/2 rounded border overflow-hidden bg-white"
-      use:clickOutside
-      on:clickOutside={handleCloseMenu}
-    >
+    <div class="cursor-text w-1/2 rounded border overflow-hidden bg-white" use:clickOutside on:close={handleCloseMenu}>
       <input
         class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
         placeholder="Type field name or select below"

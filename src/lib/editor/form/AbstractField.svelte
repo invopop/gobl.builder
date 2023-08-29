@@ -118,6 +118,8 @@
 <svelte:window />
 
 <div
+  role="button"
+  tabindex="0"
   class="relative rounded expanded-area"
   use:hover
   on:hover={handleHover}

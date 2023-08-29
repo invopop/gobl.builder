@@ -8,3 +8,9 @@ declare namespace App {
   // interface PageData {}
   // interface Platform {}
 }
+declare namespace svelteHTML {
+  interface HTMLAttributes {
+    "on:hover"?: (event: CustomEvent) => void;
+    "on:clickOutside"?: (event: CustomEvent) => void;
+  }
+}
