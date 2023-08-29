@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import type { UIModelField, UIModelRootField } from "$lib/editor/form/utils/model.js";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import AbstractField from "./AbstractField.svelte";
   import FieldTitle from "./FieldTitle.svelte";
@@ -18,7 +18,11 @@
     open = true;
   }
 
-  $: props = $$props as any;
+  interface PropsInterface {
+    field: UIModelRootField;
+  }
+
+  $: props = $$props as PropsInterface;
 </script>
 
 {#if field.is.root}
