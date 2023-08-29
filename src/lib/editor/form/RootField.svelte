@@ -22,7 +22,7 @@
       {/if}
     {/each}
     {#if !field.is.complete}
-      <AddFieldMenu {field} showModal={false} showButton={true} />
+      <AddFieldMenu {field} showModal={false} />
     {/if}
   </div>
 {/if}
