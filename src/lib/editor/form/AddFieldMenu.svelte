@@ -5,7 +5,6 @@
   import { createEventDispatcher } from "svelte";
   import { sleep } from "./utils/sleep.js";
   import type { SchemaOption, UIModelField } from "./utils/model.js";
-  import { portal } from "./action/portal.js";
   import clickOutside from "$lib/clickOutside.js";
 
   export let field: UIModelField;
@@ -100,55 +99,54 @@
 
 {#if showModal}
   <div
-    use:portal={"modal"}
     transition:fade={{ duration: 200 }}
-    class="fixed top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.2)] flex items-center justify-center text-sm"
+    class="cursor-text rounded border overflow-hidden bg-white"
+    use:clickOutside
+    on:close={handleCloseMenu}
   >
-    <div class="cursor-text w-1/2 rounded border overflow-hidden bg-white" use:clickOutside on:close={handleCloseMenu}>
-      <input
-        class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
-        placeholder="Type field name or select below"
-        bind:value={filterStr}
-        bind:this={inputRef}
-        on:focus={handleOpenMenu}
-        on:keydown={handleKeyDown}
-      />
-      <div transition:fade={{ duration: 200 }}>
-        <ul class="list-none h-80 overflow-auto" role="menu" bind:this={menuRef}>
-          {#if options.length}
-            {#each options as opt, i (opt.key)}
-              <li
-                class:bg-color2={i === focusedOptionIndex}
-                class:border-t={i > 0}
-                on:hover={() => handleHoverListItem(i)}
-                use:hover
+    <input
+      class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
+      placeholder="Type field name or select below"
+      bind:value={filterStr}
+      bind:this={inputRef}
+      on:focus={handleOpenMenu}
+      on:keydown={handleKeyDown}
+    />
+    <div transition:fade={{ duration: 200 }}>
+      <ul class="list-none h-80 overflow-auto" role="menu" bind:this={menuRef}>
+        {#if options.length}
+          {#each options as opt, i (opt.key)}
+            <li
+              class:bg-color2={i === focusedOptionIndex}
+              class:border-t={i > 0}
+              on:hover={() => handleHoverListItem(i)}
+              use:hover
+            >
+              <button
+                class="flex flex-col w-full py-3 px-6 text-grey-5 text-left"
+                on:click|stopPropagation={() => handleAddField(field, opt)}
               >
-                <button
-                  class="flex flex-col w-full py-3 px-6 text-grey-5 text-left"
-                  on:click|stopPropagation={() => handleAddField(field, opt)}
+                <div
+                  class="mb-1 text-grey-4 font-medium"
+                  class:font-bold={opt.required}
+                  class:text-black={opt.required}
                 >
-                  <div
-                    class="mb-1 text-grey-4 font-medium"
-                    class:font-bold={opt.required}
-                    class:text-black={opt.required}
-                  >
-                    {opt.schema.title || opt.key}
-                  </div>
-                  <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
-                    {opt.schema.description}
-                  </div>
-                </button>
-              </li>
-            {/each}
-          {:else}
-            <li>
-              <span class="emptyFilter">
-                No items found matching filter: <strong>"{filterStr}"</strong>
-              </span>
+                  {opt.schema.title || opt.key}
+                </div>
+                <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
+                  {opt.schema.description}
+                </div>
+              </button>
             </li>
-          {/if}
-        </ul>
-      </div>
+          {/each}
+        {:else}
+          <li>
+            <span class="emptyFilter">
+              No items found matching filter: <strong>"{filterStr}"</strong>
+            </span>
+          </li>
+        {/if}
+      </ul>
     </div>
   </div>
 {/if}

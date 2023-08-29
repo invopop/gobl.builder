@@ -134,8 +134,15 @@
         <FieldContextMenu {field} on:addField={handleAddField} />
       </span>
     </div>
+    {#if addMenu}
+      <div class="absolute top-10 left-0 w-64">
+        <AddFieldMenu
+          {field}
+          showModal={true}
+          bind:inputRef={addMenuRef}
+          on:closeAddFieldMenu={handleAddFieldMenuClose}
+        />
+      </div>
+    {/if}
   </div>
 </div>
-{#if addMenu}
-  <AddFieldMenu {field} showModal={true} bind:inputRef={addMenuRef} on:closeAddFieldMenu={handleAddFieldMenuClose} />
-{/if}
