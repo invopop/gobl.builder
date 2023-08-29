@@ -103,6 +103,7 @@ export async function getRootSchema(id: string) {
   schema.properties = {
     [schemaKey]: schemaValue,
     ...schema.properties,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any;
 
   if (schema.required) {
@@ -112,4 +113,5 @@ export async function getRootSchema(id: string) {
   return schema;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaValue = JSON | string | number | boolean | any[] | Record<string, unknown> | null | undefined | Error;

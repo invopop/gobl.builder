@@ -40,6 +40,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   );
 
   const debouncedUpdateEditor = getDebouncedFunction(500, updateEditor);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const debouncedRecreateUIModel = getDebouncedFunction(200, recreateUIModel as any);
 
   let uiModelValue: UIModelRootField | undefined;
