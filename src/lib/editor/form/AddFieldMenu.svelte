@@ -20,7 +20,13 @@
 
   function filterOptions(options: SchemaOption[], filterStr: string) {
     return options
-      .filter((opt) => opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase()))
+      .filter((opt) => {
+        const foundInKey = opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase());
+        const title = opt.schema.title || "";
+        const foundInTitle = title.toLowerCase().includes(filterStr.toLocaleLowerCase());
+
+        return foundInKey || foundInTitle;
+      })
       .sort((a, b) => {
         if ((a.required && b.required) || (!a.required && !b.required)) {
           return 0;
