@@ -4,7 +4,7 @@
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import type { UIModelField } from "./utils/model.js";
 
-  const { deleteField, duplicateField } = getFormEditorContext() || {};
+  const { deleteField, duplicateField, moveField } = getFormEditorContext() || {};
   const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
@@ -12,8 +12,9 @@
 
 <FieldButtons
   {field}
-  showAdd={["object", "array"].includes(field.type)}
   on:add={() => dispatch("addField")}
   on:duplicate={() => duplicateField(field)}
   on:remove={() => deleteField(field)}
+  on:moveUp={() => moveField(field, "up")}
+  on:moveDown={() => moveField(field, "down")}
 />

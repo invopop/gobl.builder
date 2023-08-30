@@ -6,13 +6,15 @@
   import FieldButton from "./FieldButton.svelte";
 
   export let field: UIModelField | undefined = undefined;
-  export let showAdd = true;
-  export let canMoveUp = false;
-  export let canMoveDown = false;
 
   const dispatch = createEventDispatcher();
 
   $: classes = field?.is.calculated ? "bg-blue-100" : "bg-color2";
+  $: showAdd = ["object", "array"].includes(field?.type || "");
+  $: addLabel = field?.type === "array" ? "Add Row" : "Add Property";
+  $: canMove = field?.parent?.type === "array";
+  $: canMoveUp = canMove && Number(field?.key) > 0;
+  $: canMoveDown = canMove && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
 </script>
 
 <div id="fieldBackground" class="flex w-full h-full rounded {classes}" transition:fade={{ duration: 200 }}>
@@ -20,7 +22,7 @@
     <ul class="flex align-middle text-grey-5 h-full">
       {#if showAdd}
         <li>
-          <FieldButton icon={Plus} tooltipText="Add field" on:click={() => dispatch("add")} />
+          <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
         </li>
       {/if}
       {#if field?.is.duplicable}

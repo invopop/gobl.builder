@@ -15,6 +15,7 @@ export type FormEditorContextType = {
   changeFieldValue(field: UIModelField, value: SchemaValue): void;
   deleteField(field: UIModelField): void;
   duplicateField(field: UIModelField): void;
+  moveField(field: UIModelField, direction: "up" | "down"): void;
   addField(parentField: UIModelField, option: SchemaOption): void;
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
@@ -109,6 +110,25 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     tryFocusField(focusField);
   }
 
+  function moveField(field: UIModelField, direction: "up" | "down") {
+    const swapPositions = (array: UIModelField[], a: number, b: number) => {
+      [array[a], array[b]] = [array[b], array[a]];
+    };
+
+    const children = field?.parent?.children || [];
+
+    const factor = direction === "down" ? 1 : -1;
+
+    const currentKey = Number(field?.key);
+    const destinationKey = currentKey + factor;
+
+    if (destinationKey < 0 || destinationKey >= children.length) return;
+
+    swapPositions(children, currentKey, destinationKey);
+
+    updateEditor();
+  }
+
   function addField(parentField: UIModelField, option: SchemaOption) {
     const newField = parentField.addChildField(option, undefined);
     if (!newField) return;
@@ -168,6 +188,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     changeFieldValue,
     deleteField,
     duplicateField,
+    moveField,
     addField,
     sortField,
     refreshUI,
