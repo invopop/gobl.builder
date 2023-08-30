@@ -58,6 +58,7 @@
     "@types/utf8": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
+    "@zerodevx/svelte-toast": "^0.9.5",
     "autoprefixer": "^10.4.14",
     "dotenv": "^16.3.1",
     "eslint": "^8.46.0",

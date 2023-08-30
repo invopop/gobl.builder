@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as monaco from "monaco-editor";
   import { clsx } from "clsx";
   import type { SvelteComponent } from "svelte";
 
@@ -9,7 +10,7 @@
 
   import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
-  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/editor/stores.js";
+  import { envelope, envelopeIsDraft, envelopeIsSigned, editorProblems } from "$lib/editor/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
@@ -20,6 +21,8 @@
   $: envelopeTooltip = $envelopeIsSigned
     ? "View the signatures of the sealed document."
     : "There are no signatures. They are generated when signing a document.";
+
+  $: hasSyntaxErrors = !!$editorProblems.find((p) => p.owner === "json" && p.severity === monaco.MarkerSeverity.Error);
 
   function handleHeaderClick() {
     const modal = new Modal({
@@ -131,12 +134,17 @@
   <div class="flex justify-center">
     <div class="inline-flex bg-color3 border border-grey-1 rounded">
       <EditorViewButton
-        disabled={editorView === "form"}
-        label={editorView !== "form" ? "Swap to visual editor view" : undefined}
+        disabled={hasSyntaxErrors}
+        active={editorView === "form"}
+        label={editorView !== "form"
+          ? hasSyntaxErrors
+            ? "Resolve errors before switching to visual editor"
+            : "Swap to visual editor view"
+          : undefined}
         on:click={() => (editorView = "form")}>Visual</EditorViewButton
       >
       <EditorViewButton
-        disabled={editorView === "code"}
+        active={editorView === "code"}
         label={editorView !== "code" ? "Swap to code editor view" : undefined}
         on:click={() => (editorView = "code")}>Code</EditorViewButton
       >
