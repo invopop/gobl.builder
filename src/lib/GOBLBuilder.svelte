@@ -1,22 +1,15 @@
 <script lang="ts">
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
-  import {
-    editor,
-    envelope,
-    goblError,
-    keypair,
-    newEnvelope,
-    editorProblems,
-    jsonSchema,
-    validEditor,
-  } from "$lib/editor/stores.js";
+  import { editor, envelope, goblError, keypair, newEnvelope, editorProblems, jsonSchema } from "$lib/editor/stores.js";
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
-  import { EditorProblemSeverity, problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
+  import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
   import * as actions from "./editor/actions";
+
+  type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed";
 
   const dispatch = createEventDispatcher();
 
@@ -33,17 +26,16 @@
   // envelope.
   export let data = "";
 
-  // Binding this prop from outside will show if the envelope has been built
-  export let built = false;
-
-  // Binding this prop from outside will show if the editor has been modified
-  export let modified = false;
-
-  // Binding this prop from outside will show if the editor has any errors
-  export let errored = false;
-
-  // Binding this prop from outside will show if the envelope is signed
-  export let signed = false;
+  // Binding this prop from outside will show the state of the editor. Posible values:
+  // init: the app is starting, show a loading thing
+  // empty: there is no content
+  // loaded: implies that a document was loaded and no further action has been taken yet
+  // modified: something is being changed
+  // invalid: there are syntax errors, cannot be built
+  // errored: build was attempted, but failed
+  // built: document has been built, is valid, and can be modified again
+  // signed: signature applied, main content is now read-only, headers could still be modified, but we don't need to worry about that yet
+  export let state: State = "init";
 
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
@@ -60,23 +52,25 @@
       console.log("Created keypair.", keypair);
     });
   }
-  $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
-  $: errored = !$validEditor || hasErrors;
+
   $: {
     try {
       const editorValue = $editor ? hash(JSON.parse($editor)) : "";
-      modified = editorValue !== initialEditorData;
-      // Reset gobl errors to do a clean validation
-      goblError.set(null);
+      if (editorValue !== initialEditorData) {
+        state = "modified";
+      } else {
+        state = $editor ? "loaded" : "empty";
+      }
     } catch (error) {
       // Allow invalid json entered
-      modified = true;
+      state = "invalid";
     }
   }
 
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
   $: {
+    state = "init";
     goblError.set(null);
     try {
       let parsedValue = null;
@@ -90,15 +84,16 @@
       }
 
       initialEditorData = parsedValue ? hash(parsedValue) : "";
+      state = $envelope?.sigs ? "signed" : "loaded";
     } catch (e) {
       console.error("invalid document data: ");
       $envelope = newEnvelope(null);
+      state = "empty";
     }
   }
 
   // Dispatch all `change` events when the envelope is built.
   envelope.subscribe((envelope) => {
-    signed = Boolean(envelope?.sigs);
     dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
@@ -115,7 +110,11 @@
   export const build = async () => {
     const result = await actions.build();
     dispatch("build", result);
-    built = !result?.error;
+    if (result?.error) {
+      state = "errored";
+    } else {
+      state = "built";
+    }
   };
 
   export const sign = async () => {
