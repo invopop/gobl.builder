@@ -17,8 +17,10 @@
   $: console.log({ hasErrors });
   let jsonSchemaURL = "";
   let builder: GOBLBuilder;
-  let isValid = false;
-  let isSigned = false;
+  let errored = false;
+  let signed = false;
+  let modified = false;
+  let built = false;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     data = JSON.stringify(event.detail, null, 4);
@@ -34,9 +36,9 @@
       <DocLoader on:load={handleDocLoad} />
     </div>
     <div class="bg-slate-100 rounded">
-      <Tooltip label={isValid ? "Build the GOBL document." : "To build, first ensure the document is valid."}>
+      <Tooltip label={errored ? "To build, first ensure the document is valid." : "Build the GOBL document."}>
         <button
-          class={iconButtonClasses(!isValid)}
+          class={iconButtonClasses(errored)}
           on:click={() => {
             builder.build();
           }}
@@ -55,7 +57,7 @@
           on:click={() => {
             builder.sign();
           }}
-          class={iconButtonClasses(!isValid)}
+          class={iconButtonClasses(errored)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -72,7 +74,7 @@
           on:click={() => {
             builder.validate();
           }}
-          class={iconButtonClasses(!isValid || !isSigned)}
+          class={iconButtonClasses(errored || !signed)}
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -88,8 +90,10 @@
   <div class="flex-1 h-full overflow-hidden">
     <GOBLBuilder
       bind:this={builder}
-      bind:isValid
-      bind:isSigned
+      bind:built
+      bind:modified
+      bind:errored
+      bind:signed
       bind:data
       bind:problems
       {jsonSchemaURL}

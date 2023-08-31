@@ -1,6 +1,8 @@
 <script lang="ts">
+  import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
   import {
+    editor,
     envelope,
     goblError,
     keypair,
@@ -12,7 +14,7 @@
   import MenuBar from "./menubar/MenuBar.svelte";
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
-  import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
+  import { EditorProblemSeverity, problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
   import * as actions from "./editor/actions";
 
@@ -31,11 +33,17 @@
   // envelope.
   export let data = "";
 
-  // Binding this prop from outside will show if the editor is valid
-  export let isValid = false;
+  // Binding this prop from outside will show if the envelope has been built
+  export let built = false;
+
+  // Binding this prop from outside will show if the editor has been modified
+  export let modified = false;
+
+  // Binding this prop from outside will show if the editor has any errors
+  export let errored = false;
 
   // Binding this prop from outside will show if the envelope is signed
-  export let isSigned = false;
+  export let signed = false;
 
   // Problems is an array of Monaco Editor problem markers. It can be used
   // upstream to keep track of the validity of the GOBL document.
@@ -45,13 +53,26 @@
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
 
+  let initialEditorData = "";
+
   if (signEnabled) {
     keypair.create().then((keypair) => {
       console.log("Created keypair.", keypair);
     });
   }
-
-  $: isValid = $validEditor;
+  $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
+  $: errored = !$validEditor || hasErrors;
+  $: {
+    try {
+      const editorValue = $editor ? hash(JSON.parse($editor)) : "";
+      modified = editorValue !== initialEditorData;
+      // Reset gobl errors to do a clean validation
+      goblError.set(null);
+    } catch (error) {
+      // Allow invalid json entered
+      modified = true;
+    }
+  }
 
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
@@ -67,15 +88,17 @@
       } else {
         $envelope = newEnvelope(parsedValue);
       }
+
+      initialEditorData = parsedValue ? hash(parsedValue) : "";
     } catch (e) {
       console.error("invalid document data: ");
       $envelope = newEnvelope(null);
     }
   }
 
-  // Dispatch all `change` events when the envelope is modified.
+  // Dispatch all `change` events when the envelope is built.
   envelope.subscribe((envelope) => {
-    isSigned = Boolean(envelope?.sigs);
+    signed = Boolean(envelope?.sigs);
     dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
@@ -92,6 +115,7 @@
   export const build = async () => {
     const result = await actions.build();
     dispatch("build", result);
+    built = !result?.error;
   };
 
   export const sign = async () => {
