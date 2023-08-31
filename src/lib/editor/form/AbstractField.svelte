@@ -136,12 +136,7 @@
     </div>
     {#if addMenu}
       <div class="absolute top-10 left-0 w-64">
-        <AddFieldMenu
-          {field}
-          showModal={true}
-          bind:inputRef={addMenuRef}
-          on:closeAddFieldMenu={handleAddFieldMenuClose}
-        />
+        <AddFieldMenu {field} bind:inputRef={addMenuRef} on:closeAddFieldMenu={handleAddFieldMenuClose} />
       </div>
     {/if}
   </div>

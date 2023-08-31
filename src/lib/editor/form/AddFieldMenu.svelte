@@ -10,7 +10,6 @@
   export let field: UIModelField;
   export let inputRef: HTMLElement | undefined = undefined;
   export let menuRef: HTMLElement | undefined = undefined;
-  export let showModal = false;
 
   let filterStr = "";
 
@@ -43,10 +42,6 @@
     inputRef?.focus();
   }
 
-  function handleAddFieldMenuClose() {
-    showModal = false;
-  }
-
   function handleOpenMenu() {
     inputRef?.focus();
     dispatch("openAddFieldMenu");
@@ -57,7 +52,6 @@
     filterStr = "";
     inputRef?.blur();
     dispatch("closeAddFieldMenu");
-    handleAddFieldMenuClose();
   }
 
   function handleAddField(parentField: UIModelField, option: SchemaOption) {
@@ -103,59 +97,53 @@
   }
 </script>
 
-{#if showModal}
-  <div
-    transition:fade={{ duration: 200 }}
-    class="cursor-text rounded border overflow-hidden bg-white"
-    use:clickOutside
-    on:close={handleCloseMenu}
-  >
-    <input
-      class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
-      placeholder="Type field name or select below"
-      bind:value={filterStr}
-      bind:this={inputRef}
-      on:focus={handleOpenMenu}
-      on:keydown={handleKeyDown}
-    />
-    <div transition:fade={{ duration: 200 }}>
-      <ul class="list-none h-80 overflow-auto" role="menu" bind:this={menuRef}>
-        {#if options.length}
-          {#each options as opt, i (opt.key)}
-            <li
-              class:bg-color2={i === focusedOptionIndex}
-              class:border-t={i > 0}
-              on:hover={() => handleHoverListItem(i)}
-              use:hover
+<div
+  transition:fade={{ duration: 200 }}
+  class="cursor-text rounded border overflow-hidden bg-white"
+  use:clickOutside
+  on:close={handleCloseMenu}
+>
+  <input
+    class="py-3 px-6 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border-b"
+    placeholder="Type field name or select below"
+    bind:value={filterStr}
+    bind:this={inputRef}
+    on:focus={handleOpenMenu}
+    on:keydown={handleKeyDown}
+  />
+  <div transition:fade={{ duration: 200 }}>
+    <ul class="list-none h-80 overflow-auto" role="menu" bind:this={menuRef}>
+      {#if options.length}
+        {#each options as opt, i (opt.key)}
+          <li
+            class:bg-color2={i === focusedOptionIndex}
+            class:border-t={i > 0}
+            on:hover={() => handleHoverListItem(i)}
+            use:hover
+          >
+            <button
+              class="flex flex-col w-full py-3 px-6 text-grey-5 text-left"
+              on:click|stopPropagation={() => handleAddField(field, opt)}
             >
-              <button
-                class="flex flex-col w-full py-3 px-6 text-grey-5 text-left"
-                on:click|stopPropagation={() => handleAddField(field, opt)}
-              >
-                <div
-                  class="mb-1 text-grey-4 font-medium"
-                  class:font-bold={opt.required}
-                  class:text-black={opt.required}
-                >
-                  {opt.schema.title || opt.key}
-                </div>
-                <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
-                  {opt.schema.description}
-                </div>
-              </button>
-            </li>
-          {/each}
-        {:else}
-          <li>
-            <span class="emptyFilter">
-              No items found matching filter: <strong>"{filterStr}"</strong>
-            </span>
+              <div class="mb-1 text-grey-4 font-medium" class:font-bold={opt.required} class:text-black={opt.required}>
+                {opt.schema.title || opt.key}
+              </div>
+              <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
+                {opt.schema.description}
+              </div>
+            </button>
           </li>
-        {/if}
-      </ul>
-    </div>
+        {/each}
+      {:else}
+        <li>
+          <span class="emptyFilter">
+            No items found matching filter: <strong>"{filterStr}"</strong>
+          </span>
+        </li>
+      {/if}
+    </ul>
   </div>
-{/if}
+</div>
 
 <style lang="postcss">
   span.emptyFilter {

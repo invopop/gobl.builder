@@ -4,7 +4,6 @@
   import { createFormEditorContext, getFormEditorContext } from "./context/formEditor.js";
   import { writable } from "svelte/store";
   import { editorProblems } from "$lib/editor/stores.js";
-  import { createPortal } from "./action/portal.js";
   import AbstractField from "./AbstractField.svelte";
 
   export let jsonSchemaURL: string;
@@ -21,6 +20,8 @@
 
     if (error) {
       toast.push(error, {
+        reversed: true,
+        intro: { y: 192 },
         theme: {
           "--toastColor": "rgb(75 85 99)",
           "--toastBackground": "rgb(255 228 230)",
@@ -55,5 +56,4 @@
       {/if}
     </div>
   </div>
-  <div use:createPortal={"modal"} />
 </div>
