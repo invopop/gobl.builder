@@ -54,11 +54,7 @@
   $: {
     try {
       const editorValue = $editor ? hash(JSON.parse($editor)) : "";
-      if (editorValue !== initialEditorData) {
-        state = "modified";
-      } else {
-        state = $editor ? "loaded" : "empty";
-      }
+      setState(editorValue);
     } catch (error) {
       // Allow invalid json entered
       state = "invalid";
@@ -75,16 +71,18 @@
       if (data != "") {
         parsedValue = JSON.parse(data);
       }
+
       if (data != "" && isEnvelope(parsedValue)) {
         $envelope = parsedValue;
+        initialEditorData = hash(parsedValue.doc);
       } else {
         $envelope = newEnvelope(parsedValue);
+        initialEditorData = hash(parsedValue || "");
       }
 
-      initialEditorData = parsedValue ? hash(parsedValue) : "";
       state = $envelope?.sigs ? "signed" : "loaded";
     } catch (e) {
-      console.error("invalid document data: ");
+      console.error("invalid document data: ", e);
       $envelope = newEnvelope(null);
       state = "empty";
     }
@@ -103,6 +101,20 @@
       severity: problemSeverityMap[problem.severity],
     }));
   });
+
+  const setState = (editorValue: string) => {
+    if (!editorValue) {
+      state = "empty";
+      return;
+    }
+
+    if (editorValue !== initialEditorData) {
+      state = "modified";
+      return;
+    }
+
+    state = "loaded";
+  };
 
   // Exposed functions to perform the actions from outside
   export const build = async () => {
