@@ -5,6 +5,7 @@
   import Tooltip from "$lib/ui/Tooltip.svelte";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
+  import type { State } from "$lib/types/editor";
 
   interface GOBLDocument {
     $schema: string;
@@ -17,7 +18,7 @@
   $: console.log({ hasErrors });
   let jsonSchemaURL = "";
   let builder: GOBLBuilder;
-  let state: "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed" = "init";
+  let state: State = "init";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     data = JSON.stringify(event.detail, null, 4);
@@ -34,10 +35,12 @@
     </div>
     <div class="bg-slate-100 rounded flex space-x-3 items-center justify-center">
       <Tooltip
-        label={state === "modified" ? "To build, first ensure the document is valid." : "Build the GOBL document."}
+        label={state === "modified" || state === "loaded"
+          ? "Build the GOBL document."
+          : "To build, first ensure the document is valid."}
       >
         <button
-          class={iconButtonClasses(state !== "modified")}
+          class={iconButtonClasses(state !== "modified" && state !== "loaded")}
           on:click={() => {
             builder.build();
           }}

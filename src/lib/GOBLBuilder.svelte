@@ -6,10 +6,8 @@
   import Editor from "./editor/Editor.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
-
   import * as actions from "./editor/actions";
-
-  type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed";
+  import type { State } from "./types/editor";
 
   const dispatch = createEventDispatcher();
 
