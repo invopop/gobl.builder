@@ -5,6 +5,7 @@
   import Tooltip from "$lib/ui/Tooltip.svelte";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
+  import type { State } from "$lib/types/editor";
 
   interface GOBLDocument {
     $schema: string;
@@ -17,8 +18,7 @@
   $: console.log({ hasErrors });
   let jsonSchemaURL = "";
   let builder: GOBLBuilder;
-  let isValid = false;
-  let isSigned = false;
+  let state: State = "init";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     data = JSON.stringify(event.detail, null, 4);
@@ -33,10 +33,14 @@
       <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
       <DocLoader on:load={handleDocLoad} />
     </div>
-    <div class="bg-slate-100 rounded">
-      <Tooltip label={isValid ? "Build the GOBL document." : "To build, first ensure the document is valid."}>
+    <div class="bg-slate-100 rounded flex space-x-3 items-center justify-center">
+      <Tooltip
+        label={state === "modified" || state === "loaded"
+          ? "Build the GOBL document."
+          : "To build, first ensure the document is valid."}
+      >
         <button
-          class={iconButtonClasses(!isValid)}
+          class={iconButtonClasses(state !== "modified" && state !== "loaded")}
           on:click={() => {
             builder.build();
           }}
@@ -55,7 +59,7 @@
           on:click={() => {
             builder.sign();
           }}
-          class={iconButtonClasses(!isValid)}
+          class={iconButtonClasses(state !== "built")}
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
@@ -72,7 +76,7 @@
           on:click={() => {
             builder.validate();
           }}
-          class={iconButtonClasses(!isValid || !isSigned)}
+          class={iconButtonClasses(state === "errored" || state !== "signed")}
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path
@@ -83,13 +87,29 @@
           </svg>
         </button>
       </Tooltip>
+      <div class="flex text-gray-700 space-x-2 items-center justify-center pr-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-4 h-4"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+          />
+        </svg>
+        <span class="text-xs">{state}</span>
+      </div>
     </div>
   </div>
   <div class="flex-1 h-full overflow-hidden">
     <GOBLBuilder
       bind:this={builder}
-      bind:isValid
-      bind:isSigned
+      bind:state
       bind:data
       bind:problems
       {jsonSchemaURL}
