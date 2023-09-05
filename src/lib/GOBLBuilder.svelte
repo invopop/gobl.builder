@@ -64,7 +64,6 @@
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
   $: {
-    state = "init";
     goblError.set(null);
     try {
       let parsedValue = null;
@@ -79,8 +78,6 @@
         $envelope = newEnvelope(parsedValue);
         initialEditorData = hash(parsedValue || "");
       }
-
-      state = $envelope?.sigs ? "signed" : "loaded";
     } catch (e) {
       console.error("invalid document data: ", e);
       $envelope = newEnvelope(null);
@@ -113,7 +110,7 @@
       return;
     }
 
-    state = "loaded";
+    state = $envelope?.sigs ? "signed" : "loaded";
   };
 
   // Exposed functions to perform the actions from outside
