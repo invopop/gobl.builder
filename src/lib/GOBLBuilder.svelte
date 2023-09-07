@@ -8,7 +8,6 @@
     newEnvelope,
     editorProblems,
     jsonSchema,
-    validEditor,
     envelopeDocumentJSON,
     editor,
   } from "$lib/editor/stores.js";

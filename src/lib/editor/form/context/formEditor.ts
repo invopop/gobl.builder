@@ -8,8 +8,8 @@ import { writableDerived } from "$lib/store/writableDerived.js";
 import { get, writable, type Readable, type Writable } from "svelte/store";
 
 export const FormEditorContextId = Symbol("form-editor");
-export const schemaUrlForm = writable('')
-export const recreatingUiModel = writable(false)
+export const schemaUrlForm = writable("");
+export const recreatingUiModel = writable(false);
 
 export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
@@ -57,7 +57,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     editor: SchemaValue,
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
-    recreatingUiModel.set(true)
+    recreatingUiModel.set(true);
     const model = (await getUIModel(schema, editor)) as UIModelRootField | undefined;
 
     if (model && model?.value !== editor) {
@@ -65,7 +65,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     }
 
     set({ value: model, updatedAt: Date.now() });
-    recreatingUiModel.set(false)
+    recreatingUiModel.set(false);
   }
 
   function updateEditor(model: UIModelField | undefined = uiModelValue) {
@@ -183,23 +183,23 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
   }
 
   async function updateSchema(value: string) {
-      const schema = await getRootSchema(value)
+    const schema = await getRootSchema(value);
 
-      // Schema still invalid
-      if (schema.$comment === 'empty-schema') {
-        return false
-      }
+    // Schema still invalid
+    if (schema.$comment === "empty-schema") {
+      return false;
+    }
 
-      const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
-      if (model) {
-        const field = model.root.children?.find(c => c.key === '$schema')
-        field?.setValue(value)
-        updateEditor(model.root)
-      }
+    const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
+    if (model) {
+      const field = model.root.children?.find((c) => c.key === "$schema");
+      field?.setValue(value);
+      updateEditor(model.root);
+    }
 
-      schemaUrlForm.set(value)
+    schemaUrlForm.set(value);
 
-      return true
+    return true;
   }
 
   const initialState: FormEditorContextType = {
