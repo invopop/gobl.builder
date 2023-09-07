@@ -3,6 +3,22 @@ import { path } from "./path.js";
 
 export type Schema = JSONSchema7;
 
+const EMPTY_SCHEMA: Schema = {
+  type: 'object',
+  $comment: 'empty-schema',
+  description: '',
+  $id: '',
+  $schema: 'http://json-schema.org/draft/2020-12/schema',
+  properties: {
+    $schema: {
+      $id: '',
+      title: '$schema',
+      type: 'string'
+    },
+  },
+  required: ['$schema']
+ }
+
 export const SchemaRegistry: Record<string, Schema> = {};
 // export const ParsedSchemaRegistry: Record<string, Schema> = {};
 
@@ -15,11 +31,16 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   let schema = SchemaRegistry[id];
   if (schema) return schema;
 
-  const response = await fetch(id);
-  schema = await response.json();
+  try {
+    const response = await fetch(id);
+    schema = await response.json();
 
-  SchemaRegistry[id] = schema;
-  return schema;
+    SchemaRegistry[id] = schema;
+
+    return schema;
+  } catch (error) {
+    return EMPTY_SCHEMA
+  }
 }
 
 async function fetchSchema(id: string): Promise<Schema> {

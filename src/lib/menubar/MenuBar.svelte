@@ -2,13 +2,10 @@
   import * as monaco from "monaco-editor";
   import { clsx } from "clsx";
   import type { SvelteComponent } from "svelte";
-
   import ClearEditor from "$lib/actions/ClearEditor.svelte";
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
-
-  import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Modal from "$lib/ui/Modal.svelte";
   import { envelope, envelopeIsDraft, envelopeIsSigned, editorProblems } from "$lib/editor/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
@@ -18,6 +15,10 @@
 
   export let editorView: string;
 
+  let modalTitle = "";
+  let modalComponent: typeof SvelteComponent | null = null;
+  let openModal = false;
+
   $: envelopeTooltip = $envelopeIsSigned
     ? "View the signatures of the sealed document."
     : "There are no signatures. They are generated when signing a document.";
@@ -25,24 +26,9 @@
   $: hasSyntaxErrors = !!$editorProblems.find((p) => p.owner === "json" && p.severity === monaco.MarkerSeverity.Error);
 
   function handleHeaderClick() {
-    const modal = new Modal({
-      target: document.body,
-      props: {
-        title: "Header",
-        content: EnvelopeHeader as typeof SvelteComponent,
-      },
-    });
-
-    const backdrop = new ModalBackdrop({
-      target: document.body,
-    });
-
-    function handleClose() {
-      modal.$destroy();
-      backdrop.$destroy();
-    }
-
-    modal.$on("close", handleClose);
+    openModal = true;
+    modalComponent = EnvelopeHeader as typeof SvelteComponent;
+    modalTitle = "Header";
   }
 
   function handleSigsClick() {
@@ -50,23 +36,9 @@
       return;
     }
 
-    const modal = new Modal({
-      target: document.body,
-      props: {
-        title: "Signatures",
-        content: EnvelopeSignatures as typeof SvelteComponent,
-      },
-    });
-    const backdrop = new ModalBackdrop({
-      target: document.body,
-    });
-
-    function handleClose() {
-      modal.$destroy();
-      backdrop.$destroy();
-    }
-
-    modal.$on("close", handleClose);
+    openModal = true;
+    modalComponent = EnvelopeSignatures as typeof SvelteComponent;
+    modalTitle = "Signatures";
   }
 
   function handleKeyDown(e: KeyboardEvent) {
@@ -161,3 +133,15 @@
     </div>
   </div>
 </div>
+{#if openModal}
+  <div>
+    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
+    <Modal title={modalTitle} on:close={() => (openModal = false)}>
+      <svelte:component this={modalComponent} />
+      <!-- <ExportDocContent
+        on:download={(event) => dispatch("download", event.detail)}
+        on:preview={(event) => dispatch("preview", event.detail)}
+      /> -->
+    </Modal>
+  </div>
+{/if}

@@ -6,7 +6,7 @@
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
 
-  const DEFAULT_JSON_SCHEMA_URL = "https://gobl.org/draft-0/bill/invoice";
+  const DEFAULT_JSON_SCHEMA_URL = "";
 
   interface GOBLDocument {
     $schema: string;

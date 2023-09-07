@@ -18,15 +18,13 @@
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
 
   import * as actions from "./editor/actions";
+  import { schemaUrlForm } from "./editor/form/context/formEditor";
 
   const dispatch = createEventDispatcher();
 
   // Used for JSON Schema validation within Monaco Editor. When set, this should
   // be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   export let jsonSchemaURL = "";
-
-  // Schema is stored for validation
-  $jsonSchema = jsonSchemaURL;
 
   // Data is used for setting editor contents. Note: there is "one way" binding;
   // e.g. you can set data but changes are not bound to the parent. Use the
@@ -56,6 +54,12 @@
       console.log("Created keypair.", keypair);
     });
   }
+
+  // jsonSchema is stored for validations in code editor
+  $: jsonSchema.set(jsonSchemaURL);
+
+  // schemaUrlForm is stored for recreating UI model
+  $: schemaUrlForm.set(jsonSchemaURL);
 
   $: editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() });
 
@@ -125,7 +129,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} />
           {:else}
-            <EditorForm {jsonSchemaURL} />
+            <EditorForm />
           {/if}
         </div>
       </div>

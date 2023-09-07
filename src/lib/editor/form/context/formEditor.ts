@@ -3,11 +3,13 @@ import { editor, editorJSON } from "$lib/editor/stores.js";
 import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
 import { sleep } from "../utils/sleep.js";
-import type { SchemaValue } from "../utils/schema.js";
+import { getRootSchema, type SchemaValue } from "../utils/schema.js";
 import { writableDerived } from "$lib/store/writableDerived.js";
-import type { Readable, Writable } from "svelte/store";
+import { get, writable, type Readable, type Writable } from "svelte/store";
 
 export const FormEditorContextId = Symbol("form-editor");
+export const schemaUrlForm = writable('')
+export const recreatingUiModel = writable(false)
 
 export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
@@ -20,6 +22,7 @@ export type FormEditorContextType = {
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
+  updateSchema(value: string): Promise<boolean>;
   tryFocusField(field: UIModelField, retries?: number, delay?: number): Promise<boolean>;
   getFocusableElement(focusField?: UIModelField): HTMLElement | undefined;
 };
@@ -54,28 +57,25 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     editor: SchemaValue,
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
+    recreatingUiModel.set(true)
     const model = (await getUIModel(schema, editor)) as UIModelRootField | undefined;
 
     if (model && model?.value !== editor) {
       updateEditor(model);
     }
 
-    console.log("uiModel", model);
-    console.log("$schema", schema);
-
     set({ value: model, updatedAt: Date.now() });
+    recreatingUiModel.set(false)
   }
 
   function updateEditor(model: UIModelField | undefined = uiModelValue) {
     if (!model) return;
 
     const value = model.root.toJSON();
-    console.log("EDITOR UPDATED!", value.length);
     editor.set({ value, updatedAt: Date.now() });
   }
 
   function refreshUI() {
-    console.log("UI UPDATED!");
     uiModel.update(({ value }) => ({ value, updatedAt: Date.now() }));
   }
 
@@ -182,6 +182,26 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     }
   }
 
+  async function updateSchema(value: string) {
+      const schema = await getRootSchema(value)
+
+      // Schema still invalid
+      if (schema.$comment === 'empty-schema') {
+        return false
+      }
+
+      const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
+      if (model) {
+        const field = model.root.children?.find(c => c.key === '$schema')
+        field?.setValue(value)
+        updateEditor(model.root)
+      }
+
+      schemaUrlForm.set(value)
+
+      return true
+  }
+
   const initialState: FormEditorContextType = {
     uiModel,
     changeFieldKey,
@@ -195,6 +215,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     updateEditor,
     tryFocusField,
     getFocusableElement,
+    updateSchema,
   };
 
   onDestroy(() => {

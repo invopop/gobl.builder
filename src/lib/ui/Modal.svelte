@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher, SvelteComponent } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import clickOutside from "$lib/clickOutside.js";
 
   const dispatch = createEventDispatcher();
 
   export let title = "Title";
-  export let content: typeof SvelteComponent;
-  export let contentProps: Record<string, unknown> = {};
 </script>
 
 <!-- Main modal -->
@@ -36,7 +34,7 @@
       </div>
       <!-- Modal body -->
       <div class="p-6 text-sm overflow-x-auto">
-        <svelte:component this={content} on:close on:preview on:download {...contentProps} />
+        <slot />
       </div>
     </div>
   </div>
