@@ -56,7 +56,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
     recreatingUiModel.set(true);
-    const model = await getUIModel(schema, get(editorJSON).value) as UIModelRootField | undefined;
+    const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
 
     if (model && model?.value !== editor) {
       updateEditor(model);
