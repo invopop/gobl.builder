@@ -8,7 +8,7 @@ import { writableDerived } from "$lib/store/writableDerived.js";
 import { get, writable, type Readable, type Writable } from "svelte/store";
 
 export const FormEditorContextId = Symbol("form-editor");
-export const schemaUrlForm = writable("");
+export const schemaUrlForm = writable<string | null>(null);
 export const recreatingUiModel = writable(false);
 
 export type FormEditorContextType = {
@@ -31,7 +31,7 @@ export function getFormEditorContext(): FormEditorContextType {
   return getContext<FormEditorContextType>(FormEditorContextId);
 }
 
-export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEditorContextType {
+export function createFormEditorContext(jsonSchemaURL: Readable<string | null>): FormEditorContextType {
   const uiModel: Writable<{
     value: UIModelRootField | undefined;
     updatedAt: number;

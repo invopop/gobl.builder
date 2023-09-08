@@ -19,6 +19,7 @@
   import * as actions from "./editor/actions";
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
+  import type { Schema } from "./editor/form/utils/schema";
 
   const dispatch = createEventDispatcher();
 
@@ -50,6 +51,8 @@
   // When enabled, a "Sign" action is available. A client-only keypair is
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
+
+  let editorForm: EditorForm | null = null;
 
   // Whether shows the code or the form editor
   let editorView = localStorage.getItem("editor-view") || "code";
@@ -98,6 +101,8 @@
         $envelope = newEnvelope(parsedValue);
         initialEditorData = hash(parsedValue || "");
       }
+
+      checkForEditorForm(parsedValue);
     } catch (e) {
       console.error("invalid document data: ", e);
       $envelope = newEnvelope(null);
@@ -133,6 +138,24 @@
     state = $envelope?.sigs ? "signed" : "loaded";
   };
 
+  const handleClearEditor = () => {
+    dispatch("clear");
+
+    if (!editorForm) return;
+
+    editorForm.recreateFormEditor();
+  };
+
+  const checkForEditorForm = (parsedValue: Schema) => {
+    if (!editorForm) return;
+
+    // If document loaded has the same schema as previously loaded
+    // We need to force a rebuild of the UI model
+    if (parsedValue.$schema === $schemaUrlForm) {
+      editorForm.recreateFormEditor();
+    }
+  };
+
   // Exposed functions to perform the actions from outside
   export const build = async () => {
     const result = await actions.build();
@@ -158,7 +181,7 @@
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar bind:editorView on:change on:undo on:redo on:clear on:preview on:download />
+    <MenuBar bind:editorView on:change on:undo on:redo on:preview on:download on:clear={handleClearEditor} />
   </div>
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">
@@ -167,7 +190,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} />
           {:else}
-            <EditorForm />
+            <EditorForm bind:this={editorForm} />
           {/if}
         </div>
       </div>

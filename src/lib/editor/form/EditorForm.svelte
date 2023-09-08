@@ -7,7 +7,7 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { editorProblems } from "$lib/editor/stores.js";
+  import { editorProblems, jsonSchema } from "$lib/editor/stores.js";
   import AbstractField from "./AbstractField.svelte";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
 
@@ -31,6 +31,12 @@
         },
       });
     }
+  }
+
+  export function recreateFormEditor() {
+    // Forces editor watcher to fire and rebuild the model
+    schemaUrlForm.set(null);
+    schemaUrlForm.set($jsonSchema);
   }
 
   function handleKeyDown(e: KeyboardEvent) {
