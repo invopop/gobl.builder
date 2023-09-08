@@ -109,6 +109,14 @@
       }
     } else if (goNext) {
       e.preventDefault();
+
+      const elementId = (e.target as HTMLElement)?.id || "";
+      const isKeyField = elementId.includes("-key");
+
+      if (isKeyField) {
+        return focusNextField(field);
+      }
+
       return focusNextField();
     } else if (goPrev) {
       e.preventDefault();
