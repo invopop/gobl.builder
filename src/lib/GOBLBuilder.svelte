@@ -165,6 +165,10 @@
     } else {
       state = "built";
     }
+
+    if (!editorForm) return;
+
+    editorForm.recreateFormEditor();
   };
 
   export const sign = async () => {

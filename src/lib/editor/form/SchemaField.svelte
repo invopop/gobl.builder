@@ -38,7 +38,7 @@
   };
 </script>
 
-<Tooltip label={field.schema.description} delay={200} containerClass="block w-full">
+<Tooltip containerClass="block w-full">
   <div class="flex items-stretch justify-between w-full gap-2">
     <div class="flex items-start justify-start">
       <FieldTitle {field} />

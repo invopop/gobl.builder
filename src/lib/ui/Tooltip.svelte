@@ -31,11 +31,11 @@
   });
 
   export let label: string | undefined = undefined;
-  export let delay: number | undefined = undefined;
+  export let delay = false;
   export let containerClass = "inline-block";
   export let bgClass = "bg-gray-900";
 
-  $: delayClasses = delay ? `transition-all ease-in-out duration-300 delay-${delay}` : "";
+  $: delayClasses = delay ? "transition-all ease-in-out duration-300 delay-1000" : "";
 
   let showTooltip = false;
 </script>

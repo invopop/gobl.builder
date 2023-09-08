@@ -12,7 +12,7 @@
   $: label = `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 </script>
 
-<Tooltip {label} delay={1000} placement="bottom" containerClass="block w-full">
+<Tooltip {label} delay placement="bottom" containerClass="block w-full">
   <div class="flex items-stretch justify-between w-full gap-2">
     <div class="flex items-start justify-start">
       {#if field.is.editableKey}
