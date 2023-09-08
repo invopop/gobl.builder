@@ -52,9 +52,15 @@
   </div>
 </Tooltip>
 {#if !updatingSchema}
-  <p class="text-red-400 text-center mt-2">
-    {isEmptySchema
-      ? "In order to build a visual form, please, validate a $schema first."
-      : `$schema must be ${$jsonSchema}`}
-  </p>
+  <div class="rounded-md bg-blue-50 p-4 mt-4">
+    <div class="flex">
+      <div class="ml-3 flex-1 md:flex justify-center">
+        <p class="text-sm text-blue-500">
+          {isEmptySchema
+            ? "In order to build a visual form, please, validate a $schema first."
+            : `$schema must be ${$jsonSchema}`}
+        </p>
+      </div>
+    </div>
+  </div>
 {/if}

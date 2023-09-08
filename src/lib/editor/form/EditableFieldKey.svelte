@@ -5,7 +5,7 @@
   import EditableTextField from "./EditableTextField.svelte";
   import { Icon, PencilSquare } from "svelte-hero-icons";
 
-  export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_]/g, "");
+  export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
   export let field: UIModelField<string>;
 
   let pristine = true;
