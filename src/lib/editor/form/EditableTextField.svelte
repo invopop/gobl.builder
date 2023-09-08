@@ -27,8 +27,8 @@
   on:keyup={handleChange}
   on:blur
   class="focus:border-gray-400 {classes}"
-  class:bg-white={!field.is.calculated}
   class:bg-slate-50={field.is.calculated}
+  class:border-slate-100={field.is.calculated}
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
 />

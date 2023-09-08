@@ -52,7 +52,7 @@
   export let signEnabled = true;
 
   // Whether shows the code or the form editor
-  let editorView = "code";
+  let editorView = localStorage.getItem("editor-view") || "code";
   let initialEditorData = "";
 
   if (signEnabled) {
@@ -60,6 +60,8 @@
       console.log("Created keypair.", keypair);
     });
   }
+
+  $: localStorage.setItem("editor-view", editorView);
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);

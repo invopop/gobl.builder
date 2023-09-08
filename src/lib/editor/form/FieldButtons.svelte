@@ -9,7 +9,6 @@
 
   const dispatch = createEventDispatcher();
 
-  $: classes = field?.is.calculated ? "bg-blue-100" : "bg-color2";
   $: showAdd = ["object", "array"].includes(field?.type || "");
   $: addLabel = field?.type === "array" ? "Add Row" : "Add Property";
   $: canMove = field?.parent?.type === "array";
@@ -17,8 +16,8 @@
   $: canMoveDown = canMove && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
 </script>
 
-<div id="fieldBackground" class="flex w-full h-full rounded {classes}" transition:fade={{ duration: 200 }}>
-  <div class="flex-shrink-0 left-full h-9 ml-1 top-0 rounded {classes}">
+<div id="fieldBackground" class="flex w-full h-full rounded bg-color2" transition:fade={{ duration: 200 }}>
+  <div class="flex-shrink-0 left-full h-9 top-0 rounded bg-color2">
     <ul class="flex align-middle text-grey-5 h-full">
       {#if showAdd}
         <li>
