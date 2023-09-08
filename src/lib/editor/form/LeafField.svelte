@@ -5,14 +5,13 @@
   import FieldTitle from "./FieldTitle.svelte";
   import EditableField from "./EditableField.svelte";
   import EditableFieldKey from "./EditableFieldKey.svelte";
-  import CalculatedField from "./CalculatedField.svelte";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let parseKey: ((key: SchemaValue) => string) | undefined = undefined;
   export let field: UIModelField<string>;
 </script>
 
-<Tooltip label={field.schema.description} delay={200} containerClass="block w-full">
+<Tooltip label={field.schema.description} delay={1000} placement="bottom" containerClass="block w-full">
   <div class="flex items-stretch justify-between w-full gap-2">
     <div class="flex items-start justify-start">
       {#if field.is.editableKey}
@@ -22,11 +21,7 @@
       {/if}
     </div>
     <div class="flex items-start justify-start w-[248px]">
-      {#if field.is.editable}
-        <EditableField {field} {parseValue} />
-      {:else if field.is.calculated}
-        <CalculatedField {field} />
-      {/if}
+      <EditableField {field} {parseValue} />
     </div>
   </div>
 </Tooltip>

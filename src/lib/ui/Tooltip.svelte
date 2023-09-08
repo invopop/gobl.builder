@@ -2,11 +2,14 @@
   import { writable } from "svelte/store";
   import { offset, flip, shift } from "@floating-ui/dom";
   import { createFloatingActions, arrow } from "svelte-floating-ui";
+  import type { Placement } from "@floating-ui/utils";
+
+  export let placement: Placement = "top";
 
   const arrowRef = writable<HTMLElement>();
   const [floatingRef, floatingContent] = createFloatingActions({
     strategy: "fixed",
-    placement: "top",
+    placement,
     middleware: [offset(6), flip(), shift({ padding: 5 }), arrow({ element: arrowRef })],
     onComputed({ placement, middlewareData }) {
       const { x, y } = middlewareData.arrow || { x: undefined, y: undefined };
@@ -30,8 +33,9 @@
   export let label: string | undefined = undefined;
   export let delay: number | undefined = undefined;
   export let containerClass = "inline-block";
+  export let bgClass = "bg-gray-900";
 
-  $: delayClasses = delay ? `transition-all ease-in-out duration-300 delay-[${delay}ms]` : "";
+  $: delayClasses = delay ? `transition-all ease-in-out duration-300 delay-${delay}` : "";
 
   let showTooltip = false;
 </script>
@@ -43,7 +47,8 @@
     role="contentinfo"
     class={containerClass}
     use:floatingRef
-    on:mouseenter={() => {
+    on:mouseenter={(event) => {
+      event.stopPropagation();
       showTooltip = true;
     }}
     on:mouseleave={() => {
@@ -54,7 +59,7 @@
   </div>
 
   <div
-    class="py-1 px-2 text-xs text-white bg-gray-900 rounded-lg {delayClasses}"
+    class="py-1 px-2 text-xs text-white {bgClass} rounded-lg {delayClasses} z-20"
     class:visible={showTooltip}
     class:invisible={!showTooltip}
     class:opacity-100={showTooltip}
@@ -66,6 +71,6 @@
     {:else}
       <slot name="content" />
     {/if}
-    <div class="bg-gray-900 w-2 h-2 absolute rotate-45" bind:this={$arrowRef} />
+    <div class="{bgClass} w-2 h-2 absolute rotate-45" bind:this={$arrowRef} />
   </div>
 {/if}
