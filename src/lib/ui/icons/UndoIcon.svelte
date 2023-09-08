@@ -6,9 +6,5 @@
   stroke="currentColor"
   class="w-5 h-5"
 >
-  <path
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-  />
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
 </svg>
