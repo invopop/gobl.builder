@@ -36,14 +36,13 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     value: UIModelRootField | undefined;
     updatedAt: number;
   }> = writableDerived(
-    [jsonSchemaURL, editorJSON],
-    ([$schema, $editor], set) => {
-      debouncedRecreateUIModel($schema, $editor.value, set);
+    jsonSchemaURL,
+    ($schema, set) => {
+      debouncedRecreateUIModel($schema, set);
     },
     { value: undefined as UIModelRootField | undefined, updatedAt: 0 },
   );
 
-  const debouncedUpdateEditor = getDebouncedFunction(500, updateEditor);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const debouncedRecreateUIModel = getDebouncedFunction(200, recreateUIModel as any);
 
@@ -54,11 +53,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
 
   async function recreateUIModel(
     schema: string,
-    editor: SchemaValue,
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
     recreatingUiModel.set(true);
-    const model = (await getUIModel(schema, editor)) as UIModelRootField | undefined;
+    const model = await getUIModel(schema, get(editorJSON).value) as UIModelRootField | undefined;
 
     if (model && model?.value !== editor) {
       updateEditor(model);
@@ -83,14 +81,14 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     const result = field.setKey(key);
     if (!result) return;
 
-    debouncedUpdateEditor(field.root);
+    updateEditor(field.root);
   }
 
   function changeFieldValue(field: UIModelField, value: SchemaValue) {
     const result = field.setValue(value);
     if (!result) return;
 
-    debouncedUpdateEditor(field.root);
+    updateEditor(field.root);
   }
 
   function deleteField(field: UIModelField) {
@@ -98,6 +96,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (!result) return;
 
     updateEditor();
+    refreshUI();
   }
 
   function duplicateField(field: UIModelField) {
@@ -105,6 +104,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (!newField) return;
 
     updateEditor();
+    refreshUI();
 
     const focusField = newField.getFirstFocusableChild();
     tryFocusField(focusField);
@@ -112,6 +112,8 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
 
   function moveField(field: UIModelField, direction: "up" | "down") {
     const swapPositions = (array: UIModelField[], a: number, b: number) => {
+      array[a].key = String(b);
+      array[b].key = String(a);
       [array[a], array[b]] = [array[b], array[a]];
     };
 
@@ -127,6 +129,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     swapPositions(children, currentKey, destinationKey);
 
     updateEditor();
+    refreshUI();
   }
 
   function addField(parentField: UIModelField, option: SchemaOption) {
@@ -134,6 +137,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string>): FormEd
     if (!newField) return;
 
     updateEditor();
+    refreshUI();
 
     const focusField = newField.getFirstFocusableChild();
     tryFocusField(focusField);

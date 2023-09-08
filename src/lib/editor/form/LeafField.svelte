@@ -9,7 +9,7 @@
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let parseKey: ((key: SchemaValue) => string) | undefined = undefined;
   export let field: UIModelField<string>;
-  $: label = `${field.schema.description}${field.is.calculated ? " (calculated)" : ""}`;
+  $: label = `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 </script>
 
 <Tooltip {label} delay={1000} placement="bottom" containerClass="block w-full">
