@@ -9,14 +9,7 @@ const EMPTY_SCHEMA: Schema = {
   description: "",
   $id: "",
   $schema: "http://json-schema.org/draft/2020-12/schema",
-  properties: {
-    $schema: {
-      $id: "",
-      title: "$schema",
-      type: "string",
-    },
-  },
-  required: ["$schema"],
+  properties: {},
 };
 
 export const SchemaRegistry: Record<string, Schema> = {};

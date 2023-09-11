@@ -3,7 +3,7 @@ import { editor, editorJSON } from "$lib/editor/stores.js";
 import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
 import { sleep } from "../utils/sleep.js";
-import { getRootSchema, type SchemaValue } from "../utils/schema.js";
+import type { SchemaValue } from "../utils/schema.js";
 import { writableDerived } from "$lib/store/writableDerived.js";
 import { get, writable, type Readable, type Writable } from "svelte/store";
 
@@ -22,7 +22,7 @@ export type FormEditorContextType = {
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
-  updateSchema(value: string): Promise<boolean>;
+  updateSchema(value: string): void;
   tryFocusField(field: UIModelField, retries?: number, delay?: number): Promise<boolean>;
   getFocusableElement(focusField?: UIModelField): HTMLElement | undefined;
 };
@@ -56,9 +56,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
     recreatingUiModel.set(true);
-    const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
-
-    if (model && model?.value !== editor) {
+    const value = get(editorJSON).value
+    const model = (await getUIModel(schema, value)) as UIModelRootField | undefined;
+    
+    if (model && model?.value !== value) {
       updateEditor(model);
     }
 
@@ -187,23 +188,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
   }
 
   async function updateSchema(value: string) {
-    const schema = await getRootSchema(value);
-
-    // Schema still invalid
-    if (schema.$comment === "empty-schema") {
-      return false;
-    }
-
-    const model = (await getUIModel(schema, get(editorJSON).value)) as UIModelRootField | undefined;
-    if (model) {
-      const field = model.root.children?.find((c) => c.key === "$schema");
-      field?.setValue(value);
-      updateEditor(model.root);
-    }
-
+    const parsedValue = JSON.parse(get(editor).value)
+    parsedValue.$schema = value
+    editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() })
     schemaUrlForm.set(value);
-
-    return true;
   }
 
   const initialState: FormEditorContextType = {
