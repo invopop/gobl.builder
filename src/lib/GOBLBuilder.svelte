@@ -20,6 +20,7 @@
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import type { Schema } from "./editor/form/utils/schema";
+  import { toast } from "@zerodevx/svelte-toast";
 
   const dispatch = createEventDispatcher();
 
@@ -160,6 +161,7 @@
   export const build = async () => {
     const result = await actions.build();
     dispatch("build", result);
+
     if (result?.error) {
       state = "errored";
     } else {
@@ -168,7 +170,17 @@
 
     if (!editorForm) return;
 
-    editorForm.recreateFormEditor();
+    state === "built"
+      ? editorForm.recreateFormEditor()
+      : toast.push(result?.error?.message || "", {
+          reversed: true,
+          intro: { y: 192 },
+          theme: {
+            "--toastColor": "rgb(75 85 99)",
+            "--toastBackground": "rgb(255 228 230)",
+            "--toastBarBackground": "rgb(225 29 72)",
+          },
+        });
   };
 
   export const sign = async () => {

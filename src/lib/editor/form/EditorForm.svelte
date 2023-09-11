@@ -1,37 +1,17 @@
 <script lang="ts">
-  import * as monaco from "monaco-editor";
-  import { toast } from "@zerodevx/svelte-toast";
   import {
     createFormEditorContext,
     getFormEditorContext,
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { editorProblems, jsonSchema } from "$lib/editor/stores.js";
+  import { jsonSchema } from "$lib/editor/stores.js";
   import AbstractField from "./AbstractField.svelte";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
-
-  let error = "";
 
   createFormEditorContext(schemaUrlForm);
 
   const { uiModel } = getFormEditorContext() || {};
-
-  $: {
-    error = $editorProblems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error)[0]?.message;
-
-    if (error) {
-      toast.push(error, {
-        reversed: true,
-        intro: { y: 192 },
-        theme: {
-          "--toastColor": "rgb(75 85 99)",
-          "--toastBackground": "rgb(255 228 230)",
-          "--toastBarBackground": "rgb(225 29 72)",
-        },
-      });
-    }
-  }
 
   export function recreateFormEditor() {
     // Forces editor watcher to fire and rebuild the model
