@@ -121,6 +121,10 @@ export async function validate() {
   }
 }
 
+export async function getSchemas() {
+  return await GOBL.schemas()
+}
+
 function getGOBLPayload() {
   const editorValue = get(editor);
   const envelopeValue = get(envelope);

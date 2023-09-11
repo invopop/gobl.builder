@@ -2,10 +2,13 @@
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import Tooltip from "$lib/ui/Tooltip.svelte";
   import FieldTitle from "./FieldTitle.svelte";
-  import EditableTextField from "./EditableTextField.svelte";
   import { getFormEditorContext } from "./context/formEditor";
   import { toast } from "@zerodevx/svelte-toast";
   import { jsonSchema } from "../stores";
+  import { onMount } from "svelte";
+  import { getSchemas } from "../actions";
+  import Select from "svelte-select";
+  import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
 
   const { updateSchema } = getFormEditorContext() || {};
 
@@ -13,19 +16,15 @@
   export let isEmptySchema = true;
 
   let updatingSchema = false;
-  let value = field.value;
+  let schemasList: string[] = [];
 
-  const handleUpdate = (e: CustomEvent) => {
-    value = e.detail;
-  };
-
-  const update = async () => {
+  const update = async (e: CustomEvent) => {
     updatingSchema = true;
-    const result = await updateSchema(value);
+    const result = await updateSchema(e.detail.value);
 
     if (!result) {
       updatingSchema = false;
-      toast.push(`${value} is not a valid $schema`, {
+      toast.push(`${e.detail.value} is not a valid $schema`, {
         reversed: true,
         intro: { y: 192 },
         theme: {
@@ -36,31 +35,30 @@
       });
     }
   };
+
+  onMount(async () => {
+    const schemas = await getSchemas();
+    schemasList = JSON.parse(schemas).list;
+  });
 </script>
 
-<Tooltip containerClass="block w-full">
-  <div class="flex items-stretch justify-between w-full gap-2">
-    <div class="flex items-start justify-start">
+{#if updatingSchema}
+  <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
+{:else}
+  <Tooltip containerClass="block w-full">
+    <div class="flex items-center justify-center w-full gap-2">
       <FieldTitle {field} />
-    </div>
-    <div class="flex justify-start w-full" class:opacity-30={updatingSchema} class:pointer-events-none={updatingSchema}>
-      <EditableTextField {field} on:edit={handleUpdate} />
-      <button disabled={updatingSchema} class="ml-1 border px-2 flex items-center justify-center" on:click={update}
-        >{updatingSchema ? "Validating..." : "Validate"}</button
-      >
-    </div>
-  </div>
-</Tooltip>
-{#if !updatingSchema}
-  <div class="rounded-md bg-blue-50 p-4 mt-4">
-    <div class="flex">
-      <div class="ml-3 flex-1 md:flex justify-center">
-        <p class="text-sm text-blue-500">
-          {isEmptySchema
-            ? "In order to build a visual form, please, validate a $schema first."
+      <div class="flex justify-start w-full">
+        <Select
+          placeholder={isEmptySchema
+            ? "In order to build a visual form, validate a $schema first."
             : `$schema must be ${$jsonSchema}`}
-        </p>
+          items={schemasList}
+          searchable
+          showChevron
+          on:change={update}
+        />
       </div>
     </div>
-  </div>
+  </Tooltip>
 {/if}
