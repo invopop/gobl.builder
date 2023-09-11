@@ -20,7 +20,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   public children?: UIModelField[];
   public childrenMap?: Record<string, UIModelField>;
   public options?: SchemaOption[];
-  public error?: Error;
   public is: UIModelFieldFlags;
 
   constructor(
@@ -37,7 +36,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     this.controlType = this.getControlType();
     this.controlMeta = this.getControlMeta();
     this.root = !root ? (this as UIModelRootField) : root;
-    this.error = value instanceof Error ? value : undefined;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const calculated = (this.schema as any).calculated || this.parent?.is.calculated;
@@ -50,7 +48,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       calculated: calculated,
       editable: true,
       editableKey: this.parent?.controlType === "dictionary",
-      error: value instanceof Error,
       complete: false,
       empty: true,
     };
@@ -62,21 +59,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         $schema: this.schema.$id,
         ...emptyValue,
       };
-    }
-
-    if (!this.is.error && this.schema.pattern) {
-      const pattern = new RegExp(this.schema.pattern);
-      const valid = pattern.test(this.value as string);
-
-      if (!valid) {
-        this.is.error = true;
-        this.error = new Error(`Invalid format ${this.schema.pattern}`);
-      }
-    }
-
-    if (!this.is.error && this.is.required && !this.value) {
-      this.is.error = true;
-      this.error = new Error(`Required field`);
     }
 
     switch (this.schema.type) {
@@ -531,7 +513,7 @@ export type UIModelFieldFlags = {
   calculated: boolean;
   editableKey: boolean;
   editable: boolean;
-  error: boolean;
+  // error: boolean;
   complete: boolean;
   empty: boolean;
 };

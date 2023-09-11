@@ -13,6 +13,11 @@
 
     dispatch("edit", value);
   }
+
+  function handleBlur(e: Event & { currentTarget: HTMLSelectElement }) {
+    const value = e.currentTarget.value;
+    dispatch("blur", value);
+  }
 </script>
 
 <select
@@ -20,7 +25,7 @@
   value={field.value}
   on:change={handleChange}
   on:keyup={handleChange}
-  on:blur
+  on:blur={handleBlur}
   class="text-ellipsis outline-none w-full rounded border h-8 py-1.5 pl-2 pr-8 text-gray-700 appearance-none focus:border-gray-400 cursor-pointer"
   class:border-rose-500={showError}
   class:bg-slate-50={field.is.calculated}

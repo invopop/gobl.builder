@@ -1,8 +1,7 @@
 <script lang="ts">
-  import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  export let field: UIModelField<unknown>;
+  export let error = "";
 </script>
 
 <span class="text-rose-500 text-xs whitespace-nowrap">
-  {field.error}
+  {error}
 </span>

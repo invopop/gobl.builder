@@ -10,8 +10,8 @@
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
 
-  let pristine = true;
-  $: showError = !pristine && field.is.error;
+  let error = "";
+  $: showError = Boolean(error);
 
   const { changeFieldValue } = getFormEditorContext() || {};
 
@@ -23,20 +23,35 @@
     changeFieldValue(field, parsedValue);
   }
 
-  function handleBlur() {
-    pristine = false;
+  function validateField(e: CustomEvent<SchemaValue>) {
+    const value = e.detail;
+    const parsedValue = parseValue(value);
+
+    if (field.is.required) {
+      error = parsedValue ? "" : "Required field";
+      return;
+    }
+
+    if (field.schema.pattern) {
+      const pattern = new RegExp(field.schema.pattern);
+      const valid = pattern.test(parsedValue as string);
+
+      if (!valid) {
+        error = `Invalid format ${field.schema.pattern}`;
+      }
+    }
   }
 </script>
 
 <div class="w-full">
   {#if field.controlType === "date"}
-    <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
+    <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
-    <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={handleBlur} />
+    <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
   {:else}
-    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={handleBlur} />
+    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {/if}
   {#if showError}
-    <FieldError {field} />
+    <FieldError {error} />
   {/if}
 </div>

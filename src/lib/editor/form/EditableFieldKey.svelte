@@ -8,8 +8,6 @@
   export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
   export let field: UIModelField<string>;
 
-  let pristine = true;
-  $: showError = !pristine && field.is.error;
   let inputValue: SchemaValue = field.key;
 
   const { changeFieldKey } = getFormEditorContext() || {};
@@ -22,8 +20,6 @@
   }
 
   function handleBlur() {
-    pristine = false;
-
     if (!inputValue) return;
 
     const parsedKey = parseKey(inputValue);
@@ -33,12 +29,5 @@
 
 <span class="flex items-center justify-start">
   <Icon src={PencilSquare} solid class="h-4 w-4 mr-2 text-grey-5" />
-  <EditableTextField
-    {field}
-    id={`${field.id}-key`}
-    value={field.key}
-    {showError}
-    on:edit={handleEdit}
-    on:blur={handleBlur}
-  />
+  <EditableTextField {field} id={`${field.id}-key`} value={field.key} on:edit={handleEdit} on:blur={handleBlur} />
 </span>

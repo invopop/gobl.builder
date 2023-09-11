@@ -17,6 +17,11 @@
     const value = e.currentTarget.value;
     dispatch("edit", value);
   }
+
+  function handleBlur(e: Event & { currentTarget: HTMLInputElement }) {
+    const value = e.currentTarget.value;
+    dispatch("blur", value);
+  }
 </script>
 
 <input
@@ -25,7 +30,7 @@
   value={val}
   on:change={handleChange}
   on:keyup={handleChange}
-  on:blur
+  on:blur={handleBlur}
   class="focus:border-gray-400 {classes}"
   class:bg-slate-50={field.is.calculated}
   class:border-slate-100={field.is.calculated}
