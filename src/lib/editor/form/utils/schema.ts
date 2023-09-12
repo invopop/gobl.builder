@@ -26,10 +26,10 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   if (schema) return schema;
 
   try {
-    const result = await GOBL.schema(id.replace('https://gobl.org/draft-0/', ''))
+    const result = await GOBL.schema(id.replace("https://gobl.org/draft-0/", ""));
 
-    schema = JSON.parse(result)
-    
+    schema = JSON.parse(result);
+
     SchemaRegistry[id] = schema;
 
     return schema;

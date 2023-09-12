@@ -192,9 +192,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     if (this.children.length <= newChildren.length) return false;
 
     // Adds back the field to parent options
-    const field = this.children.find(f => f.id === id)
+    const field = this.children.find((f) => f.id === id);
     this.options?.splice(Number(field?.index), 0, {
-      key: field?.key || '',
+      key: field?.key || "",
       required: field?.is.required || false,
       schema: field?.schema as Schema,
     });
@@ -278,9 +278,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     this.updateChildren(newChildren);
 
     // Removes the just added child from the suggestion options
-    this.options = this.options?.filter(o => {
-      return o.key !== newField.key
-    })
+    this.options = this.options?.filter((o) => {
+      return o.key !== newField.key;
+    });
 
     return newField;
   }

@@ -56,9 +56,9 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     set: (value: { value: UIModelRootField | undefined; updatedAt: number }) => void,
   ) {
     recreatingUiModel.set(true);
-    const value = get(editorJSON).value
+    const value = get(editorJSON).value;
     const model = (await getUIModel(schema, value)) as UIModelRootField | undefined;
-    
+
     if (model && model?.value !== value) {
       updateEditor(model);
     }
@@ -188,9 +188,9 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
   }
 
   async function updateSchema(value: string) {
-    const parsedValue = JSON.parse(get(editor).value)
-    parsedValue.$schema = value
-    editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() })
+    const parsedValue = JSON.parse(get(editor).value);
+    parsedValue.$schema = value;
+    editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() });
     schemaUrlForm.set(value);
   }
 

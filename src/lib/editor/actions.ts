@@ -122,7 +122,7 @@ export async function validate() {
 }
 
 export async function getSchemas() {
-  return await GOBL.schemas()
+  return await GOBL.schemas();
 }
 
 function getGOBLPayload() {
