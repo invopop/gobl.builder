@@ -40,6 +40,6 @@
 
 <style lang="postcss">
   input {
-    @apply outline-none w-full bg-white rounded border h-8 py-1.5 px-2 text-gray-700;
+    @apply outline-none w-full rounded border h-8 py-1.5 px-2 text-gray-700;
   }
 </style>
