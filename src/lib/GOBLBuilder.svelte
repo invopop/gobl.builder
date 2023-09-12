@@ -91,7 +91,6 @@
     try {
       reloadData(data);
     } catch (e) {
-      console.log({ e });
       console.error("invalid document data: ", e);
       $envelope = newEnvelope(null);
       state = "empty";

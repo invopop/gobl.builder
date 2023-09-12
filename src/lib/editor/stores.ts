@@ -47,6 +47,11 @@ export const editorJSON: Readable<{
   };
 });
 
+export const currentEditorSchema = derived(editorJSON, ($editor) => {
+  // eslint-disable-next-line
+  return ($editor.value as any).$schema
+})
+
 export const jsonSchema = writable<string | null>(null);
 export const keypair = createKeypairStore();
 export const undoAvailable = writable(false);

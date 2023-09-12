@@ -6,8 +6,7 @@
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
   import type { State } from "$lib/types/editor";
-
-  const DEFAULT_JSON_SCHEMA_URL = "";
+  import SelectSchemas from "$lib/SelectSchemas.svelte";
 
   interface GOBLDocument {
     $schema: string;
@@ -18,7 +17,8 @@
   let problems: EditorProblem[] = [];
   $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
   $: console.log({ hasErrors });
-  let jsonSchemaURL = DEFAULT_JSON_SCHEMA_URL;
+  let jsonSchemaURL = "";
+  let defaultSchema = "All";
   let builder: GOBLBuilder;
   let state: State = "init";
 
@@ -32,6 +32,11 @@
     }
 
     jsonSchemaURL = event.detail.$schema;
+    defaultSchema = jsonSchemaURL.replace("https://gobl.org/draft-0/", "");
+  }
+
+  function handleSchemaChange(event: CustomEvent<string>) {
+    jsonSchemaURL = event.detail;
   }
 </script>
 
@@ -40,6 +45,10 @@
     <div class="flex gap-4">
       <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
       <DocLoader on:load={handleDocLoad} />
+    </div>
+    <div class="w-96 flex text-sm items-center justify-center">
+      <span class="whitespace-nowrap mr-3 text-white">Validation Schema:</span>
+      <SelectSchemas allowAll value={defaultSchema} on:change={handleSchemaChange} />
     </div>
     <div class="bg-slate-100 rounded flex space-x-3 items-center justify-center">
       <Tooltip

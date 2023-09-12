@@ -10,7 +10,6 @@
   import { getFormEditorContext } from "./context/formEditor.js";
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
-  import { jsonSchema } from "../stores";
 
   export let field: UIModelField;
 
@@ -26,10 +25,7 @@
   let isHover = false;
   let isFocus = false;
 
-  $: isEmptySchema = field.schema.$comment == "empty-schema";
-  $: currentSchema = field.children?.find((f) => f.key === "$schema")?.value || "";
-  $: isValidSchema = !$jsonSchema || currentSchema === $jsonSchema;
-  $: showContextMenu = !isEmptySchema && (isHover || isFocus);
+  $: showContextMenu = isHover || isFocus;
   $: addMenu = showAddMenu && !field.is.complete;
 
   $: {
@@ -142,7 +138,7 @@
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
-      <span class:invisible={(!field.is.root || isEmptySchema || !isValidSchema) && !showContextMenu}>
+      <span class:invisible={!field.is.root && !showContextMenu}>
         <FieldContextMenu {field} on:addField={handleAddField} />
       </span>
     </div>

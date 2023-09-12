@@ -122,7 +122,8 @@ export async function validate() {
 }
 
 export async function getSchemas() {
-  return await GOBL.schemas();
+  const schemas =  await GOBL.schemas();
+  return JSON.parse(schemas).list
 }
 
 function getGOBLPayload() {
