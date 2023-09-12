@@ -23,7 +23,14 @@
   let state: State = "init";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
-    data = JSON.stringify(event.detail, null, 4);
+    const newData = JSON.stringify(event.detail, null, 4);
+    data = newData;
+
+    // Hack for allowing load the same document again to restore data
+    if (newData === data) {
+      builder.reloadData();
+    }
+
     jsonSchemaURL = event.detail.$schema;
   }
 </script>

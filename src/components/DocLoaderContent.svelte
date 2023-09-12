@@ -89,7 +89,7 @@
       return;
     }
 
-    document.dispatchEvent(new CustomEvent("docLoaded", { detail: template.value }));
+    dispatch("docLoaded", template.value);
     dispatch("close");
   }
 
@@ -129,7 +129,7 @@
             "inline-block p-4 rounded-t-lg border-b-2 border-transparent",
             { "text-sky-500 border-b-2 border-sky-500": tab.title === activeTab },
             { "hover:text-gray-600 hover:border-gray-300": tab.title !== activeTab },
-            { "cursor-not-allowed": tab.disabled }
+            { "cursor-not-allowed": tab.disabled },
           )}
           on:click={tab.onClick}
           >{tab.title}

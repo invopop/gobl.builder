@@ -19,7 +19,6 @@
   import * as actions from "./editor/actions";
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
-  import type { Schema } from "./editor/form/utils/schema";
   import { toast } from "@zerodevx/svelte-toast";
 
   const dispatch = createEventDispatcher();
@@ -90,21 +89,9 @@
   $: {
     goblError.set(null);
     try {
-      let parsedValue = null;
-      if (data != "") {
-        parsedValue = JSON.parse(data);
-      }
-
-      if (data != "" && isEnvelope(parsedValue)) {
-        $envelope = parsedValue;
-        initialEditorData = hash(parsedValue.doc);
-      } else {
-        $envelope = newEnvelope(parsedValue);
-        initialEditorData = hash(parsedValue || "");
-      }
-
-      checkForEditorForm(parsedValue);
+      reloadData(data);
     } catch (e) {
+      console.log({ e });
       console.error("invalid document data: ", e);
       $envelope = newEnvelope(null);
       state = "empty";
@@ -142,19 +129,7 @@
   const handleClearEditor = () => {
     dispatch("clear");
 
-    if (!editorForm) return;
-
-    editorForm.recreateFormEditor();
-  };
-
-  const checkForEditorForm = (parsedValue: Schema) => {
-    if (!editorForm) return;
-
-    // If document loaded has the same schema as previously loaded
-    // We need to force a rebuild of the UI model
-    if (parsedValue.$schema === $schemaUrlForm) {
-      editorForm.recreateFormEditor();
-    }
+    recreateVisualEditor();
   };
 
   // Exposed functions to perform the actions from outside
@@ -192,6 +167,35 @@
   export const validate = async () => {
     const result = await actions.validate();
     dispatch("validate", result);
+  };
+
+  export const reloadData = async (d: string | null = null) => {
+    let parsedValue = null;
+    const internalData = d || data;
+
+    if (internalData != "") {
+      parsedValue = JSON.parse(internalData);
+    }
+
+    if (internalData != "" && isEnvelope(parsedValue)) {
+      $envelope = parsedValue;
+      initialEditorData = hash(parsedValue.doc);
+    } else {
+      $envelope = newEnvelope(parsedValue);
+      initialEditorData = hash(parsedValue || "");
+    }
+
+    // If document loaded has the same schema as previously loaded
+    // We need to force a rebuild of the UI model
+    if (parsedValue?.$schema === $schemaUrlForm) {
+      recreateVisualEditor();
+    }
+  };
+
+  export const recreateVisualEditor = async () => {
+    if (!editorForm) return;
+
+    editorForm.recreateFormEditor();
   };
 </script>
 

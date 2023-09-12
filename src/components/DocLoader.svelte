@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
   import Modal from "$lib/ui/Modal.svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
   import { createEventDispatcher } from "svelte";
@@ -8,16 +7,6 @@
   const dispatch = createEventDispatcher();
 
   let openModal = false;
-
-  onMount(() => {
-    // eslint-disable-next-line no-undef
-    document.addEventListener("docLoaded", handleDocLoaded as EventListener, true);
-  });
-
-  onDestroy(() => {
-    // eslint-disable-next-line no-undef
-    document.removeEventListener("docLoaded", handleDocLoaded as EventListener, true);
-  });
 
   function handleDocLoaded(event: CustomEvent<string>): void {
     dispatch("load", event.detail);
@@ -51,7 +40,7 @@
   <div>
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
     <Modal title="Load document" on:close={() => (openModal = false)}>
-      <DocLoaderContent on:close={() => (openModal = false)} />
+      <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
     </Modal>
   </div>
 {/if}
