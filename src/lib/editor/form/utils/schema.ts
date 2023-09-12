@@ -13,6 +13,21 @@ const EMPTY_SCHEMA: Schema = {
   properties: {},
 };
 
+export async function fetchJsonSchema (url: string) {
+  const GOBL_URL = "https://gobl.org/draft-0/"
+  
+  const matchUrl = new RegExp(GOBL_URL, "g")
+
+  const isGoblSchema = matchUrl.test(url);
+
+  if (isGoblSchema) {
+    return await GOBL.schema(url.replace(GOBL_URL, ""));
+  }
+
+  const response = await fetch(url);
+  return await response.json();
+}
+
 export const SchemaRegistry: Record<string, Schema> = {};
 // export const ParsedSchemaRegistry: Record<string, Schema> = {};
 
@@ -26,7 +41,7 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   if (schema) return schema;
 
   try {
-    const result = await GOBL.schema(id.replace("https://gobl.org/draft-0/", ""));
+    const result = await fetchJsonSchema(id)
 
     schema = JSON.parse(result);
 

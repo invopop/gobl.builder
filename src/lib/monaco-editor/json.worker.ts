@@ -2,6 +2,7 @@
  * Source: https://github.com/microsoft/monaco-editor/blob/35eb0efbc039827432002ccc17b120eb0874d70f/src/language/json/jsonWorker.ts
  */
 
+import { fetchJsonSchema } from "$lib/editor/form/utils/schema";
 import type * as monaco from "monaco-editor";
 import * as worker from "monaco-editor/esm/vs/editor/editor.worker.js";
 import * as jsonService from "vscode-json-languageservice";
@@ -26,8 +27,8 @@ self.onmessage = () => {
 
 let defaultSchemaRequestService: ((url: string) => Promise<string>) | undefined;
 if (typeof fetch !== "undefined") {
-  defaultSchemaRequestService = function (url: string) {
-    return fetch(url).then((response) => response.text());
+  defaultSchemaRequestService = async function (url: string) {
+    return await fetchJsonSchema(url);
   };
 }
 
