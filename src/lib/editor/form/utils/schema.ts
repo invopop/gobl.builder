@@ -1,5 +1,6 @@
 import type { JSONSchema7 } from "json-schema";
 import { path } from "./path.js";
+import * as GOBL from "@invopop/gobl-worker";
 
 export type Schema = JSONSchema7;
 
@@ -25,9 +26,10 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   if (schema) return schema;
 
   try {
-    const response = await fetch(id);
-    schema = await response.json();
+    const result = await GOBL.schema(id.replace('https://gobl.org/draft-0/', ''))
 
+    schema = JSON.parse(result)
+    
     SchemaRegistry[id] = schema;
 
     return schema;
