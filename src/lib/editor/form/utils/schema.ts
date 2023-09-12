@@ -13,10 +13,10 @@ const EMPTY_SCHEMA: Schema = {
   properties: {},
 };
 
-export async function fetchJsonSchema (url: string) {
-  const GOBL_URL = "https://gobl.org/draft-0/"
-  
-  const matchUrl = new RegExp(GOBL_URL, "g")
+export async function fetchJsonSchema(url: string) {
+  const GOBL_URL = "https://gobl.org/draft-0/";
+
+  const matchUrl = new RegExp(GOBL_URL, "g");
 
   const isGoblSchema = matchUrl.test(url);
 
@@ -41,7 +41,7 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   if (schema) return schema;
 
   try {
-    const result = await fetchJsonSchema(id)
+    const result = await fetchJsonSchema(id);
 
     schema = JSON.parse(result);
 
