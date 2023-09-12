@@ -8,7 +8,7 @@
   export let isEmptySchema = true;
 
   const update = async (e: CustomEvent) => {
-    await updateSchema(e.detail.value);
+    await updateSchema(e.detail);
   };
 </script>
 
