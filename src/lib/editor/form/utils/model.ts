@@ -433,7 +433,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     }
 
     if (controlType === "dictionary") {
-      return { key: `keyssss`, required: false, schema: { type: "string" } };
+      return { key: `key`, required: false, schema: { type: "string" } };
     }
   }
 

@@ -39,6 +39,9 @@
       ? 'hover:bg-red-400 hover:text-white'
       : 'hover:bg-gray-200'}"
   >
+    {#if isDestructive && needsConfirmation}
+      <span>Sure? </span>
+    {/if}
     <Icon src={buttonIcon} class="h-4 w-4 p-0.5" />
   </button>
 </Tooltip>

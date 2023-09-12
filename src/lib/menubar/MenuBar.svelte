@@ -124,8 +124,10 @@
   </div>
   <div class="flex justify-end">
     <div class="border-r-2 pr-2 mr-2">
-      <Undo on:undo />
-      <Redo on:redo />
+      {#if editorView === "code"}
+        <Undo on:undo />
+        <Redo on:redo />
+      {/if}
       <ClearEditor on:clear />
     </div>
     <div>

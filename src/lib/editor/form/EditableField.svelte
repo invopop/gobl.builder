@@ -36,9 +36,7 @@
       const pattern = new RegExp(field.schema.pattern);
       const valid = pattern.test(parsedValue as string);
 
-      if (!valid) {
-        error = `Invalid format ${field.schema.pattern}`;
-      }
+      error = valid ? "" : `Invalid format ${field.schema.pattern}`;
     }
   }
 </script>

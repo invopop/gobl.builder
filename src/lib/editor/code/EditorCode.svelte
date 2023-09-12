@@ -66,6 +66,8 @@
   }
 
   onMount(async () => {
+    undoAvailable.set(false);
+    redoAvailable.set(false);
     const monacoEditorImport = await import("monaco-editor");
     loader.config({ monaco: monacoEditorImport.default });
 
