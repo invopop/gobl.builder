@@ -8,7 +8,6 @@
   import { currentEditorSchema, jsonSchema } from "$lib/editor/stores.js";
   import AbstractField from "./AbstractField.svelte";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
-  import { onMount } from "svelte";
   import { getSchemas } from "../actions.js";
   import SchemaField from "./SchemaField.svelte";
 
@@ -19,6 +18,10 @@
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
   $: showSchemaField = isEmptySchema || !isValidSchema;
+
+  $: {
+    updateSchemaIfNeeded($schemaUrlForm || "");
+  }
 
   function handleKeyDown(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") {
@@ -32,12 +35,12 @@
     }
   }
 
-  onMount(async () => {
+  async function updateSchemaIfNeeded(formSchema: string) {
     // If editor has a fixed schema we dont need to perform any action
     if ($jsonSchema) return;
 
     // If editor schema is not the same as the form
-    if ($currentEditorSchema !== $schemaUrlForm) {
+    if ($currentEditorSchema !== formSchema) {
       const schemas = await getSchemas();
       // If is not a valid schema we dont do anything
       if (!schemas.includes($currentEditorSchema)) return;
@@ -45,7 +48,7 @@
       // Recreate visual form with editor schema
       updateSchema($currentEditorSchema);
     }
-  });
+  }
 
   export function recreateFormEditor() {
     // Forces editor watcher to fire and rebuild the model

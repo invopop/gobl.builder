@@ -18,7 +18,7 @@
   $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
   $: console.log({ hasErrors });
   let jsonSchemaURL = "";
-  let defaultSchema = "All";
+  let defaultSchema = "";
   let builder: GOBLBuilder;
   let state: State = "init";
 
@@ -42,14 +42,22 @@
 
 <div class="flex flex-col h-screen">
   <div class="flex justify-between items-center pl-4 pr-2 py-2.5 bg-gray-800">
-    <div class="flex gap-4">
+    <div class="flex gap-4 items-center">
       <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
       <DocLoader on:load={handleDocLoad} />
+      <div
+        class="w-64 flex text-sm items-center justify-center"
+        style="--height: 28px; --chevron-height: 28px; --font-size: 14px;"
+      >
+        <SelectSchemas
+          placeholder="Select required schema..."
+          allowAll
+          value={defaultSchema}
+          on:change={handleSchemaChange}
+        />
+      </div>
     </div>
-    <div class="w-96 flex text-sm items-center justify-center">
-      <span class="whitespace-nowrap mr-3 text-white">Validation Schema:</span>
-      <SelectSchemas allowAll value={defaultSchema} on:change={handleSchemaChange} />
-    </div>
+
     <div class="bg-slate-100 rounded flex space-x-3 items-center justify-center">
       <Tooltip
         label={state === "modified" || state === "loaded"
