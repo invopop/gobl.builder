@@ -22,7 +22,7 @@ export function formatErrors(error: string) {
       if (typeof value === "string") {
         errors.push(`${parentKey}${key}: ${value}`);
       } else {
-        readParsedObj(value, key);
+        readParsedObj(value, `${parentKey}${key}`);
       }
     }
   };
