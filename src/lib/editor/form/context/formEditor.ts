@@ -188,7 +188,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
   }
 
   async function updateSchema(value: string) {
-    const parsedValue = JSON.parse(get(editor).value);
+    const parsedValue = get(editor).value ? JSON.parse(get(editor).value) : {};
     parsedValue.$schema = value;
     editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() });
     schemaUrlForm.set(value);

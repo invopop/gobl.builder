@@ -36,17 +36,16 @@
   }
 
   async function updateSchemaIfNeeded(formSchema: string) {
-    // If editor has a fixed schema we dont need to perform any action
-    if ($jsonSchema) return;
-
     // If editor schema is not the same as the form
     if ($currentEditorSchema !== formSchema) {
       const schemas = await getSchemas();
+
+      const schema = $currentEditorSchema || $jsonSchema;
       // If is not a valid schema we dont do anything
-      if (!schemas.includes($currentEditorSchema)) return;
+      if (!schemas.includes(schema)) return;
 
       // Recreate visual form with editor schema
-      updateSchema($currentEditorSchema);
+      updateSchema(schema);
     }
   }
 

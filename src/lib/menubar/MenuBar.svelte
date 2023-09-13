@@ -3,7 +3,6 @@
   import { clsx } from "clsx";
   import type { SvelteComponent } from "svelte";
   import ClearEditor from "$lib/actions/ClearEditor.svelte";
-  import ExportDoc from "$lib/actions/ExportDoc.svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
   import Modal from "$lib/ui/Modal.svelte";
@@ -108,30 +107,21 @@
       <EditorViewButton
         disabled={hasSyntaxErrors}
         active={editorView === "form"}
-        label={editorView !== "form"
-          ? hasSyntaxErrors
-            ? "Resolve errors before switching to visual editor"
-            : "Swap to visual editor view"
+        label={editorView !== "form" && hasSyntaxErrors
+          ? "Resolve errors before switching to visual editor"
           : undefined}
         on:click={() => (editorView = "form")}>Visual</EditorViewButton
       >
-      <EditorViewButton
-        active={editorView === "code"}
-        label={editorView !== "code" ? "Swap to code editor view" : undefined}
-        on:click={() => (editorView = "code")}>Code</EditorViewButton
-      >
+      <EditorViewButton active={editorView === "code"} on:click={() => (editorView = "code")}>Code</EditorViewButton>
     </div>
   </div>
   <div class="flex justify-end">
-    <div class="border-r-2 pr-2 mr-2">
+    <div class="pr-2 mr-2">
       {#if editorView === "code"}
         <Undo on:undo />
         <Redo on:redo />
       {/if}
       <ClearEditor on:clear />
-    </div>
-    <div>
-      <ExportDoc on:preview on:download />
     </div>
   </div>
 </div>
@@ -140,10 +130,6 @@
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
     <Modal title={modalTitle} on:close={() => (openModal = false)}>
       <svelte:component this={modalComponent} />
-      <!-- <ExportDocContent
-        on:download={(event) => dispatch("download", event.detail)}
-        on:preview={(event) => dispatch("preview", event.detail)}
-      /> -->
     </Modal>
   </div>
 {/if}

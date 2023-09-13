@@ -20,6 +20,7 @@
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import { toast } from "@zerodevx/svelte-toast";
+  import { formatErrors } from "./helpers";
 
   const dispatch = createEventDispatcher();
 
@@ -144,9 +145,16 @@
 
     if (!editorForm) return;
 
-    state === "built"
-      ? editorForm.recreateFormEditor()
-      : toast.push(result?.error?.message || "", {
+    if (state === "built") {
+      editorForm.recreateFormEditor();
+      return;
+    }
+
+    try {
+      const errors = formatErrors(result?.error?.message || "");
+      errors.forEach((e) => {
+        toast.push(e, {
+          duration: 10000,
           reversed: true,
           intro: { y: 192 },
           theme: {
@@ -155,6 +163,19 @@
             "--toastBarBackground": "rgb(225 29 72)",
           },
         });
+      });
+    } catch (error) {
+      toast.push(result?.error?.message || "", {
+        duration: 10000,
+        reversed: true,
+        intro: { y: 192 },
+        theme: {
+          "--toastColor": "rgb(75 85 99)",
+          "--toastBackground": "rgb(255 228 230)",
+          "--toastBarBackground": "rgb(225 29 72)",
+        },
+      });
+    }
   };
 
   export const sign = async () => {
@@ -200,7 +221,7 @@
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar bind:editorView on:change on:undo on:redo on:preview on:download on:clear={handleClearEditor} />
+    <MenuBar bind:editorView on:change on:undo on:redo on:clear={handleClearEditor} />
   </div>
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">
