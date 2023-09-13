@@ -17,7 +17,6 @@
 
   function handleEdit(e: CustomEvent<SchemaValue>) {
     const value = e.detail;
-    if (!value) return;
 
     const parsedValue = parseValue(value);
     changeFieldValue(field, parsedValue);
