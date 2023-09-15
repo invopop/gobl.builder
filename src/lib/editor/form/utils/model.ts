@@ -53,8 +53,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     };
 
     if (this.is.root) {
-      const keys = this.value && (Object.entries(this.value) || [])
-      const emptyModelWithSchema = keys.length === 1 && !!this.value.$schema
+      const keys = this.value && (Object.entries(this.value) || []);
+      // eslint-disable-next-line
+      const emptyModelWithSchema = keys.length === 1 && !!(this.value as any).$schema;
 
       if (!this.value || emptyModelWithSchema) {
         const emptyValue = this.getEmptyFieldValue({ key: this.key, schema: this.schema, required: true });
