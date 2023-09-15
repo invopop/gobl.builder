@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { SchemaValue } from "$lib/editor/form/utils/schema.js";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import Tooltip from "$lib/ui/Tooltip.svelte";
   import FieldTitle from "./FieldTitle.svelte";
   import EditableField from "./EditableField.svelte";
   import EditableFieldKey from "./EditableFieldKey.svelte";
