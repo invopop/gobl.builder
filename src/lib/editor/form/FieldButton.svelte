@@ -40,7 +40,7 @@
       : 'hover:bg-gray-200'}"
   >
     {#if isDestructive && needsConfirmation}
-      <span>Sure? </span>
+      <span class="text-xs mr-1">Sure?</span>
     {/if}
     <Icon src={buttonIcon} class="h-4 w-4 p-0.5" />
   </button>

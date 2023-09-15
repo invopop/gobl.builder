@@ -38,7 +38,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     this.root = !root ? (this as UIModelRootField) : root;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const calculated = (this.schema as any).calculated || this.parent?.is.calculated;
+    const calculated = (this.schema as any)?.calculated || this.parent?.is.calculated;
 
     this.is = {
       required: !!this.key && (this.parent?.schema.required || []).includes(this.key),
@@ -52,13 +52,18 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       empty: true,
     };
 
-    if (this.is.root && !this.value) {
-      const emptyValue = this.getEmptyFieldValue({ key: this.key, schema: this.schema, required: true });
+    if (this.is.root) {
+      const keys = this.value && (Object.entries(this.value) || [])
+      const emptyModelWithSchema = keys.length === 1 && !!this.value.$schema
 
-      this.value = {
-        $schema: this.schema.$id,
-        ...emptyValue,
-      };
+      if (!this.value || emptyModelWithSchema) {
+        const emptyValue = this.getEmptyFieldValue({ key: this.key, schema: this.schema, required: true });
+
+        this.value = {
+          $schema: this.schema.$id,
+          ...emptyValue,
+        };
+      }
     }
 
     switch (this.schema.type) {
@@ -360,8 +365,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     childs = reverse ? childs.slice(0, this.index).reverse() : childs.slice(this.index + 1);
 
     for (const item of childs) {
-      if (item.is.calculated) continue;
-
       const focusableField = item.getFirstFocusableChild(reverse);
       if (focusableField) return focusableField;
     }
@@ -441,7 +444,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   getEmptyFieldValue(option: SchemaOption, nestingLevel: number = Number.POSITIVE_INFINITY): any {
     let value;
 
-    switch (option.schema.type) {
+    switch (option.schema?.type) {
       case "object": {
         const requiredFields = option.schema.required || [];
 
@@ -449,7 +452,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
           (acc, key) => {
             const schema = (option.schema.properties || {})[key] as Schema;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            if ((schema as any).calculated) return acc;
+            if ((schema as any)?.calculated) return acc;
 
             acc[key] = this.getEmptyFieldValue({ key, schema, required: true }, --nestingLevel);
             return acc;

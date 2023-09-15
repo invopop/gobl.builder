@@ -12,17 +12,15 @@
   $: label = `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 </script>
 
-<Tooltip {label} delay placement="bottom" containerClass="block w-full">
-  <div class="flex items-stretch justify-between w-full gap-2">
-    <div class="flex items-start justify-start">
-      {#if field.is.editableKey}
-        <EditableFieldKey {field} {parseKey} />
-      {:else}
-        <FieldTitle {field} />
-      {/if}
-    </div>
-    <div class="flex items-start justify-start w-[248px]">
-      <EditableField {field} {parseValue} />
-    </div>
+<div class="flex items-stretch justify-between w-full gap-2" title={label}>
+  <div class="flex items-start justify-start">
+    {#if field.is.editableKey}
+      <EditableFieldKey {field} {parseKey} />
+    {:else}
+      <FieldTitle {field} />
+    {/if}
   </div>
-</Tooltip>
+  <div class="flex items-start justify-start w-[248px]">
+    <EditableField {field} {parseValue} />
+  </div>
+</div>

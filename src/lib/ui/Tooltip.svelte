@@ -35,7 +35,7 @@
   export let containerClass = "inline-block";
   export let bgClass = "bg-gray-900";
 
-  $: delayClasses = delay ? "transition-all ease-in-out duration-300 delay-1000" : "";
+  $: delayClasses = delay ? "transition-all ease-in duration-300 delay-300" : "";
 
   let showTooltip = false;
 </script>

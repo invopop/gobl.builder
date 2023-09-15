@@ -56,7 +56,7 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="flex items-center justify-between pl-4 pr-2 py-1 bg-slate-100 text-xs">
-  <div class="flex gap-4 items-center">
+  <div class="flex gap-4 items-center flex-1">
     {#if $envelope}
       <div class="flex gap-2 text-gray-700">
         {#if $envelopeIsDraft}
@@ -102,7 +102,7 @@
       </div>
     {/if}
   </div>
-  <div class="flex justify-center">
+  <div class="flex justify-center flex-1">
     <div class="inline-flex bg-color3 border border-grey-1 rounded">
       <EditorViewButton
         disabled={hasSyntaxErrors}
@@ -115,7 +115,7 @@
       <EditorViewButton active={editorView === "code"} on:click={() => (editorView = "code")}>Code</EditorViewButton>
     </div>
   </div>
-  <div class="flex justify-end">
+  <div class="flex justify-end flex-1">
     <div class="pr-2 mr-2">
       {#if editorView === "code"}
         <Undo on:undo />

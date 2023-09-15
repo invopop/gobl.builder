@@ -126,7 +126,7 @@
 <div
   role="button"
   tabindex="0"
-  class="relative rounded expanded-area"
+  class="relative rounded expanded-area cursor-default"
   use:hover
   on:hover={handleHover}
   on:keydown={handleKeyDown}
