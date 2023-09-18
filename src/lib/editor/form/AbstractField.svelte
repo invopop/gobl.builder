@@ -10,6 +10,7 @@
   import { getFormEditorContext } from "./context/formEditor.js";
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
+  import BooleanField from "./BooleanField.svelte";
 
   export let field: UIModelField;
 
@@ -18,6 +19,7 @@
     array: ArrayField as typeof SvelteComponent,
     string: StringField as typeof SvelteComponent,
     integer: IntegerField as typeof SvelteComponent,
+    boolean: BooleanField as typeof SvelteComponent,
   };
 
   let showAddMenu = false;

@@ -6,6 +6,7 @@
   import EditableTextField from "./EditableTextField.svelte";
   import EditableDateField from "./EditableDateField.svelte";
   import FieldError from "./FieldError.svelte";
+  import EditableBooleanField from "./EditableBooleanField.svelte";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
@@ -45,6 +46,8 @@
     <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
     <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
+  {:else if field.type === "boolean"}
+    <EditableBooleanField {field} on:edit={handleEdit} />
   {:else}
     <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {/if}

@@ -12,14 +12,14 @@
 </script>
 
 <div class="flex items-stretch justify-between w-full gap-2" title={label}>
-  <div class="flex items-start justify-start">
+  <div class="flex items-center justify-start">
     {#if field.is.editableKey}
       <EditableFieldKey {field} {parseKey} />
     {:else}
       <FieldTitle {field} />
     {/if}
   </div>
-  <div class="flex items-start justify-start w-[248px]">
+  <div class="flex items-center justify-start w-[248px]">
     <EditableField {field} {parseValue} />
   </div>
 </div>
