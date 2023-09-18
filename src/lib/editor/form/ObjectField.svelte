@@ -8,6 +8,7 @@
   export let field: UIModelField;
   let open = true; // field.level >= 2;
   $: children = field.children || ([] as UIModelField[]);
+  $: label = `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 
   function handleExpandChange() {
     open = !open;
@@ -28,7 +29,7 @@
 {#if field.is.root}
   <RootField {...props} />
 {:else}
-  <div id={field.id}>
+  <div id={field.id} title={label}>
     <button class="flex items-center justify-start cursor-pointer h-8" on:click={handleExpandChange}>
       <FieldTitle {field} />
       <ExpandButton {open} />
