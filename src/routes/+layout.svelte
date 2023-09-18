@@ -3,8 +3,11 @@
   import { SvelteToast } from "@zerodevx/svelte-toast";
 </script>
 
-<slot />
+<svelte:head>
+  <script defer data-domain="build.gobl.org" src="https://plausible.io/js/script.js"></script>
+</svelte:head>
 
+<slot />
 <SvelteToast />
 
 <style>
