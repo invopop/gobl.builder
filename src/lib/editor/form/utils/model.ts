@@ -517,7 +517,7 @@ export type ControlType = "text" | "select" | "date" | "dictionary";
 export type SchemaOption = {
   key: string;
   required: boolean;
-  schema: Schema & { calculated?: boolean};
+  schema: Schema & { calculated?: boolean };
 };
 
 export type UIModelFieldFlags = {

@@ -147,7 +147,10 @@
       {:else}
         <li>
           <span class="emptyFilter">
-            No items found matching filter: <strong>"{filterStr}"</strong>
+            <span>No items found</span>
+            {#if filterStr}
+              <span>matching filter: <strong>"{filterStr}"</strong></span>
+            {/if}
           </span>
         </li>
       {/if}
