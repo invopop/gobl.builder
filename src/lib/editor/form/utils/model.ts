@@ -100,8 +100,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
                   required: ((this.schema as Schema).required || []).includes(key),
                   schema: subSchema as Schema,
                 }))
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((opt) => !(opt.schema as any).calculated)
                 .filter((opt) => (this.value as Record<string, unknown>)?.[opt.key] === undefined);
 
         break;
@@ -519,7 +517,7 @@ export type ControlType = "text" | "select" | "date" | "dictionary";
 export type SchemaOption = {
   key: string;
   required: boolean;
-  schema: Schema;
+  schema: Schema & { calculated?: boolean};
 };
 
 export type UIModelFieldFlags = {

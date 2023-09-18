@@ -27,11 +27,14 @@
         return foundInKey || foundInTitle;
       })
       .sort((a, b) => {
-        if ((a.required && b.required) || (!a.required && !b.required)) {
+        const aRequired = a.required && !a.schema.calculated;
+        const bRequired = b.required && !b.schema.calculated;
+
+        if ((aRequired && bRequired) || (!aRequired && !bRequired)) {
           return 0;
         }
 
-        return a.required ? -1 : 1;
+        return aRequired ? -1 : 1;
       });
   }
 
@@ -126,9 +129,16 @@
               on:click|stopPropagation={() => handleAddField(field, opt)}
             >
               <div class="mb-1 text-grey-4 font-medium" class:font-bold={opt.required} class:text-black={opt.required}>
-                {opt.schema.title || opt.key}
+                <span>{opt.schema.title || opt.key}</span>
+                {#if opt.schema.calculated}
+                  <span class="text-xs text-gray-700">(Calculated)</span>
+                {/if}
               </div>
-              <div class="text-grey-5 text-md" class:font-bold={opt.required} class:text-black={opt.required}>
+              <div
+                class="text-grey-5 text-md"
+                class:font-bold={opt.required && !opt.schema.calculated}
+                class:text-black={opt.required}
+              >
                 {opt.schema.description}
               </div>
             </button>
