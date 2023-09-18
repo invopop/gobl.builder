@@ -1,15 +1,14 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { SvelteComponent } from "svelte";
-
   import { envelope } from "$lib/editor/stores.js";
   import Modal from "$lib/ui/Modal.svelte";
   import ExportDocContent from "./ExportDocContent.svelte";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
-  import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
   const dispatch = createEventDispatcher();
+
+  let openModal = false;
 
   $: envelopeExists = Boolean($envelope);
 
@@ -18,25 +17,7 @@
       return;
     }
 
-    const modal = new Modal({
-      target: document.body,
-      props: {
-        title: "Export document",
-        content: ExportDocContent as typeof SvelteComponent,
-      },
-    });
-    const backdrop = new ModalBackdrop({
-      target: document.body,
-    });
-
-    function handleClose() {
-      modal.$destroy();
-      backdrop.$destroy();
-    }
-
-    modal.$on("close", handleClose);
-    modal.$on("preview", (event) => dispatch("preview", event.detail));
-    modal.$on("download", (event) => dispatch("download", event.detail));
+    openModal = true;
   }
 </script>
 
@@ -51,3 +32,14 @@
     </svg>
   </button>
 </Tooltip>
+{#if openModal}
+  <div>
+    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
+    <Modal title="Export document" on:close={() => (openModal = false)}>
+      <ExportDocContent
+        on:download={(event) => dispatch("download", event.detail)}
+        on:preview={(event) => dispatch("preview", event.detail)}
+      />
+    </Modal>
+  </div>
+{/if}

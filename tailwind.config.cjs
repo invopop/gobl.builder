@@ -15,6 +15,17 @@ module.exports = {
         "monospace",
       ],
     },
+    extend: {
+      colors: {
+        grey: {
+          1: "#EFEFEF",
+          2: "#DBDBDB",
+          3: "#B9B9B7",
+          4: "#373530",
+          5: "#787774",
+        },
+      },
+    },
   },
   plugins: [
     require("@tailwindcss/forms")({

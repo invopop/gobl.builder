@@ -1,54 +1,22 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
-  import type { SvelteComponent } from "svelte";
-
   import Modal from "$lib/ui/Modal.svelte";
-  import ModalBackdrop from "$lib/ui/ModalBackdrop.svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
   import { createEventDispatcher } from "svelte";
   import Tooltip from "$lib/ui/Tooltip.svelte";
 
   const dispatch = createEventDispatcher();
 
-  onMount(() => {
-    // eslint-disable-next-line no-undef
-    document.addEventListener("docLoaded", handleDocLoaded as EventListener, true);
-  });
-
-  onDestroy(() => {
-    // eslint-disable-next-line no-undef
-    document.removeEventListener("docLoaded", handleDocLoaded as EventListener, true);
-  });
+  let openModal = false;
 
   function handleDocLoaded(event: CustomEvent<string>): void {
     dispatch("load", event.detail);
-  }
-
-  function handleLoadClick() {
-    const modal = new Modal({
-      target: document.body,
-      props: {
-        title: "Load document",
-        content: DocLoaderContent as typeof SvelteComponent,
-      },
-    });
-    const backdrop = new ModalBackdrop({
-      target: document.body,
-    });
-
-    function handleClose() {
-      modal.$destroy();
-      backdrop.$destroy();
-    }
-
-    modal.$on("close", handleClose);
   }
 </script>
 
 <Tooltip label="Load a GOBL document from a template, file upload or your library.">
   <button
     class="font-medium text-white bg-sky-600 hover:bg-sky-500 text-xs px-4 py-2 rounded-md inline-flex items-center"
-    on:click={handleLoadClick}
+    on:click={() => (openModal = true)}
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -68,3 +36,11 @@
     Load document…
   </button>
 </Tooltip>
+{#if openModal}
+  <div>
+    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
+    <Modal title="Load document" on:close={() => (openModal = false)}>
+      <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
+    </Modal>
+  </div>
+{/if}

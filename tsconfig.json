@@ -9,6 +9,7 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "types": ["node"]
   }
 }

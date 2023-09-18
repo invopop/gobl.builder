@@ -121,12 +121,17 @@ export async function validate() {
   }
 }
 
+export async function getSchemas() {
+  const schemas = await GOBL.schemas();
+  return JSON.parse(schemas).list;
+}
+
 function getGOBLPayload() {
   const editorValue = get(editor);
   const envelopeValue = get(envelope);
-  const doc = JSON.parse(editorValue || "");
+  const doc = JSON.parse(editorValue.value || "");
   if (doc.$schema == envelopeGOBLSchema) {
-    return editorValue || ""; // send as-is
+    return editorValue.value || ""; // send as-is
   }
   envelopeValue.doc = doc;
 

@@ -7,16 +7,9 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import {
-    editor,
-    goblError,
-    redoAvailable,
-    undoAvailable,
-    envelope,
-    envelopeDocumentJSON,
-  } from "$lib/editor/stores.js";
-  import { editorProblems as problems } from "./stores.js";
-  import EditorProblem from "./EditorProblem.svelte";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import { editorProblems as problems } from "../stores.js";
+  import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
@@ -37,8 +30,6 @@
   let unsubscribeEditor: Unsubscriber;
 
   const goblDocURL = "gobl://doc.json";
-
-  $: editor.set(envelopeDocumentJSON($envelope));
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -75,6 +66,8 @@
   }
 
   onMount(async () => {
+    undoAvailable.set(false);
+    redoAvailable.set(false);
     const monacoEditorImport = await import("monaco-editor");
     loader.config({ monaco: monacoEditorImport.default });
 
@@ -132,7 +125,7 @@
       ]);
     });
 
-    unsubscribeEditor = editor.subscribe((value) => {
+    unsubscribeEditor = editor.subscribe(({ value }) => {
       // To keep undo/redo in the editor working, only overwrite the model
       // contents when the current editor model value isn't the same as the new
       // store value.
@@ -152,7 +145,7 @@
 
     monacoEditor.onDidChangeModelContent(() => {
       const value = monacoEditor.getValue();
-      editor.set(value);
+      editor.set({ value, updatedAt: Date.now() });
 
       const versionId = model.getAlternativeVersionId();
       if (versionId < currentVersion) {
@@ -338,14 +331,14 @@
       class="flex-none h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800"
       transition:slide={{ duration: 300 }}
     >
-      {#if $editor === ""}
+      {#if $editor.value === ""}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
             >Warnings, errors and tips are shown in this area.</span
           >
         </p>
       {/if}
-      {#if $editor !== "" && $problems.length === 0}
+      {#if $editor.value !== "" && $problems.length === 0}
         <p class="m-4">
           <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
             >Use the action buttons in the menu bar.</span
@@ -354,10 +347,10 @@
       {/if}
       <ul>
         {#each sortedProblems as problem}
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700" on:click={handleProblemClick(problem)}>
-            <EditorProblem {problem} />
+          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
+            <button on:click={handleProblemClick(problem)}>
+              <EditorProblem {problem} />
+            </button>
           </li>
         {/each}
       </ul>
