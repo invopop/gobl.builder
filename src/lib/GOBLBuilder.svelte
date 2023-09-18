@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { SvelteToast } from "@zerodevx/svelte-toast";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
   import {
@@ -237,3 +238,14 @@
     </div>
   </div>
 </div>
+
+<SvelteToast />
+
+<style>
+  :root {
+    --toastContainerTop: auto;
+    --toastContainerRight: auto;
+    --toastContainerBottom: 2rem;
+    --toastContainerLeft: calc(100vw - 18rem);
+  }
+</style>

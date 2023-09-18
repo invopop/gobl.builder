@@ -24,15 +24,13 @@
   let addMenuRef: HTMLElement;
   let isHover = false;
   let isFocus = false;
+  let contextMenuOffset = 0;
 
   $: showContextMenu = isHover || isFocus;
-  $: addMenu = showAddMenu && !field.is.complete;
-
-  $: {
-    if (addMenuRef) {
-      addMenuRef.scrollIntoView({ behavior: "auto", block: "center" });
-      addMenuRef.focus();
-    }
+  $: if (showAddMenu && addMenuRef) {
+    const { height, top } = addMenuRef.getBoundingClientRect();
+    const offset = top + height - window.innerHeight;
+    contextMenuOffset = offset > 0 ? offset : 0;
   }
 
   const { addField, tryFocusField } = getFormEditorContext() || {};
@@ -55,8 +53,6 @@
   }
 
   function handleAddField() {
-    if (field.is.complete) return;
-
     showAddMenu = false;
 
     // @note: Add field directly instead of showing the dropdown option list
@@ -142,9 +138,13 @@
         <FieldContextMenu {field} on:addField={handleAddField} />
       </span>
     </div>
-    {#if addMenu}
-      <div class="absolute top-10 left-0 w-64">
-        <AddFieldMenu {field} bind:inputRef={addMenuRef} on:closeAddFieldMenu={handleAddFieldMenuClose} />
+    {#if showAddMenu}
+      <div
+        class="absolute top-10 left-0 w-64 z-20"
+        style={`margin-top: -${contextMenuOffset}px`}
+        bind:this={addMenuRef}
+      >
+        <AddFieldMenu {field} on:closeAddFieldMenu={handleAddFieldMenuClose} />
       </div>
     {/if}
   </div>
