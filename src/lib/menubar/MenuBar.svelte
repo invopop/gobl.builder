@@ -2,7 +2,6 @@
   import * as monaco from "monaco-editor";
   import { clsx } from "clsx";
   import type { SvelteComponent } from "svelte";
-  import ClearEditor from "$lib/actions/ClearEditor.svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
   import Modal from "$lib/ui/Modal.svelte";
@@ -121,7 +120,6 @@
         <Undo on:undo />
         <Redo on:redo />
       {/if}
-      <ClearEditor on:clear />
     </div>
   </div>
 </div>

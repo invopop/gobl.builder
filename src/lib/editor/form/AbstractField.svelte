@@ -11,6 +11,7 @@
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
+  import { envelopeIsSigned } from "../stores";
 
   export let field: UIModelField;
 
@@ -28,7 +29,7 @@
   let isFocus = false;
   let contextMenuOffset = 0;
 
-  $: showContextMenu = isHover || isFocus;
+  $: showContextMenu = !$envelopeIsSigned && (isHover || isFocus);
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
     const offset = top + height - window.innerHeight;
@@ -136,7 +137,7 @@
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
-      <span class:invisible={!field.is.root && !showContextMenu}>
+      <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
         <FieldContextMenu {field} on:addField={handleAddField} />
       </span>
     </div>

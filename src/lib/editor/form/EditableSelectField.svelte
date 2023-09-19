@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let field: UIModelField<string>;
-  export let options: { key: string; value: string }[];
+  export let options: { key: string; value: string | boolean }[];
   export let showError = false;
 
   const dispatch = createEventDispatcher();

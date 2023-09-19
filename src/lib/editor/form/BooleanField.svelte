@@ -11,8 +11,8 @@
   $: props = $$props as PropsInterface;
 
   function handleParseValue(value: SchemaValue): boolean {
-    const b = Boolean(value);
-    return b;
+    // Cast string emitted by select as boolean
+    return value == "true";
   }
 </script>
 
