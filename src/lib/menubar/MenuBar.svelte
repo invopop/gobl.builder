@@ -8,7 +8,6 @@
   import { envelope, envelopeIsDraft, envelopeIsSigned, editorProblems } from "$lib/editor/stores.js";
   import EnvelopeHeader from "./EnvelopeHeader.svelte";
   import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
-  import Tooltip from "$lib/ui/Tooltip.svelte";
   import EditorViewButton from "$lib/ui/EditorViewButton.svelte";
 
   export let editorView: string;
@@ -85,19 +84,16 @@
         {/if}
       </div>
       <div class="border-l-2 pl-4 py-2">
-        <Tooltip label="View the header of the built document.">
-          <button on:click={handleHeaderClick}>Header</button>
-        </Tooltip>
+        <button title="View the header of the built document." on:click={handleHeaderClick}>Header</button>
       </div>
       <div>
-        <Tooltip label={envelopeTooltip}>
-          <button
-            class={clsx({
-              "cursor-not-allowed text-gray-500": !$envelopeIsSigned,
-            })}
-            on:click={handleSigsClick}>Signatures</button
-          >
-        </Tooltip>
+        <button
+          title={envelopeTooltip}
+          class={clsx({
+            "cursor-not-allowed text-gray-500": !$envelopeIsSigned,
+          })}
+          on:click={handleSigsClick}>Signatures</button
+        >
       </div>
     {/if}
   </div>
