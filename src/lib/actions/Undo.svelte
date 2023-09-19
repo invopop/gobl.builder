@@ -3,7 +3,6 @@
 
   import { undoAvailable } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
-  import Tooltip from "$lib/ui/Tooltip.svelte";
   import UndoIcon from "$lib/ui/icons/UndoIcon.svelte";
 
   const dispatch = createEventDispatcher();
@@ -14,8 +13,10 @@
   }
 </script>
 
-<Tooltip label="Undo the last change in the editor.">
-  <button on:click={handleUndo} class={iconButtonClasses($undoAvailable === false)}>
-    <UndoIcon />
-  </button>
-</Tooltip>
+<button
+  title="Undo the last change in the editor."
+  on:click={handleUndo}
+  class={iconButtonClasses($undoAvailable === false)}
+>
+  <UndoIcon />
+</button>

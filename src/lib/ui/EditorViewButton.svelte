@@ -1,6 +1,5 @@
 <script lang="ts">
   import { clsx } from "clsx";
-  import Tooltip from "$lib/ui/Tooltip.svelte";
 
   export let active = false;
   export let disabled = false;
@@ -17,8 +16,10 @@
   }
 </script>
 
-<Tooltip containerClass="block" {label}>
-  <button {disabled} class:cursor-not-allowed={disabled} on:click class={editorViewButtonClasses(active, right)}
-    ><slot /></button
-  >
-</Tooltip>
+<button
+  title={label}
+  {disabled}
+  class:cursor-not-allowed={disabled}
+  on:click
+  class={editorViewButtonClasses(active, right)}><slot /></button
+>
