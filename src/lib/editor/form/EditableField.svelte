@@ -45,6 +45,17 @@
     <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
     <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
+  {:else if field.type === "boolean"}
+    <EditableSelectField
+      {field}
+      {showError}
+      options={[
+        { key: "Yes", value: true },
+        { key: "No", value: false },
+      ]}
+      on:edit={handleEdit}
+      on:blur={validateField}
+    />
   {:else}
     <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {/if}

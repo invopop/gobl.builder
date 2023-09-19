@@ -143,9 +143,6 @@
       on:redo={() => {
         console.log("User clicked `Redo`.");
       }}
-      on:clear={() => {
-        console.log("User cleared editor.");
-      }}
       on:build={(event) => {
         console.log("Received build result.", event.detail);
       }}

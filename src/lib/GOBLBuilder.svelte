@@ -127,12 +127,6 @@
     state = $envelope?.sigs ? "signed" : "loaded";
   };
 
-  const handleClearEditor = () => {
-    dispatch("clear");
-
-    recreateVisualEditor();
-  };
-
   // Exposed functions to perform the actions from outside
   export const build = async () => {
     const result = await actions.build();
@@ -222,7 +216,7 @@
 
 <div class="flex flex-col h-full editor">
   <div class="flex-none">
-    <MenuBar bind:editorView on:change on:undo on:redo on:clear={handleClearEditor} />
+    <MenuBar bind:editorView on:change on:undo on:redo />
   </div>
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { UIModelField, UIModelRootField } from "$lib/editor/form/utils/model.js";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
+  import { envelopeIsSigned } from "../stores";
   import AbstractField from "./AbstractField.svelte";
   import FieldTitle from "./FieldTitle.svelte";
   import RootField from "./RootField.svelte";
@@ -8,7 +9,9 @@
   export let field: UIModelField;
   let open = true; // field.level >= 2;
   $: children = field.children || ([] as UIModelField[]);
-  $: label = `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
+  $: label = $envelopeIsSigned
+    ? "Document is signed and can not be edited"
+    : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 
   function handleExpandChange() {
     open = !open;
