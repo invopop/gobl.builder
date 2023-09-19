@@ -26,7 +26,7 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="text-ellipsis outline-none w-full rounded border h-8 py-1.5 pl-2 pr-8 text-gray-700 appearance-none focus:border-gray-400 cursor-pointer"
+  class="text-ellipsis outline-none w-full rounded border h-8 py-1.5 pl-2 pr-8 text-gray-700 appearance-none focus:border-gray-400 cursor-pointer custom-select"
   class:border-rose-500={showError}
   class:bg-slate-50={field.is.calculated}
   class:border-slate-100={field.is.calculated}
@@ -38,17 +38,17 @@
 </select>
 
 <style lang="postcss">
-  select {
+  .custom-select {
     /* icon */
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxNiAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aAogICAgZD0iTTggOS40Mzc1TDguNjg3NSA4LjcxODc1TDE0LjY4NzUgMi43MTg3NUwxNS40MDYyIDJMMTQgMC41OTM3NUwxMy4yODEyIDEuMzEyNUw4IDYuNTkzNzVMMi42ODc1IDEuMzEyNUwyIDAuNTkzNzVMMC41NjI1IDJMMS4yODEyNSAyLjcxODc1TDcuMjgxMjUgOC43MTg3NUw4IDkuNDM3NVoiCiAgICBmaWxsPSJibGFjayIgLz4KPC9zdmc+");
-    background-repeat: no-repeat;
-    background-position: center right -1.3rem;
-    background-origin: content-box;
-    background-size: 0.8em;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxNiAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aAogICAgZD0iTTggOS40Mzc1TDguNjg3NSA4LjcxODc1TDE0LjY4NzUgMi43MTg3NUwxNS40MDYyIDJMMTQgMC41OTM3NUwxMy4yODEyIDEuMzEyNUw4IDYuNTkzNzVMMi42ODc1IDEuMzEyNUwyIDAuNTkzNzVMMC41NjI1IDJMMS4yODEyNSAyLjcxODc1TDcuMjgxMjUgOC43MTg3NUw4IDkuNDM3NVoiCiAgICBmaWxsPSJibGFjayIgLz4KPC9zdmc+") !important;
+    background-repeat: no-repeat !important;
+    background-position: center right -1.3rem !important;
+    background-origin: content-box !important;
+    background-size: 0.8em !important;
   }
 
   /* Remove default arrow IE*/
-  select::-ms-expand {
+  .custom-select::-ms-expand {
     display: none;
   }
 </style>
