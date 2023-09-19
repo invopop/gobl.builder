@@ -1,6 +1,5 @@
 <script lang="ts">
   import * as monaco from "monaco-editor";
-  import { clsx } from "clsx";
   import type { SvelteComponent } from "svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
