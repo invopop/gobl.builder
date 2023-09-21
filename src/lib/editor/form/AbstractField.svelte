@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SvelteComponent } from "svelte";
+  import { createEventDispatcher, type SvelteComponent } from "svelte";
   import ObjectField from "./ObjectField.svelte";
   import ArrayField from "./ArrayField.svelte";
   import StringField from "./StringField.svelte";
@@ -7,11 +7,12 @@
   import FieldContextMenu from "./FieldContextMenu.svelte";
   import hover from "./action/hover.js";
   import IntegerField from "./IntegerField.svelte";
-  import { getFormEditorContext } from "./context/formEditor.js";
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
+
+  const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
 
@@ -35,8 +36,6 @@
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
-
-  const { addField, tryFocusField } = getFormEditorContext() || {};
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -62,25 +61,24 @@
     if (field.type === "array" || field.controlType === "dictionary") {
       const [childOption] = field.options || [];
 
-      addField(field, childOption);
+      const newField = field.addChildField(childOption);
+      newField?.tryFocus();
+      dispatch("fieldAdded", newField);
+
       return;
     }
 
     showAddMenu = true;
   }
 
-  function handleAddFieldMenuClose() {
-    showAddMenu = false;
-  }
-
   function focusNextField(nextField = field.getNextFocusableField()) {
     if (!nextField) return;
-    tryFocusField(nextField, 5, 0);
+    nextField.tryFocus(5, 0);
   }
 
   function focusPrevField(prevField = field.getPrevFocusableField()) {
     if (!prevField) return;
-    tryFocusField(prevField, 5, 0);
+    prevField.tryFocus(5, 0);
   }
 
   function handleKeyDown(e: KeyboardEvent) {
@@ -133,12 +131,29 @@
   on:focusout={handleFocusOut}
 >
   <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
-    <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
+    <svelte:component
+      this={componentsMap[field.type] || FallbackField}
+      {field}
+      on:fieldAdded
+      on:fieldDeleted
+      on:fieldDuplicated
+      on:fieldMoved
+      on:fieldValueUpdated
+      on:fieldKeyUpdated
+    />
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
       <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu {field} on:addField={handleAddField} />
+        <FieldContextMenu
+          {field}
+          on:addField={handleAddField}
+          on:fieldDeleted
+          on:fieldDuplicated
+          on:fieldMoved
+          on:fieldValueUpdated
+          on:fieldKeyUpdated
+        />
       </span>
     </div>
     {#if showAddMenu}
@@ -147,7 +162,7 @@
         style={`margin-top: -${contextMenuOffset}px`}
         bind:this={addMenuRef}
       >
-        <AddFieldMenu {field} on:closeAddFieldMenu={handleAddFieldMenuClose} />
+        <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
       </div>
     {/if}
   </div>

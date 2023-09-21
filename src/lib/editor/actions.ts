@@ -121,6 +121,74 @@ export async function validate() {
   }
 }
 
+// Send a request to the GOBL worker to get the adecuate correction fields using
+// editor window contents to read the tax regime.
+export async function getCorrectionOptionsSchema() {
+  if (!get(validEditor)) {
+    return;
+  }
+
+  try {
+    const sendData = getGOBLPayload();
+
+    const payload: GOBL.CorrectPayload = {
+      data: encodeUTF8ToBase64(sendData),
+      schema: true,
+    };
+
+    const schema = await GOBL.correct({ payload });
+
+    goblError.set(null);
+
+    return { schema };
+  } catch (e) {
+    const goblErr = GOBL.parseGOBLError(e);
+    goblError.set(goblErr);
+
+    return {
+      schema: null,
+      error: goblErr,
+    };
+  }
+}
+
+// Send a request to the GOBL worker to run the "correct" operation using the current
+// editor window contents and update with the results.
+export async function correct(options: string) {
+  if (!get(validEditor)) {
+    return;
+  }
+
+  try {
+    const sendData = getGOBLPayload();
+
+    const payload: GOBL.CorrectPayload = {
+      data: encodeUTF8ToBase64(sendData),
+      options: encodeUTF8ToBase64(options),
+    };
+
+    const rawResult = await GOBL.correct({ payload });
+    const result = JSON.parse(rawResult);
+
+    envelope.set(result);
+    goblError.set(null);
+
+    createNotification({
+      severity: Severity.Success,
+      message: "Document successfully corrected.",
+    });
+
+    return { result };
+  } catch (e) {
+    const goblErr = GOBL.parseGOBLError(e);
+    goblError.set(goblErr);
+
+    return {
+      error: goblErr,
+    };
+  }
+}
+
 export async function getSchemas() {
   const schemas = await GOBL.schemas();
   return JSON.parse(schemas).list;

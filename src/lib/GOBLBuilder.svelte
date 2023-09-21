@@ -20,8 +20,10 @@
   import * as actions from "./editor/actions";
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
-  import { toast } from "@zerodevx/svelte-toast";
-  import { formatErrors } from "./helpers";
+  import { displayAllErrors } from "./helpers";
+  import Modal from "./ui/Modal.svelte";
+  import DynamicForm from "./editor/form/DynamicForm.svelte";
+  import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
 
   const dispatch = createEventDispatcher();
 
@@ -55,6 +57,8 @@
   export let signEnabled = true;
 
   let editorForm: EditorForm | null = null;
+  let openModal = false;
+  let correctionModel: UIModelField | undefined;
 
   // Whether shows the code or the form editor
   let editorView = localStorage.getItem("editor-view") || "code";
@@ -145,32 +149,38 @@
       return;
     }
 
-    try {
-      const errors = formatErrors(result?.error?.message || "");
-      errors.forEach((e) => {
-        toast.push(e, {
-          duration: 10000,
-          reversed: true,
-          intro: { y: 192 },
-          theme: {
-            "--toastColor": "rgb(75 85 99)",
-            "--toastBackground": "rgb(255 228 230)",
-            "--toastBarBackground": "rgb(225 29 72)",
-          },
-        });
-      });
-    } catch (error) {
-      toast.push(result?.error?.message || "", {
-        duration: 10000,
-        reversed: true,
-        intro: { y: 192 },
-        theme: {
-          "--toastColor": "rgb(75 85 99)",
-          "--toastBackground": "rgb(255 228 230)",
-          "--toastBarBackground": "rgb(225 29 72)",
-        },
-      });
+    displayAllErrors(result?.error?.message || "");
+  };
+
+  export const correct = async () => {
+    const result = await actions.getCorrectionOptionsSchema();
+
+    if (result?.error) {
+      state = "errored";
+      displayAllErrors(result?.error?.message || "");
+      return;
     }
+
+    correctionModel = await generateCorrectOptionsModel(result?.schema || "");
+    openModal = true;
+  };
+
+  export const correctWithOtions = async (options: string) => {
+    const result = await actions.correct(options);
+
+    if (result?.error) {
+      state = "errored";
+      displayAllErrors(result?.error?.message || "");
+      return;
+    }
+
+    openModal = false;
+
+    state = "corrected";
+
+    if (!editorForm) return;
+
+    editorForm.recreateFormEditor();
   };
 
   export const sign = async () => {
@@ -232,6 +242,19 @@
     </div>
   </div>
 </div>
+
+{#if openModal}
+  <div>
+    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
+    <Modal title="Correction Options" on:close={() => (openModal = false)}>
+      <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
+      <button
+        class="border border-black px-6 py-3"
+        on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}>Correct</button
+      >
+    </Modal>
+  </div>
+{/if}
 
 <SvelteToast />
 

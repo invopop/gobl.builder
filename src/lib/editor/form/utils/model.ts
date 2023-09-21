@@ -1,4 +1,17 @@
-import { getRootSchema, type Schema, type SchemaValue } from "./schema.js";
+import { tick } from "svelte";
+import { getRootSchema, parseSchema, type Schema, type SchemaValue } from "./schema.js";
+import { sleep } from "./sleep.js";
+
+export async function generateCorrectOptionsModel(schema: string) {
+  const schemaObj = JSON.parse(schema);
+  const options = schemaObj.$defs.CorrectionOptions;
+  const parsedSchema = await parseSchema(schemaObj.$id, options);
+
+  const CORRECTION_OPTIONS_SCHEMA_URL = "https://gobl.org/draft-0/bill/correction-options?tax_regime=";
+  parsedSchema.title = `Correction Options [${parsedSchema.$id?.replace(CORRECTION_OPTIONS_SCHEMA_URL, "")}]`;
+
+  return getUIModel(parsedSchema as Schema, "");
+}
 
 export async function getUIModel<V extends SchemaValue>(
   schema: Schema | string,
@@ -353,6 +366,25 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return this.parent.type === "array" ? sortedChilds[position].id : this.id;
   }
 
+  move(direction: "up" | "down") {
+    const swapPositions = (array: UIModelField[], a: number, b: number) => {
+      array[a].key = String(b);
+      array[b].key = String(a);
+      [array[a], array[b]] = [array[b], array[a]];
+    };
+
+    const children = this.parent?.children || [];
+
+    const factor = direction === "down" ? 1 : -1;
+
+    const currentKey = Number(this.key);
+    const destinationKey = currentKey + factor;
+
+    if (destinationKey < 0 || destinationKey >= children.length) return;
+
+    swapPositions(children, currentKey, destinationKey);
+  }
+
   getNextFocusableField(reverse = false): UIModelField | undefined {
     if (this.is.root) {
       return this.getFirstFocusableChild(reverse);
@@ -394,6 +426,32 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
   getLastFocusableChild(): UIModelField | undefined {
     return this.getFirstFocusableChild(true);
+  }
+
+  async tryFocus(retries = 5, delay = 200): Promise<boolean> {
+    await tick();
+
+    while (--retries > 0) {
+      await sleep(delay);
+
+      const el = this.getFocusableElement();
+      if (!el) continue;
+
+      el.scrollIntoView({ behavior: "auto", block: "center" });
+      el.focus();
+
+      return true;
+    }
+
+    return false;
+  }
+
+  getFocusableElement(): HTMLElement | undefined {
+    if (this.isContainer()) {
+      return document.querySelector(`#${this.id} > .add-field-button`) as HTMLElement;
+    } else {
+      return document.querySelector(`#${this.id}`) as HTMLElement;
+    }
   }
 
   getControlType(schema: Schema = this.schema): ControlType | undefined {
@@ -482,10 +540,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         value = 0;
         break;
       }
-      case "boolean": {
-        value = true;
-        break;
-      }
     }
 
     // @note: Override default values of specific form control types
@@ -494,11 +548,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     switch (controlType) {
       case "date": {
         value = new Date().toISOString().split("T")[0];
-        break;
-      }
-      case "select": {
-        const [firstOption] = this.getControlMeta(option.schema) as { key: string; value: string }[];
-        value = firstOption.value;
         break;
       }
       case "dictionary": {

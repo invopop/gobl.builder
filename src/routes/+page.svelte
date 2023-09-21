@@ -7,6 +7,7 @@
   import type { State } from "$lib/types/editor";
   import SelectSchemas from "$lib/SelectSchemas.svelte";
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
+  import CorrectIcon from "$lib/ui/icons/CorrectIcon.svelte";
 
   interface GOBLDocument {
     $schema: string;
@@ -75,6 +76,15 @@
             clip-rule="evenodd"
           />
         </svg>
+      </button>
+      <button
+        title="Correct document."
+        on:click={() => {
+          builder.correct();
+        }}
+        class={iconButtonClasses(!["built", "loaded", "signed"].includes(state))}
+      >
+        <CorrectIcon />
       </button>
       <button
         title="Sign document."

@@ -15,10 +15,10 @@ const EMPTY_SCHEMA: Schema = {
 
 export async function fetchJsonSchema(url: string) {
   const GOBL_URL = "https://gobl.org/draft-0/";
+  // We only support loading json from the worker without ?query=modifiers
+  const GOBL_URL_REGEX = /^https:\/\/gobl\.org\/draft-0\/[^?]*$/;
 
-  const matchUrl = new RegExp(GOBL_URL, "g");
-
-  const isGoblSchema = matchUrl.test(url);
+  const isGoblSchema = GOBL_URL_REGEX.test(url);
 
   if (isGoblSchema) {
     return await GOBL.schema(url.replace(GOBL_URL, ""));
@@ -66,7 +66,7 @@ async function fetchSchema(id: string): Promise<Schema> {
   return schema;
 }
 
-async function parseSchema(id: string, schema: Schema): Promise<Schema> {
+export async function parseSchema(id: string, schema: Schema): Promise<Schema> {
   const pSchema = { ...schema, $id: id };
   delete pSchema.$ref;
   delete pSchema.$defs;

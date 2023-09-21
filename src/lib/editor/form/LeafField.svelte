@@ -17,12 +17,12 @@
 <div class="flex items-stretch justify-between w-full gap-2" title={label}>
   <div class:pointer-events-none={$envelopeIsSigned} class="flex items-center justify-start">
     {#if field.is.editableKey}
-      <EditableFieldKey {field} {parseKey} />
+      <EditableFieldKey {field} {parseKey} on:fieldKeyUpdated />
     {:else}
       <FieldTitle {field} />
     {/if}
   </div>
   <div class:pointer-events-none={$envelopeIsSigned} class="flex items-center justify-start w-[248px]">
-    <EditableField {field} {parseValue} />
+    <EditableField {field} {parseValue} on:fieldValueUpdated on:fieldKeyUpdated />
   </div>
 </div>

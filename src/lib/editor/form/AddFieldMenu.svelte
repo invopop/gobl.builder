@@ -1,7 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import hover from "./action/hover.js";
-  import { getFormEditorContext } from "./context/formEditor.js";
   import { createEventDispatcher } from "svelte";
   import { sleep } from "./utils/sleep.js";
   import type { SchemaOption, UIModelField } from "./utils/model.js";
@@ -14,8 +13,6 @@
   let filterStr = "";
 
   const dispatch = createEventDispatcher();
-
-  const { addField } = getFormEditorContext() || {};
 
   function filterOptions(options: SchemaOption[], filterStr: string) {
     return options
@@ -59,7 +56,9 @@
 
   function handleAddField(parentField: UIModelField, option: SchemaOption) {
     handleCloseMenu();
-    addField(parentField, option);
+    const newField = parentField.addChildField(option);
+    newField?.tryFocus();
+    dispatch("fieldAdded", newField);
   }
 
   function handleKeyDown(e: KeyboardEvent) {

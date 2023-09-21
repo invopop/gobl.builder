@@ -5,11 +5,10 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { currentEditorSchema, jsonSchema } from "$lib/editor/stores.js";
-  import AbstractField from "./AbstractField.svelte";
+  import { currentEditorSchema, editor, jsonSchema } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { getSchemas } from "../actions.js";
-  import SchemaField from "./SchemaField.svelte";
+  import DynamicForm from "./DynamicForm.svelte";
 
   createFormEditorContext(schemaUrlForm);
 
@@ -54,21 +53,29 @@
     schemaUrlForm.set(null);
     schemaUrlForm.set($jsonSchema);
   }
+
+  function handleFormUpdated(event: CustomEvent) {
+    handleUpdateEditor(event);
+    recreateFormEditor();
+  }
+
+  function handleUpdateEditor(event: CustomEvent) {
+    const model = event.detail;
+    const value = model.root.toJSON();
+    editor.set({ value, updatedAt: Date.now() });
+  }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
 {#if $recreatingUiModel}
   <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
 {:else}
-  <div class="h-full overflow-y-auto overflow-x-hidden bg-color1">
-    <div class="flex justify-center px-16 py-8 pb-40 text-sm">
-      <div class="w-full max-w-[536px]">
-        {#if showSchemaField}
-          <SchemaField {isEmptySchema} />
-        {:else if $uiModel.value}
-          <AbstractField field={$uiModel.value} />
-        {/if}
-      </div>
-    </div>
-  </div>
+  <DynamicForm
+    model={$uiModel.value}
+    {showSchemaField}
+    {isEmptySchema}
+    on:uiRefreshNeeded={handleFormUpdated}
+    on:fieldKeyUpdated={handleUpdateEditor}
+    on:fieldValueUpdated={handleUpdateEditor}
+  />
 {/if}
