@@ -1,10 +1,8 @@
 <script lang="ts">
-  import { getFormEditorContext } from "./context/formEditor.js";
   import { createEventDispatcher } from "svelte";
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import type { UIModelField } from "./utils/model.js";
 
-  const { moveField } = getFormEditorContext() || {};
   const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
@@ -25,6 +23,16 @@
     focusField.tryFocus();
     dispatch("fieldDuplicated", newField);
   }
+
+  function handleModeFieldUp() {
+    field.move("up");
+    dispatch("fieldMoved", field);
+  }
+
+  function handleModeFieldDown() {
+    field.move("down");
+    dispatch("fieldMoved", field);
+  }
 </script>
 
 <FieldButtons
@@ -32,6 +40,6 @@
   on:add={() => dispatch("addField")}
   on:duplicate={handleDuplicate}
   on:remove={handleRemove}
-  on:moveUp={() => moveField(field, "up")}
-  on:moveDown={() => moveField(field, "down")}
+  on:moveUp={handleModeFieldUp}
+  on:moveDown={handleModeFieldDown}
 />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SvelteComponent } from "svelte";
+  import { createEventDispatcher, type SvelteComponent } from "svelte";
   import ObjectField from "./ObjectField.svelte";
   import ArrayField from "./ArrayField.svelte";
   import StringField from "./StringField.svelte";
@@ -7,11 +7,12 @@
   import FieldContextMenu from "./FieldContextMenu.svelte";
   import hover from "./action/hover.js";
   import IntegerField from "./IntegerField.svelte";
-  import { getFormEditorContext } from "./context/formEditor.js";
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
+
+  const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
 
@@ -35,8 +36,6 @@
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
-
-  const { addField } = getFormEditorContext() || {};
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -62,7 +61,10 @@
     if (field.type === "array" || field.controlType === "dictionary") {
       const [childOption] = field.options || [];
 
-      addField(field, childOption);
+      const newField = field.addChildField(childOption);
+      newField?.tryFocus();
+      dispatch("fieldAdded", newField);
+
       return;
     }
 
@@ -135,12 +137,13 @@
       on:fieldAdded
       on:fieldDeleted
       on:fieldDuplicated
+      on:fieldMoved
     />
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
       <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu {field} on:addField={handleAddField} on:fieldDeleted on:fieldDuplicated />
+        <FieldContextMenu {field} on:addField={handleAddField} on:fieldDeleted on:fieldDuplicated on:fieldMoved />
       </span>
     </div>
     {#if showAddMenu}

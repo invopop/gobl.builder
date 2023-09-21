@@ -22,6 +22,7 @@
           on:fieldAdded={() => dispatch("updated", model)}
           on:fieldDeleted={() => dispatch("updated", model)}
           on:fieldDuplicated={() => dispatch("updated", model)}
+          on:fieldMoved={() => dispatch("updated", model)}
         />
       {/if}
     </div>

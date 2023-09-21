@@ -17,6 +17,6 @@
     <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
   {/if}
   {#each children || emptyChildren as field (field.id)}
-    <AbstractField {field} on:fieldAdded on:fieldDeleted on:fieldDuplicated />
+    <AbstractField {field} on:fieldAdded on:fieldDeleted on:fieldDuplicated on:fieldMoved />
   {/each}
 </div>

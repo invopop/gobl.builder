@@ -1,6 +1,6 @@
 import { getContext, onDestroy, setContext } from "svelte";
 import { editor, editorJSON } from "$lib/editor/stores.js";
-import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
+import { type UIModelRootField, UIModelField, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
 import type { SchemaValue } from "../utils/schema.js";
 import { writableDerived } from "$lib/store/writableDerived.js";
@@ -14,9 +14,6 @@ export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
   changeFieldKey(field: UIModelField, value: SchemaValue): void;
   changeFieldValue(field: UIModelField, value: SchemaValue): void;
-  // duplicateField(field: UIModelField): void;
-  moveField(field: UIModelField, direction: "up" | "down"): void;
-  addField(parentField: UIModelField, option: SchemaOption): void;
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
@@ -88,56 +85,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     updateEditor(field.root);
   }
 
-  // function duplicateField(field: UIModelField) {
-  //   const newField = field.duplicate();
-  //   if (!newField) return;
-
-  //   updateEditor();
-  //   refreshUI();
-
-  //   const focusField = newField.getFirstFocusableChild();
-
-  //   if (!focusField) return;
-
-  //   focusField.tryFocus()
-  // }
-
-  function moveField(field: UIModelField, direction: "up" | "down") {
-    const swapPositions = (array: UIModelField[], a: number, b: number) => {
-      array[a].key = String(b);
-      array[b].key = String(a);
-      [array[a], array[b]] = [array[b], array[a]];
-    };
-
-    const children = field?.parent?.children || [];
-
-    const factor = direction === "down" ? 1 : -1;
-
-    const currentKey = Number(field?.key);
-    const destinationKey = currentKey + factor;
-
-    if (destinationKey < 0 || destinationKey >= children.length) return;
-
-    swapPositions(children, currentKey, destinationKey);
-
-    updateEditor();
-    refreshUI();
-  }
-
-  function addField(parentField: UIModelField, option: SchemaOption) {
-    const newField = parentField.addChildField(option, undefined);
-    if (!newField) return;
-
-    updateEditor();
-    refreshUI();
-
-    const focusField = newField.getFirstFocusableChild();
-
-    if (!focusField) return;
-
-    focusField.tryFocus();
-  }
-
   function sortField(field: UIModelField, position: number, update = false): string | undefined {
     const result = field.sortField(position);
     if (!result) return;
@@ -162,9 +109,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     uiModel,
     changeFieldKey,
     changeFieldValue,
-    // duplicateField,
-    moveField,
-    addField,
     sortField,
     refreshUI,
     updateEditor,

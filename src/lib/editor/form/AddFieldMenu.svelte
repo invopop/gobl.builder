@@ -56,7 +56,7 @@
 
   function handleAddField(parentField: UIModelField, option: SchemaOption) {
     handleCloseMenu();
-    const newField = parentField.addChildField(option, undefined);
+    const newField = parentField.addChildField(option);
     newField?.tryFocus();
     dispatch("fieldAdded", newField);
   }

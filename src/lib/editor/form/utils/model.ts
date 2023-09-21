@@ -363,6 +363,25 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return this.parent.type === "array" ? sortedChilds[position].id : this.id;
   }
 
+  move(direction: "up" | "down") {
+    const swapPositions = (array: UIModelField[], a: number, b: number) => {
+      array[a].key = String(b);
+      array[b].key = String(a);
+      [array[a], array[b]] = [array[b], array[a]];
+    };
+
+    const children = this.parent?.children || [];
+
+    const factor = direction === "down" ? 1 : -1;
+
+    const currentKey = Number(this.key);
+    const destinationKey = currentKey + factor;
+
+    if (destinationKey < 0 || destinationKey >= children.length) return;
+
+    swapPositions(children, currentKey, destinationKey);
+  }
+
   getNextFocusableField(reverse = false): UIModelField | undefined {
     if (this.is.root) {
       return this.getFirstFocusableChild(reverse);
