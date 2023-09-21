@@ -139,6 +139,7 @@
       on:fieldDuplicated
       on:fieldMoved
       on:fieldValueUpdated
+      on:fieldKeyUpdated
     />
   </div>
   <div class="absolute top-0 right-0">
@@ -151,6 +152,7 @@
           on:fieldDuplicated
           on:fieldMoved
           on:fieldValueUpdated
+          on:fieldKeyUpdated
         />
       </span>
     </div>

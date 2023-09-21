@@ -19,11 +19,24 @@
       {:else if model}
         <AbstractField
           field={model}
-          on:fieldAdded={() => dispatch("updated", model)}
-          on:fieldDeleted={() => dispatch("updated", model)}
-          on:fieldDuplicated={() => dispatch("updated", model)}
-          on:fieldMoved={() => dispatch("updated", model)}
-          on:fieldValueUpdated={() => dispatch("updated", model)}
+          on:fieldAdded={(event) => {
+            dispatch("uiRefreshNeeded", model);
+            dispatch("fieldAdded", event);
+          }}
+          on:fieldDeleted={(event) => {
+            dispatch("uiRefreshNeeded", model);
+            dispatch("fieldDeleted", event);
+          }}
+          on:fieldDuplicated={(event) => {
+            dispatch("uiRefreshNeeded", model);
+            dispatch("fieldDuplicated", event);
+          }}
+          on:fieldMoved={(event) => {
+            dispatch("uiRefreshNeeded", model);
+            dispatch("fieldMoved", event);
+          }}
+          on:fieldValueUpdated
+          on:fieldKeyUpdated
         />
       {/if}
     </div>

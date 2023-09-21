@@ -55,10 +55,14 @@
   }
 
   function handleFormUpdated(event: CustomEvent) {
+    handleUpdateEditor(event);
+    recreateFormEditor();
+  }
+
+  function handleUpdateEditor(event: CustomEvent) {
     const model = event.detail;
     const value = model.root.toJSON();
     editor.set({ value, updatedAt: Date.now() });
-    recreateFormEditor();
   }
 </script>
 
@@ -66,5 +70,12 @@
 {#if $recreatingUiModel}
   <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
 {:else}
-  <DynamicForm model={$uiModel.value} {showSchemaField} {isEmptySchema} on:updated={handleFormUpdated} />
+  <DynamicForm
+    model={$uiModel.value}
+    {showSchemaField}
+    {isEmptySchema}
+    on:uiRefreshNeeded={handleFormUpdated}
+    on:fieldKeyUpdated={handleUpdateEditor}
+    on:fieldValueUpdated={handleUpdateEditor}
+  />
 {/if}

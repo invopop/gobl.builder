@@ -9,7 +9,7 @@
 
   function handleRemove() {
     field.delete();
-    dispatch("fieldDeleted");
+    dispatch("fieldDeleted", field);
   }
 
   function handleDuplicate() {
