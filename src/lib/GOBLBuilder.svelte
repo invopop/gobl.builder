@@ -229,7 +229,7 @@
   <div>
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
     <Modal title="Correction Options" on:close={() => (openModal = false)}>
-      <DynamicForm model={correctionModel} />
+      <DynamicForm model={correctionModel} on:updated={(event) => (correctionModel = event.detail)} />
     </Modal>
   </div>
 {/if}

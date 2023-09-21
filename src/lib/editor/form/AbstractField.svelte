@@ -129,12 +129,12 @@
   on:focusout={handleFocusOut}
 >
   <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
-    <svelte:component this={componentsMap[field.type] || FallbackField} {field} on:fieldAdded />
+    <svelte:component this={componentsMap[field.type] || FallbackField} {field} on:fieldAdded on:fieldDeleted />
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
       <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu {field} on:addField={handleAddField} />
+        <FieldContextMenu {field} on:addField={handleAddField} on:fieldDeleted />
       </span>
     </div>
     {#if showAddMenu}

@@ -14,7 +14,6 @@ export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
   changeFieldKey(field: UIModelField, value: SchemaValue): void;
   changeFieldValue(field: UIModelField, value: SchemaValue): void;
-  deleteField(field: UIModelField): void;
   duplicateField(field: UIModelField): void;
   moveField(field: UIModelField, direction: "up" | "down"): void;
   addField(parentField: UIModelField, option: SchemaOption): void;
@@ -87,14 +86,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     if (!result) return;
 
     updateEditor(field.root);
-  }
-
-  function deleteField(field: UIModelField) {
-    const result = field.delete();
-    if (!result) return;
-
-    updateEditor();
-    refreshUI();
   }
 
   function duplicateField(field: UIModelField) {
@@ -171,7 +162,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     uiModel,
     changeFieldKey,
     changeFieldValue,
-    deleteField,
     duplicateField,
     moveField,
     addField,

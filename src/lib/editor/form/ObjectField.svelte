@@ -30,7 +30,7 @@
 </script>
 
 {#if field.is.root}
-  <RootField {...props} on:fieldAdded />
+  <RootField {...props} on:fieldAdded on:fieldDeleted />
 {:else}
   <div id={field.id} title={label}>
     <button class="flex items-center justify-start cursor-pointer h-8" on:click={handleExpandChange}>

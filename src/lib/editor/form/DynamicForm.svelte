@@ -13,6 +13,10 @@
   function handleFieldAdded() {
     dispatch("updated", model);
   }
+
+  function handleFieldDeleted() {
+    dispatch("updated", model);
+  }
 </script>
 
 <div class="h-full overflow-y-auto overflow-x-hidden bg-color1">
@@ -21,7 +25,7 @@
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />
       {:else if model}
-        <AbstractField field={model} on:fieldAdded={handleFieldAdded} />
+        <AbstractField field={model} on:fieldAdded={handleFieldAdded} on:fieldDeleted={handleFieldDeleted} />
       {/if}
     </div>
   </div>
