@@ -7,8 +7,8 @@ export async function generateCorrectOptionsModel(schema: string) {
   const options = schemaObj.$defs.CorrectionOptions;
   const parsedSchema = await parseSchema(schemaObj.$id, options);
 
-  const CORRECTION_OPTIONS_SCHEMA_URL = 'https://gobl.org/draft-0/bill/correction-options?tax_regime=';
-  parsedSchema.title = `Correction Options [${parsedSchema.$id?.replace(CORRECTION_OPTIONS_SCHEMA_URL, '')}]`;
+  const CORRECTION_OPTIONS_SCHEMA_URL = "https://gobl.org/draft-0/bill/correction-options?tax_regime=";
+  parsedSchema.title = `Correction Options [${parsedSchema.$id?.replace(CORRECTION_OPTIONS_SCHEMA_URL, "")}]`;
 
   return getUIModel(parsedSchema as Schema, "");
 }
