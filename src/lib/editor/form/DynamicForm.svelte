@@ -9,14 +9,6 @@
   export let showSchemaField = false;
   export let isEmptySchema = false;
   export let model: UIModelRootField | UIModelField | undefined = undefined;
-
-  function handleFieldAdded() {
-    dispatch("updated", model);
-  }
-
-  function handleFieldDeleted() {
-    dispatch("updated", model);
-  }
 </script>
 
 <div class="h-full overflow-y-auto overflow-x-hidden bg-color1">
@@ -25,7 +17,12 @@
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />
       {:else if model}
-        <AbstractField field={model} on:fieldAdded={handleFieldAdded} on:fieldDeleted={handleFieldDeleted} />
+        <AbstractField
+          field={model}
+          on:fieldAdded={() => dispatch("updated", model)}
+          on:fieldDeleted={() => dispatch("updated", model)}
+          on:fieldDuplicated={() => dispatch("updated", model)}
+        />
       {/if}
     </div>
   </div>

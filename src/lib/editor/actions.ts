@@ -133,7 +133,7 @@ export async function getCorrectionOptionsSchema() {
 
     const payload: GOBL.CorrectPayload = {
       data: encodeUTF8ToBase64(sendData),
-      schema: true
+      schema: true,
     };
 
     const schema = await GOBL.correct({ payload });
@@ -164,7 +164,7 @@ export async function correct() {
 
     const payload: GOBL.CorrectPayload = {
       data: encodeUTF8ToBase64(sendData),
-      options: ''
+      options: "",
     };
 
     await GOBL.correct({ payload });

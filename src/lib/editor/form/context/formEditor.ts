@@ -14,7 +14,7 @@ export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
   changeFieldKey(field: UIModelField, value: SchemaValue): void;
   changeFieldValue(field: UIModelField, value: SchemaValue): void;
-  duplicateField(field: UIModelField): void;
+  // duplicateField(field: UIModelField): void;
   moveField(field: UIModelField, direction: "up" | "down"): void;
   addField(parentField: UIModelField, option: SchemaOption): void;
   sortField(field: UIModelField, position: number): string | undefined;
@@ -88,19 +88,19 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     updateEditor(field.root);
   }
 
-  function duplicateField(field: UIModelField) {
-    const newField = field.duplicate();
-    if (!newField) return;
+  // function duplicateField(field: UIModelField) {
+  //   const newField = field.duplicate();
+  //   if (!newField) return;
 
-    updateEditor();
-    refreshUI();
+  //   updateEditor();
+  //   refreshUI();
 
-    const focusField = newField.getFirstFocusableChild();
+  //   const focusField = newField.getFirstFocusableChild();
 
-    if (!focusField) return;
-  
-    focusField.tryFocus()
-  }
+  //   if (!focusField) return;
+
+  //   focusField.tryFocus()
+  // }
 
   function moveField(field: UIModelField, direction: "up" | "down") {
     const swapPositions = (array: UIModelField[], a: number, b: number) => {
@@ -135,7 +135,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
 
     if (!focusField) return;
 
-    focusField.tryFocus()
+    focusField.tryFocus();
   }
 
   function sortField(field: UIModelField, position: number, update = false): string | undefined {
@@ -162,7 +162,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     uiModel,
     changeFieldKey,
     changeFieldValue,
-    duplicateField,
+    // duplicateField,
     moveField,
     addField,
     sortField,

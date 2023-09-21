@@ -4,8 +4,7 @@
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import type { UIModelField } from "./utils/model.js";
 
-  // const { deleteField, duplicateField, moveField } = getFormEditorContext() || {};
-  const { duplicateField, moveField } = getFormEditorContext() || {};
+  const { moveField } = getFormEditorContext() || {};
   const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
@@ -14,12 +13,24 @@
     field.delete();
     dispatch("fieldDeleted");
   }
+
+  function handleDuplicate() {
+    const newField = field.duplicate();
+    if (!newField) return;
+
+    const focusField = newField.getFirstFocusableChild();
+
+    if (!focusField) return;
+
+    focusField.tryFocus();
+    dispatch("fieldDuplicated", newField);
+  }
 </script>
 
 <FieldButtons
   {field}
   on:add={() => dispatch("addField")}
-  on:duplicate={() => duplicateField(field)}
+  on:duplicate={handleDuplicate}
   on:remove={handleRemove}
   on:moveUp={() => moveField(field, "up")}
   on:moveDown={() => moveField(field, "down")}

@@ -3,11 +3,11 @@ import { getRootSchema, parseSchema, type Schema, type SchemaValue } from "./sch
 import { sleep } from "./sleep.js";
 
 export async function generateCorrectOptionsModel(schema: string) {
-  const schemaObj = JSON.parse(schema)
+  const schemaObj = JSON.parse(schema);
   const options = schemaObj.$defs.CorrectionOptions;
-  const parsedSchema = await parseSchema(schemaObj.$id, options)
+  const parsedSchema = await parseSchema(schemaObj.$id, options);
 
-  return getUIModel(parsedSchema as Schema, '');
+  return getUIModel(parsedSchema as Schema, "");
 }
 
 export async function getUIModel<V extends SchemaValue>(

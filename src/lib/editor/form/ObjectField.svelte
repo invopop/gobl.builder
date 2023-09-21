@@ -30,7 +30,7 @@
 </script>
 
 {#if field.is.root}
-  <RootField {...props} on:fieldAdded on:fieldDeleted />
+  <RootField {...props} on:fieldAdded on:fieldDeleted on:fieldDuplicated />
 {:else}
   <div id={field.id} title={label}>
     <button class="flex items-center justify-start cursor-pointer h-8" on:click={handleExpandChange}>
@@ -44,7 +44,7 @@
       on:focusin|capture={handleFocusInner}
     >
       {#each children as childField (childField.id)}
-        <AbstractField field={childField} on:fieldAdded />
+        <AbstractField field={childField} on:fieldAdded on:fieldDeleted on:fieldDuplicated />
       {/each}
     </div>
     <slot />
