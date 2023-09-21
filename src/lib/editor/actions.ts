@@ -154,7 +154,7 @@ export async function getCorrectionOptionsSchema() {
 
 // Send a request to the GOBL worker to run the "correct" operation using the current
 // editor window contents and update with the results.
-export async function correct() {
+export async function correct(options: string) {
   if (!get(validEditor)) {
     return;
   }
@@ -164,11 +164,13 @@ export async function correct() {
 
     const payload: GOBL.CorrectPayload = {
       data: encodeUTF8ToBase64(sendData),
-      options: "",
+      options: encodeUTF8ToBase64(options),
     };
 
-    await GOBL.correct({ payload });
+    const rawResult = await GOBL.correct({ payload });
+    const result = JSON.parse(rawResult);
 
+    envelope.set(result);
     goblError.set(null);
 
     createNotification({
@@ -176,13 +178,12 @@ export async function correct() {
       message: "Document successfully corrected.",
     });
 
-    return { corrected: true };
+    return { result };
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e);
     goblError.set(goblErr);
 
     return {
-      corrected: false,
       error: goblErr,
     };
   }

@@ -165,6 +165,24 @@
     openModal = true;
   };
 
+  export const correctWithOtions = async (options: string) => {
+    const result = await actions.correct(options);
+
+    if (result?.error) {
+      state = "errored";
+      displayAllErrors(result?.error?.message || "");
+      return;
+    }
+
+    openModal = false;
+
+    state = "corrected";
+
+    if (!editorForm) return;
+
+    editorForm.recreateFormEditor();
+  };
+
   export const sign = async () => {
     if (!signEnabled) return;
     const result = await actions.sign();
@@ -230,6 +248,10 @@
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
     <Modal title="Correction Options" on:close={() => (openModal = false)}>
       <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
+      <button
+        class="border border-black px-6 py-3"
+        on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}>Correct</button
+      >
     </Modal>
   </div>
 {/if}
