@@ -36,7 +36,7 @@
     contextMenuOffset = offset > 0 ? offset : 0;
   }
 
-  const { addField, tryFocusField } = getFormEditorContext() || {};
+  const { addField } = getFormEditorContext() || {};
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -69,18 +69,14 @@
     showAddMenu = true;
   }
 
-  function handleAddFieldMenuClose() {
-    showAddMenu = false;
-  }
-
   function focusNextField(nextField = field.getNextFocusableField()) {
     if (!nextField) return;
-    tryFocusField(nextField, 5, 0);
+    nextField.tryFocus(5, 0);
   }
 
   function focusPrevField(prevField = field.getPrevFocusableField()) {
     if (!prevField) return;
-    tryFocusField(prevField, 5, 0);
+    prevField.tryFocus(5, 0);
   }
 
   function handleKeyDown(e: KeyboardEvent) {
@@ -133,7 +129,7 @@
   on:focusout={handleFocusOut}
 >
   <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
-    <svelte:component this={componentsMap[field.type] || FallbackField} {field} />
+    <svelte:component this={componentsMap[field.type] || FallbackField} {field} on:fieldAdded />
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
@@ -147,7 +143,7 @@
         style={`margin-top: -${contextMenuOffset}px`}
         bind:this={addMenuRef}
       >
-        <AddFieldMenu {field} on:closeAddFieldMenu={handleAddFieldMenuClose} />
+        <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
       </div>
     {/if}
   </div>

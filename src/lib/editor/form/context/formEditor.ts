@@ -1,8 +1,7 @@
-import { getContext, onDestroy, setContext, tick } from "svelte";
+import { getContext, onDestroy, setContext } from "svelte";
 import { editor, editorJSON } from "$lib/editor/stores.js";
 import { type UIModelRootField, UIModelField, type SchemaOption, getUIModel } from "$lib/editor/form/utils/model.js";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce.js";
-import { sleep } from "../utils/sleep.js";
 import type { SchemaValue } from "../utils/schema.js";
 import { writableDerived } from "$lib/store/writableDerived.js";
 import { get, writable, type Readable, type Writable } from "svelte/store";
@@ -23,8 +22,6 @@ export type FormEditorContextType = {
   refreshUI(): void;
   updateEditor(): void;
   updateSchema(value: string): void;
-  tryFocusField(field: UIModelField, retries?: number, delay?: number): Promise<boolean>;
-  getFocusableElement(focusField?: UIModelField): HTMLElement | undefined;
 };
 
 export function getFormEditorContext(): FormEditorContextType {
@@ -108,7 +105,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     refreshUI();
 
     const focusField = newField.getFirstFocusableChild();
-    tryFocusField(focusField);
+
+    if (!focusField) return;
+  
+    focusField.tryFocus()
   }
 
   function moveField(field: UIModelField, direction: "up" | "down") {
@@ -141,7 +141,10 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     refreshUI();
 
     const focusField = newField.getFirstFocusableChild();
-    tryFocusField(focusField);
+
+    if (!focusField) return;
+
+    focusField.tryFocus()
   }
 
   function sortField(field: UIModelField, position: number, update = false): string | undefined {
@@ -155,36 +158,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     }
 
     return result;
-  }
-
-  async function tryFocusField(field?: UIModelField, retries = 5, delay = 200): Promise<boolean> {
-    if (!field) return false;
-
-    await tick();
-
-    while (--retries > 0) {
-      await sleep(delay);
-
-      const el = getFocusableElement(field);
-      if (!el) continue;
-
-      el.scrollIntoView({ behavior: "auto", block: "center" });
-      el.focus();
-
-      return true;
-    }
-
-    return false;
-  }
-
-  function getFocusableElement(focusField?: UIModelField): HTMLElement | undefined {
-    if (!focusField) return;
-
-    if (focusField?.isContainer()) {
-      return document.querySelector(`#${focusField.id} > .add-field-button`) as HTMLElement;
-    } else {
-      return document.querySelector(`#${focusField.id}`) as HTMLElement;
-    }
   }
 
   async function updateSchema(value: string) {
@@ -205,8 +178,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     sortField,
     refreshUI,
     updateEditor,
-    tryFocusField,
-    getFocusableElement,
     updateSchema,
   };
 

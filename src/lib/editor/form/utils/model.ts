@@ -1,4 +1,14 @@
-import { getRootSchema, type Schema, type SchemaValue } from "./schema.js";
+import { tick } from "svelte";
+import { getRootSchema, parseSchema, type Schema, type SchemaValue } from "./schema.js";
+import { sleep } from "./sleep.js";
+
+export async function generateCorrectOptionsModel(schema: string) {
+  const schemaObj = JSON.parse(schema)
+  const options = schemaObj.$defs.CorrectionOptions;
+  const parsedSchema = await parseSchema(schemaObj.$id, options)
+
+  return getUIModel(parsedSchema as Schema, '');
+}
 
 export async function getUIModel<V extends SchemaValue>(
   schema: Schema | string,
@@ -394,6 +404,32 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
   getLastFocusableChild(): UIModelField | undefined {
     return this.getFirstFocusableChild(true);
+  }
+
+  async tryFocus(retries = 5, delay = 200): Promise<boolean> {
+    await tick();
+
+    while (--retries > 0) {
+      await sleep(delay);
+
+      const el = this.getFocusableElement();
+      if (!el) continue;
+
+      el.scrollIntoView({ behavior: "auto", block: "center" });
+      el.focus();
+
+      return true;
+    }
+
+    return false;
+  }
+
+  getFocusableElement(): HTMLElement | undefined {
+    if (this.isContainer()) {
+      return document.querySelector(`#${this.id} > .add-field-button`) as HTMLElement;
+    } else {
+      return document.querySelector(`#${this.id}`) as HTMLElement;
+    }
   }
 
   getControlType(schema: Schema = this.schema): ControlType | undefined {

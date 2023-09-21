@@ -9,6 +9,6 @@
   $: props = $$props as PropsInterface;
 </script>
 
-<ObjectField {...props}>
+<ObjectField {...props} on:fieldAdded>
   <slot />
 </ObjectField>
