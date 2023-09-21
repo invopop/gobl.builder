@@ -540,10 +540,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         value = 0;
         break;
       }
-      case "boolean": {
-        value = true;
-        break;
-      }
     }
 
     // @note: Override default values of specific form control types
@@ -552,11 +548,6 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     switch (controlType) {
       case "date": {
         value = new Date().toISOString().split("T")[0];
-        break;
-      }
-      case "select": {
-        const [firstOption] = this.getControlMeta(option.schema) as { key: string; value: string }[];
-        value = firstOption.value;
         break;
       }
       case "dictionary": {

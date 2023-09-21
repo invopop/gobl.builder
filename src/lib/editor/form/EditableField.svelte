@@ -24,12 +24,16 @@
     dispatch("fieldValueUpdated", field);
   }
 
+  function isEmpty(value: SchemaValue) {
+    return value === null || value === "" || value === undefined;
+  }
+
   function validateField(e: CustomEvent<SchemaValue>) {
     const value = e.detail;
     const parsedValue = parseValue(value);
 
     if (field.is.required) {
-      error = parsedValue ? "" : "Required field";
+      error = isEmpty(parsedValue) ? "Required field" : "";
       return;
     }
 
