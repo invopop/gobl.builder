@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { SchemaValue } from "$lib/editor/form/utils/schema.js";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import { getFormEditorContext } from "./context/formEditor.js";
   import EditableSelectField from "./EditableSelectField.svelte";
   import EditableTextField from "./EditableTextField.svelte";
   import EditableDateField from "./EditableDateField.svelte";
   import FieldError from "./FieldError.svelte";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
@@ -13,13 +15,13 @@
   let error = "";
   $: showError = Boolean(error);
 
-  const { changeFieldValue } = getFormEditorContext() || {};
-
   function handleEdit(e: CustomEvent<SchemaValue>) {
     const value = e.detail;
 
     const parsedValue = parseValue(value);
-    changeFieldValue(field, parsedValue);
+    const result = field.setValue(parsedValue as string);
+    if (!result) return;
+    dispatch("fieldValueUpdated", field);
   }
 
   function validateField(e: CustomEvent<SchemaValue>) {

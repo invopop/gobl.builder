@@ -15,5 +15,5 @@
   }
 </script>
 
-<LeafField {...props} parseValue={handleParseValue} />
+<LeafField {...props} parseValue={handleParseValue} on:fieldValueUpdated />
 <slot />

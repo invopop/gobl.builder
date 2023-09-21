@@ -138,12 +138,20 @@
       on:fieldDeleted
       on:fieldDuplicated
       on:fieldMoved
+      on:fieldValueUpdated
     />
   </div>
   <div class="absolute top-0 right-0">
     <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
       <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu {field} on:addField={handleAddField} on:fieldDeleted on:fieldDuplicated on:fieldMoved />
+        <FieldContextMenu
+          {field}
+          on:addField={handleAddField}
+          on:fieldDeleted
+          on:fieldDuplicated
+          on:fieldMoved
+          on:fieldValueUpdated
+        />
       </span>
     </div>
     {#if showAddMenu}

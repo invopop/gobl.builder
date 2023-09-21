@@ -23,6 +23,6 @@
     {/if}
   </div>
   <div class:pointer-events-none={$envelopeIsSigned} class="flex items-center justify-start w-[248px]">
-    <EditableField {field} {parseValue} />
+    <EditableField {field} {parseValue} on:fieldValueUpdated />
   </div>
 </div>

@@ -13,7 +13,6 @@ export const recreatingUiModel = writable(false);
 export type FormEditorContextType = {
   uiModel: Readable<{ value: UIModelRootField | undefined; updatedAt: number }>;
   changeFieldKey(field: UIModelField, value: SchemaValue): void;
-  changeFieldValue(field: UIModelField, value: SchemaValue): void;
   sortField(field: UIModelField, position: number): string | undefined;
   refreshUI(): void;
   updateEditor(): void;
@@ -78,13 +77,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
     updateEditor(field.root);
   }
 
-  function changeFieldValue(field: UIModelField, value: SchemaValue) {
-    const result = field.setValue(value);
-    if (!result) return;
-
-    updateEditor(field.root);
-  }
-
   function sortField(field: UIModelField, position: number, update = false): string | undefined {
     const result = field.sortField(position);
     if (!result) return;
@@ -108,7 +100,6 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
   const initialState: FormEditorContextType = {
     uiModel,
     changeFieldKey,
-    changeFieldValue,
     sortField,
     refreshUI,
     updateEditor,
