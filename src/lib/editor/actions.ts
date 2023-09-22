@@ -142,13 +142,7 @@ export async function getCorrectionOptionsSchema() {
 
     return { schema };
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    goblError.set(goblErr);
-
-    return {
-      schema: null,
-      error: goblErr,
-    };
+    return { schema: null };
   }
 }
 

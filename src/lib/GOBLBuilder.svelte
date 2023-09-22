@@ -20,7 +20,7 @@
   import * as actions from "./editor/actions";
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
-  import { displayAllErrors } from "./helpers";
+  import { displayAllErrors, showErrorToast } from "./helpers";
   import Modal from "./ui/Modal.svelte";
   import DynamicForm from "./editor/form/DynamicForm.svelte";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
@@ -155,9 +155,9 @@
   export const correct = async () => {
     const result = await actions.getCorrectionOptionsSchema();
 
-    if (result?.error) {
+    if (result?.schema) {
       state = "errored";
-      displayAllErrors(result?.error?.message || "");
+      showErrorToast("This document can not be corrected.");
       return;
     }
 
