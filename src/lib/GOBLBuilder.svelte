@@ -155,7 +155,7 @@
   export const correct = async () => {
     const result = await actions.getCorrectionOptionsSchema();
 
-    if (result?.schema) {
+    if (!result?.schema) {
       state = "errored";
       showErrorToast("This document can not be corrected.");
       return;
