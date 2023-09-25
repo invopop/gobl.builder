@@ -9,6 +9,7 @@
   export let showSchemaField = false;
   export let isEmptySchema = false;
   export let model: UIModelRootField | UIModelField | undefined = undefined;
+  export let readOnly = false;
 </script>
 
 <div class="h-full overflow-y-auto overflow-x-hidden bg-color1">
@@ -19,6 +20,7 @@
       {:else if model}
         <AbstractField
           field={model}
+          {readOnly}
           on:fieldAdded={(event) => {
             dispatch("uiRefreshNeeded", model);
             dispatch("fieldAdded", event);

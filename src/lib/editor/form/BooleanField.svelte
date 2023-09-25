@@ -8,6 +8,8 @@
     parseKey: undefined;
   }
 
+  export let readOnly = false;
+
   $: props = $$props as PropsInterface;
 
   function handleParseValue(value: SchemaValue): boolean {
@@ -16,5 +18,5 @@
   }
 </script>
 
-<LeafField {...props} parseValue={handleParseValue} on:fieldValueUpdated on:fieldKeyUpdated />
+<LeafField {...props} parseValue={handleParseValue} {readOnly} on:fieldValueUpdated on:fieldKeyUpdated />
 <slot />

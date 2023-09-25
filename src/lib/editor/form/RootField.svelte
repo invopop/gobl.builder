@@ -4,6 +4,7 @@
   import { currentEditorSchema, jsonSchema } from "../stores";
 
   export let field: UIModelRootField;
+  export let readOnly = false;
 
   const emptyChildren: UIModelField[] = [];
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
@@ -19,6 +20,7 @@
   {#each children || emptyChildren as field (field.id)}
     <AbstractField
       {field}
+      {readOnly}
       on:fieldAdded
       on:fieldDeleted
       on:fieldDuplicated

@@ -7,6 +7,8 @@
   import RootField from "./RootField.svelte";
 
   export let field: UIModelField;
+  export let readOnly = false;
+
   let open = true; // field.level >= 2;
   $: children = field.children || ([] as UIModelField[]);
   $: label = $envelopeIsSigned
@@ -32,6 +34,7 @@
 {#if field.is.root}
   <RootField
     {...props}
+    {readOnly}
     on:fieldAdded
     on:fieldDeleted
     on:fieldDuplicated
@@ -54,6 +57,7 @@
       {#each children as childField (childField.id)}
         <AbstractField
           field={childField}
+          {readOnly}
           on:fieldAdded
           on:fieldDeleted
           on:fieldDuplicated

@@ -82,7 +82,7 @@
         on:click={() => {
           builder.correct();
         }}
-        class={iconButtonClasses(!["built", "loaded", "signed"].includes(state))}
+        class={iconButtonClasses(!["built", "loaded", "signed", "modified"].includes(state))}
       >
         <CorrectIcon />
       </button>

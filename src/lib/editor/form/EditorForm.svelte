@@ -5,7 +5,7 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { currentEditorSchema, editor, jsonSchema } from "$lib/editor/stores.js";
+  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
@@ -72,6 +72,7 @@
 {:else}
   <DynamicForm
     model={$uiModel.value}
+    readOnly={$envelopeIsSigned}
     {showSchemaField}
     {isEmptySchema}
     on:uiRefreshNeeded={handleFormUpdated}
