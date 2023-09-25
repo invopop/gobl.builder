@@ -30,6 +30,8 @@
   let isFocus = false;
   let contextMenuOffset = 0;
 
+  export let readOnly = false;
+
   $: showContextMenu = !$envelopeIsSigned && (isHover || isFocus);
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
@@ -134,6 +136,7 @@
     <svelte:component
       this={componentsMap[field.type] || FallbackField}
       {field}
+      {readOnly}
       on:fieldAdded
       on:fieldDeleted
       on:fieldDuplicated
