@@ -484,7 +484,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         options = (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
       }
 
-      return options.sort((a, b) => a.key.localeCompare(b.key));
+      return [{key: '', value: ''}, ...options.sort((a, b) => a.key.localeCompare(b.key))];
     }
 
     if (controlType === "dictionary" && !!schema.patternProperties?.[".*"]) {

@@ -56,6 +56,7 @@
       {field}
       {showError}
       options={[
+        { key: "", value: "" },
         { key: "Yes", value: true },
         { key: "No", value: false },
       ]}
