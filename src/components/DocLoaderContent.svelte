@@ -5,7 +5,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let regime = "Spain";
+  export let regime = "Spain";
 
   $: filteredGroups = templateGroups.filter((g) => g.name === regime);
 

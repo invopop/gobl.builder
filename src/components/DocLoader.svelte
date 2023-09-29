@@ -2,6 +2,7 @@
   import Modal from "$lib/ui/Modal.svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
   import { createEventDispatcher } from "svelte";
+  export let regime = "Spain";
 
   const dispatch = createEventDispatcher();
 
@@ -38,7 +39,7 @@
   <div>
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
     <Modal title="Load document" on:close={() => (openModal = false)}>
-      <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
+      <DocLoaderContent bind:regime on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
     </Modal>
   </div>
 {/if}
