@@ -1,0 +1,128 @@
+{
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "type": "standard",
+    "series": "SAMPLE",
+    "code": "002",
+    "issue_date": "2023-05-21",
+    "currency": "EUR",
+    "tax": {
+        "prices_include": "VAT"
+    },
+    "supplier": {
+        "name": "Hotel California",
+        "tax_id": {
+            "country": "IT",
+            "code": "12345678903"
+        },
+        "addresses": [
+            {
+                "num": "102",
+                "street": "Via California",
+                "locality": "Palermo",
+                "region": "PA",
+                "code": "33213",
+                "country": "IT"
+            }
+        ],
+        "registration": {
+            "capital": "50000.00",
+            "currency": "EUR",
+            "office": "RM",
+            "entry": "123456"
+        }
+    },
+    "customer": {
+        "name": "Mela S.r.l.",
+        "tax_id": {
+            "country": "IT",
+            "code": "13029381004"
+        },
+        "inboxes": [
+            {
+                "key": "codice-destinatario",
+                "code": "M5UXCR5"
+            }
+        ],
+        "addresses": [
+            {
+                "num": "23",
+                "street": "Via dei Mille",
+                "locality": "Firenze",
+                "region": "FI",
+                "code": "00100",
+                "country": "IT"
+            }
+        ]
+    },
+    "lines": [
+        {
+            "i": 1,
+            "quantity": "1",
+            "item": {
+                "name": "Tassa di Soggiorno",
+                "price": "1.00"
+            },
+            "sum": "1.00",
+            "taxes": [
+                {
+                    "cat": "VAT",
+                    "rate": "exempt",
+                    "ext": {
+                        "it-sdi-nature": "N4"
+                    }
+                }
+            ],
+            "total": "1.00"
+        },
+        {
+            "i": 2,
+            "quantity": "1",
+            "item": {
+                "name": "Camera Matrimoniale",
+                "price": "125.00"
+            },
+            "sum": "125.00",
+            "taxes": [
+                {
+                    "cat": "VAT",
+                    "rate": "intermediate",
+                    "percent": "10.0%"
+                }
+            ],
+            "total": "125.00"
+        }
+    ],
+    "totals": {
+        "sum": "126.00",
+        "tax_included": "11.36",
+        "total": "114.64",
+        "taxes": {
+            "categories": [
+                {
+                    "code": "VAT",
+                    "rates": [
+                        {
+                            "key": "exempt",
+                            "ext": {
+                                "it-sdi-nature": "N4"
+                            },
+                            "base": "1.00",
+                            "amount": "0.00"
+                        },
+                        {
+                            "key": "intermediate",
+                            "base": "113.64",
+                            "percent": "10.0%",
+                            "amount": "11.36"
+                        }
+                    ],
+                    "amount": "11.36"
+                }
+            ],
+            "sum": "11.36"
+        },
+        "tax": "11.36",
+        "total_with_tax": "126.00",
+        "payable": "126.00"
+    }
+}

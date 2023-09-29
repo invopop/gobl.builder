@@ -1,0 +1,115 @@
+{
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "type": "standard",
+    "series": "SAMPLE",
+    "code": "004",
+    "issue_date": "2023-08-01",
+    "currency": "EUR",
+    "tax": {
+        "tags": [
+            "reverse-charge"
+        ]
+    },
+    "supplier": {
+        "name": "MªF. Services",
+        "tax_id": {
+            "country": "IT",
+            "code": "12345678903"
+        },
+        "people": [
+            {
+                "name": {
+                    "given": "MARIA FRANCISCA",
+                    "surname": "MONTERO",
+                    "surname2": "ESTEBAN"
+                }
+            }
+        ],
+        "addresses": [
+            {
+                "num": "9",
+                "street": "VIA DI TORREVECCHIA",
+                "locality": "ROMA",
+                "region": "RM",
+                "code": "23480",
+                "country": "IT"
+            }
+        ],
+        "emails": [
+            {
+                "addr": "billing@example.com"
+            }
+        ]
+    },
+    "customer": {
+        "name": "David Bowie",
+        "tax_id": {
+            "country": "IT",
+            "code": "13029381004"
+        },
+        "addresses": [
+            {
+                "num": "1",
+                "street": "Via del Corso",
+                "locality": "Roma",
+                "region": "RM",
+                "code": "00100",
+                "country": "IT"
+            }
+        ]
+    },
+    "lines": [
+        {
+            "i": 1,
+            "quantity": "20",
+            "item": {
+                "name": "Development services",
+                "price": "90.00"
+            },
+            "sum": "1800.00",
+            "taxes": [
+                {
+                    "cat": "VAT",
+                    "rate": "exempt",
+                    "ext": {
+                        "it-sdi-nature": "N6.9"
+                    }
+                }
+            ],
+            "total": "1800.00"
+        }
+    ],
+    "totals": {
+        "sum": "1800.00",
+        "total": "1800.00",
+        "taxes": {
+            "categories": [
+                {
+                    "code": "VAT",
+                    "rates": [
+                        {
+                            "key": "exempt",
+                            "ext": {
+                                "it-sdi-nature": "N6.9"
+                            },
+                            "base": "1800.00",
+                            "amount": "0.00"
+                        }
+                    ],
+                    "amount": "0.00"
+                }
+            ],
+            "sum": "0.00"
+        },
+        "tax": "0.00",
+        "total_with_tax": "1800.00",
+        "payable": "1800.00"
+    },
+    "notes": [
+        {
+            "key": "legal",
+            "src": "reverse-charge",
+            "text": "Reverse Charge / Inversione del soggetto passivo"
+        }
+    ]
+}

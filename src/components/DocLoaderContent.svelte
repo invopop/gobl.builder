@@ -1,161 +1,41 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import { clsx } from "clsx";
-
-  // import { editor, envelope } from "$lib/stores.js";
-  import { schemaIconFor } from "$lib/ui/icons/schemaIconMap.svelte";
-  import MessageIcon from "$lib/ui/icons/MessageIcon.svelte";
-
-  import esInvoice from "../templates/es/invoice.json";
-  import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";
-  import esInvoiceFreelance from "../templates/es/invoice-freelance.json";
-  import nlInvoice from "../templates/nl/invoice.json";
-  import message from "../templates/misc/message.json";
+  import DocLoaderRegimePicker from "./DocLoaderRegimePicker.svelte";
+  import templateGroups from "./templateData";
 
   const dispatch = createEventDispatcher();
 
-  type Template = {
-    name: string;
-    value: TemplateValue;
-  };
+  let regime = "Spain";
 
-  type TemplateValue = {
-    $schema: string;
-    [field: string]: unknown;
-  };
+  $: filteredGroups = templateGroups.filter((g) => g.name === regime);
 
-  const templateGroups = new Map<string, Map<string, Template>>([
-    [
-      "Spain",
-      new Map([
-        [
-          "es-invoice",
-          {
-            name: "Invoice",
-            value: esInvoice as TemplateValue,
-          },
-        ],
-        [
-          "es-invoice-rev-charge",
-          {
-            name: "Invoice (reverse charge)",
-            value: esInvoiceRevCharge as TemplateValue,
-          },
-        ],
-        [
-          "es-invoice-freelance",
-          {
-            name: "Invoice (freelance)",
-            value: esInvoiceFreelance as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-    [
-      "Netherlands",
-      new Map([
-        [
-          "nl-invoice",
-          {
-            name: "Invoice",
-            value: nlInvoice as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-    [
-      "Miscellaneous",
-      new Map([
-        [
-          "misc-message",
-          {
-            name: "Message",
-            value: message as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-  ]);
+  async function handleTemplateClick(templatePath: string) {
+    const doc = await fetch(templatePath);
+    const data = await doc.json();
 
-  function handleTemplateClick(templateKey: string) {
-    let template: Template | undefined;
-
-    templateGroups.forEach((group) => {
-      if (group.has(templateKey)) {
-        template = group.get(templateKey);
-      }
-    });
-    if (!template) {
-      return;
-    }
-
-    dispatch("docLoaded", template.value);
+    dispatch("docLoaded", data);
     dispatch("close");
   }
-
-  let activeTab = "Templates";
-
-  const tabs = new Set<{ title: string; onClick(): void; disabled: boolean }>([
-    {
-      title: "Templates",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: false,
-    },
-    {
-      title: "Upload",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: true,
-    },
-    {
-      title: "Library",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: true,
-    },
-  ]);
 </script>
 
-<div class="font-medium text-center text-gray-500 border-b border-gray-200 mb-6 -mt-3">
-  <ul class="flex flex-wrap -mb-px">
-    {#each [...tabs] as tab}
-      <li>
-        <button
-          class={clsx(
-            "inline-block p-4 rounded-t-lg border-b-2 border-transparent",
-            { "text-sky-500 border-b-2 border-sky-500": tab.title === activeTab },
-            { "hover:text-gray-600 hover:border-gray-300": tab.title !== activeTab },
-            { "cursor-not-allowed": tab.disabled },
-          )}
-          on:click={tab.onClick}
-          >{tab.title}
-        </button>
-      </li>
-    {/each}
-  </ul>
-</div>
-
-{#each [...templateGroups] as [groupKey, group]}
-  <div class="mb-6">
-    <h3 class="uppercase font-semibold mb-3">{groupKey}</h3>
-    <ul>
-      {#each [...group] as [templateKey, template]}
-        {#if template.value.$schema}
+<div class="h-80 overflow-hidden">
+  <DocLoaderRegimePicker bind:regime />
+  {#each filteredGroups as group}
+    <div class="my-6">
+      <p class="block text-sm font-medium leading-6 text-gray-900 mb-2">Select a template</p>
+      <ul>
+        {#each group.templates as template}
           <li>
             <button
               class="inline-flex gap-2 items-center hover:text-sky-500"
-              on:click={() => handleTemplateClick(templateKey)}
+              on:click={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}
             >
-              <svelte:component this={schemaIconFor(template.value.$schema) || MessageIcon} />
+              <svelte:component this={template.icon} />
               {template.name}
             </button>
           </li>
-        {/if}
-      {/each}
-    </ul>
-  </div>
-{/each}
+        {/each}
+      </ul>
+    </div>
+  {/each}
+</div>
