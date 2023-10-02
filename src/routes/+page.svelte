@@ -22,7 +22,6 @@
   let defaultSchema = "";
   let builder: GOBLBuilder;
   let state: State = "init";
-  let regime = "Spain";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -46,7 +45,7 @@
   <div class="flex justify-between items-center pl-4 pr-2 py-2.5 bg-gray-800">
     <div class="flex gap-4 items-center">
       <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
-      <DocLoader {regime} on:load={handleDocLoad} />
+      <DocLoader on:load={handleDocLoad} />
       <div
         class="w-64 flex text-sm items-center justify-center"
         style="--height: 28px; --chevron-height: 28px; --font-size: 14px;"

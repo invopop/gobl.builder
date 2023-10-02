@@ -1,13 +1,11 @@
 <script lang="ts">
+  import "flag-icons/css/flag-icons.min.css";
+  import { AccordionItem, Accordion } from "flowbite-svelte";
+  import { ChevronDoubleUpOutline, ChevronDoubleDownOutline } from "flowbite-svelte-icons";
   import { createEventDispatcher } from "svelte";
-  import DocLoaderRegimePicker from "./DocLoaderRegimePicker.svelte";
   import templateGroups from "./templateData";
 
   const dispatch = createEventDispatcher();
-
-  export let regime = "Spain";
-
-  $: filteredGroups = templateGroups.filter((g) => g.name === regime);
 
   async function handleTemplateClick(templatePath: string) {
     const doc = await fetch(templatePath);
@@ -18,12 +16,24 @@
   }
 </script>
 
-<div class="h-80 overflow-hidden">
-  <DocLoaderRegimePicker bind:regime />
-  {#each filteredGroups as group}
-    <div class="my-6">
-      <p class="block text-sm font-medium leading-6 text-gray-900 mb-2">Select a template</p>
-      <ul>
+<Accordion>
+  {#each templateGroups as group, i (i)}
+    <AccordionItem
+      open={i === 0}
+      paddingDefault="0"
+      defaultClass="flex items-center justify-between w-full font-medium text-left border-gray-200 dark:border-gray-700"
+    >
+      <div slot="header" class="w-full p-4">
+        <span class={`fi fis fi-${group.folder}`} />
+        <span class="ml-2">{group.name}</span>
+      </div>
+      <div slot="arrowup" class="p-4">
+        <ChevronDoubleUpOutline class="h-3 w-3 -mr-0.5" />
+      </div>
+      <div slot="arrowdown" class="p-4">
+        <ChevronDoubleDownOutline class="h-3 w-3 -mr-0.5" />
+      </div>
+      <ul class="p-4">
         {#each group.templates as template}
           <li>
             <button
@@ -36,6 +46,6 @@
           </li>
         {/each}
       </ul>
-    </div>
+    </AccordionItem>
   {/each}
-</div>
+</Accordion>
