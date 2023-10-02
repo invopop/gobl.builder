@@ -1,161 +1,50 @@
 <script lang="ts">
+  import "flag-icons/css/flag-icons.min.css";
+  import { AccordionItem, Accordion } from "flowbite-svelte";
+  import { ChevronDoubleUpOutline, ChevronDoubleDownOutline } from "flowbite-svelte-icons";
   import { createEventDispatcher } from "svelte";
-  import { clsx } from "clsx";
-
-  // import { editor, envelope } from "$lib/stores.js";
-  import { schemaIconFor } from "$lib/ui/icons/schemaIconMap.svelte";
-  import MessageIcon from "$lib/ui/icons/MessageIcon.svelte";
-
-  import esInvoice from "../templates/es/invoice.json";
-  import esInvoiceRevCharge from "../templates/es/invoice-rev-charge.json";
-  import esInvoiceFreelance from "../templates/es/invoice-freelance.json";
-  import nlInvoice from "../templates/nl/invoice.json";
-  import message from "../templates/misc/message.json";
+  import templateGroups from "./templateData";
 
   const dispatch = createEventDispatcher();
 
-  type Template = {
-    name: string;
-    value: TemplateValue;
-  };
+  async function handleTemplateClick(templatePath: string) {
+    const doc = await fetch(templatePath);
+    const data = await doc.json();
 
-  type TemplateValue = {
-    $schema: string;
-    [field: string]: unknown;
-  };
-
-  const templateGroups = new Map<string, Map<string, Template>>([
-    [
-      "Spain",
-      new Map([
-        [
-          "es-invoice",
-          {
-            name: "Invoice",
-            value: esInvoice as TemplateValue,
-          },
-        ],
-        [
-          "es-invoice-rev-charge",
-          {
-            name: "Invoice (reverse charge)",
-            value: esInvoiceRevCharge as TemplateValue,
-          },
-        ],
-        [
-          "es-invoice-freelance",
-          {
-            name: "Invoice (freelance)",
-            value: esInvoiceFreelance as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-    [
-      "Netherlands",
-      new Map([
-        [
-          "nl-invoice",
-          {
-            name: "Invoice",
-            value: nlInvoice as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-    [
-      "Miscellaneous",
-      new Map([
-        [
-          "misc-message",
-          {
-            name: "Message",
-            value: message as TemplateValue,
-          },
-        ],
-      ]),
-    ],
-  ]);
-
-  function handleTemplateClick(templateKey: string) {
-    let template: Template | undefined;
-
-    templateGroups.forEach((group) => {
-      if (group.has(templateKey)) {
-        template = group.get(templateKey);
-      }
-    });
-    if (!template) {
-      return;
-    }
-
-    dispatch("docLoaded", template.value);
+    dispatch("docLoaded", data);
     dispatch("close");
   }
-
-  let activeTab = "Templates";
-
-  const tabs = new Set<{ title: string; onClick(): void; disabled: boolean }>([
-    {
-      title: "Templates",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: false,
-    },
-    {
-      title: "Upload",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: true,
-    },
-    {
-      title: "Library",
-      onClick: () => {
-        // Not implemented yet.
-      },
-      disabled: true,
-    },
-  ]);
 </script>
 
-<div class="font-medium text-center text-gray-500 border-b border-gray-200 mb-6 -mt-3">
-  <ul class="flex flex-wrap -mb-px">
-    {#each [...tabs] as tab}
-      <li>
-        <button
-          class={clsx(
-            "inline-block p-4 rounded-t-lg border-b-2 border-transparent",
-            { "text-sky-500 border-b-2 border-sky-500": tab.title === activeTab },
-            { "hover:text-gray-600 hover:border-gray-300": tab.title !== activeTab },
-            { "cursor-not-allowed": tab.disabled },
-          )}
-          on:click={tab.onClick}
-          >{tab.title}
-        </button>
-      </li>
-    {/each}
-  </ul>
-</div>
-
-{#each [...templateGroups] as [groupKey, group]}
-  <div class="mb-6">
-    <h3 class="uppercase font-semibold mb-3">{groupKey}</h3>
-    <ul>
-      {#each [...group] as [templateKey, template]}
-        {#if template.value.$schema}
+<Accordion>
+  {#each templateGroups as group, i (i)}
+    <AccordionItem
+      paddingDefault="0"
+      defaultClass="flex items-center justify-between w-full font-medium text-left border-gray-200 dark:border-gray-700"
+    >
+      <div slot="header" class="w-full p-4">
+        <span class={`fi fis fi-${group.folder}`} />
+        <span class="ml-2">{group.name}</span>
+      </div>
+      <div slot="arrowup" class="p-4">
+        <ChevronDoubleUpOutline class="h-3 w-3 -mr-0.5" />
+      </div>
+      <div slot="arrowdown" class="p-4">
+        <ChevronDoubleDownOutline class="h-3 w-3 -mr-0.5" />
+      </div>
+      <ul class="p-4">
+        {#each group.templates as template}
           <li>
             <button
               class="inline-flex gap-2 items-center hover:text-sky-500"
-              on:click={() => handleTemplateClick(templateKey)}
+              on:click={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}
             >
-              <svelte:component this={schemaIconFor(template.value.$schema) || MessageIcon} />
+              <svelte:component this={template.icon} />
               {template.name}
             </button>
           </li>
-        {/if}
-      {/each}
-    </ul>
-  </div>
-{/each}
+        {/each}
+      </ul>
+    </AccordionItem>
+  {/each}
+</Accordion>

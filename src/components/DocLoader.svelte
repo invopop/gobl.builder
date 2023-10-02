@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Modal from "$lib/ui/Modal.svelte";
+  import { Modal } from "flowbite-svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
   import { createEventDispatcher } from "svelte";
 
@@ -35,10 +35,7 @@
   Load document…
 </button>
 {#if openModal}
-  <div>
-    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
-    <Modal title="Load document" on:close={() => (openModal = false)}>
-      <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
-    </Modal>
-  </div>
+  <Modal outsideclose size="xs" title="Load Document Template" bind:open={openModal} autoclose>
+    <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
+  </Modal>
 {/if}

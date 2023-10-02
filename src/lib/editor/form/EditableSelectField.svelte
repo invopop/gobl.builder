@@ -32,7 +32,7 @@
   class:border-slate-100={field.is.calculated}
   class:focus:border-rose-500={showError}
 >
-  {#each options as opt (opt.value)}
+  {#each options as opt (opt.key)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
   {/each}
 </select>
