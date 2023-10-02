@@ -19,7 +19,6 @@
 <Accordion>
   {#each templateGroups as group, i (i)}
     <AccordionItem
-      open={i === 0}
       paddingDefault="0"
       defaultClass="flex items-center justify-between w-full font-medium text-left border-gray-200 dark:border-gray-700"
     >
