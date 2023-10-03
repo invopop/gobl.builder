@@ -36,6 +36,7 @@
   class:border-slate-100={field.is.calculated}
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
+  class:text-right={field.schema.type === "number"}
 />
 
 <style lang="postcss">

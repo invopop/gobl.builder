@@ -20,6 +20,7 @@
     object: ObjectField as typeof SvelteComponent,
     array: ArrayField as typeof SvelteComponent,
     string: StringField as typeof SvelteComponent,
+    number: StringField as typeof SvelteComponent,
     integer: IntegerField as typeof SvelteComponent,
     boolean: BooleanField as typeof SvelteComponent,
   };
