@@ -10,6 +10,7 @@
 
   $: iid = id || field.id;
   $: val = value || field.value;
+  $: fieldType = Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "";
 
   const dispatch = createEventDispatcher();
 
@@ -36,6 +37,7 @@
   class:border-slate-100={field.is.calculated}
   class:border-rose-500={showError}
   class:focus:border-rose-500={showError}
+  class:text-right={["number", "integer"].includes(fieldType)}
 />
 
 <style lang="postcss">
