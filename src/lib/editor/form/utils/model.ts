@@ -434,24 +434,18 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     while (--retries > 0) {
       await sleep(delay);
 
-      const el = this.getFocusableElement();
+      const elementToFocus = this.getFirstFocusableChild();
+
+      const el = document.querySelector(`#${elementToFocus?.id}`) as HTMLElement;
       if (!el) continue;
 
-      el.scrollIntoView({ behavior: "auto", block: "center" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
       el.focus();
 
       return true;
     }
 
     return false;
-  }
-
-  getFocusableElement(): HTMLElement | undefined {
-    if (this.isContainer()) {
-      return document.querySelector(`#${this.id} > .add-field-button`) as HTMLElement;
-    } else {
-      return document.querySelector(`#${this.id}`) as HTMLElement;
-    }
   }
 
   getControlType(schema: Schema = this.schema): ControlType | undefined {
