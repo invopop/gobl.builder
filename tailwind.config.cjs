@@ -16,7 +16,24 @@ module.exports = {
       ],
     },
     extend: {
+      fontSize: {
+        base: ["15px", "21.75px"],
+        xl: ["19px", "28px"],
+      },
       colors: {
+        neutral: {
+          50: "#FAFBFB",
+          100: "#F3F5F5",
+          200: "#E9EBEB",
+          500: "#7E7F7F",
+          900: "#103830",
+        },
+        accent: {
+          500: "#169958",
+        },
+        danger: {
+          500: "#EC4E46",
+        },
         grey: {
           1: "#EFEFEF",
           2: "#DBDBDB",

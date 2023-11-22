@@ -18,7 +18,7 @@
 
 <div id="fieldBackground" class="flex w-full h-full rounded bg-color2" transition:fade={{ duration: 200 }}>
   <div class="flex-shrink-0 left-full h-9 top-0 rounded bg-color2">
-    <ul class="flex align-middle text-grey-5 h-full">
+    <ul class="flex align-middle text-grey-5 h-full space-x-2">
       {#if showAdd}
         <li>
           <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
@@ -32,7 +32,7 @@
       {#if field?.is.disposable}
         <li>
           <FieldButton
-            icon={Minus}
+            icon={Trash}
             confirmationIcon={Trash}
             tooltipText="Remove"
             isDestructive={true}

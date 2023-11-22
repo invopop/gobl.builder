@@ -11,6 +11,7 @@
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
+  import clsx from "clsx";
 
   const dispatch = createEventDispatcher();
 
@@ -39,22 +40,34 @@
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
+  $: isSection = field.type === "object" && field.parent?.is.root;
+  $: isParent = ["object", "array"].includes(field.type);
+
+  $: wrapperClasses = clsx({
+    "bg-neutral-50 border border-neutral-100": showContextMenu && !isParent,
+  });
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
     isHover = e.detail;
+
+    if (!isHover && isFocus) return; // avoid parent to remove the highlight for the section when element is focused
+
+    dispatch("hoverChild", e.detail);
   }
 
   function handleFocusIn(e: FocusEvent) {
     // @note: Prevent undesired hover events on other items while dragging
     isFocus = true;
     e.stopPropagation();
+    dispatch("hoverChild", true);
   }
 
   function handleFocusOut(e: FocusEvent) {
     // // @note: Prevent undesired hover events on other items while dragging
     isFocus = false;
     e.stopPropagation();
+    dispatch("hoverChild", false);
   }
 
   function handleAddField() {
@@ -122,10 +135,13 @@
 </script>
 
 <svelte:window />
-
+{#if isSection}
+  <hr class="my-6 border-dashed" />
+{/if}
 <div
   role="button"
   tabindex="0"
+  class:col-span-2={["object", "array"].includes(field.type)}
   class="relative rounded expanded-area cursor-default"
   use:hover
   on:hover={handleHover}
@@ -133,7 +149,7 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
+  <div class="{wrapperClasses} px-2 pt-2.5 pb-2 rounded">
     <svelte:component
       this={componentsMap[field.type] || FallbackField}
       {field}
@@ -144,30 +160,25 @@
       on:fieldMoved
       on:fieldValueUpdated
       on:fieldKeyUpdated
+      on:hoverChild
     />
   </div>
-  <div class="absolute top-0 right-0">
-    <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
-      <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu
-          {field}
-          on:addField={handleAddField}
-          on:fieldDeleted
-          on:fieldDuplicated
-          on:fieldMoved
-          on:fieldValueUpdated
-          on:fieldKeyUpdated
-        />
-      </span>
-    </div>
-    {#if showAddMenu}
-      <div
-        class="absolute top-10 left-0 w-64 z-20"
-        style={`margin-top: -${contextMenuOffset}px`}
-        bind:this={addMenuRef}
-      >
-        <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
-      </div>
-    {/if}
+  <div on:hover={handleHover} class="absolute top-2 right-2 h-6" class:bg-neutral-50={showContextMenu && !isParent}>
+    <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
+      <FieldContextMenu
+        {field}
+        on:addField={handleAddField}
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    </span>
   </div>
+  {#if showAddMenu}
+    <div class="absolute top-10 left-0 w-64 z-20" style={`margin-top: -${contextMenuOffset}px`} bind:this={addMenuRef}>
+      <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
+    </div>
+  {/if}
 </div>

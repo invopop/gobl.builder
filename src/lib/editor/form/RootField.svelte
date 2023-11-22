@@ -15,7 +15,7 @@
 
 <div id={field.id}>
   {#if title != "root" && isValidSchema}
-    <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
+    <h1 class="text-xl capitalize text-grey-4 font-semibold p-2">{title}</h1>
   {/if}
   {#each children || emptyChildren as field (field.id)}
     <AbstractField
