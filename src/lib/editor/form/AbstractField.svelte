@@ -138,6 +138,7 @@
 {#if isSection}
   <hr class="my-6 border-dashed" />
 {/if}
+
 <div
   role="button"
   tabindex="0"

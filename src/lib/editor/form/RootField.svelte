@@ -1,23 +1,84 @@
 <script lang="ts">
   import type { UIModelRootField, UIModelField } from "$lib/editor/form/utils/model.js";
   import AbstractField from "./AbstractField.svelte";
-  import { currentEditorSchema, jsonSchema } from "../stores";
+  import SectionWrapper from "./SectionWrapper.svelte";
 
   export let field: UIModelRootField;
   export let readOnly = false;
 
   const emptyChildren: UIModelField[] = [];
-  $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
-  $: children = field.children?.filter((f) => f.key !== "$schema");
+  let highlight = false;
+
+  $: children = field.children?.filter((f) => f.key !== "$schema") || emptyChildren;
   // @todo: Add title field to schema object on gobl
-  $: title = field.schema.title || field.id.split("/").slice(-1);
+  $: complexFields = children.filter((f) => ["array", "object"].includes(f.type));
+  $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
+
+  function handleHoverChild(e: CustomEvent) {
+    highlight = e.detail;
+  }
 </script>
 
-<div id={field.id}>
+<SectionWrapper {field} {highlight}>
+  {#each simpleFields as field (field.id)}
+    <AbstractField
+      {field}
+      {readOnly}
+      on:fieldAdded
+      on:fieldDeleted
+      on:fieldDuplicated
+      on:fieldMoved
+      on:fieldValueUpdated
+      on:fieldKeyUpdated
+      on:hoverChild={handleHoverChild}
+    />
+  {/each}
+
+  <div slot="extra-content">
+    {#each complexFields as field (field.id)}
+      <AbstractField
+        {field}
+        {readOnly}
+        on:fieldAdded
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    {/each}
+  </div>
+</SectionWrapper>
+
+<!-- <div id={field.id}>
   {#if title != "root" && isValidSchema}
-    <h1 class="text-xl capitalize text-grey-4 font-semibold p-2">{title}</h1>
+    <button
+      class="flex items-center justify-start cursor-pointer h-8"
+      on:click={() => {
+        open = !open;
+      }}
+    >
+      <FieldTitle {field} isSection />
+      <ExpandButton {open} />
+    </button>
   {/if}
-  {#each children || emptyChildren as field (field.id)}
+
+  <div class="grid grid-cols-2 gap-2 w-full py-2">
+    {#each simpleFields as field (field.id)}
+      <AbstractField
+        {field}
+        {readOnly}
+        on:fieldAdded
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    {/each}
+  </div>
+
+  {#each complexFields as field (field.id)}
     <AbstractField
       {field}
       {readOnly}
@@ -29,4 +90,4 @@
       on:fieldKeyUpdated
     />
   {/each}
-</div>
+</div> -->
