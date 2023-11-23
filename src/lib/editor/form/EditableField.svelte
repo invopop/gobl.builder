@@ -46,7 +46,7 @@
   }
 </script>
 
-<div class="w-full">
+<div class="w-full space-y-2 flex flex-col">
   {#if field.controlType === "date"}
     <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}

@@ -9,8 +9,8 @@
 
   $: classes = clsx({
     "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
-    "text-neutral-800": !field.is.calculated,
-    "border-danger-500 focus:border-danger-500": showError,
+    "text-neutral-800": !field.is.calculated && !showError,
+    "border-danger-200 focus:border-danger-200 text-danger-500": showError,
   });
 
   const dispatch = createEventDispatcher();

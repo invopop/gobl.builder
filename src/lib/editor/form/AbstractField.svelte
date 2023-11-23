@@ -31,6 +31,7 @@
   let isHover = false;
   let isFocus = false;
   let contextMenuOffset = 0;
+  let highlight = false;
 
   export let readOnly = false;
 
@@ -42,12 +43,20 @@
   }
   $: isParent = ["object", "array"].includes(field.type);
   $: isSection = isParent && field.parent?.is.root;
-
   $: wrapperClasses = clsx({
     "bg-neutral-50 border-neutral-100": showContextMenu && !isParent,
     "border-transparent": !showContextMenu,
     border: !isParent,
   });
+  $: classes = clsx({
+    "border-accent-500": highlight,
+    "border-neutral-200": !highlight,
+  });
+
+  function handleHoverChild(e: CustomEvent) {
+    highlight = e.detail;
+    dispatch("hoverChild", e.detail);
+  }
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
@@ -153,19 +162,24 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="{wrapperClasses} px-2 pt-2.5 pb-2 rounded">
-    <svelte:component
-      this={componentsMap[field.type] || FallbackField}
-      {field}
-      {readOnly}
-      on:fieldAdded
-      on:fieldDeleted
-      on:fieldDuplicated
-      on:fieldMoved
-      on:fieldValueUpdated
-      on:fieldKeyUpdated
-      on:hoverChild
-    />
+  <div class="{wrapperClasses} px-2 pt-2.5 pb-2 rounded flex space-x-2">
+    {#if isParent && !isSection && !field.is.root}
+      <div class="{classes} w-2 border-l border-t border-b flex-none"></div>
+    {/if}
+    <div class="flex-1">
+      <svelte:component
+        this={componentsMap[field.type] || FallbackField}
+        {field}
+        {readOnly}
+        on:fieldAdded
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+        on:hoverChild={handleHoverChild}
+      />
+    </div>
   </div>
   <div on:hover={handleHover} class="absolute top-2 right-2 h-6" class:bg-neutral-50={showContextMenu && !isParent}>
     <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>

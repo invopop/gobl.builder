@@ -17,6 +17,7 @@ module.exports = {
     },
     extend: {
       fontSize: {
+        sm: ["13px", "18.20px"],
         base: ["15px", "21.75px"],
         xl: ["19px", "28px"],
       },
@@ -33,6 +34,7 @@ module.exports = {
           500: "#169958",
         },
         danger: {
+          200: "rgba(236, 78, 70, 0.4)",
           500: "#EC4E46",
         },
         grey: {
