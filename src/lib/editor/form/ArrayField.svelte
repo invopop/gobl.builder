@@ -17,6 +17,7 @@
   on:fieldMoved
   on:fieldValueUpdated
   on:fieldKeyUpdated
+  on:hoverChild
 >
   <slot />
 </ObjectField>

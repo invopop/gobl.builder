@@ -40,11 +40,13 @@
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
-  $: isSection = field.type === "object" && field.parent?.is.root;
   $: isParent = ["object", "array"].includes(field.type);
+  $: isSection = isParent && field.parent?.is.root;
 
   $: wrapperClasses = clsx({
-    "bg-neutral-50 border border-neutral-100": showContextMenu && !isParent,
+    "bg-neutral-50 border-neutral-100": showContextMenu && !isParent,
+    "border-transparent": !showContextMenu,
+    border: !isParent,
   });
 
   function handleHover(e: CustomEvent<boolean>) {
@@ -135,6 +137,7 @@
 </script>
 
 <svelte:window />
+
 {#if isSection}
   <hr class="my-6 border-dashed" />
 {/if}
@@ -176,10 +179,14 @@
         on:fieldKeyUpdated
       />
     </span>
+    {#if showAddMenu}
+      <div
+        class="absolute top-10 left-0 w-64 z-20"
+        style={`margin-top: -${contextMenuOffset}px`}
+        bind:this={addMenuRef}
+      >
+        <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
+      </div>
+    {/if}
   </div>
-  {#if showAddMenu}
-    <div class="absolute top-10 left-0 w-64 z-20" style={`margin-top: -${contextMenuOffset}px`} bind:this={addMenuRef}>
-      <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
-    </div>
-  {/if}
 </div>
