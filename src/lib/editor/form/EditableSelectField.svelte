@@ -1,10 +1,17 @@
 <script lang="ts">
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
   export let field: UIModelField<string>;
   export let options: { key: string; value: string | boolean }[];
   export let showError = false;
+
+  $: classes = clsx({
+    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
+    "text-neutral-800": !field.is.calculated,
+    "border-danger-500 focus:border-danger-500": showError,
+  });
 
   const dispatch = createEventDispatcher();
 
@@ -26,11 +33,7 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="text-ellipsis outline-none w-full rounded border h-8 py-1.5 pl-2 pr-8 text-gray-700 appearance-none focus:border-gray-400 cursor-pointer custom-select"
-  class:border-rose-500={showError}
-  class:bg-slate-50={field.is.calculated}
-  class:border-slate-100={field.is.calculated}
-  class:focus:border-rose-500={showError}
+  class="{classes} text-ellipsis outline-none w-full rounded border py-1.5 pl-3 pr-8 appearance-none focus:border-accent-500 cursor-pointer custom-select"
 >
   {#each options as opt (opt.key)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
@@ -40,11 +43,11 @@
 <style lang="postcss">
   .custom-select {
     /* icon */
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxNiAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cGF0aAogICAgZD0iTTggOS40Mzc1TDguNjg3NSA4LjcxODc1TDE0LjY4NzUgMi43MTg3NUwxNS40MDYyIDJMMTQgMC41OTM3NUwxMy4yODEyIDEuMzEyNUw4IDYuNTkzNzVMMi42ODc1IDEuMzEyNUwyIDAuNTkzNzVMMC41NjI1IDJMMS4yODEyNSAyLjcxODc1TDcuMjgxMjUgOC43MTg3NUw4IDkuNDM3NVoiCiAgICBmaWxsPSJibGFjayIgLz4KPC9zdmc+") !important;
+    background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iOCIgZmlsbD0iI0YzRjVGNSIvPgo8cGF0aCBkPSJNNi41IDguMjUwMDRMMTAgMTEuNzVMMTMuNSA4LjI1IiBzdHJva2U9IiMwQTBBMEEiIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjwvc3ZnPgo=") !important;
     background-repeat: no-repeat !important;
     background-position: center right -1.3rem !important;
     background-origin: content-box !important;
-    background-size: 0.8em !important;
+    background-size: 20px !important;
   }
 
   /* Remove default arrow IE*/

@@ -31,9 +31,9 @@
 <button
   title={tooltipText}
   on:click={handleClick}
-  class="flex items-center justify-start w-full p-1 bg-white rounded-md border border-neutral-200 {isDestructive
+  class="flex items-center justify-start w-full p-1 bg-white rounded-sm border border-neutral-200 {isDestructive
     ? 'hover:bg-danger-500 hover:text-white text-danger-500'
-    : 'hover:bg-gray-200'}"
+    : 'hover:bg-neutral-100 text-neutral-800'}"
 >
   {#if isDestructive && needsConfirmation}
     <span class="text-xs mr-1">Sure?</span>

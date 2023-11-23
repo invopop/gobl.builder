@@ -7,17 +7,18 @@
   export let isSection = false;
 
   $: arrayTitle = field.schema.title || "";
+  $: isParent = ["object", "array"].includes(field.type);
   $: classes = clsx({
-    "font-semibold text-neutral-900": ["object", "array"].includes(field.type),
+    "font-semibold text-neutral-900": isParent,
     "text-xl text-neutral-900 py-2": isSection,
-    "text-neutral-500": !isSection,
+    "text-neutral-500 text-sm": !isSection && !isParent,
   });
 </script>
 
 <span class="{classes} whitespace-nowrap flex items-center" class:capitalize={!field.schema.title}>
   {#if field.parent?.isArray()}
-    <span class="flex items-center justify-start w-8">
-      <Icon src={Hashtag} class="h-3 text-grey-5 mr-1" />
+    <span class="flex items-center justify-start">
+      <Icon src={Hashtag} class="h-4" />
       {arrayTitle}
       {Number(field.key) + 1}
     </span>

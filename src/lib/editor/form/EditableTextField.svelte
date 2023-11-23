@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
   export let field: UIModelField<string>;
@@ -11,6 +12,12 @@
   $: iid = id || field.id;
   $: val = value || field.value;
   $: fieldType = Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "";
+  $: classes = clsx({
+    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
+    "text-neutral-800": !field.is.calculated,
+    "border-danger-500 focus:border-danger-500": showError,
+    "text-right": ["number", "integer"].includes(fieldType),
+  });
 
   const dispatch = createEventDispatcher();
 
@@ -32,16 +39,5 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="focus:border-gray-400 {classes}"
-  class:bg-slate-50={field.is.calculated}
-  class:border-slate-100={field.is.calculated}
-  class:border-rose-500={showError}
-  class:focus:border-rose-500={showError}
-  class:text-right={["number", "integer"].includes(fieldType)}
+  class="{classes} focus:border-accent-500 border rounded px-3 py-1.5 outline-none w-full caret-accent-500 {classes}"
 />
-
-<style lang="postcss">
-  input {
-    @apply outline-none w-full rounded border h-8 py-1.5 px-2 text-gray-700;
-  }
-</style>

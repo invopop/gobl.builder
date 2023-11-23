@@ -1,9 +1,16 @@
 <script lang="ts">
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
   export let field: UIModelField<string>;
   export let showError = false;
+
+  $: classes = clsx({
+    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
+    "text-neutral-800": !field.is.calculated,
+    "border-danger-500 focus:border-danger-500": showError,
+  });
 
   const dispatch = createEventDispatcher();
 
@@ -25,9 +32,5 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="outline-none w-full border rounded h-8 py-1.5 px-2 text-gray-700 focus:border-gray-400"
-  class:border-rose-500={showError}
-  class:bg-slate-50={field.is.calculated}
-  class:border-slate-100={field.is.calculated}
-  class:focus:border-rose-500={showError}
+  class="{classes} outline-none w-full border rounded py-1.5 px-3 focus:border-accent-500"
 />

@@ -2,6 +2,6 @@
   export let error = "";
 </script>
 
-<span class="text-rose-500 text-xs whitespace-nowrap">
+<span class="text-danger-500 text-xs whitespace-nowrap">
   {error}
 </span>

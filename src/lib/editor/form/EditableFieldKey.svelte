@@ -30,6 +30,6 @@
 </script>
 
 <span class="flex items-center justify-start">
-  <Icon src={PencilSquare} solid class="h-4 w-4 mr-2 text-grey-5" />
+  <Icon src={PencilSquare} solid class="h-6 w-6 mr-2 text-neutral-500" />
   <EditableTextField {field} id={`${field.id}-key`} value={field.key} on:edit={handleEdit} on:blur={handleBlur} />
 </span>
