@@ -162,7 +162,7 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="{wrapperClasses} px-2 pt-2.5 pb-2 rounded flex space-x-2">
+  <div class="{wrapperClasses} rounded flex" class:mb-2={isParent}>
     {#if isParent && !isSection && !field.is.root}
       <div class="{classes} w-2 border-l border-t border-b flex-none"></div>
     {/if}
@@ -181,7 +181,7 @@
       />
     </div>
   </div>
-  <div on:hover={handleHover} class="absolute top-2 right-2 h-6" class:bg-neutral-50={showContextMenu && !isParent}>
+  <div on:hover={handleHover} class="absolute top-0 -right-8 h-6" class:bg-neutral-50={showContextMenu && !isParent}>
     <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
       <FieldContextMenu
         {field}
@@ -195,7 +195,7 @@
     </span>
     {#if showAddMenu}
       <div
-        class="absolute top-10 left-0 w-64 z-20"
+        class="absolute top-10 right-0 w-64 z-20"
         style={`margin-top: -${contextMenuOffset}px`}
         bind:this={addMenuRef}
       >

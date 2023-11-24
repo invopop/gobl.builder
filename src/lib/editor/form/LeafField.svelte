@@ -15,15 +15,15 @@
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 </script>
 
-<div class="flex flex-col items-stretch justify-between w-full space-y-2" title={label}>
-  <div class:pointer-events-none={readOnly} class="flex items-center justify-start">
+<div class="flex w-full space-x-2" title={label}>
+  <div class:pointer-events-none={readOnly} class="flex items-center justify-start flex-1">
     {#if field.is.editableKey}
       <EditableFieldKey {field} {parseKey} on:fieldKeyUpdated />
     {:else}
       <FieldTitle {field} />
     {/if}
   </div>
-  <div class:pointer-events-none={readOnly} class="flex items-center justify-start w-full">
+  <div class:pointer-events-none={readOnly} class="flex items-center justify-start w-[300px] lg:w-[450px]">
     <EditableField {field} {parseValue} on:fieldValueUpdated on:fieldKeyUpdated />
   </div>
 </div>
