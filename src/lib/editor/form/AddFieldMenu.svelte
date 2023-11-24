@@ -165,6 +165,7 @@
     </ul>
     <div class="pb-2 pt-1 px-2">
       <button
+        on:click={handleAddFields}
         class="flex items-center justify-center rounded border font-medium bg-accent-500 text-white px-3 py-1.5 w-full"
         >Add items</button
       >
