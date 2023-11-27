@@ -29,6 +29,16 @@
           <FieldButton icon={DocumentDuplicate} tooltipText="Duplicate" on:click={() => dispatch("duplicate")} />
         </li>
       {/if}
+      {#if canMoveUp}
+        <li>
+          <FieldButton icon={ArrowUp} tooltipText="Move Up" on:click={() => dispatch("moveUp")} />
+        </li>
+      {/if}
+      {#if canMoveDown}
+        <li>
+          <FieldButton icon={ArrowDown} tooltipText="Move Down" on:click={() => dispatch("moveDown")} />
+        </li>
+      {/if}
       {#if field?.is.disposable}
         <li>
           <FieldButton
@@ -38,16 +48,6 @@
             isDestructive={true}
             on:click={() => dispatch("remove")}
           />
-        </li>
-      {/if}
-      {#if canMoveUp}
-        <li>
-          <FieldButton icon={ArrowUp} tooltipText="Move Up" on:click={() => dispatch("moveUp")} />
-        </li>
-      {/if}
-      {#if canMoveDown}
-        <li>
-          <FieldButton icon={ArrowDown} tooltipText="Move Down" on:click={() => dispatch("moveDown")} />
         </li>
       {/if}
     </ul>
