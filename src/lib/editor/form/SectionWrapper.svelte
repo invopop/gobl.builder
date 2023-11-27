@@ -4,8 +4,10 @@
   import FieldTitle from "./FieldTitle.svelte";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import { slide } from "svelte/transition";
+  import clsx from "clsx";
 
   export let field: UIModelField;
+  export let isActive = false;
 
   let open = true;
 
@@ -13,14 +15,23 @@
     ? "Document is signed and can not be edited"
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
   $: isSection = field.is.root || field.parent?.is.root;
+  $: isParent = ["object", "array"].includes(field.type);
+  $: classes = clsx({
+    "border-neutral-100 bg-neutral-50": isActive,
+    "border-transparent": !isActive,
+  });
 
   function handleFocusInner() {
     open = true;
   }
 </script>
 
-<div id={field.id} title={label} class:pl-4={isSection} class:pl-2={!isSection}>
-  <div class="pt-2.5 pb-2 pr-2.5" class:ml-4={field.is.root}>
+<div id={field.id} title={label}>
+  <div
+    class:pl-2={isParent}
+    class="{classes} py-1 pr-2 rounded-l border-l border-t border-b"
+    class:ml-2={field.is.root}
+  >
     <button
       class="flex items-center justify-start cursor-pointer h-8"
       on:click={() => {
@@ -39,7 +50,7 @@
       class:overflow-hidden={!open}
       on:focusin|capture={handleFocusInner}
     >
-      <div class="grid grid-cols-1 space-y-1 w-full py-1">
+      <div class="grid grid-cols-1 w-full py-1">
         <slot />
       </div>
     </div>

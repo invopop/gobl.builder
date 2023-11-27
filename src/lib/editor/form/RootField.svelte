@@ -5,21 +5,17 @@
 
   export let field: UIModelRootField;
   export let readOnly = false;
+  export let isActive = false;
 
   const emptyChildren: UIModelField[] = [];
-  let highlight = false;
 
   $: children = field.children?.filter((f) => f.key !== "$schema") || emptyChildren;
   // @todo: Add title field to schema object on gobl
   $: complexFields = children.filter((f) => ["array", "object"].includes(f.type));
   $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
-
-  function handleHoverChild(e: CustomEvent) {
-    highlight = e.detail;
-  }
 </script>
 
-<SectionWrapper {field} {highlight}>
+<SectionWrapper {field} {isActive}>
   {#each simpleFields as field (field.id)}
     <AbstractField
       {field}
@@ -30,7 +26,6 @@
       on:fieldMoved
       on:fieldValueUpdated
       on:fieldKeyUpdated
-      on:hoverChild={handleHoverChild}
     />
   {/each}
 

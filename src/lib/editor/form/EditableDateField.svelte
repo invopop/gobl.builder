@@ -32,5 +32,5 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="{classes} outline-none w-full border rounded py-1.5 px-3 focus:border-accent-500"
+  class="{classes} outline-none w-full border rounded h-[32px] px-3 focus:border-accent-500"
 />

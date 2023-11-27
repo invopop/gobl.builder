@@ -1,7 +1,7 @@
 <script lang="ts">
   import { clsx } from "clsx";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import { Hashtag, Icon } from "svelte-hero-icons";
+  import { Calculator, Hashtag, Icon } from "svelte-hero-icons";
 
   export let field: UIModelField<unknown>;
   export let isSection = false;
@@ -23,6 +23,11 @@
       {Number(field.key) + 1}
     </span>
   {:else}
-    <span class:italic={field.is.calculated}>{field.schema.title || field.key}</span>
+    <span class="flex items-center space-x-1">
+      <span>{field.schema.title || field.key}</span>
+      {#if field.is.calculated}
+        <Icon src={Calculator} class="h-3" />
+      {/if}
+    </span>
   {/if}
 </span>

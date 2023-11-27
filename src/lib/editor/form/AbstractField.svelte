@@ -46,11 +46,14 @@
   $: wrapperClasses = clsx({
     "bg-neutral-50 border-neutral-100": showContextMenu && !isParent,
     "border-transparent": !showContextMenu,
-    border: !isParent,
+    "border-l border-t border-b": !isParent,
   });
   $: classes = clsx({
     "border-accent-500": highlight,
     "border-neutral-200": !highlight,
+  });
+  $: contextMenuClasses = clsx({
+    "mt-1": isParent && !isSection && !field.is.root,
   });
 
   function handleHoverChild(e: CustomEvent) {
@@ -162,7 +165,7 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="{wrapperClasses} rounded flex" class:mb-2={isParent}>
+  <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
       <div class="{classes} w-2 border-l border-t border-b flex-none"></div>
     {/if}
@@ -171,6 +174,7 @@
         this={componentsMap[field.type] || FallbackField}
         {field}
         {readOnly}
+        isActive={showContextMenu}
         on:fieldAdded
         on:fieldDeleted
         on:fieldDuplicated
@@ -181,8 +185,11 @@
       />
     </div>
   </div>
-  <div on:hover={handleHover} class="absolute top-0 -right-8 h-6" class:bg-neutral-50={showContextMenu && !isParent}>
-    <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
+  <div on:hover={handleHover} class="absolute top-0 right-0">
+    <span
+      class="{contextMenuClasses} bg-neutral-50 border-neutral-100 border-r border-t border-b rounded-r absolute top-0 left-0 h-[41.7px] py-1 pr-1"
+      class:invisible={!showContextMenu}
+    >
       <FieldContextMenu
         {field}
         on:addField={handleAddField}
@@ -195,7 +202,7 @@
     </span>
     {#if showAddMenu}
       <div
-        class="absolute top-10 right-0 w-64 z-20"
+        class="absolute top-12 -right-8 w-64 z-20"
         style={`margin-top: -${contextMenuOffset}px`}
         bind:this={addMenuRef}
       >

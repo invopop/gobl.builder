@@ -17,7 +17,7 @@
 </script>
 
 <div id="fieldBackground" class="flex w-full h-full rounded bg-color2" transition:fade={{ duration: 200 }}>
-  <div class="flex-shrink-0 left-full h-9 top-0 rounded bg-color2">
+  <div class="flex-shrink-0 left-full top-0 rounded bg-color2">
     <ul class="flex align-middle h-full space-x-2">
       {#if showAdd}
         <li>

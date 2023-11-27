@@ -6,6 +6,7 @@
 
   export let field: UIModelField;
   export let readOnly = false;
+  export let isActive = false;
 
   $: children = field.children || ([] as UIModelField[]);
 
@@ -20,6 +21,7 @@
   <RootField
     {...props}
     {readOnly}
+    {isActive}
     on:fieldAdded
     on:fieldDeleted
     on:fieldDuplicated
@@ -28,7 +30,7 @@
     on:fieldKeyUpdated
   />
 {:else}
-  <SectionWrapper {field}>
+  <SectionWrapper {field} {isActive}>
     {#each children as childField (childField.id)}
       <AbstractField
         field={childField}

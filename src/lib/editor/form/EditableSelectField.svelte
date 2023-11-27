@@ -33,7 +33,7 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="{classes} text-ellipsis outline-none w-full rounded border py-1.5 pl-3 pr-8 appearance-none focus:border-accent-500 cursor-pointer custom-select"
+  class="{classes} text-ellipsis outline-none w-full rounded border h-[32px] pl-3 pr-8 appearance-none focus:border-accent-500 cursor-pointer custom-select"
 >
   {#each options as opt (opt.key)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
