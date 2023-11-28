@@ -5,7 +5,8 @@
   import EditableTextField from "./EditableTextField.svelte";
   import EditableDateField from "./EditableDateField.svelte";
   import FieldError from "./FieldError.svelte";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, getContext } from "svelte";
+  import type { Writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
@@ -13,7 +14,15 @@
   export let field: UIModelField<string>;
 
   let error = "";
+  let fieldContext = getContext(field.id) as Writable<{
+    hasError: boolean;
+    error: string;
+  }>;
   $: showError = Boolean(error);
+  $: {
+    $fieldContext.hasError = showError;
+    $fieldContext.error = error;
+  }
 
   function handleEdit(e: CustomEvent<SchemaValue>) {
     const value = e.detail;
@@ -46,7 +55,7 @@
   }
 </script>
 
-<div class="w-full space-y-2 flex flex-col">
+<div class="w-full space-y-1 flex flex-col">
   {#if field.controlType === "date"}
     <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}

@@ -16,12 +16,14 @@
 </script>
 
 <div class="flex w-full space-x-2 py-1 px-2" title={label}>
-  <div class:pointer-events-none={readOnly} class="flex items-center justify-start flex-1">
-    {#if field.is.editableKey}
-      <EditableFieldKey {field} {parseKey} on:fieldKeyUpdated />
-    {:else}
-      <FieldTitle {field} />
-    {/if}
+  <div class:pointer-events-none={readOnly} class="flex items-start justify-start flex-1">
+    <div class="h-8 flex items-center">
+      {#if field.is.editableKey}
+        <EditableFieldKey {field} {parseKey} on:fieldKeyUpdated />
+      {:else}
+        <FieldTitle {field} />
+      {/if}
+    </div>
   </div>
   <div class:pointer-events-none={readOnly} class="flex items-center justify-start w-[300px] lg:w-[450px]">
     <EditableField {field} {parseValue} on:fieldValueUpdated on:fieldKeyUpdated />

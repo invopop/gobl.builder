@@ -4,12 +4,12 @@
   import { Calculator, Hashtag, Icon } from "svelte-hero-icons";
 
   export let field: UIModelField<unknown>;
-  export let isSection = false;
 
   $: arrayTitle = field.schema.title || "";
   $: isParent = ["object", "array"].includes(field.type);
+  $: isSection = field.is.root || (field.parent?.is.root && isParent);
   $: classes = clsx({
-    "font-semibold text-neutral-900": isParent,
+    "font-semibold text-neutral-900 text-base": isParent,
     "text-xl text-neutral-900 py-2": isSection,
     "text-neutral-500 text-sm": !isSection && !isParent,
   });

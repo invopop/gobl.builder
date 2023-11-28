@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, type SvelteComponent } from "svelte";
+  import { createEventDispatcher, setContext, type SvelteComponent } from "svelte";
   import ObjectField from "./ObjectField.svelte";
   import ArrayField from "./ArrayField.svelte";
   import StringField from "./StringField.svelte";
@@ -12,10 +12,15 @@
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
   import clsx from "clsx";
+  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
+
+  let fieldContext = writable({ hasError: false, error: "" });
+
+  setContext(field.id, fieldContext);
 
   const componentsMap: Record<string, typeof SvelteComponent> = {
     object: ObjectField as typeof SvelteComponent,
@@ -54,6 +59,7 @@
   });
   $: contextMenuClasses = clsx({
     "mt-1": isParent && !isSection && !field.is.root,
+    "h-[64px]": $fieldContext.hasError,
   });
 
   function handleHoverChild(e: CustomEvent) {
@@ -157,7 +163,6 @@
 <div
   role="button"
   tabindex="0"
-  class:col-span-2={["object", "array"].includes(field.type)}
   class="relative rounded expanded-area cursor-default"
   use:hover
   on:hover={handleHover}
@@ -187,7 +192,7 @@
   </div>
   <div on:hover={handleHover} class="absolute top-0 right-0">
     <span
-      class="{contextMenuClasses} bg-neutral-50 border-neutral-100 border-r border-t border-b rounded-r absolute top-0 left-0 h-[41.7px] py-1 pr-1"
+      class="{contextMenuClasses} bg-neutral-50 border-neutral-100 border-r border-t border-b rounded-r absolute top-0 left-0 py-1 pr-1"
       class:invisible={!showContextMenu}
     >
       <FieldContextMenu

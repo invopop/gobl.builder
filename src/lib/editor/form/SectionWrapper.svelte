@@ -14,7 +14,6 @@
   $: label = $envelopeIsSigned
     ? "Document is signed and can not be edited"
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
-  $: isSection = field.is.root || field.parent?.is.root;
   $: isParent = ["object", "array"].includes(field.type);
   $: classes = clsx({
     "border-neutral-100 bg-neutral-50": isActive,
@@ -38,7 +37,7 @@
         open = !open;
       }}
     >
-      <FieldTitle {field} {isSection} />
+      <FieldTitle {field} />
       <ExpandButton {open} />
     </button>
   </div>
