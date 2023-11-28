@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, setContext, type SvelteComponent } from "svelte";
+  import { createEventDispatcher, type SvelteComponent } from "svelte";
   import ObjectField from "./ObjectField.svelte";
   import ArrayField from "./ArrayField.svelte";
   import StringField from "./StringField.svelte";
@@ -12,15 +12,10 @@
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
   import clsx from "clsx";
-  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
   export let field: UIModelField;
-
-  let fieldContext = writable({ hasError: false, error: "" });
-
-  setContext(field.id, fieldContext);
 
   const componentsMap: Record<string, typeof SvelteComponent> = {
     object: ObjectField as typeof SvelteComponent,
@@ -34,13 +29,12 @@
   let showAddMenu = false;
   let addMenuRef: HTMLElement;
   let isHover = false;
-  let isFocus = false;
   let contextMenuOffset = 0;
   let highlight = false;
 
   export let readOnly = false;
 
-  $: showContextMenu = !$envelopeIsSigned && (isHover || isFocus);
+  $: showContextMenu = !$envelopeIsSigned && isHover;
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
     const offset = top + height - window.innerHeight;
@@ -51,43 +45,41 @@
   $: wrapperClasses = clsx({
     "bg-neutral-50 border-neutral-100": showContextMenu && !isParent,
     "border-transparent": !showContextMenu,
-    "border-l border-t border-b": !isParent,
+    border: !isParent,
+    "pl-2": isParent && !isSection,
   });
   $: classes = clsx({
-    "border-accent-500": highlight,
+    "border-accent-500 bg-neutral-50": highlight,
     "border-neutral-200": !highlight,
   });
   $: contextMenuClasses = clsx({
-    "mt-1": isParent && !isSection && !field.is.root,
-    "h-[64px]": $fieldContext.hasError,
+    "pt-2": isParent && !isSection && !field.is.root,
   });
 
   function handleHoverChild(e: CustomEvent) {
     highlight = e.detail;
-    dispatch("hoverChild", e.detail);
   }
 
   function handleHover(e: CustomEvent<boolean>) {
     // @note: Prevent undesired hover events on other items while dragging
     isHover = e.detail;
 
-    if (!isHover && isFocus) return; // avoid parent to remove the highlight for the section when element is focused
+    if (isParent) {
+      highlight = e.detail;
+      return;
+    }
 
     dispatch("hoverChild", e.detail);
   }
 
   function handleFocusIn(e: FocusEvent) {
-    // @note: Prevent undesired hover events on other items while dragging
-    isFocus = true;
+    isHover = true;
     e.stopPropagation();
-    dispatch("hoverChild", true);
   }
 
   function handleFocusOut(e: FocusEvent) {
-    // // @note: Prevent undesired hover events on other items while dragging
-    isFocus = false;
+    isHover = false;
     e.stopPropagation();
-    dispatch("hoverChild", false);
   }
 
   function handleAddField() {
@@ -157,7 +149,7 @@
 <svelte:window />
 
 {#if isSection}
-  <hr class="my-6 border-dashed" />
+  <hr class="my-4 mx-2 border-dashed" />
 {/if}
 
 <div
@@ -170,7 +162,7 @@
   on:focusin={handleFocusIn}
   on:focusout={handleFocusOut}
 >
-  <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
+  <div class="{wrapperClasses} rounded flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
       <div class="{classes} w-2 border-l border-t border-b flex-none"></div>
     {/if}
@@ -191,10 +183,7 @@
     </div>
   </div>
   <div on:hover={handleHover} class="absolute top-0 right-0">
-    <span
-      class="{contextMenuClasses} bg-neutral-50 border-neutral-100 border-r border-t border-b rounded-r absolute top-0 left-0 py-1 pr-1"
-      class:invisible={!showContextMenu}
-    >
+    <span class="{contextMenuClasses} absolute top-0 left-0 mt-1 pl-2" class:invisible={!showContextMenu}>
       <FieldContextMenu
         {field}
         on:addField={handleAddField}

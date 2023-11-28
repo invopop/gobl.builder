@@ -15,8 +15,10 @@
     ? "Document is signed and can not be edited"
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
   $: isParent = ["object", "array"].includes(field.type);
-  $: classes = clsx({
+  $: isSection = field.is.root || (isParent && field.parent?.is.root);
+  $: wrapperClasses = clsx({
     "border-neutral-100 bg-neutral-50": isActive,
+    "border-l": isActive && isSection,
     "border-transparent": !isActive,
   });
 
@@ -25,12 +27,8 @@
   }
 </script>
 
-<div id={field.id} title={label}>
-  <div
-    class:pl-2={isParent}
-    class="{classes} py-1 pr-2 rounded-l border-l border-t border-b"
-    class:ml-2={field.is.root}
-  >
+<div id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r">
+  <div class:pl-2={isParent} class="mt-1 py-1 pr-2">
     <button
       class="flex items-center justify-start cursor-pointer h-8"
       on:click={() => {
@@ -43,16 +41,11 @@
   </div>
 
   {#if open}
-    <div
-      transition:slide
-      class:ml-4={field.is.root}
-      class:overflow-hidden={!open}
-      on:focusin|capture={handleFocusInner}
-    >
-      <div class="grid grid-cols-1 w-full py-1">
+    <div transition:slide class:overflow-hidden={!open} on:focusin|capture={handleFocusInner}>
+      <div class="grid grid-cols-1 w-full pb-1">
         <slot />
       </div>
     </div>
   {/if}
-  <slot name="extra-content" />
 </div>
+<slot name="extra-content" />

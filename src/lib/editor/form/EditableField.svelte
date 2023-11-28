@@ -5,8 +5,7 @@
   import EditableTextField from "./EditableTextField.svelte";
   import EditableDateField from "./EditableDateField.svelte";
   import FieldError from "./FieldError.svelte";
-  import { createEventDispatcher, getContext } from "svelte";
-  import type { Writable } from "svelte/store";
+  import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -14,15 +13,7 @@
   export let field: UIModelField<string>;
 
   let error = "";
-  let fieldContext = getContext(field.id) as Writable<{
-    hasError: boolean;
-    error: string;
-  }>;
   $: showError = Boolean(error);
-  $: {
-    $fieldContext.hasError = showError;
-    $fieldContext.error = error;
-  }
 
   function handleEdit(e: CustomEvent<SchemaValue>) {
     const value = e.detail;

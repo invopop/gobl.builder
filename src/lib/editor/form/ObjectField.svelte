@@ -41,7 +41,6 @@
         on:fieldMoved
         on:fieldValueUpdated
         on:fieldKeyUpdated
-        on:hoverChild
       />
     {/each}
   </SectionWrapper>
