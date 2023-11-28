@@ -18,7 +18,7 @@
   $: isSection = field.is.root || (isParent && field.parent?.is.root);
   $: wrapperClasses = clsx({
     "border-neutral-100 bg-neutral-50": isActive,
-    "border-l": isActive && isSection,
+    "border-l": isSection,
     "border-transparent": !isActive,
   });
 

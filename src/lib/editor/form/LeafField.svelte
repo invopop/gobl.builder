@@ -17,7 +17,7 @@
 
 <div class="flex w-full space-x-2 py-1 px-2" title={label}>
   <div class:pointer-events-none={readOnly} class="flex items-start justify-start flex-1">
-    <div class="h-8 flex items-center">
+    <div class="h-8 flex items-center w-full">
       {#if field.is.editableKey}
         <EditableFieldKey {field} {parseKey} on:fieldKeyUpdated />
       {:else}
