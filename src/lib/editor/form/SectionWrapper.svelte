@@ -18,7 +18,7 @@
   $: isSection = field.is.root || (isParent && field.parent?.is.root);
   $: wrapperClasses = clsx({
     "border-neutral-100 bg-neutral-50": isActive,
-    "border-l": isSection,
+    "border-l rounded-l": isSection,
     "border-transparent": !isActive,
   });
 
@@ -27,7 +27,7 @@
   }
 </script>
 
-<div id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r">
+<div id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r rounded-r">
   <div class:pl-2={isParent} class="mt-1 py-1 pr-2">
     <button
       class="flex items-center justify-start cursor-pointer h-8"

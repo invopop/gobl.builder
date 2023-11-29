@@ -9,12 +9,15 @@
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
+  import type { DocumentHeader } from "$lib/types/editor.js";
 
   createFormEditorContext(schemaUrlForm);
 
   const { uiModel, updateSchema } = getFormEditorContext() || {};
 
   export let forceReadOnly = false;
+  export let documentHeaders: DocumentHeader[] = [];
+
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
@@ -23,6 +26,27 @@
   $: {
     updateSchemaIfNeeded($schemaUrlForm || "");
   }
+
+  // Update documentHeaders on editor change
+  uiModel.subscribe((model) => {
+    const fields = model.value;
+    if (!fields) return;
+
+    const rootKey = fields.key;
+    const root = { slug: rootKey, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
+    const items =
+      fields.children
+        ?.filter((f) => ["object", "array"].includes(f.type))
+        .map((f) => ({
+          slug: f.id,
+          label: f.schema.title || "",
+          active: false,
+        })) || [];
+
+    items.unshift(root);
+
+    documentHeaders = items;
+  });
 
   function handleKeyDown(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") {

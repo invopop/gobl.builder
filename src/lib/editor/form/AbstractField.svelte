@@ -165,7 +165,7 @@
 >
   <div class="{wrapperClasses} rounded flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
-      <div class="{classes} w-2 border-l border-t border-b flex-none"></div>
+      <div class="{classes} w-2 border-l border-t border-b flex-none rounded-l"></div>
     {/if}
     <div class="flex-1">
       <svelte:component

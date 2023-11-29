@@ -19,7 +19,7 @@
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
   import { schemaUrlForm } from "./editor/form/context/formEditor";
-  import type { State } from "./types/editor";
+  import type { DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import Modal from "./ui/Modal.svelte";
   import DynamicForm from "./editor/form/DynamicForm.svelte";
@@ -61,6 +61,9 @@
 
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
+
+  // Exposes the main sections of the GOBL schema (root fields that are either a Object or an Array) i.e. Supplier > Customer
+  export let documentHeaders: DocumentHeader[] = [];
 
   let editorForm: EditorForm | null = null;
   let openModal = false;
@@ -236,7 +239,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} {forceReadOnly} />
+            <EditorForm bind:this={editorForm} bind:documentHeaders {forceReadOnly} />
           {/if}
         </div>
       </div>

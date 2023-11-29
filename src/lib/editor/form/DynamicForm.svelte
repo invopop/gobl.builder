@@ -12,7 +12,7 @@
   export let readOnly = false;
 </script>
 
-<div class="h-full overflow-y-auto overflow-x-hidden bg-color1">
+<div class="h-full overflow-y-auto overflow-x-hidden scroll-smooth">
   <div class="flex justify-center px-16 py-8 pb-40 text-sm">
     <div class="w-full max-w-[632px]">
       {#if showSchemaField}
