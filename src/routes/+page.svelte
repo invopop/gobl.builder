@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { EditorProblemSeverity, type EditorProblem } from "$lib/editor/EditorProblem.js";
+  import type { EditorProblem } from "$lib/editor/EditorProblem.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import DocLoader from "../components/DocLoader.svelte";
@@ -16,12 +16,13 @@
 
   let data = "";
   let problems: EditorProblem[] = [];
-  $: hasErrors = !!problems.find((problem) => problem.severity === EditorProblemSeverity.Error);
-  $: console.log({ hasErrors });
   let jsonSchemaURL = "";
   let defaultSchema = "";
   let builder: GOBLBuilder;
   let state: State = "init";
+  let editorView = localStorage.getItem("editor-view") || "code";
+
+  $: localStorage.setItem("editor-view", editorView);
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -56,6 +57,16 @@
           value={defaultSchema}
           on:change={handleSchemaChange}
         />
+      </div>
+      <div class="text-white space-x-2 text-xs flex">
+        <label class="flex items-center justify-center">
+          Code
+          <input type="radio" bind:group={editorView} name="code" value="code" class="text-sky-500 ml-2" />
+        </label>
+        <label class="flex items-center justify-center">
+          Form
+          <input type="radio" bind:group={editorView} name="form" value="form" class="text-sky-500 ml-2" />
+        </label>
       </div>
     </div>
 
@@ -137,6 +148,7 @@
       bind:data
       bind:problems
       {jsonSchemaURL}
+      {editorView}
       signEnabled={true}
       on:change={(event) => {
         console.log("Received change event.", event.detail);

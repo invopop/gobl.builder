@@ -12,7 +12,7 @@
     envelopeDocumentJSON,
     editor,
   } from "$lib/editor/stores.js";
-  import MenuBar from "./menubar/MenuBar.svelte";
+  // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -61,7 +61,7 @@
   let correctionModel: UIModelField | undefined;
 
   // Whether shows the code or the form editor
-  let editorView = localStorage.getItem("editor-view") || "code";
+  export let editorView = "code";
   let initialEditorData = "";
 
   if (signEnabled) {
@@ -69,8 +69,6 @@
       console.log("Created keypair.", keypair);
     });
   }
-
-  $: localStorage.setItem("editor-view", editorView);
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
@@ -225,9 +223,9 @@
 </script>
 
 <div class="flex flex-col h-full editor">
-  <div class="flex-none">
+  <!-- <div class="flex-none">
     <MenuBar bind:editorView on:change on:undo on:redo />
-  </div>
+  </div> -->
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">
       <div class="relative flex-1 overflow-hidden">
