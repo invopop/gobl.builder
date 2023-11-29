@@ -56,12 +56,15 @@
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
 
+  // Whether shows the code or the form editor
+  export let editorView = "code";
+
+  // When enabled, it sets the editor as readOnly even if the document is not signed
+  export let forceReadOnly = false;
+
   let editorForm: EditorForm | null = null;
   let openModal = false;
   let correctionModel: UIModelField | undefined;
-
-  // Whether shows the code or the form editor
-  export let editorView = "code";
   let initialEditorData = "";
 
   if (signEnabled) {
@@ -231,9 +234,9 @@
       <div class="relative flex-1 overflow-hidden">
         <div class="h-full absolute inset-0">
           {#if editorView === "code"}
-            <EditorCode {jsonSchemaURL} />
+            <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} />
+            <EditorForm bind:this={editorForm} {forceReadOnly} />
           {/if}
         </div>
       </div>

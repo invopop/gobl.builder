@@ -19,7 +19,7 @@
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
     "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
     "focus:border-accent-500 border": !readOnly,
-    "font-medium": readOnly,
+    "font-medium bg-transparent": readOnly,
   });
 
   const dispatch = createEventDispatcher();

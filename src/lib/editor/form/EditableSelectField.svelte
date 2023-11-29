@@ -13,7 +13,7 @@
     "text-neutral-800": readOnly || (!field.is.calculated && !showError),
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
     "border focus:border-accent-500 custom-select": !readOnly,
-    "font-medium": readOnly,
+    "font-medium bg-transparent": readOnly,
   });
 
   const dispatch = createEventDispatcher();

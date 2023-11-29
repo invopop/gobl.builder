@@ -7,7 +7,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope, type Envelope } from "$lib/editor/stores.js";
   import { editorProblems as problems } from "../stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
@@ -18,6 +18,7 @@
   let monaco: typeof Monaco;
 
   export let jsonSchemaURL: string;
+  export let forceReadOnly = false;
 
   let editorEl: HTMLElement;
   let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
@@ -41,6 +42,8 @@
   $: {
     setSchemaURI(jsonSchemaURL);
   }
+
+  $: forceReadOnly, setEditorReadOnly();
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
@@ -190,17 +193,7 @@
     });
 
     envelope.subscribe(async (value) => {
-      const isSigned = Boolean(value?.sigs);
-      if (!isSigned) {
-        monacoEditor.updateOptions({ readOnly: false });
-        return;
-      }
-
-      // Svelte updates the DOM in batches and not immediately. We need to wait until svelte
-      // has finished updating the DOM to set the readOnly status. Otherwise the editor content
-      // update would be blocked
-      await tick();
-      monacoEditor.updateOptions({ readOnly: true });
+      setEditorReadOnly(value);
     });
 
     document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
@@ -220,6 +213,21 @@
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
     console.log("destroying editor");
   });
+
+  async function setEditorReadOnly(envelopeValue: Envelope | null = null) {
+    const signatures = envelopeValue?.sigs || $envelope?.sigs;
+    const isSigned = Boolean(signatures) || forceReadOnly;
+    if (!isSigned) {
+      monacoEditor.updateOptions({ readOnly: false });
+      return;
+    }
+
+    // Svelte updates the DOM in batches and not immediately. We need to wait until svelte
+    // has finished updating the DOM to set the readOnly status. Otherwise the editor content
+    // update would be blocked
+    await tick();
+    monacoEditor.updateOptions({ readOnly: true });
+  }
 
   // validateSchema is used to ensure the $schema property is set to something
   // that is expected by the component using the editor.

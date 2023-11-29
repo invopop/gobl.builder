@@ -13,6 +13,8 @@
   createFormEditorContext(schemaUrlForm);
 
   const { uiModel, updateSchema } = getFormEditorContext() || {};
+
+  export let forceReadOnly = false;
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
@@ -72,7 +74,7 @@
 {:else}
   <DynamicForm
     model={$uiModel.value}
-    readOnly={$envelopeIsSigned}
+    readOnly={$envelopeIsSigned || forceReadOnly}
     {showSchemaField}
     {isEmptySchema}
     on:uiRefreshNeeded={handleFormUpdated}

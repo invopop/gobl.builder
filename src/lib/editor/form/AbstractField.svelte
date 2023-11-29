@@ -34,7 +34,8 @@
 
   export let readOnly = false;
 
-  $: showContextMenu = !$envelopeIsSigned && isHover;
+  $: isReadOnly = $envelopeIsSigned || readOnly;
+  $: showContextMenu = !isReadOnly && isHover;
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
     const offset = top + height - window.innerHeight;
@@ -43,8 +44,8 @@
   $: isParent = ["object", "array"].includes(field.type);
   $: isSection = isParent && field.parent?.is.root;
   $: wrapperClasses = clsx({
-    "bg-neutral-50 border-neutral-100": showContextMenu && !isParent,
-    "border-transparent": !showContextMenu,
+    "bg-neutral-50 border-neutral-100": isHover && !isParent,
+    "border-transparent": !isHover,
     border: !isParent,
     "pl-2": isParent && !isSection,
   });
@@ -171,7 +172,7 @@
         this={componentsMap[field.type] || FallbackField}
         {field}
         {readOnly}
-        isActive={showContextMenu}
+        isActive={isHover}
         on:fieldAdded
         on:fieldDeleted
         on:fieldDuplicated

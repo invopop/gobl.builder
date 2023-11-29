@@ -21,6 +21,7 @@
   let builder: GOBLBuilder;
   let state: State = "init";
   let editorView = localStorage.getItem("editor-view") || "code";
+  let forceReadOnly = false;
 
   $: localStorage.setItem("editor-view", editorView);
 
@@ -66,6 +67,10 @@
         <label class="flex items-center justify-center">
           Form
           <input type="radio" bind:group={editorView} name="form" value="form" class="text-sky-500 ml-2" />
+        </label>
+        <label class="flex items-center justify-center">
+          readOnly
+          <input type="checkbox" bind:checked={forceReadOnly} class="text-sky-500 ml-2" />
         </label>
       </div>
     </div>
@@ -149,7 +154,8 @@
       bind:problems
       {jsonSchemaURL}
       {editorView}
-      signEnabled={true}
+      signEnabled
+      {forceReadOnly}
       on:change={(event) => {
         console.log("Received change event.", event.detail);
       }}
