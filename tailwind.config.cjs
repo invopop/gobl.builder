@@ -3,6 +3,7 @@ module.exports = {
   content: ["./src/**/*.{html,js,svelte,ts}", "./node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}"],
   theme: {
     fontFamily: {
+      sans: ["Inter", "sans-serif"],
       mono: [
         "ui-monospace",
         `"Fira Code"`,

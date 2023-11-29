@@ -17,7 +17,7 @@
     "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated && !readOnly,
     "text-neutral-800": readOnly || (!field.is.calculated && !showError),
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
-    "text-right": ["number", "integer"].includes(fieldType),
+    "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
     "focus:border-accent-500 border": !readOnly,
     "font-medium": readOnly,
   });
