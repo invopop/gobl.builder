@@ -215,6 +215,7 @@
   });
 
   async function setEditorReadOnly(envelopeValue: Envelope | null = null) {
+    if (!monacoEditor) return;
     const signatures = envelopeValue?.sigs || $envelope?.sigs;
     const isSigned = Boolean(signatures) || forceReadOnly;
     if (!isSigned) {

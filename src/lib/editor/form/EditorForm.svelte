@@ -16,7 +16,7 @@
   const { uiModel, updateSchema } = getFormEditorContext() || {};
 
   export let forceReadOnly = false;
-  export let documentHeaders: DocumentHeader[] = [];
+  let documentHeaders: DocumentHeader[] = [];
 
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
@@ -90,19 +90,51 @@
     const value = model.root.toJSON();
     editor.set({ value, updatedAt: Date.now() });
   }
+
+  function setActive(header: DocumentHeader) {
+    documentHeaders = documentHeaders.map((h) => {
+      h.active = h.slug === header.slug;
+      return h;
+    });
+  }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
-{#if $recreatingUiModel}
-  <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
-{:else}
-  <DynamicForm
-    model={$uiModel.value}
-    readOnly={$envelopeIsSigned || forceReadOnly}
-    {showSchemaField}
-    {isEmptySchema}
-    on:uiRefreshNeeded={handleFormUpdated}
-    on:fieldKeyUpdated={handleUpdateEditor}
-    on:fieldValueUpdated={handleUpdateEditor}
-  />
-{/if}
+<div class="bg-white h-full relative">
+  {#if $recreatingUiModel}
+    <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
+  {:else}
+    {#if documentHeaders.length && documentHeaders[0].slug !== "root"}
+      <div class="pt-7 absolute top-0 left-0 bg-white hidden md:block md:w-36 lg:w-56 z-10">
+        <ul>
+          {#each documentHeaders as header}
+            <li
+              class:font-medium={header.active}
+              class:text-neutral-800={header.active}
+              class:text-neutral-400={!header.active}
+              class:border-neutral-800={header.active}
+              class:border-neutral-100={!header.active}
+              class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
+            >
+              <a
+                href={`#${header.slug}`}
+                on:click={() => {
+                  setActive(header);
+                }}>{header.label}</a
+              >
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+    <DynamicForm
+      model={$uiModel.value}
+      readOnly={$envelopeIsSigned || forceReadOnly}
+      {showSchemaField}
+      {isEmptySchema}
+      on:uiRefreshNeeded={handleFormUpdated}
+      on:fieldKeyUpdated={handleUpdateEditor}
+      on:fieldValueUpdated={handleUpdateEditor}
+    />
+  {/if}
+</div>

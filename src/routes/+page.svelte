@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { slide } from "svelte/transition";
   import type { EditorProblem } from "$lib/editor/EditorProblem.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import DocLoader from "../components/DocLoader.svelte";
   import logo from "../static/logo-light.svg";
-  import type { DocumentHeader, State } from "$lib/types/editor";
+  import type { State } from "$lib/types/editor";
   import SelectSchemas from "$lib/SelectSchemas.svelte";
   import ExportDoc from "$lib/actions/ExportDoc.svelte";
   import CorrectIcon from "$lib/ui/icons/CorrectIcon.svelte";
@@ -23,8 +22,6 @@
   let state: State = "init";
   let editorView = localStorage.getItem("editor-view") || "code";
   let forceReadOnly = false;
-  let showSidebar = false;
-  let documentHeaders: DocumentHeader[] = [];
 
   $: localStorage.setItem("editor-view", editorView);
 
@@ -44,17 +41,12 @@
   function handleSchemaChange(event: CustomEvent<string>) {
     jsonSchemaURL = event.detail;
   }
-
-  function setActive(header: DocumentHeader) {
-    documentHeaders = documentHeaders.map((h) => {
-      h.active = h.slug === header.slug;
-      return h;
-    });
-  }
 </script>
 
 <div class="flex flex-col h-screen">
-  <div class="flex justify-between items-center pl-4 pr-2 py-2.5 bg-gray-800">
+  <div
+    class="flex flex-col space-x-0 md:space-x-1 space-y-1 md:space-y-0 md:flex-row justify-between items-center pl-4 pr-2 py-2.5 bg-gray-800"
+  >
     <div class="flex gap-4 items-center">
       <img src={logo} class="w-8 h-8" alt="GOBL logo" title="GOBL Builder" />
       <DocLoader on:load={handleDocLoad} />
@@ -70,7 +62,7 @@
         />
       </div>
     </div>
-    <div class="text-white space-x-4 text-xs flex">
+    <div class="text-white lg:space-x-4 text-xs flex flex-col lg:flex-row">
       <label class="flex items-center justify-center">
         <input type="radio" bind:group={editorView} name="code" value="code" class="text-sky-500 mr-1" />
         Code
@@ -81,17 +73,13 @@
       </label>
     </div>
     <div class="text-white space-x-4 text-xs flex">
-      <label class="flex items-center justify-center">
+      <label class="flex items-center justify-center whitespace-nowrap">
         <input type="checkbox" bind:checked={forceReadOnly} class="text-sky-500 mr-1" />
         Read only
       </label>
-      <label class="flex items-center justify-center">
-        <input type="checkbox" bind:checked={showSidebar} class="text-sky-500 mr-1" />
-        Show sidebar
-      </label>
     </div>
 
-    <div class="bg-slate-100 rounded flex space-x-3 items-center justify-center">
+    <div class="bg-slate-100 rounded flex md:space-x-3 items-center justify-center">
       <button
         title={state === "modified" || state === "loaded"
           ? "Build the GOBL document."
@@ -162,60 +150,34 @@
       </div>
     </div>
   </div>
-  <div class="flex-1 h-full overflow-hidden flex">
-    {#if showSidebar}
-      <div class="w-56 pt-7" transition:slide={{ duration: 300, axis: "x" }}>
-        <ul>
-          {#each documentHeaders as header}
-            <li
-              class:font-medium={header.active}
-              class:text-neutral-800={header.active}
-              class:text-neutral-400={!header.active}
-              class:border-neutral-800={header.active}
-              class:border-neutral-100={!header.active}
-              class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
-            >
-              <a
-                href={`#${header.slug}`}
-                on:click={() => {
-                  setActive(header);
-                }}>{header.label}</a
-              >
-            </li>
-          {/each}
-        </ul>
-      </div>
-    {/if}
-    <div class="flex-1">
-      <GOBLBuilder
-        bind:this={builder}
-        bind:state
-        bind:data
-        bind:problems
-        bind:documentHeaders
-        {jsonSchemaURL}
-        {editorView}
-        signEnabled
-        {forceReadOnly}
-        on:change={(event) => {
-          console.log("Received change event.", event.detail);
-        }}
-        on:undo={() => {
-          console.log("User clicked `Undo`.");
-        }}
-        on:redo={() => {
-          console.log("User clicked `Redo`.");
-        }}
-        on:build={(event) => {
-          console.log("Received build result.", event.detail);
-        }}
-        on:sign={(event) => {
-          console.log("Received sign result.", event.detail);
-        }}
-        on:validate={(event) => {
-          console.log("Received validate result.", event.detail);
-        }}
-      />
-    </div>
+  <div class="flex-1 h-full overflow-auto">
+    <GOBLBuilder
+      bind:this={builder}
+      bind:state
+      bind:data
+      bind:problems
+      {jsonSchemaURL}
+      {editorView}
+      signEnabled
+      {forceReadOnly}
+      on:change={(event) => {
+        console.log("Received change event.", event.detail);
+      }}
+      on:undo={() => {
+        console.log("User clicked `Undo`.");
+      }}
+      on:redo={() => {
+        console.log("User clicked `Redo`.");
+      }}
+      on:build={(event) => {
+        console.log("Received build result.", event.detail);
+      }}
+      on:sign={(event) => {
+        console.log("Received sign result.", event.detail);
+      }}
+      on:validate={(event) => {
+        console.log("Received validate result.", event.detail);
+      }}
+    />
   </div>
 </div>

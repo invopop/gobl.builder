@@ -14,7 +14,7 @@
 
 <div class="h-full overflow-y-auto overflow-x-hidden scroll-smooth">
   <div class="flex justify-center px-16 py-8 pb-40 text-sm">
-    <div class="w-full max-w-[632px]">
+    <div class="w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[632px]">
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />
       {:else if model}
