@@ -180,6 +180,7 @@
         on:fieldValueUpdated
         on:fieldKeyUpdated
         on:hoverChild={handleHoverChild}
+        on:activeSection
       />
     </div>
   </div>

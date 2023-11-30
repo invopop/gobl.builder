@@ -1,10 +1,22 @@
 <script lang="ts">
+  import { intersect } from "svelte-intersection-observer-action";
   import type { UIModelField } from "./utils/model";
   import { envelopeIsSigned } from "../stores";
   import FieldTitle from "./FieldTitle.svelte";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import { slide } from "svelte/transition";
   import clsx from "clsx";
+  import { createEventDispatcher } from "svelte";
+
+  const dispatch = createEventDispatcher();
+
+  function callback(entry: IntersectionObserverEntry) {
+    if (!entry.isIntersecting) return;
+
+    dispatch("activeSection", field.id);
+  }
+
+  const intersectOptions = { callback };
 
   export let field: UIModelField;
   export let isActive = false;
@@ -28,6 +40,9 @@
 </script>
 
 <div id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r rounded-r">
+  {#if isSection}
+    <div use:intersect={intersectOptions}></div>
+  {/if}
   <div class:pl-2={isParent} class="mt-1 py-1 pr-2">
     <button
       class="flex items-center justify-start cursor-pointer h-8"

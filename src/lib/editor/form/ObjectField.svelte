@@ -28,9 +28,10 @@
     on:fieldMoved
     on:fieldValueUpdated
     on:fieldKeyUpdated
+    on:activeSection
   />
 {:else}
-  <SectionWrapper {field} {isActive}>
+  <SectionWrapper {field} {isActive} on:activeSection>
     {#each children as childField (childField.id)}
       <AbstractField
         field={childField}

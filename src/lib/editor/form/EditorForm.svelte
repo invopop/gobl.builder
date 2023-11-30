@@ -97,6 +97,13 @@
       return h;
     });
   }
+
+  function handleActiveSection(event: CustomEvent) {
+    documentHeaders = documentHeaders.map((h) => {
+      h.active = h.slug === event.detail;
+      return h;
+    });
+  }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
@@ -135,6 +142,7 @@
       on:uiRefreshNeeded={handleFormUpdated}
       on:fieldKeyUpdated={handleUpdateEditor}
       on:fieldValueUpdated={handleUpdateEditor}
+      on:activeSection={handleActiveSection}
     />
   {/if}
 </div>

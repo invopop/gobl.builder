@@ -95,6 +95,7 @@
     "svelte": "^4.1.2",
     "svelte-floating-ui": "^1.5.3",
     "svelte-hero-icons": "^5.0.0",
+    "svelte-intersection-observer-action": "^0.0.4",
     "svelte-select": "^5.7.0",
     "utf8": "^3.0.0",
     "vscode-json-languageservice": "5.3.5"

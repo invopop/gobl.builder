@@ -39,6 +39,7 @@
           }}
           on:fieldValueUpdated
           on:fieldKeyUpdated
+          on:activeSection
         />
       {/if}
     </div>
