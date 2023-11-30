@@ -10,6 +10,7 @@
   import { getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
+  import { activeSection } from "$lib/store/visualEditor.js";
 
   createFormEditorContext(schemaUrlForm);
 
@@ -92,21 +93,15 @@
   }
 
   function setActive(header: DocumentHeader) {
-    documentHeaders = documentHeaders.map((h) => {
-      h.active = h.slug === header.slug;
-      return h;
-    });
-  }
-
-  function handleActiveSection(event: CustomEvent) {
-    documentHeaders = documentHeaders.map((h) => {
-      h.active = h.slug === event.detail;
-      return h;
-    });
+    $activeSection = {
+      section: header.slug,
+      scroll: true,
+    };
   }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
+
 <div class="bg-white h-full relative">
   {#if $recreatingUiModel}
     <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
@@ -116,18 +111,17 @@
         <ul>
           {#each documentHeaders as header}
             <li
-              class:font-medium={header.active}
-              class:text-neutral-800={header.active}
-              class:text-neutral-400={!header.active}
-              class:border-neutral-800={header.active}
-              class:border-neutral-100={!header.active}
+              class:font-medium={$activeSection.section === header.slug}
+              class:text-neutral-800={$activeSection.section === header.slug}
+              class:text-neutral-400={$activeSection.section !== header.slug}
+              class:border-neutral-800={$activeSection.section === header.slug}
+              class:border-neutral-100={$activeSection.section !== header.slug}
               class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
             >
-              <a
-                href={`#${header.slug}`}
+              <button
                 on:click={() => {
                   setActive(header);
-                }}>{header.label}</a
+                }}>{header.label}</button
               >
             </li>
           {/each}
@@ -142,7 +136,6 @@
       on:uiRefreshNeeded={handleFormUpdated}
       on:fieldKeyUpdated={handleUpdateEditor}
       on:fieldValueUpdated={handleUpdateEditor}
-      on:activeSection={handleActiveSection}
     />
   {/if}
 </div>

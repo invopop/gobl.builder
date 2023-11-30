@@ -12,6 +12,7 @@
   import BooleanField from "./BooleanField.svelte";
   import { envelopeIsSigned } from "../stores";
   import clsx from "clsx";
+  import { activeItem, highlightedItem } from "$lib/store/visualEditor";
 
   const dispatch = createEventDispatcher();
 
@@ -28,12 +29,12 @@
 
   let showAddMenu = false;
   let addMenuRef: HTMLElement;
-  let isHover = false;
   let contextMenuOffset = 0;
-  let highlight = false;
 
   export let readOnly = false;
 
+  $: isHover = $activeItem === field.id;
+  $: highlight = $highlightedItem === field.id;
   $: isReadOnly = $envelopeIsSigned || readOnly;
   $: showContextMenu = !isReadOnly && isHover;
   $: if (showAddMenu && addMenuRef) {
@@ -50,36 +51,29 @@
     "pl-2": isParent && !isSection,
   });
   $: classes = clsx({
-    "border-accent-500 bg-neutral-50": highlight,
+    "bg-neutral-50": isHover,
+    "border-accent-500": highlight,
     "border-neutral-200": !highlight,
   });
   $: contextMenuClasses = clsx({
     "pt-2": isParent && !isSection && !field.is.root,
   });
 
-  function handleHoverChild(e: CustomEvent) {
-    highlight = e.detail;
-  }
-
   function handleHover(e: CustomEvent<boolean>) {
-    // @note: Prevent undesired hover events on other items while dragging
-    isHover = e.detail;
+    $activeItem = e.detail ? field.id : null;
 
-    if (isParent) {
-      highlight = e.detail;
-      return;
-    }
+    if (!e.detail) return;
 
-    dispatch("hoverChild", e.detail);
+    $highlightedItem = isParent ? field.id : field.parent?.id || null;
   }
 
   function handleFocusIn(e: FocusEvent) {
-    isHover = true;
+    $activeItem = field.id;
     e.stopPropagation();
   }
 
   function handleFocusOut(e: FocusEvent) {
-    isHover = false;
+    $activeItem = field.id;
     e.stopPropagation();
   }
 
@@ -172,19 +166,16 @@
         this={componentsMap[field.type] || FallbackField}
         {field}
         {readOnly}
-        isActive={isHover}
         on:fieldAdded
         on:fieldDeleted
         on:fieldDuplicated
         on:fieldMoved
         on:fieldValueUpdated
         on:fieldKeyUpdated
-        on:hoverChild={handleHoverChild}
-        on:activeSection
       />
     </div>
   </div>
-  <div on:hover={handleHover} class="absolute top-0 right-0">
+  <div use:hover on:hover={handleHover} class="absolute top-0 right-0">
     <span class="{contextMenuClasses} absolute top-0 left-0 mt-1 pl-2" class:invisible={!showContextMenu}>
       <FieldContextMenu
         {field}

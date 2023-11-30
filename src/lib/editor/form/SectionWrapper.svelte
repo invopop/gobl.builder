@@ -6,21 +6,22 @@
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import { slide } from "svelte/transition";
   import clsx from "clsx";
-  import { createEventDispatcher } from "svelte";
-
-  const dispatch = createEventDispatcher();
+  import { activeItem, activeSection } from "$lib/store/visualEditor";
 
   function callback(entry: IntersectionObserverEntry) {
     if (!entry.isIntersecting) return;
 
-    dispatch("activeSection", field.id);
+    $activeSection = {
+      section: field.id,
+      scroll: false,
+    };
   }
 
   const intersectOptions = { callback };
 
   export let field: UIModelField;
-  export let isActive = false;
 
+  let element: HTMLElement;
   let open = true;
 
   $: label = $envelopeIsSigned
@@ -33,13 +34,21 @@
     "border-l rounded-l": isSection,
     "border-transparent": !isActive,
   });
+  $: isActive = field.id === $activeItem;
+
+  $: if ($activeSection.section === field.id && $activeSection.scroll) {
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
 
   function handleFocusInner() {
     open = true;
   }
 </script>
 
-<div id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r rounded-r">
+<div bind:this={element} id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r rounded-r">
   {#if isSection}
     <div use:intersect={intersectOptions}></div>
   {/if}

@@ -3,5 +3,4 @@ export type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "erro
 export type DocumentHeader = {
   label: string;
   slug: string;
-  active: boolean;
 };

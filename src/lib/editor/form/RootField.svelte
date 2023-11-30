@@ -5,7 +5,6 @@
 
   export let field: UIModelRootField;
   export let readOnly = false;
-  export let isActive = false;
 
   const emptyChildren: UIModelField[] = [];
 
@@ -15,7 +14,7 @@
   $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
 </script>
 
-<SectionWrapper {field} {isActive} on:activeSection>
+<SectionWrapper {field}>
   {#each simpleFields as field (field.id)}
     <AbstractField
       {field}
@@ -40,7 +39,6 @@
         on:fieldMoved
         on:fieldValueUpdated
         on:fieldKeyUpdated
-        on:activeSection
       />
     {/each}
   </div>
