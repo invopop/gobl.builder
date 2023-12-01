@@ -59,13 +59,22 @@
   function handleAddFields() {
     handleCloseMenu();
 
+    const addedFields: (UIModelField | undefined)[] = [];
+
     selection.forEach((fieldKey) => {
       const option = options.find((o) => o.key === fieldKey);
+
       if (!option) return;
+
       const newField = field.addChildField(option);
-      newField?.tryFocus();
+
+      addedFields.push(newField);
+
       dispatch("fieldAdded", newField);
     });
+
+    // Focus first field added
+    addedFields[0]?.tryFocus();
   }
 
   function handleKeyDown(e: KeyboardEvent) {
