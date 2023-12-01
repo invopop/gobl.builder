@@ -102,7 +102,7 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div class="bg-white h-full relative">
+<div class="h-full relative" id="visual-editor">
   {#if $recreatingUiModel}
     <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
   {:else}

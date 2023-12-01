@@ -9,20 +9,24 @@
   import { activeItem, activeSection } from "$lib/store/visualEditor";
 
   function callback(entry: IntersectionObserverEntry) {
-    if (!entry.isIntersecting) return;
+    // If we are navigating from outside
+    if (disableIntersect) return;
+
+    // We only care about intersecting in and off ocurring on the top side
+    if (entry.boundingClientRect.top > 100) return;
 
     $activeSection = {
       section: field.id,
       scroll: false,
     };
   }
-
-  const intersectOptions = { callback };
+  const intersectOptions = { callback, root: document.querySelector("#visual-editor") };
 
   export let field: UIModelField;
 
   let element: HTMLElement;
   let open = true;
+  let disableIntersect = false;
 
   $: label = $envelopeIsSigned
     ? "Document is signed and can not be edited"
@@ -36,7 +40,19 @@
   });
   $: isActive = field.id === $activeItem;
 
-  $: if ($activeSection.section === field.id && $activeSection.scroll) {
+  $: if ($activeSection.scroll) {
+    scrollElementIntoView();
+  }
+
+  function scrollElementIntoView() {
+    disableIntersect = true;
+
+    setTimeout(() => {
+      disableIntersect = false;
+    }, 1000);
+
+    if (!element || $activeSection.section !== field.id) return;
+
     element.scrollIntoView({
       behavior: "smooth",
       block: "start",
