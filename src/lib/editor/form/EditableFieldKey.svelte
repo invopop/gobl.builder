@@ -39,13 +39,6 @@
     const el = document.querySelector(`#${field.id}-key`) as HTMLElement;
     el.focus();
   }
-
-  function onKeyPress(e: KeyboardEvent) {
-    e.stopImmediatePropagation();
-    if (e.key === "Enter") {
-      handleSave();
-    }
-  }
 </script>
 
 <span class="flex items-center justify-start space-x-1 w-full">
@@ -57,12 +50,8 @@
         id={`${field.id}-key`}
         value={field.key}
         on:edit={handleEdit}
-        on:keypress={onKeyPress}
+        on:blur={handleSave}
       />
-      <button
-        class="absolute top-1 right-1 border rounded px-3 h-6 bg-neutral-100 border-neutral-200 text-sm text-neutral-800"
-        on:click={handleSave}>Save</button
-      >
     </div>
   {:else}
     <FieldTitle {field} />
