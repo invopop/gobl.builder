@@ -150,7 +150,7 @@
       </div>
     </div>
   </div>
-  <div class="flex-1 h-full overflow-auto">
+  <div class="flex-1 h-full">
     <GOBLBuilder
       bind:this={builder}
       bind:state

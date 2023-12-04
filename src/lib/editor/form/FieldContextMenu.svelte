@@ -26,11 +26,13 @@
 
   function handleModeFieldUp() {
     field.move("up");
+    field.tryFocus();
     dispatch("fieldMoved", field);
   }
 
   function handleModeFieldDown() {
     field.move("down");
+    field.tryFocus();
     dispatch("fieldMoved", field);
   }
 </script>

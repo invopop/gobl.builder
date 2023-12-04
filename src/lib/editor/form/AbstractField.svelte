@@ -72,11 +72,6 @@
     e.stopPropagation();
   }
 
-  function handleFocusOut(e: FocusEvent) {
-    $activeItem = field.id;
-    e.stopPropagation();
-  }
-
   function handleAddField() {
     showAddMenu = false;
 
@@ -155,7 +150,6 @@
   on:hover={handleHover}
   on:keydown={handleKeyDown}
   on:focusin={handleFocusIn}
-  on:focusout={handleFocusOut}
 >
   <div class="{wrapperClasses} rounded flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
@@ -175,7 +169,7 @@
       />
     </div>
   </div>
-  <div use:hover on:hover={handleHover} class="absolute top-0 right-0">
+  <div class="absolute top-0 right-0">
     <span class="{contextMenuClasses} absolute top-0 left-0 mt-1 pl-2" class:invisible={!showContextMenu}>
       <FieldContextMenu
         {field}
