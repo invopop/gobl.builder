@@ -68,8 +68,10 @@
   }
 
   function handleFocusIn(e: FocusEvent) {
-    $activeItem = field.id;
     e.stopPropagation();
+
+    $activeItem = field.id;
+    $highlightedItem = isParent ? field.id : field.parent?.id || null;
   }
 
   function handleAddField() {

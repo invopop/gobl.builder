@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import type { UIModelField } from "./utils/model.js";
 
@@ -25,15 +25,15 @@
   }
 
   function handleModeFieldUp() {
-    field.move("up");
-    field.tryFocus();
+    const destinationField = field.move("up");
     dispatch("fieldMoved", field);
+    destinationField?.tryFocus();
   }
 
   function handleModeFieldDown() {
-    field.move("down");
-    field.tryFocus();
+    const destinationField = field.move("down");
     dispatch("fieldMoved", field);
+    destinationField?.tryFocus();
   }
 </script>
 

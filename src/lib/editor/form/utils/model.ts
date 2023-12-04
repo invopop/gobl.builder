@@ -386,6 +386,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     if (destinationKey < 0 || destinationKey >= children.length) return;
 
     swapPositions(children, currentKey, destinationKey);
+
+    return children[currentKey];
   }
 
   getNextFocusableField(reverse = false): UIModelField | undefined {
