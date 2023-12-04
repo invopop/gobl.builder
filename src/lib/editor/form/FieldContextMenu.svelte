@@ -24,15 +24,17 @@
     dispatch("fieldDuplicated", newField);
   }
 
-  function handleModeFieldUp() {
+  async function handleModeFieldUp() {
     const destinationField = field.move("up");
     dispatch("fieldMoved", field);
+    await tick();
     destinationField?.tryFocus();
   }
 
-  function handleModeFieldDown() {
+  async function handleModeFieldDown() {
     const destinationField = field.move("down");
     dispatch("fieldMoved", field);
+    await tick();
     destinationField?.tryFocus();
   }
 </script>
