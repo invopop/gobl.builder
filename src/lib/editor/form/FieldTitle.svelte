@@ -18,7 +18,7 @@
 <span class="{classes} whitespace-nowrap flex items-center" class:capitalize={!field.schema.title}>
   {#if field.parent?.isArray()}
     <span class="flex items-center justify-start">
-      <Icon src={Hashtag} class="h-4" />
+      <Icon src={Hashtag} class="h-4 w-4" />
       {arrayTitle}
       {Number(field.key) + 1}
     </span>
@@ -26,7 +26,7 @@
     <span class="flex items-center space-x-1">
       <span>{field.schema.title || field.key}</span>
       {#if field.is.calculated}
-        <Icon src={Calculator} class="h-3" />
+        <Icon src={Calculator} class="h-3 w-3" />
       {/if}
     </span>
   {/if}
