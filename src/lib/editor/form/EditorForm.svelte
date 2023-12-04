@@ -11,6 +11,7 @@
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
+  import { onMount } from "svelte";
 
   createFormEditorContext(schemaUrlForm);
 
@@ -98,6 +99,10 @@
       scroll: true,
     };
   }
+
+  onMount(() => {
+    localStorage.setItem("scrollPosition", "0");
+  });
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
