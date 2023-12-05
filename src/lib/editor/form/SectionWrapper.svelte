@@ -87,5 +87,8 @@
       </div>
     </div>
   {/if}
+  {#if isSection}
+    <div use:intersect={intersectOptions}></div>
+  {/if}
 </div>
 <slot name="extra-content" />
