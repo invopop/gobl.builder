@@ -62,6 +62,9 @@
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
 
+  // When enabled, it tries to build the document after any form update if the view is set to Visual Editor
+  export let autobuild = false;
+
   let editorForm: EditorForm | null = null;
   let openModal = false;
   let correctionModel: UIModelField | undefined;
@@ -236,7 +239,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} {forceReadOnly} />
+            <EditorForm bind:this={editorForm} {forceReadOnly} {autobuild} />
           {/if}
         </div>
       </div>

@@ -24,13 +24,9 @@
 
   const dispatch = createEventDispatcher();
 
-  function handleChange(e: Event & { currentTarget: HTMLInputElement }) {
-    const value = e.currentTarget.value;
-    dispatch("edit", value);
-  }
-
   function handleBlur(e: Event & { currentTarget: HTMLInputElement }) {
     const value = e.currentTarget.value;
+    dispatch("edit", value);
     dispatch("blur", value);
   }
 </script>
@@ -39,8 +35,6 @@
   type="text"
   id={iid}
   value={val}
-  on:change={handleChange}
-  on:keyup={handleChange}
   on:blur={handleBlur}
   on:keypress
   class="{classes} text-base rounded px-3 h-[32px] outline-none w-full caret-accent-500"

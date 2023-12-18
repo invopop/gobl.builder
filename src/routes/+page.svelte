@@ -22,6 +22,7 @@
   let state: State = "init";
   let editorView = localStorage.getItem("editor-view") || "code";
   let forceReadOnly = false;
+  let autobuild = false;
 
   $: localStorage.setItem("editor-view", editorView);
 
@@ -72,10 +73,14 @@
         Form
       </label>
     </div>
-    <div class="text-white space-x-4 text-xs flex">
+    <div class="text-white lg:space-x-4 text-xs flex flex-col lg:flex-row">
       <label class="flex items-center justify-center whitespace-nowrap">
         <input type="checkbox" bind:checked={forceReadOnly} class="text-sky-500 mr-1" />
         Read only
+      </label>
+      <label class="flex items-center justify-center whitespace-nowrap">
+        <input type="checkbox" bind:checked={autobuild} class="text-sky-500 mr-1" />
+        Autobuild
       </label>
     </div>
 
@@ -160,6 +165,7 @@
       {editorView}
       signEnabled
       {forceReadOnly}
+      {autobuild}
       on:change={(event) => {
         console.log("Received change event.", event.detail);
       }}

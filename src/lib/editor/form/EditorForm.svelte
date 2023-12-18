@@ -7,7 +7,7 @@
   } from "./context/formEditor.js";
   import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
-  import { getSchemas } from "../actions.js";
+  import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
@@ -18,6 +18,7 @@
   const { uiModel, updateSchema } = getFormEditorContext() || {};
 
   export let forceReadOnly = false;
+  export let autobuild = false;
   let documentHeaders: DocumentHeader[] = [];
 
   // eslint-disable-next-line
@@ -82,15 +83,35 @@
     schemaUrlForm.set($jsonSchema);
   }
 
-  function handleFormUpdated(event: CustomEvent) {
+  async function handleFormUpdated(event: CustomEvent) {
     handleUpdateEditor(event);
+    await handleBuild();
     recreateFormEditor();
   }
 
-  function handleUpdateEditor(event: CustomEvent) {
+  async function handleFieldUpdated(event: CustomEvent) {
+    handleUpdateEditor(event);
+
+    const result = await handleBuild();
+
+    if (result) {
+      recreateFormEditor();
+    }
+  }
+
+  async function handleUpdateEditor(event: CustomEvent) {
     const model = event.detail;
     const value = model.root.toJSON();
     editor.set({ value, updatedAt: Date.now() });
+  }
+
+  async function handleBuild() {
+    if (!autobuild) return false;
+
+    const result = await build(true);
+
+    // return true if build is successful for recreating the form
+    return !result?.error;
   }
 
   function setActive(header: DocumentHeader) {
@@ -139,8 +160,8 @@
       {showSchemaField}
       {isEmptySchema}
       on:uiRefreshNeeded={handleFormUpdated}
-      on:fieldKeyUpdated={handleUpdateEditor}
-      on:fieldValueUpdated={handleUpdateEditor}
+      on:fieldKeyUpdated={handleFieldUpdated}
+      on:fieldValueUpdated={handleFieldUpdated}
     />
   {/if}
 </div>

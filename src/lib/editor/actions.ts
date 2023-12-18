@@ -14,7 +14,7 @@ import {
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
-export async function build() {
+export async function build(isAutobuilt = false) {
   if (!get(validEditor)) {
     return;
   }
@@ -33,10 +33,12 @@ export async function build() {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully built.",
-    });
+    if (!isAutobuilt) {
+      createNotification({
+        severity: Severity.Success,
+        message: "Document successfully built.",
+      });
+    }
 
     return { result };
   } catch (e) {
