@@ -154,3 +154,5 @@ export function envelopeDocumentSchema(envelope: Envelope | null): string {
 }
 
 export const editorCursor = writable({ line: 1, column: 1 });
+
+export const recentlyAutobuilt = writable(false);

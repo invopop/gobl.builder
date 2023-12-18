@@ -5,7 +5,7 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema } from "$lib/editor/stores.js";
+  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema, recentlyAutobuilt } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
@@ -110,8 +110,13 @@
 
     const result = await build(true);
 
-    // return true if build is successful for recreating the form
-    return !result?.error;
+    const isSuccess = !result?.error;
+
+    if (isSuccess) {
+      $recentlyAutobuilt = true;
+    }
+
+    return isSuccess;
   }
 
   function setActive(header: DocumentHeader) {

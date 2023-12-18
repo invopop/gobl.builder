@@ -11,6 +11,7 @@
     jsonSchema,
     envelopeDocumentJSON,
     editor,
+    recentlyAutobuilt,
   } from "$lib/editor/stores.js";
   // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
@@ -128,7 +129,13 @@
     }
 
     if (editorValue !== initialEditorData) {
-      state = "modified";
+      if ($recentlyAutobuilt) {
+        state = "built";
+        $recentlyAutobuilt = false;
+      } else {
+        state = "modified";
+      }
+
       return;
     }
 

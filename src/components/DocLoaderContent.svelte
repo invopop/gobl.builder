@@ -23,7 +23,7 @@
       defaultClass="flex items-center justify-between w-full font-medium text-left border-gray-200 dark:border-gray-700"
     >
       <div slot="header" class="w-full p-4">
-        <span class={`fi fis fi-${group.folder}`} />
+        <span class={`fi fi-${group.folder}`} />
         <span class="ml-2">{group.name}</span>
       </div>
       <div slot="arrowup" class="p-4">
