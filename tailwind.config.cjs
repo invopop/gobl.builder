@@ -21,6 +21,7 @@ module.exports = {
         sm: ["13px", "18.20px"],
         base: ["15px", "21.75px"],
         xl: ["19px", "28px"],
+        "3xl": ["27px", "32px"],
       },
       colors: {
         neutral: {
@@ -33,6 +34,9 @@ module.exports = {
         },
         accent: {
           500: "#169958",
+        },
+        positive: {
+          500: "#3FC275",
         },
         danger: {
           200: "rgba(236, 78, 70, 0.4)",

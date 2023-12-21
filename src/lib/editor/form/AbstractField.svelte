@@ -141,7 +141,7 @@
 <svelte:window />
 
 {#if isSection}
-  <hr class="my-4 mx-2 border-dashed" />
+  <div class="my-4 mx-2 border-b border-dashed border-neutral-300" />
 {/if}
 
 <div
