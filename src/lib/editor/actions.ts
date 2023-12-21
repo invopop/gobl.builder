@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
-import { Severity, createNotification } from "$lib/notifications/index.js";
+import { toasts } from "svelte-toasts";
 import {
   validEditor,
   envelope,
@@ -14,7 +14,7 @@ import {
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
-export async function build(isAutobuilt = false) {
+export async function build() {
   if (!get(validEditor)) {
     return;
   }
@@ -33,12 +33,12 @@ export async function build(isAutobuilt = false) {
     envelope.set(result);
     goblError.set(null);
 
-    if (!isAutobuilt) {
-      createNotification({
-        severity: Severity.Success,
-        message: "Document successfully built.",
-      });
-    }
+    // TODO: With autobuild in place this notification is disableScrollHandling, find a way to show it manually
+
+    // toasts.add({
+    //   type: "success",
+    //   description: "Document successfully built.",
+    // });
 
     return { result };
   } catch (e) {
@@ -73,9 +73,9 @@ export async function sign() {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully signed.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully signed.",
     });
 
     return { result };
@@ -106,9 +106,9 @@ export async function validate() {
 
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully validated.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully validated.",
     });
 
     return { isValid: true };
@@ -169,9 +169,9 @@ export async function correct(options: string) {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully corrected.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully corrected.",
     });
 
     return { result };

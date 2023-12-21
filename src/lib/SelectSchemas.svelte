@@ -2,15 +2,11 @@
   import Select from "svelte-select";
   import { createEventDispatcher, onMount } from "svelte";
   import { getSchemas } from "./editor/actions";
+  import type { ListOption } from "./types/ui";
 
   const dispatch = createEventDispatcher();
 
   const GOBL_URL = "https://gobl.org/draft-0/";
-
-  type ListOption = {
-    value: string;
-    label: string;
-  };
 
   export let value: string = "";
   export let placeholder = "";

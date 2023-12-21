@@ -18,7 +18,6 @@
   const { uiModel, updateSchema } = getFormEditorContext() || {};
 
   export let forceReadOnly = false;
-  export let autobuild = false;
   let documentHeaders: DocumentHeader[] = [];
 
   // eslint-disable-next-line
@@ -106,9 +105,7 @@
   }
 
   async function handleBuild() {
-    if (!autobuild) return false;
-
-    const result = await build(true);
+    const result = await build();
 
     const isSuccess = !result?.error;
 

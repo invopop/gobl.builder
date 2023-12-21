@@ -34,7 +34,7 @@
       </div>
       <ul class="p-4">
         {#each group.templates as template}
-          <li>
+          <li class="text-left">
             <button
               class="inline-flex gap-2 items-center hover:text-sky-500"
               on:click={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}

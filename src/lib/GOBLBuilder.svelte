@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SvelteToast } from "@zerodevx/svelte-toast";
+  import { ToastContainer } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
   import {
@@ -25,6 +25,8 @@
   import Modal from "./ui/Modal.svelte";
   import DynamicForm from "./editor/form/DynamicForm.svelte";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
+  import BaseButton from "./ui/BaseButton.svelte";
+  import { Edit } from "@invopop/ui-icons";
 
   const dispatch = createEventDispatcher();
 
@@ -62,9 +64,6 @@
 
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
-
-  // When enabled, it tries to build the document after any form update if the view is set to Visual Editor
-  export let autobuild = false;
 
   let editorForm: EditorForm | null = null;
   let openModal = false;
@@ -143,7 +142,7 @@
   };
 
   // Exposed functions to perform the actions from outside
-  export const build = async () => {
+  export const build = async (): Promise<State> => {
     const result = await actions.build();
     dispatch("build", result);
 
@@ -153,14 +152,16 @@
       state = "built";
     }
 
-    if (!editorForm) return;
+    if (!editorForm) return state;
 
     if (state === "built") {
       editorForm.recreateFormEditor();
-      return;
+      return state;
     }
 
     displayAllErrors(result?.error?.message || "");
+
+    return state;
   };
 
   export const correct = async () => {
@@ -246,7 +247,7 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} {forceReadOnly} {autobuild} />
+            <EditorForm bind:this={editorForm} {forceReadOnly} />
           {/if}
         </div>
       </div>
@@ -257,23 +258,54 @@
 {#if openModal}
   <div>
     <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
-    <Modal title="Correction Options" on:close={() => (openModal = false)}>
+    <Modal
+      title="Correct"
+      on:close={() => {
+        openModal = false;
+      }}
+    >
       <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
-      <button
-        class="border border-black px-6 py-3"
-        on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}>Correct</button
-      >
+      <div slot="footer" class="flex space-x-3">
+        <BaseButton
+          on:click={() => {
+            openModal = false;
+          }}
+        >
+          Cancel
+        </BaseButton>
+        <BaseButton
+          icon={Edit}
+          variant="primary"
+          on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}
+        >
+          Correct
+        </BaseButton>
+      </div>
     </Modal>
   </div>
 {/if}
 
-<SvelteToast />
-
-<style>
-  :root {
-    --toastContainerTop: auto;
-    --toastContainerRight: auto;
-    --toastContainerBottom: 2rem;
-    --toastContainerLeft: calc(100vw - 18rem);
-  }
-</style>
+<ToastContainer let:data placement="top-center" duration={3000}>
+  <div
+    class:border-positive-500={data.type === "success"}
+    class:border-danger-500={data.type === "error"}
+    class="bg-white border border-positive-500 py-[7px] pl-2 pr-3 flex space-x-1 rounded shadow-lg"
+  >
+    {#if data.type === "error"}
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15ZM7.99999 9.35C7.66862 9.35 7.39999 9.08137 7.39999 8.75V4.75C7.39999 4.41863 7.66862 4.15 7.99999 4.15C8.33137 4.15 8.59999 4.41863 8.59999 4.75L8.59999 8.75C8.59999 9.08137 8.33136 9.35 7.99999 9.35ZM8.75 11C8.75 11.4142 8.41421 11.75 8 11.75C7.58579 11.75 7.25 11.4142 7.25 11C7.25 10.5858 7.58579 10.25 8 10.25C8.41421 10.25 8.75 10.5858 8.75 11Z"
+          fill="#EC4E46"
+        />
+      </svg>
+    {:else}
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="7" fill="#3FC275" />
+        <path d="M11 5L7 10.6842L5 8.64719" stroke="white" />
+      </svg>
+    {/if}
+    <p class="text-neutral-800 font-medium text-sm">{data.description}</p>
+  </div>
+</ToastContainer>
