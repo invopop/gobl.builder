@@ -165,52 +165,6 @@
         </ul>
       </div>
 
-      <div class="navbar-item has-dropdown" class:is-active={activeSection === "actions"}>
-        <button
-          class="navbar-link"
-          on:mouseenter={() => {
-            activeSection = "actions";
-          }}
-        >
-          Document Actions
-        </button>
-
-        <ul class="navbar-dropdown">
-          <BuilderNavbarItem
-            option={{ value: "build", label: "Build" }}
-            disabled={state !== "modified" && state !== "loaded"}
-            on:click={(event) => {
-              activeSection = null;
-              dispatch("action", event.detail.value);
-            }}
-          />
-          <BuilderNavbarItem
-            option={{ value: "correct", label: "Correct" }}
-            disabled={!["built", "loaded", "signed", "modified"].includes(state)}
-            on:click={(event) => {
-              activeSection = null;
-              dispatch("action", event.detail.value);
-            }}
-          />
-          <BuilderNavbarItem
-            option={{ value: "sign", label: "Sign" }}
-            disabled={state !== "built"}
-            on:click={(event) => {
-              activeSection = null;
-              dispatch("action", event.detail.value);
-            }}
-          />
-          <BuilderNavbarItem
-            option={{ value: "validate", label: "Validate" }}
-            disabled={state === "errored" || state !== "signed"}
-            on:click={(event) => {
-              activeSection = null;
-              dispatch("action", event.detail.value);
-            }}
-          />
-        </ul>
-      </div>
-
       {#if $envelope}
         <div class="navbar-item has-dropdown" class:is-active={activeSection === "info"}>
           <button
@@ -235,7 +189,7 @@
     </div>
 
     <div class="navbar-end">
-      <div class="flex md:space-x-1 items-center justify-center">
+      <div class="flex md:space-x-1 items-center justify-center pr-4">
         <button
           title={state === "modified" || state === "loaded"
             ? "Build the GOBL document."
@@ -294,9 +248,6 @@
           </svg>
         </button>
         <ExportDoc />
-        <div class="flex text-gray-700 space-x-2 items-center justify-center pr-4 w-20 text-right">
-          <span class="text-xs">{state}</span>
-        </div>
       </div>
     </div>
   </div>

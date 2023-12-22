@@ -5,15 +5,17 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema, recentlyAutobuilt } from "$lib/editor/stores.js";
+  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
 
   createFormEditorContext(schemaUrlForm);
+
+  const dispatch = createEventDispatcher();
 
   const { uiModel, updateSchema } = getFormEditorContext() || {};
 
@@ -109,9 +111,7 @@
 
     const isSuccess = !result?.error;
 
-    if (isSuccess) {
-      $recentlyAutobuilt = true;
-    }
+    dispatch("setState", isSuccess ? "built" : "errored");
 
     return isSuccess;
   }

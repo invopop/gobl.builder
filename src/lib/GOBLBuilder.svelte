@@ -11,7 +11,7 @@
     jsonSchema,
     envelopeDocumentJSON,
     editor,
-    recentlyAutobuilt,
+    type Envelope,
   } from "$lib/editor/stores.js";
   // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
@@ -41,7 +41,7 @@
   export let data = "";
 
   // Binding this prop from outside will show the state of the editor. Posible values:
-  // init: the app is starting, show a loading thing
+  // init: the app is starting
   // empty: there is no content
   // loaded: implies that a document was loaded and no further action has been taken yet
   // modified: something is being changed
@@ -128,13 +128,7 @@
     }
 
     if (editorValue !== initialEditorData) {
-      if ($recentlyAutobuilt) {
-        state = "built";
-        $recentlyAutobuilt = false;
-      } else {
-        state = "modified";
-      }
-
+      state = "modified";
       return;
     }
 
@@ -208,6 +202,8 @@
 
   export const reloadData = async (d: string | null = null) => {
     let parsedValue = null;
+    let envelopeValue: Envelope | null = null;
+    let hashedData = "";
     const internalData = d || data;
 
     if (internalData != "") {
@@ -215,18 +211,35 @@
     }
 
     if (internalData != "" && isEnvelope(parsedValue)) {
-      $envelope = parsedValue;
-      initialEditorData = hash(parsedValue.doc);
+      envelopeValue = parsedValue;
+      hashedData = hash(parsedValue.doc);
     } else {
-      $envelope = newEnvelope(parsedValue);
-      initialEditorData = hash(parsedValue || "");
+      envelopeValue = newEnvelope(parsedValue);
+      hashedData = hash(parsedValue || "");
     }
+
+    if (initialEditorData === hashedData) {
+      return;
+    }
+
+    $envelope = envelopeValue as Envelope;
+    initialEditorData = hashedData;
+
+    // Only applies to form view
+    if (editorView === "code") return;
 
     // If document loaded has the same schema as previously loaded
     // We need to force a rebuild of the UI model
     if (parsedValue?.$schema === $schemaUrlForm) {
       recreateVisualEditor();
     }
+
+    // Attemp autobuild after editor refreshes
+    setTimeout(() => {
+      if (!envelopeValue?.doc) return;
+
+      build();
+    }, 100);
   };
 
   export const recreateVisualEditor = async () => {
@@ -247,7 +260,13 @@
           {#if editorView === "code"}
             <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} {forceReadOnly} />
+            <EditorForm
+              bind:this={editorForm}
+              {forceReadOnly}
+              on:setState={(event) => {
+                state = event.detail;
+              }}
+            />
           {/if}
         </div>
       </div>

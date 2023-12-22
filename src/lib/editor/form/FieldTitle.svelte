@@ -15,7 +15,10 @@
   });
 </script>
 
-<span class="{classes} whitespace-nowrap flex items-center" class:capitalize={!field.schema.title}>
+<span
+  class="{classes} whitespace-nowrap flex items-center"
+  class:capitalize={!field.schema.title && !field.is.editableKey}
+>
   {#if field.parent?.isArray()}
     <span class="flex items-center justify-start">
       <Icon src={Hashtag} class="h-4 w-4" />
