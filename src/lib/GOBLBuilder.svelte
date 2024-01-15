@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ToastContainer } from "svelte-toasts";
   import hash from "object-hash";
-  import { createEventDispatcher } from "svelte";
+  import { SvelteComponent, createEventDispatcher } from "svelte";
   import {
     envelope,
     goblError,
@@ -12,6 +12,7 @@
     envelopeDocumentJSON,
     editor,
     type Envelope,
+    envelopeIsSigned,
   } from "$lib/editor/stores.js";
   // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
@@ -27,6 +28,8 @@
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
   import BaseButton from "./ui/BaseButton.svelte";
   import { Edit } from "@invopop/ui-icons";
+  import EnvelopeSignatures from "./menubar/EnvelopeSignatures.svelte";
+  import EnvelopeHeader from "./menubar/EnvelopeHeader.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -67,6 +70,9 @@
 
   let editorForm: EditorForm | null = null;
   let openModal = false;
+  let openHeadersModal = false;
+  let modalComponent: typeof SvelteComponent | null = null;
+  let modalTitle = "";
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
@@ -247,6 +253,22 @@
 
     editorForm.recreateFormEditor();
   };
+
+  export const showHeaders = async () => {
+    openHeadersModal = true;
+    modalComponent = EnvelopeHeader as typeof SvelteComponent;
+    modalTitle = "Header";
+  };
+
+  export const showSignatures = async () => {
+    if (!$envelopeIsSigned) {
+      return;
+    }
+
+    openHeadersModal = true;
+    modalComponent = EnvelopeSignatures as typeof SvelteComponent;
+    modalTitle = "Signatures";
+  };
 </script>
 
 <div class="flex flex-col h-full editor">
@@ -300,6 +322,23 @@
           Correct
         </BaseButton>
       </div>
+    </Modal>
+  </div>
+{/if}
+
+{#if openHeadersModal}
+  <div>
+    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
+    <Modal title={modalTitle} on:close={() => (openHeadersModal = false)}>
+      <svelte:component this={modalComponent} />
+      <BaseButton
+        slot="footer"
+        on:click={() => {
+          openHeadersModal = false;
+        }}
+      >
+        Cancel
+      </BaseButton>
     </Modal>
   </div>
 {/if}

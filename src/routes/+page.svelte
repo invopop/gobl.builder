@@ -3,6 +3,7 @@
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import type { State } from "$lib/types/editor";
   import BuilderNavbar from "$lib/BuilderNavbar.svelte";
+  import { envelope, envelopeIsSigned } from "$lib/editor/stores";
 
   interface GOBLDocument {
     $schema: string;
@@ -53,6 +54,24 @@
     on:schemaChanged={handleSchemaChange}
   />
   <div class="flex-1 h-full">
+    {#if $envelope?.doc}
+      <div class="flex items-center md:justify-center py-3 px-3 md:px-4 border-b border-neutral-200 space-x-2">
+        <button
+          class="px-2 pt-[2.5px] pb-[3.5px] border border-neutral-200 rounded-sm"
+          on:click={() => {
+            builder.showHeaders();
+          }}>Header</button
+        >
+        {#if $envelopeIsSigned}
+          <button
+            class="px-2 pt-[2.5px] pb-[3.5px] border border-neutral-200 rounded-sm"
+            on:click={() => {
+              builder.showSignatures();
+            }}>Signatures</button
+          >
+        {/if}
+      </div>
+    {/if}
     <GOBLBuilder
       bind:this={builder}
       bind:state
