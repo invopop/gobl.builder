@@ -5,21 +5,54 @@
   import { DocumentText, Download } from "@invopop/ui-icons";
   import LoadingIcon from "./ui/LoadingIcon.svelte";
   import { createEventDispatcher } from "svelte";
-  import { generatingPDF } from "./ui/store";
+  import { toasts } from "svelte-toasts";
+
+  const pdfApiBaseUrl = "https://pdf.invopop.com";
 
   const dispatch = createEventDispatcher();
 
+  let generatingPDF = false;
+
   $: envelopeExists = Boolean($envelope);
+
+  async function previewPDF() {
+    const formData = new FormData();
+    formData.append("envelope", new Blob([JSON.stringify($envelope)]));
+
+    generatingPDF = true;
+
+    try {
+      const res = await fetch(`${pdfApiBaseUrl}/api`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const message = "The PDF service returned an error:";
+        const context = `${await res.text()} (HTTP status: ${res.status})`;
+        toasts.add({
+          type: "error",
+          description: `${message} ${context}`,
+        });
+        return;
+      }
+
+      const data = await res.blob();
+      const url = URL.createObjectURL(data);
+      window.open(url);
+    } catch (e) {
+      toasts.add({
+        type: "error",
+        description: `Failed to fetch PDF: ${e as string}`,
+      });
+    } finally {
+      generatingPDF = false;
+    }
+  }
 </script>
 
-<button
-  title="Preview document as PDF"
-  on:click={() => {
-    dispatch("action", "previewPDF");
-  }}
-  class={iconButtonClasses(!envelopeExists)}
->
-  {#if $generatingPDF}
+<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses(!envelopeExists)}>
+  {#if generatingPDF}
     <LoadingIcon />
   {:else}
     <Icon src={DocumentText} class="w-5 h-5" />

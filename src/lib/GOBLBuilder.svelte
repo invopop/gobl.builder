@@ -31,9 +31,6 @@
   import EnvelopeSignatures from "./menubar/EnvelopeSignatures.svelte";
   import EnvelopeHeader from "./menubar/EnvelopeHeader.svelte";
   import fileSaver from "file-saver";
-  import { generatingPDF } from "./ui/store";
-
-  const pdfApiBaseUrl = "https://pdf.invopop.com";
 
   const dispatch = createEventDispatcher();
 
@@ -286,41 +283,6 @@
       type: "success",
       description: "Downloaded JSON file of GOBL document.",
     });
-  };
-
-  export const previewPDF = async () => {
-    const formData = new FormData();
-    formData.append("envelope", new Blob([JSON.stringify($envelope)]));
-
-    $generatingPDF = true;
-
-    try {
-      const res = await fetch(`${pdfApiBaseUrl}/api`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) {
-        const message = "The PDF service returned an error:";
-        const context = `${await res.text()} (HTTP status: ${res.status})`;
-        toasts.add({
-          type: "error",
-          description: `${message} ${context}`,
-        });
-        return;
-      }
-
-      const data = await res.blob();
-      const url = URL.createObjectURL(data);
-      window.open(url);
-    } catch (e) {
-      toasts.add({
-        type: "error",
-        description: `Failed to fetch PDF: ${e as string}`,
-      });
-    } finally {
-      $generatingPDF = false;
-    }
   };
 </script>
 
