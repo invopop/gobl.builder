@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ToastContainer } from "svelte-toasts";
+  import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { SvelteComponent, createEventDispatcher } from "svelte";
   import {
@@ -30,6 +30,10 @@
   import { Edit } from "@invopop/ui-icons";
   import EnvelopeSignatures from "./menubar/EnvelopeSignatures.svelte";
   import EnvelopeHeader from "./menubar/EnvelopeHeader.svelte";
+  import fileSaver from "file-saver";
+  import { generatingPDF } from "./ui/store";
+
+  const pdfApiBaseUrl = "https://pdf.invopop.com";
 
   const dispatch = createEventDispatcher();
 
@@ -177,7 +181,7 @@
     openModal = true;
   };
 
-  export const correctWithOtions = async (options: string) => {
+  export const correctWithOptions = async (options: string) => {
     const result = await actions.correct(options);
 
     if (result?.error) {
@@ -269,6 +273,55 @@
     modalComponent = EnvelopeSignatures as typeof SvelteComponent;
     modalTitle = "Signatures";
   };
+
+  export const downloadJson = () => {
+    if (!$envelope) {
+      return;
+    }
+
+    const filename = ($envelope.head?.uuid || "gob") + ".json";
+    fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
+
+    toasts.add({
+      type: "success",
+      description: "Downloaded JSON file of GOBL document.",
+    });
+  };
+
+  export const previewPDF = async () => {
+    const formData = new FormData();
+    formData.append("envelope", new Blob([JSON.stringify($envelope)]));
+
+    $generatingPDF = true;
+
+    try {
+      const res = await fetch(`${pdfApiBaseUrl}/api`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const message = "The PDF service returned an error:";
+        const context = `${await res.text()} (HTTP status: ${res.status})`;
+        toasts.add({
+          type: "error",
+          description: `${message} ${context}`,
+        });
+        return;
+      }
+
+      const data = await res.blob();
+      const url = URL.createObjectURL(data);
+      window.open(url);
+    } catch (e) {
+      toasts.add({
+        type: "error",
+        description: `Failed to fetch PDF: ${e as string}`,
+      });
+    } finally {
+      $generatingPDF = false;
+    }
+  };
 </script>
 
 <div class="flex flex-col h-full editor">
@@ -317,7 +370,7 @@
         <BaseButton
           icon={Edit}
           variant="primary"
-          on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}
+          on:click={() => correctWithOptions(correctionModel?.root.toJSON() || "")}
         >
           Correct
         </BaseButton>

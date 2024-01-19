@@ -1,6 +1,6 @@
 <svg
   role="status"
-  class="w-5 h-5 text-gray-500 animate-spin fill-gray-300"
+  class="w-5 h-5 text-neutral-500 animate-spin fill-gray-300"
   viewBox="0 0 100 101"
   fill="none"
   xmlns="http://www.w3.org/2000/svg"

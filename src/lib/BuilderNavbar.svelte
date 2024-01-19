@@ -5,14 +5,16 @@
   import logo from "../static/logo-name.svg";
   import type { ListOption } from "./types/ui";
   import type { State } from "./types/editor";
-  import ExportDoc from "./actions/ExportDoc.svelte";
   import SelectSchemas from "./SelectSchemas.svelte";
   import BuilderNavbarViews from "./BuilderNavbarViews.svelte";
   import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
   import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
+  import BuilderNavbarEnvelopeMeta from "./BuilderNavbarEnvelopeMeta.svelte";
   import BuilderNavbarSeparator from "./BuilderNavbarSeparator.svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Menu, Close } from "@invopop/ui-icons";
+  import { envelope } from "./editor/stores";
+  import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -41,7 +43,7 @@
 </script>
 
 <nav
-  class="relative h-14 flex items-center justify-between bg-background-500 py-2 px-5 space-x-1"
+  class="fixed w-full z-50 h-14 flex items-center justify-between bg-background-500 py-2 px-5 space-x-1"
   aria-label="main navigation"
 >
   <div class="flex items-center">
@@ -59,6 +61,7 @@
 
     <div class="hidden md:block lg:w-[256px] ml-3">
       <SelectSchemas
+        navBar
         bind:value={defaultSchema}
         placeholder="Schema"
         on:change={(event) => {
@@ -68,20 +71,24 @@
     </div>
   </div>
 
-  <div class="hidden md:block">
-    <BuilderNavbarViews bind:editorView />
-  </div>
-
   <div class="hidden md:flex items-center space-x-3">
     <BuilderNavbarOptions bind:forceReadOnly />
 
+    {#if $envelope?.doc}
+      <BuilderNavbarSeparator />
+      <BuilderNavbarEnvelopeMeta on:action />
+    {/if}
+
+    <BuilderNavbarSeparator />
+
+    <BuilderNavbarViews bind:editorView />
     <BuilderNavbarSeparator />
 
     <BuilderNavbarActions {state} on:action />
 
     <BuilderNavbarSeparator />
 
-    <ExportDoc />
+    <BuilderNavbarDownload on:action />
   </div>
   <button
     class="md:hidden p-1.5 border border-neutral-300"
@@ -107,6 +114,7 @@
       />
       <div class="w-full ml-3">
         <SelectSchemas
+          navBar
           bind:value={defaultSchema}
           placeholder="Schema"
           on:change={(event) => {
@@ -120,6 +128,8 @@
     <hr class="my-5 border-neutral-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
     <hr class="my-5 border-neutral-300" />
+    <BuilderNavbarEnvelopeMeta on:action />
+    <hr class="my-5 border-neutral-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
         {state}
@@ -129,7 +139,7 @@
         }}
       />
       <BuilderNavbarSeparator />
-      <ExportDoc />
+      <BuilderNavbarDownload on:action />
     </div>
   </div>
 {/if}
