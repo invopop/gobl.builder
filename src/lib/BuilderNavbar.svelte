@@ -88,7 +88,7 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload on:action />
+    <BuilderNavbarDownload on:action disabled={state !== "built"} />
   </div>
   <button
     class="md:hidden p-1.5 border border-neutral-300"
@@ -139,7 +139,7 @@
         }}
       />
       <BuilderNavbarSeparator />
-      <BuilderNavbarDownload on:action />
+      <BuilderNavbarDownload on:action disabled={state !== "built"} />
     </div>
   </div>
 {/if}

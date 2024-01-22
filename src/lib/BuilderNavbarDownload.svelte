@@ -11,6 +11,8 @@
 
   const dispatch = createEventDispatcher();
 
+  export let disabled = false;
+
   let generatingPDF = false;
 
   $: envelopeExists = Boolean($envelope);
@@ -51,7 +53,7 @@
   }
 </script>
 
-<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses(!envelopeExists)}>
+<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses(!envelopeExists || disabled)}>
   {#if generatingPDF}
     <LoadingIcon />
   {:else}
@@ -64,7 +66,7 @@
   on:click={() => {
     dispatch("action", "downloadJson");
   }}
-  class={iconButtonClasses(!envelopeExists)}
+  class={iconButtonClasses(!envelopeExists || disabled)}
 >
   <Icon src={Download} class="w-5 h-5" />
 </button>
