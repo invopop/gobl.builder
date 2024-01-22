@@ -5,7 +5,13 @@
     recreatingUiModel,
     schemaUrlForm,
   } from "./context/formEditor.js";
-  import { currentEditorSchema, editor, envelopeIsSigned, jsonSchema } from "$lib/editor/stores.js";
+  import {
+    currentEditorSchema,
+    editor,
+    envelopeIsSigned,
+    jsonSchema,
+    someEditorValueIsEmpty,
+  } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
@@ -107,6 +113,10 @@
   }
 
   async function handleBuild() {
+    // Skips autobuild if any field is empty. Allowing user to add new
+    // fields without having them deleted
+    if ($someEditorValueIsEmpty) return false;
+
     const result = await build();
 
     const isSuccess = !result?.error;

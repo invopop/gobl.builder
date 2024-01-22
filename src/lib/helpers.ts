@@ -54,3 +54,31 @@ export function displayAllErrors(error: string) {
     showErrorToast(error as string);
   }
 }
+
+export function objectHasEmptyProperties(obj: Record<string, unknown>) {
+  for (const key in obj) {
+    const value = obj[key];
+
+    if (value === "") {
+      return true; // Found an empty string
+    }
+
+    if (typeof value === "object" && value !== null) {
+      if (Array.isArray(value)) {
+        // If the property is an array, check each element
+        for (const element of value) {
+          if (objectHasEmptyProperties(element)) {
+            return true; // Found an empty string in array element
+          }
+        }
+      } else {
+        // If the property is an object (but not an array), recursively check its properties
+        if (objectHasEmptyProperties(value as Record<string, unknown>)) {
+          return true; // Found an empty string in nested object
+        }
+      }
+    }
+  }
+
+  return false; // No empty string found
+}
