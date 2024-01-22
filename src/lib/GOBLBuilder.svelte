@@ -320,7 +320,7 @@
         openModal = false;
       }}
     >
-      <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
+      <DynamicForm modal model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
       <div slot="footer" class="flex space-x-3">
         <BaseButton
           on:click={() => {

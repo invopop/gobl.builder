@@ -134,7 +134,7 @@
     />
   </div>
   <div transition:fade={{ duration: 200 }}>
-    <ul class="list-none h-80 overflow-auto p-1" role="menu" bind:this={menuRef}>
+    <ul class="list-none max-h-80 overflow-auto p-1" role="menu" bind:this={menuRef}>
       {#if options.length}
         {#each options as opt, i (opt.key)}
           <li
@@ -163,7 +163,7 @@
         {/each}
       {:else}
         <li>
-          <span class="emptyFilter">
+          <span class="w-full py-3 px-6 text-grey-5 text-left">
             <span>No items found</span>
             {#if filterStr}
               <span>matching filter: <strong>"{filterStr}"</strong></span>
@@ -181,9 +181,3 @@
     </div>
   </div>
 </div>
-
-<style lang="postcss">
-  span.emptyFilter {
-    @apply block w-full py-3 px-6 text-grey-5 text-left;
-  }
-</style>

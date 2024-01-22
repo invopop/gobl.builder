@@ -9,7 +9,7 @@
   tabindex="-1"
   class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center items-center flex"
 >
-  <div class="relative w-full lg:w-[600px] h-full p-4 md:h-auto">
+  <div class="relative w-full lg:w-[800px] h-full p-4 md:h-auto">
     <!-- Modal content -->
     <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside on:close>
       <!-- Modal header -->
