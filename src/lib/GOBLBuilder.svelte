@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
-  import { SvelteComponent, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import {
     envelope,
     goblError,
@@ -23,13 +23,10 @@
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
-  import Modal from "./ui/Modal.svelte";
-  import DynamicForm from "./editor/form/DynamicForm.svelte";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
-  import BaseButton from "./ui/BaseButton.svelte";
-  import { Edit } from "@invopop/ui-icons";
-  import EnvelopeSignatures from "./menubar/EnvelopeSignatures.svelte";
-  import EnvelopeHeader from "./menubar/EnvelopeHeader.svelte";
+  import EditorFormModalSignatures from "./editor/form/modals/EditorFormModalSignatures.svelte";
+  import EditorFormModalHeaders from "./editor/form/modals/EditorFormModalHeaders.svelte";
+  import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
   import fileSaver from "file-saver";
 
   const dispatch = createEventDispatcher();
@@ -70,10 +67,9 @@
   export let forceReadOnly = false;
 
   let editorForm: EditorForm | null = null;
-  let openModal = false;
+  let openCorrectModal = false;
   let openHeadersModal = false;
-  let modalComponent: typeof SvelteComponent | null = null;
-  let modalTitle = "";
+  let openSignaturesModal = false;
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
@@ -175,7 +171,7 @@
     }
 
     correctionModel = await generateCorrectOptionsModel(result?.schema || "");
-    openModal = true;
+    openCorrectModal = true;
   };
 
   export const correctWithOptions = async (options: string) => {
@@ -187,7 +183,7 @@
       return;
     }
 
-    openModal = false;
+    openCorrectModal = false;
 
     state = "corrected";
 
@@ -257,8 +253,6 @@
 
   export const showHeaders = async () => {
     openHeadersModal = true;
-    modalComponent = EnvelopeHeader as typeof SvelteComponent;
-    modalTitle = "Header";
   };
 
   export const showSignatures = async () => {
@@ -266,9 +260,7 @@
       return;
     }
 
-    openHeadersModal = true;
-    modalComponent = EnvelopeSignatures as typeof SvelteComponent;
-    modalTitle = "Signatures";
+    openSignaturesModal = true;
   };
 
   export const downloadJson = () => {
@@ -311,51 +303,32 @@
   </div>
 </div>
 
-{#if openModal}
-  <div>
-    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
-    <Modal
-      title="Correct"
-      on:close={() => {
-        openModal = false;
-      }}
-    >
-      <DynamicForm modal model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
-      <div slot="footer" class="flex space-x-3">
-        <BaseButton
-          on:click={() => {
-            openModal = false;
-          }}
-        >
-          Cancel
-        </BaseButton>
-        <BaseButton
-          icon={Edit}
-          variant="primary"
-          on:click={() => correctWithOptions(correctionModel?.root.toJSON() || "")}
-        >
-          Correct
-        </BaseButton>
-      </div>
-    </Modal>
-  </div>
+{#if openCorrectModal}
+  <EditorFormModalCorrect
+    bind:correctionModel
+    on:close={() => {
+      openCorrectModal = false;
+    }}
+    on:correct={() => {
+      correctWithOptions(correctionModel?.root.toJSON() || "");
+    }}
+  />
 {/if}
 
 {#if openHeadersModal}
-  <div>
-    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
-    <Modal title={modalTitle} on:close={() => (openHeadersModal = false)}>
-      <svelte:component this={modalComponent} />
-      <BaseButton
-        slot="footer"
-        on:click={() => {
-          openHeadersModal = false;
-        }}
-      >
-        Cancel
-      </BaseButton>
-    </Modal>
-  </div>
+  <EditorFormModalHeaders
+    on:close={() => {
+      openHeadersModal = false;
+    }}
+  />
+{/if}
+
+{#if openSignaturesModal}
+  <EditorFormModalSignatures
+    on:close={() => {
+      openSignaturesModal = false;
+    }}
+  />
 {/if}
 
 <ToastContainer let:data placement="top-center" duration={3000}>

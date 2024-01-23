@@ -10,7 +10,6 @@
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
-  import { envelopeIsSigned } from "../stores";
   import clsx from "clsx";
   import { activeItem, highlightedItem } from "$lib/store/visualEditor";
 
@@ -35,8 +34,7 @@
 
   $: isHover = $activeItem === field.id;
   $: highlight = $highlightedItem === field.id;
-  $: isReadOnly = $envelopeIsSigned || readOnly;
-  $: showContextMenu = !isReadOnly && isHover;
+  $: showContextMenu = !readOnly && isHover;
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
     const offset = top + height - window.innerHeight;

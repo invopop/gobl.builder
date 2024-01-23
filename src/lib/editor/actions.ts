@@ -33,7 +33,7 @@ export async function build() {
     envelope.set(result);
     goblError.set(null);
 
-    // TODO: With autobuild in place this notification is disableScrollHandling, find a way to show it manually
+    // TODO: With autobuild in place this notification is disabled, find a way to show it manually
 
     // toasts.add({
     //   type: "success",
