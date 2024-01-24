@@ -52,34 +52,36 @@
     on:action={handleAction}
     on:schemaChanged={handleSchemaChange}
   />
-  <div class="flex-1 h-full rounded-t-lg mx-1 bg-white pt-14">
-    <GOBLBuilder
-      bind:this={builder}
-      bind:state
-      bind:data
-      bind:problems
-      {jsonSchemaURL}
-      {editorView}
-      signEnabled
-      {forceReadOnly}
-      on:change={(event) => {
-        console.log("Received change event.", event.detail);
-      }}
-      on:undo={() => {
-        console.log("User clicked `Undo`.");
-      }}
-      on:redo={() => {
-        console.log("User clicked `Redo`.");
-      }}
-      on:build={(event) => {
-        console.log("Received build result.", event.detail);
-      }}
-      on:sign={(event) => {
-        console.log("Received sign result.", event.detail);
-      }}
-      on:validate={(event) => {
-        console.log("Received validate result.", event.detail);
-      }}
-    />
+  <div class="flex-1 h-full p-1 pt-14">
+    <div class="h-full bg-white rounded-t-lg">
+      <GOBLBuilder
+        bind:this={builder}
+        bind:state
+        bind:data
+        bind:problems
+        {jsonSchemaURL}
+        {editorView}
+        signEnabled
+        {forceReadOnly}
+        on:change={(event) => {
+          console.log("Received change event.", event.detail);
+        }}
+        on:undo={() => {
+          console.log("User clicked `Undo`.");
+        }}
+        on:redo={() => {
+          console.log("User clicked `Redo`.");
+        }}
+        on:build={(event) => {
+          console.log("Received build result.", event.detail);
+        }}
+        on:sign={(event) => {
+          console.log("Received sign result.", event.detail);
+        }}
+        on:validate={(event) => {
+          console.log("Received validate result.", event.detail);
+        }}
+      />
+    </div>
   </div>
 </div>

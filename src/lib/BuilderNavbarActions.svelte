@@ -12,10 +12,9 @@
 
 <div class="flex space-x-1 items-center">
   <button
-    title={state === "modified" || state === "loaded"
-      ? "Build the GOBL document."
-      : "To build, first ensure the document is valid."}
-    class={iconButtonClasses(state !== "modified" && state !== "loaded")}
+    title="Build the GOBL document."
+    class={iconButtonClasses(state !== "modified" && state !== "loaded" && state !== "errored")}
+    disabled={state !== "modified" && state !== "loaded" && state !== "errored"}
     on:click={() => {
       dispatch("action", "build");
     }}
@@ -28,6 +27,7 @@
       dispatch("action", "correct");
     }}
     class={iconButtonClasses(!["built", "loaded", "signed", "modified"].includes(state))}
+    disabled={!["built", "loaded", "signed", "modified"].includes(state)}
   >
     <Icon src={Erase} class="w-5 h-5" />
   </button>
@@ -37,6 +37,7 @@
       dispatch("action", "sign");
     }}
     class={iconButtonClasses(state !== "built")}
+    disabled={state !== "built"}
   >
     <Icon src={Sign} class="w-5 h-5" />
   </button>
@@ -46,6 +47,7 @@
       dispatch("action", "validate");
     }}
     class={iconButtonClasses(state === "errored" || state !== "signed")}
+    disabled={state === "errored" || state !== "signed"}
   >
     <Icon src={SquareCheck} class="w-5 h-5" />
   </button>
