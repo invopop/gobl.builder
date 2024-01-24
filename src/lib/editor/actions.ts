@@ -1,7 +1,7 @@
 import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
-import { Severity, createNotification } from "$lib/notifications/index.js";
+import { toasts } from "svelte-toasts";
 import {
   validEditor,
   envelope,
@@ -33,10 +33,12 @@ export async function build() {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully built.",
-    });
+    // TODO: With autobuild in place this notification is disabled, find a way to show it manually
+
+    // toasts.add({
+    //   type: "success",
+    //   description: "Document successfully built.",
+    // });
 
     return { result };
   } catch (e) {
@@ -71,9 +73,9 @@ export async function sign() {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully signed.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully signed.",
     });
 
     return { result };
@@ -104,9 +106,9 @@ export async function validate() {
 
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully validated.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully validated.",
     });
 
     return { isValid: true };
@@ -167,9 +169,9 @@ export async function correct(options: string) {
     envelope.set(result);
     goblError.set(null);
 
-    createNotification({
-      severity: Severity.Success,
-      message: "Document successfully corrected.",
+    toasts.add({
+      type: "success",
+      description: "Document successfully corrected.",
     });
 
     return { result };

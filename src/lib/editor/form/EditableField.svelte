@@ -11,6 +11,7 @@
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
+  export let readOnly = false;
 
   let error = "";
   $: showError = Boolean(error);
@@ -46,15 +47,23 @@
   }
 </script>
 
-<div class="w-full">
+<div class="w-full space-y-1 flex flex-col">
   {#if field.controlType === "date"}
-    <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
+    <EditableDateField {field} {showError} {readOnly} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
-    <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
+    <EditableSelectField
+      {field}
+      {showError}
+      {readOnly}
+      options={field.controlMeta}
+      on:edit={handleEdit}
+      on:blur={validateField}
+    />
   {:else if field.type === "boolean"}
     <EditableSelectField
       {field}
       {showError}
+      {readOnly}
       options={[
         { key: "", value: "" },
         { key: "Yes", value: true },
@@ -64,7 +73,7 @@
       on:blur={validateField}
     />
   {:else}
-    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
+    <EditableTextField {field} {showError} {readOnly} on:edit={handleEdit} on:blur={validateField} />
   {/if}
   {#if showError}
     <FieldError {error} />

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   import FieldButtons from "$lib/editor/form/FieldButtons.svelte";
   import type { UIModelField } from "./utils/model.js";
 
@@ -24,14 +24,18 @@
     dispatch("fieldDuplicated", newField);
   }
 
-  function handleModeFieldUp() {
-    field.move("up");
+  async function handleModeFieldUp() {
+    const destinationField = field.move("up");
     dispatch("fieldMoved", field);
+    await tick();
+    destinationField?.tryFocus();
   }
 
-  function handleModeFieldDown() {
-    field.move("down");
+  async function handleModeFieldDown() {
+    const destinationField = field.move("down");
     dispatch("fieldMoved", field);
+    await tick();
+    destinationField?.tryFocus();
   }
 </script>
 

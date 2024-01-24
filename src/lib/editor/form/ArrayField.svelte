@@ -17,6 +17,4 @@
   on:fieldMoved
   on:fieldValueUpdated
   on:fieldKeyUpdated
->
-  <slot />
-</ObjectField>
+/>

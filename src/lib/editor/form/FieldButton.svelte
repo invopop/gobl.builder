@@ -31,12 +31,12 @@
 <button
   title={tooltipText}
   on:click={handleClick}
-  class="flex items-center justify-start w-full p-2 {isDestructive
-    ? 'hover:bg-red-400 hover:text-white'
-    : 'hover:bg-gray-200'}"
+  class="flex items-center justify-start w-full p-[5px] bg-white rounded {isDestructive
+    ? 'hover:bg-danger-500 hover:text-white text-danger-500'
+    : 'hover:bg-neutral-100 text-neutral-800'}"
 >
   {#if isDestructive && needsConfirmation}
     <span class="text-xs mr-1">Sure?</span>
   {/if}
-  <Icon src={buttonIcon} class="h-4 w-4 p-0.5" />
+  <Icon src={buttonIcon} class="h-4 w-4" />
 </button>

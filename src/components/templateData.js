@@ -131,7 +131,7 @@ export default [
     ],
   },
   {
-    name: "Miscellaneous",
+    name: "Other",
     folder: "misc",
     templates: [
       {

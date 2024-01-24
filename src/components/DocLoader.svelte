@@ -2,6 +2,8 @@
   import { Modal } from "flowbite-svelte";
   import DocLoaderContent from "./DocLoaderContent.svelte";
   import { createEventDispatcher } from "svelte";
+  import { Icon } from "@steeze-ui/svelte-icon";
+  import { Folder } from "@invopop/ui-icons";
 
   const dispatch = createEventDispatcher();
 
@@ -14,28 +16,27 @@
 
 <button
   title="Load a GOBL document from a template, file upload or your library."
-  class="font-medium text-white bg-sky-600 hover:bg-sky-500 text-xs px-4 py-2 rounded-md inline-flex items-center"
-  on:click={() => (openModal = true)}
+  class="border border-cyan-500 py-[5px] pl-2 pr-3 text-cyan-500 rounded text-base font-medium flex items-center space-x-1"
+  on:click={() => {
+    openModal = true;
+  }}
 >
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="mr-2 -ml-1 w-4 h-4"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776"
-    />
-  </svg>
-
-  Load document…
+  <Icon src={Folder} class="h-5 w-5" />
+  <span>Load</span>
 </button>
 {#if openModal}
-  <Modal outsideclose size="xs" title="Load Document Template" bind:open={openModal} autoclose>
+  <Modal
+    backdropClass="fixed inset-0 z-40 bg-neutral-800/80"
+    bodyClass="px-6 pt-0"
+    outsideclose
+    dismissable={false}
+    size="xs"
+    bind:open={openModal}
+    autoclose
+  >
+    <div slot="header" class="p-2">
+      <p class="font-semibold text-3xl text-neutral-800">Load Template</p>
+    </div>
     <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
   </Modal>
 {/if}

@@ -2,7 +2,7 @@ import { derived, writable, type Writable, type Readable } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import type { GOBLError } from "@invopop/gobl-worker";
 import type * as monaco from "monaco-editor";
-import type { Notification } from "$lib/notifications/index.js";
+import { objectHasEmptyProperties } from "$lib/helpers";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null);
@@ -107,15 +107,6 @@ export const envelope = writable<Envelope>(buildNewEnvelope(null));
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head?.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
-function createNotificationStore() {
-  const { subscribe, set } = writable<Notification | null>(null);
-  return {
-    subscribe,
-    set,
-  };
-}
-export const notifications = createNotificationStore();
-
 function createGOBLErrorStore() {
   const { subscribe, set } = writable<GOBLError | null>(null);
 
@@ -154,3 +145,9 @@ export function envelopeDocumentSchema(envelope: Envelope | null): string {
 }
 
 export const editorCursor = writable({ line: 1, column: 1 });
+
+export const someEditorValueIsEmpty = derived(editorJSON, ($editor) => {
+  if (!$editor.value) return false;
+
+  return objectHasEmptyProperties($editor.value as Record<string, unknown>);
+});

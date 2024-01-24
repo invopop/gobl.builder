@@ -180,6 +180,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     if (!this.parent) return false;
     if (this.key === key) return false;
 
+    // Force reactivity updates before recreation
+    this.key = key;
+
     this.parent.deleteChildFieldById(this.id);
     this.parent.addChildField({ key, required: this.is.required, schema: this.schema }, this.value);
 
@@ -383,6 +386,8 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     if (destinationKey < 0 || destinationKey >= children.length) return;
 
     swapPositions(children, currentKey, destinationKey);
+
+    return children[currentKey];
   }
 
   getNextFocusableField(reverse = false): UIModelField | undefined {

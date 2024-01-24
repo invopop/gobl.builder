@@ -1,23 +1,21 @@
 <script lang="ts">
   import type { UIModelRootField, UIModelField } from "$lib/editor/form/utils/model.js";
   import AbstractField from "./AbstractField.svelte";
-  import { currentEditorSchema, jsonSchema } from "../stores";
+  import SectionWrapper from "./SectionWrapper.svelte";
 
   export let field: UIModelRootField;
   export let readOnly = false;
 
   const emptyChildren: UIModelField[] = [];
-  $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
-  $: children = field.children?.filter((f) => f.key !== "$schema");
+
+  $: children = field.children?.filter((f) => f.key !== "$schema") || emptyChildren;
   // @todo: Add title field to schema object on gobl
-  $: title = field.schema.title || field.id.split("/").slice(-1);
+  $: complexFields = children.filter((f) => ["array", "object"].includes(f.type));
+  $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
 </script>
 
-<div id={field.id}>
-  {#if title != "root" && isValidSchema}
-    <h1 class="text-sm capitalize text-grey-4 font-bold p-2">{title}</h1>
-  {/if}
-  {#each children || emptyChildren as field (field.id)}
+<SectionWrapper {field}>
+  {#each simpleFields as field (field.id)}
     <AbstractField
       {field}
       {readOnly}
@@ -29,4 +27,19 @@
       on:fieldKeyUpdated
     />
   {/each}
-</div>
+
+  <div slot="extra-content">
+    {#each complexFields as field (field.id)}
+      <AbstractField
+        {field}
+        {readOnly}
+        on:fieldAdded
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    {/each}
+  </div>
+</SectionWrapper>

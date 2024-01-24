@@ -10,7 +10,8 @@
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
-  import { envelopeIsSigned } from "../stores";
+  import clsx from "clsx";
+  import { activeItem, highlightedItem } from "$lib/store/visualEditor";
 
   const dispatch = createEventDispatcher();
 
@@ -27,34 +28,48 @@
 
   let showAddMenu = false;
   let addMenuRef: HTMLElement;
-  let isHover = false;
-  let isFocus = false;
   let contextMenuOffset = 0;
 
   export let readOnly = false;
 
-  $: showContextMenu = !$envelopeIsSigned && (isHover || isFocus);
+  $: isHover = $activeItem === field.id;
+  $: highlight = $highlightedItem === field.id;
+  $: showContextMenu = !readOnly && isHover;
   $: if (showAddMenu && addMenuRef) {
     const { height, top } = addMenuRef.getBoundingClientRect();
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
+  $: isParent = ["object", "array"].includes(field.type);
+  $: isSection = isParent && field.parent?.is.root;
+  $: wrapperClasses = clsx({
+    "bg-neutral-50 border-neutral-100": isHover && !isParent,
+    "border-transparent": !isHover,
+    border: !isParent,
+    "pl-2": isParent && !isSection,
+  });
+  $: classes = clsx({
+    "bg-neutral-50": isHover,
+    "border-accent-500": highlight,
+    "border-neutral-200": !highlight,
+  });
+  $: contextMenuClasses = clsx({
+    "pt-2": isParent && !isSection && !field.is.root,
+  });
 
   function handleHover(e: CustomEvent<boolean>) {
-    // @note: Prevent undesired hover events on other items while dragging
-    isHover = e.detail;
+    $activeItem = e.detail ? field.id : null;
+
+    if (!e.detail) return;
+
+    $highlightedItem = isParent ? field.id : field.parent?.id || null;
   }
 
   function handleFocusIn(e: FocusEvent) {
-    // @note: Prevent undesired hover events on other items while dragging
-    isFocus = true;
     e.stopPropagation();
-  }
 
-  function handleFocusOut(e: FocusEvent) {
-    // // @note: Prevent undesired hover events on other items while dragging
-    isFocus = false;
-    e.stopPropagation();
+    $activeItem = field.id;
+    $highlightedItem = isParent ? field.id : field.parent?.id || null;
   }
 
   function handleAddField() {
@@ -123,6 +138,10 @@
 
 <svelte:window />
 
+{#if isSection}
+  <div class="my-4 mx-2 border-b border-dotted border-neutral-400" />
+{/if}
+
 <div
   role="button"
   tabindex="0"
@@ -131,38 +150,40 @@
   on:hover={handleHover}
   on:keydown={handleKeyDown}
   on:focusin={handleFocusIn}
-  on:focusout={handleFocusOut}
 >
-  <div class="p-0.5 pl-2.5 pr-0" class:pr-2.5={!field.children} class:bg-slate-50={showContextMenu}>
-    <svelte:component
-      this={componentsMap[field.type] || FallbackField}
-      {field}
-      {readOnly}
-      on:fieldAdded
-      on:fieldDeleted
-      on:fieldDuplicated
-      on:fieldMoved
-      on:fieldValueUpdated
-      on:fieldKeyUpdated
-    />
+  <div class="{wrapperClasses} rounded flex" class:my-1={isParent}>
+    {#if isParent && !isSection && !field.is.root}
+      <div class="{classes} w-2 border-l border-t border-b flex-none rounded-l"></div>
+    {/if}
+    <div class="flex-1">
+      <svelte:component
+        this={componentsMap[field.type] || FallbackField}
+        {field}
+        {readOnly}
+        on:fieldAdded
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    </div>
   </div>
   <div class="absolute top-0 right-0">
-    <div on:hover={handleHover} class="absolute top-0 left-0 -ml-2.5" class:bg-slate-50={showContextMenu}>
-      <span class:invisible={($envelopeIsSigned || !field.is.root) && !showContextMenu}>
-        <FieldContextMenu
-          {field}
-          on:addField={handleAddField}
-          on:fieldDeleted
-          on:fieldDuplicated
-          on:fieldMoved
-          on:fieldValueUpdated
-          on:fieldKeyUpdated
-        />
-      </span>
-    </div>
+    <span class="{contextMenuClasses} absolute top-0 left-0 mt-1 pl-2" class:invisible={!showContextMenu}>
+      <FieldContextMenu
+        {field}
+        on:addField={handleAddField}
+        on:fieldDeleted
+        on:fieldDuplicated
+        on:fieldMoved
+        on:fieldValueUpdated
+        on:fieldKeyUpdated
+      />
+    </span>
     {#if showAddMenu}
       <div
-        class="absolute top-10 left-0 w-64 z-20"
+        class="absolute top-12 -right-8 w-64 z-20"
         style={`margin-top: -${contextMenuOffset}px`}
         bind:this={addMenuRef}
       >

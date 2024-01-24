@@ -1,19 +1,36 @@
 <script lang="ts">
+  import { clsx } from "clsx";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import { Hashtag, Icon } from "svelte-hero-icons";
+  import { Calculator, Hashtag, Icon } from "svelte-hero-icons";
+
   export let field: UIModelField<unknown>;
 
   $: arrayTitle = field.schema.title || "";
+  $: isParent = ["object", "array"].includes(field.type);
+  $: isSection = field.is.root || (field.parent?.is.root && isParent);
+  $: classes = clsx({
+    "font-semibold text-neutral-900 text-base": isParent,
+    "text-xl text-neutral-900 py-2": isSection,
+    "text-neutral-500 text-sm": !isSection && !isParent,
+  });
 </script>
 
-<span class="text-grey-4 font-medium whitespace-nowrap flex items-center py-1.5" class:capitalize={!field.schema.title}>
+<span
+  class="{classes} whitespace-nowrap flex items-center"
+  class:capitalize={!field.schema.title && !field.is.editableKey}
+>
   {#if field.parent?.isArray()}
-    <span class="flex items-center justify-start w-8">
-      <Icon src={Hashtag} class="h-3 text-grey-5 mr-1" />
+    <span class="flex items-center justify-start">
+      <Icon src={Hashtag} class="h-4 w-4" />
       {arrayTitle}
       {Number(field.key) + 1}
     </span>
   {:else}
-    <span class:italic={field.is.calculated}>{field.schema.title || field.key}</span>
+    <span class="flex items-center space-x-1">
+      <span>{field.schema.title || field.key}</span>
+      {#if field.is.calculated}
+        <Icon src={Calculator} class="h-3 w-3" />
+      {/if}
+    </span>
   {/if}
 </span>

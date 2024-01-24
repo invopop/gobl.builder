@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SvelteToast } from "@zerodevx/svelte-toast";
+  import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
   import {
@@ -11,8 +11,10 @@
     jsonSchema,
     envelopeDocumentJSON,
     editor,
+    type Envelope,
+    envelopeIsSigned,
   } from "$lib/editor/stores.js";
-  import MenuBar from "./menubar/MenuBar.svelte";
+  // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -21,9 +23,11 @@
   import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
-  import Modal from "./ui/Modal.svelte";
-  import DynamicForm from "./editor/form/DynamicForm.svelte";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
+  import EditorFormModalSignatures from "./editor/form/modals/EditorFormModalSignatures.svelte";
+  import EditorFormModalHeaders from "./editor/form/modals/EditorFormModalHeaders.svelte";
+  import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
+  import fileSaver from "file-saver";
 
   const dispatch = createEventDispatcher();
 
@@ -38,7 +42,7 @@
   export let data = "";
 
   // Binding this prop from outside will show the state of the editor. Posible values:
-  // init: the app is starting, show a loading thing
+  // init: the app is starting
   // empty: there is no content
   // loaded: implies that a document was loaded and no further action has been taken yet
   // modified: something is being changed
@@ -56,12 +60,17 @@
   // generated and used for signing GOBL documents.
   export let signEnabled = true;
 
-  let editorForm: EditorForm | null = null;
-  let openModal = false;
-  let correctionModel: UIModelField | undefined;
-
   // Whether shows the code or the form editor
-  let editorView = localStorage.getItem("editor-view") || "code";
+  export let editorView = "code";
+
+  // When enabled, it sets the editor as readOnly even if the document is not signed
+  export let forceReadOnly = false;
+
+  let editorForm: EditorForm | null = null;
+  let openCorrectModal = false;
+  let openHeadersModal = false;
+  let openSignaturesModal = false;
+  let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
   if (signEnabled) {
@@ -69,8 +78,6 @@
       console.log("Created keypair.", keypair);
     });
   }
-
-  $: localStorage.setItem("editor-view", editorView);
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
@@ -132,7 +139,7 @@
   };
 
   // Exposed functions to perform the actions from outside
-  export const build = async () => {
+  export const build = async (): Promise<State> => {
     const result = await actions.build();
     dispatch("build", result);
 
@@ -142,14 +149,16 @@
       state = "built";
     }
 
-    if (!editorForm) return;
+    if (!editorForm) return state;
 
     if (state === "built") {
       editorForm.recreateFormEditor();
-      return;
+      return state;
     }
 
     displayAllErrors(result?.error?.message || "");
+
+    return state;
   };
 
   export const correct = async () => {
@@ -162,10 +171,10 @@
     }
 
     correctionModel = await generateCorrectOptionsModel(result?.schema || "");
-    openModal = true;
+    openCorrectModal = true;
   };
 
-  export const correctWithOtions = async (options: string) => {
+  export const correctWithOptions = async (options: string) => {
     const result = await actions.correct(options);
 
     if (result?.error) {
@@ -174,7 +183,7 @@
       return;
     }
 
-    openModal = false;
+    openCorrectModal = false;
 
     state = "corrected";
 
@@ -196,6 +205,8 @@
 
   export const reloadData = async (d: string | null = null) => {
     let parsedValue = null;
+    let envelopeValue: Envelope | null = null;
+    let hashedData = "";
     const internalData = d || data;
 
     if (internalData != "") {
@@ -203,18 +214,35 @@
     }
 
     if (internalData != "" && isEnvelope(parsedValue)) {
-      $envelope = parsedValue;
-      initialEditorData = hash(parsedValue.doc);
+      envelopeValue = parsedValue;
+      hashedData = hash(parsedValue.doc);
     } else {
-      $envelope = newEnvelope(parsedValue);
-      initialEditorData = hash(parsedValue || "");
+      envelopeValue = newEnvelope(parsedValue);
+      hashedData = hash(parsedValue || "");
     }
+
+    if (initialEditorData === hashedData) {
+      return;
+    }
+
+    $envelope = envelopeValue as Envelope;
+    initialEditorData = hashedData;
+
+    // Only applies to form view
+    if (editorView === "code") return;
 
     // If document loaded has the same schema as previously loaded
     // We need to force a rebuild of the UI model
     if (parsedValue?.$schema === $schemaUrlForm) {
       recreateVisualEditor();
     }
+
+    // Attemp autobuild after editor refreshes
+    setTimeout(() => {
+      if (!envelopeValue?.doc) return;
+
+      build();
+    }, 100);
   };
 
   export const recreateVisualEditor = async () => {
@@ -222,20 +250,52 @@
 
     editorForm.recreateFormEditor();
   };
+
+  export const showHeaders = async () => {
+    openHeadersModal = true;
+  };
+
+  export const showSignatures = async () => {
+    if (!$envelopeIsSigned) {
+      return;
+    }
+
+    openSignaturesModal = true;
+  };
+
+  export const downloadJson = () => {
+    if (!$envelope) {
+      return;
+    }
+
+    const filename = ($envelope.head?.uuid || "gob") + ".json";
+    fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename);
+
+    toasts.add({
+      type: "success",
+      description: "Downloaded JSON file of GOBL document.",
+    });
+  };
 </script>
 
 <div class="flex flex-col h-full editor">
-  <div class="flex-none">
+  <!-- <div class="flex-none">
     <MenuBar bind:editorView on:change on:undo on:redo />
-  </div>
+  </div> -->
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">
       <div class="relative flex-1 overflow-hidden">
         <div class="h-full absolute inset-0">
           {#if editorView === "code"}
-            <EditorCode {jsonSchemaURL} />
+            <EditorCode {jsonSchemaURL} {forceReadOnly} />
           {:else}
-            <EditorForm bind:this={editorForm} />
+            <EditorForm
+              bind:this={editorForm}
+              {forceReadOnly}
+              on:setState={(event) => {
+                state = event.detail;
+              }}
+            />
           {/if}
         </div>
       </div>
@@ -243,26 +303,55 @@
   </div>
 </div>
 
-{#if openModal}
-  <div>
-    <div class="bg-black bg-opacity-70 fixed inset-0 z-40" />
-    <Modal title="Correction Options" on:close={() => (openModal = false)}>
-      <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
-      <button
-        class="border border-black px-6 py-3"
-        on:click={() => correctWithOtions(correctionModel?.root.toJSON() || "")}>Correct</button
-      >
-    </Modal>
-  </div>
+{#if openCorrectModal}
+  <EditorFormModalCorrect
+    bind:correctionModel
+    on:close={() => {
+      openCorrectModal = false;
+    }}
+    on:correct={() => {
+      correctWithOptions(correctionModel?.root.toJSON() || "");
+    }}
+  />
 {/if}
 
-<SvelteToast />
+{#if openHeadersModal}
+  <EditorFormModalHeaders
+    on:close={() => {
+      openHeadersModal = false;
+    }}
+  />
+{/if}
 
-<style>
-  :root {
-    --toastContainerTop: auto;
-    --toastContainerRight: auto;
-    --toastContainerBottom: 2rem;
-    --toastContainerLeft: calc(100vw - 18rem);
-  }
-</style>
+{#if openSignaturesModal}
+  <EditorFormModalSignatures
+    on:close={() => {
+      openSignaturesModal = false;
+    }}
+  />
+{/if}
+
+<ToastContainer let:data placement="top-center" duration={3000}>
+  <div
+    class:border-positive-500={data.type === "success"}
+    class:border-danger-500={data.type === "error"}
+    class="bg-white border border-positive-500 py-[7px] pl-2 pr-3 flex space-x-1 rounded shadow-lg"
+  >
+    {#if data.type === "error"}
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15ZM7.99999 9.35C7.66862 9.35 7.39999 9.08137 7.39999 8.75V4.75C7.39999 4.41863 7.66862 4.15 7.99999 4.15C8.33137 4.15 8.59999 4.41863 8.59999 4.75L8.59999 8.75C8.59999 9.08137 8.33136 9.35 7.99999 9.35ZM8.75 11C8.75 11.4142 8.41421 11.75 8 11.75C7.58579 11.75 7.25 11.4142 7.25 11C7.25 10.5858 7.58579 10.25 8 10.25C8.41421 10.25 8.75 10.5858 8.75 11Z"
+          fill="#EC4E46"
+        />
+      </svg>
+    {:else}
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="8" cy="8" r="7" fill="#3FC275" />
+        <path d="M11 5L7 10.6842L5 8.64719" stroke="white" />
+      </svg>
+    {/if}
+    <p class="text-neutral-800 font-medium text-sm">{data.description}</p>
+  </div>
+</ToastContainer>
