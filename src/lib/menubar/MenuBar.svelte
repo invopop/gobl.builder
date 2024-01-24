@@ -5,8 +5,6 @@
   import Redo from "$lib/actions/Redo.svelte";
   import Modal from "$lib/ui/Modal.svelte";
   import { envelope, envelopeIsDraft, envelopeIsSigned, editorProblems } from "$lib/editor/stores.js";
-  import EnvelopeHeader from "./EnvelopeHeader.svelte";
-  import EnvelopeSignatures from "./EnvelopeSignatures.svelte";
   import EditorViewButton from "$lib/ui/EditorViewButton.svelte";
   import HeaderIcon from "$lib/ui/icons/HeaderIcon.svelte";
   import DraftIcon from "$lib/ui/icons/DraftIcon.svelte";
@@ -19,22 +17,6 @@
   let openModal = false;
 
   $: hasSyntaxErrors = !!$editorProblems.find((p) => p.owner === "json" && p.severity === monaco.MarkerSeverity.Error);
-
-  function handleHeaderClick() {
-    openModal = true;
-    modalComponent = EnvelopeHeader as typeof SvelteComponent;
-    modalTitle = "Header";
-  }
-
-  function handleSigsClick() {
-    if (!$envelopeIsSigned) {
-      return;
-    }
-
-    openModal = true;
-    modalComponent = EnvelopeSignatures as typeof SvelteComponent;
-    modalTitle = "Signatures";
-  }
 
   function handleKeyDown(e: KeyboardEvent) {
     if (!e.ctrlKey) return;
@@ -61,16 +43,13 @@
           </div>
         {/if}
         {#if $envelopeIsSigned}
-          <button
-            title="This document is signed. Click to view the signatures of the sealed document."
-            on:click={handleSigsClick}
-          >
+          <button title="This document is signed. Click to view the signatures of the sealed document.">
             <SignedIcon />
           </button>
         {/if}
       </div>
       <div class="mt-1">
-        <button title="View the header of the built document." on:click={handleHeaderClick}><HeaderIcon /></button>
+        <button title="View the header of the built document."><HeaderIcon /></button>
       </div>
     {/if}
   </div>
