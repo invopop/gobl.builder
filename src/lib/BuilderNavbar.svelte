@@ -72,6 +72,8 @@
   </div>
 
   <div class="hidden md:flex items-center space-x-3">
+    <BuilderNavbarViews bind:editorView />
+    <BuilderNavbarSeparator />
     <BuilderNavbarOptions bind:forceReadOnly />
 
     {#if $envelope?.doc}
@@ -79,9 +81,6 @@
       <BuilderNavbarEnvelopeMeta on:action />
     {/if}
 
-    <BuilderNavbarSeparator />
-
-    <BuilderNavbarViews bind:editorView />
     <BuilderNavbarSeparator />
 
     <BuilderNavbarActions {state} on:action />
