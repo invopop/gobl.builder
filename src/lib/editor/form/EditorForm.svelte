@@ -145,7 +145,7 @@
     <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
   {:else}
     {#if documentHeaders.length && documentHeaders[0].slug !== "root"}
-      <div class="pt-7 absolute top-1 left-1 bg-white w-36 @[1055px]:w-56 hidden @[915px]:block z-10">
+      <div class="pt-7 absolute top-1 left-1 bg-white w-36 @[1055px]:w-56 hidden @[800px]:block z-10">
         <ul>
           {#each documentHeaders as header}
             <li
