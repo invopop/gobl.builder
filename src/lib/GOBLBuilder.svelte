@@ -278,10 +278,7 @@
   };
 </script>
 
-<div class="flex flex-col h-full editor">
-  <!-- <div class="flex-none">
-    <MenuBar bind:editorView on:change on:undo on:redo />
-  </div> -->
+<div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
     <div class="flex flex-col h-full">
       <div class="relative flex-1 overflow-hidden">

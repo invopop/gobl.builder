@@ -22,7 +22,7 @@
 
   $: classes = clsx({
     "w-[500px]": modal,
-    "w-full max-w-[500px] lg:max-w-[550px] xl:max-w-[632px]": !modal,
+    "w-full max-w-[500px] @[1055px]:max-w-[550px] @[1200px]:max-w-[632px]": !modal,
   });
 
   const handleScroll = () => {
