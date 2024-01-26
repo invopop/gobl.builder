@@ -17,15 +17,18 @@
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { createEventDispatcher, onMount, setContext } from "svelte";
 
   createFormEditorContext(schemaUrlForm);
 
   const dispatch = createEventDispatcher();
-
   const { uiModel, updateSchema } = getFormEditorContext() || {};
+  const editorId = Math.random().toString(36).slice(2, 7);
+
+  setContext("editorId", editorId);
 
   export let forceReadOnly = false;
+
   let documentHeaders: DocumentHeader[] = [];
 
   // eslint-disable-next-line
@@ -140,7 +143,7 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div class="h-full relative" id="visual-editor">
+<div class="h-full relative" id={editorId}>
   {#if $recreatingUiModel}
     <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
   {:else}
