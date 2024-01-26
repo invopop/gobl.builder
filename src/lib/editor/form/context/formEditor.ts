@@ -19,6 +19,8 @@ export function getFormEditorContext(): FormEditorContextType {
 }
 
 export function createFormEditorContext(jsonSchemaURL: Readable<string | null>): FormEditorContextType {
+  const formUniqueId = Math.random().toString(36).slice(2, 7);
+
   const uiModel: Writable<{
     value: UIModelRootField | undefined;
     updatedAt: number;
@@ -39,7 +41,7 @@ export function createFormEditorContext(jsonSchemaURL: Readable<string | null>):
   ) {
     recreatingUiModel.set(true);
     const value = get(editorJSON).value;
-    const model = (await getUIModel(schema, value)) as UIModelRootField | undefined;
+    const model = (await getUIModel(schema, value, formUniqueId)) as UIModelRootField | undefined;
 
     if (model && model?.value !== value) {
       const value = model.root.toJSON();

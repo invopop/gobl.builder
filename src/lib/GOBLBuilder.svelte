@@ -239,7 +239,7 @@
 
     // Attemp autobuild after editor refreshes
     setTimeout(() => {
-      if (!envelopeValue?.doc) return;
+      if (forceReadOnly || !envelopeValue?.doc || $envelopeIsSigned) return;
 
       build();
     }, 100);
