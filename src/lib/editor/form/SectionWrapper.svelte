@@ -7,25 +7,23 @@
   import { slide } from "svelte/transition";
   import clsx from "clsx";
   import { activeItem, activeSection } from "$lib/store/visualEditor";
+  import { getContext } from "svelte";
+
+  const editorId = getContext("editorId");
 
   function callback(entry: IntersectionObserverEntry) {
-    console.log("intersecting");
     // If we are navigating from outside
     if (disableIntersect) return;
 
-    console.log(entry);
-
     // We only care about intersecting in and off ocurring on the top side
-    if (entry.boundingClientRect.top > 100) return;
-
-    console.log(field.id);
+    if (entry.boundingClientRect.top > 120) return;
 
     $activeSection = {
       section: field.id,
       scroll: false,
     };
   }
-  const intersectOptions = { callback, root: document.querySelector("#visual-editor") };
+  const intersectOptions = { callback, root: document.querySelector(`#${editorId}`) };
 
   export let field: UIModelField;
 
