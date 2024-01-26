@@ -9,11 +9,16 @@
   import { activeItem, activeSection } from "$lib/store/visualEditor";
 
   function callback(entry: IntersectionObserverEntry) {
+    console.log("intersecting");
     // If we are navigating from outside
     if (disableIntersect) return;
 
+    console.log(entry);
+
     // We only care about intersecting in and off ocurring on the top side
     if (entry.boundingClientRect.top > 100) return;
+
+    console.log(field.id);
 
     $activeSection = {
       section: field.id,
