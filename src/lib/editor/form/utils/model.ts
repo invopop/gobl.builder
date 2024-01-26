@@ -16,11 +16,12 @@ export async function generateCorrectOptionsModel(schema: string) {
 export async function getUIModel<V extends SchemaValue>(
   schema: Schema | string,
   value: V,
+  uniqueId: string | undefined = undefined,
 ): Promise<UIModelField<V> | undefined> {
   schema = typeof schema === "string" ? await getRootSchema(schema) : schema;
   if (!schema) return;
 
-  return new UIModelField<V>(schema, value);
+  return new UIModelField<V>(schema, value, uniqueId);
 }
 
 export class UIModelField<V extends SchemaValue | unknown = unknown> {
@@ -38,13 +39,17 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   constructor(
     public schema: Schema,
     public value: V,
+    public uniqueId: string = "",
     public key: string = String(schema.$id?.split("/").slice(-1)[0] || "root").toLowerCase(),
     public index: number = 0,
     public level: number = 0,
     public parent?: UIModelField,
     root?: UIModelRootField,
   ) {
-    this.id = `${this.parent?.id ? `${this.parent.id}-` : ""}${this.key}`.replace(/[^a-zA-Z0-9-_\\$]/g, "");
+    this.id = `${this.parent?.id ? `${this.parent.id}` : `${this.uniqueId}`}-${this.key}`.replace(
+      /[^a-zA-Z0-9-_\\$]/g,
+      "",
+    );
     this.type = this.schema.type as string;
     this.controlType = this.getControlType();
     this.controlMeta = this.getControlMeta();
@@ -93,7 +98,16 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
           if (!subSchema) continue;
 
-          const childUIModelField = new UIModelField(subSchema, value, key, index, this.level + 1, this, this.root);
+          const childUIModelField = new UIModelField(
+            subSchema,
+            value,
+            this.root.uniqueId,
+            key,
+            index,
+            this.level + 1,
+            this,
+            this.root,
+          );
 
           if (!childUIModelField) continue;
           index++;
@@ -127,7 +141,16 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
         for (const [k, value] of items) {
           const key = k + "";
-          const childUIModelField = new UIModelField(subSchema, value, key, index, this.level + 1, this, this.root);
+          const childUIModelField = new UIModelField(
+            subSchema,
+            value,
+            this.root.uniqueId,
+            key,
+            index,
+            this.level + 1,
+            this,
+            this.root,
+          );
 
           if (!childUIModelField) continue;
           index++;
@@ -272,7 +295,16 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const childLength = childs.length;
     const key = this.getNextChildFieldKey(option.key);
 
-    const newField = new UIModelField(option.schema, value, key, childLength, this.level + 1, this, this.root);
+    const newField = new UIModelField(
+      option.schema,
+      value,
+      this.root.uniqueId,
+      key,
+      childLength,
+      this.level + 1,
+      this,
+      this.root,
+    );
 
     if (!newField) return;
 

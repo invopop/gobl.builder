@@ -43,7 +43,7 @@
     if (!fields) return;
 
     const rootKey = fields.key;
-    const root = { slug: rootKey, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
+    const root = { slug: fields.id, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
     const items =
       fields.children
         ?.filter((f) => ["object", "array"].includes(f.type))
@@ -144,7 +144,7 @@
   {#if $recreatingUiModel}
     <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
   {:else}
-    {#if documentHeaders.length && documentHeaders[0].slug !== "root"}
+    {#if documentHeaders.length && !documentHeaders[0].slug.includes("root")}
       <div class="pt-7 absolute top-1 left-1 bg-white w-36 @[1055px]:w-56 hidden @[800px]:block z-10">
         <ul>
           {#each documentHeaders as header}

@@ -15,7 +15,7 @@
   }
 
   async function generateHeadersModel(schema: SchemaValue) {
-    headerModel = await getUIModel("https://gobl.org/draft-0/head/header", schema);
+    headerModel = await getUIModel("https://gobl.org/draft-0/head/header", schema, "headers");
   }
 
   function handleConfirm() {
