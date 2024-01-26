@@ -23,7 +23,7 @@
 
   const dispatch = createEventDispatcher();
   const { uiModel, updateSchema } = getFormEditorContext() || {};
-  const editorId = Math.random().toString(36).slice(2, 7);
+  const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`;
 
   setContext("editorId", editorId);
 
