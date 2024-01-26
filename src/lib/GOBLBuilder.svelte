@@ -28,6 +28,8 @@
   import EditorFormModalHeaders from "./editor/form/modals/EditorFormModalHeaders.svelte";
   import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
   import fileSaver from "file-saver";
+  import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
+  import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -328,27 +330,21 @@
   />
 {/if}
 
-<ToastContainer let:data placement="top-center" duration={3000}>
-  <div
-    class:border-positive-500={data.type === "success"}
-    class:border-danger-500={data.type === "error"}
-    class="bg-white border border-positive-500 py-[7px] pl-2 pr-3 flex space-x-1 rounded shadow-lg"
-  >
-    {#if data.type === "error"}
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
-          d="M8 15C11.866 15 15 11.866 15 8C15 4.13401 11.866 1 8 1C4.13401 1 1 4.13401 1 8C1 11.866 4.13401 15 8 15ZM7.99999 9.35C7.66862 9.35 7.39999 9.08137 7.39999 8.75V4.75C7.39999 4.41863 7.66862 4.15 7.99999 4.15C8.33137 4.15 8.59999 4.41863 8.59999 4.75L8.59999 8.75C8.59999 9.08137 8.33136 9.35 7.99999 9.35ZM8.75 11C8.75 11.4142 8.41421 11.75 8 11.75C7.58579 11.75 7.25 11.4142 7.25 11C7.25 10.5858 7.58579 10.25 8 10.25C8.41421 10.25 8.75 10.5858 8.75 11Z"
-          fill="#EC4E46"
-        />
-      </svg>
-    {:else}
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="8" cy="8" r="7" fill="#3FC275" />
-        <path d="M11 5L7 10.6842L5 8.64719" stroke="white" />
-      </svg>
-    {/if}
-    <p class="text-neutral-800 font-medium text-sm">{data.description}</p>
+<ToastContainer let:data placement="bottom-right" width="" duration={3000}>
+  <div class="bg-neutral-800 rounded">
+    <div
+      class="{data.type === 'success' ? 'from-positive-500/30' : ''} {data.type === 'error'
+        ? 'from-danger-500/30'
+        : ''} py-[7px] pl-2 pr-3 flex space-x-1 bg-opacity-30 bg-gradient-to-r via-transparent to-transparent rounded"
+    >
+      <div class="flex-nowrap">
+        {#if data.type === "success"}
+          <SuccessToastIcon />
+        {:else if data.type === "error"}
+          <ErrorToastIcon />
+        {/if}
+      </div>
+      <p class="text-white font-medium text-sm">{data.description}</p>
+    </div>
   </div>
 </ToastContainer>
