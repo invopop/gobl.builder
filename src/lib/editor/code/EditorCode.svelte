@@ -30,7 +30,8 @@
 
   let unsubscribeEditor: Unsubscriber;
 
-  const goblDocURL = "gobl://doc.json";
+  const EditorUniqueId = Math.random().toString(36).slice(2, 7);
+  const goblDocURL = `gobl://doc.json?${EditorUniqueId}`;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -205,10 +206,22 @@
     if (unsubscribeEditor != null) {
       unsubscribeEditor();
     }
-    // model.dispose();
-    monaco?.editor.getModels().forEach((m) => m.dispose());
-    monacoEditor?.dispose();
-    readOnlyEditHandler?.dispose();
+
+    const models = monaco?.editor.getModels();
+
+    monaco?.editor.getModels().forEach((m) => {
+      // Only dispose the model that matches with the unique URI
+      if (m.uri.query === EditorUniqueId) {
+        m.dispose();
+      }
+    });
+
+    // Obly dispose the editor if there is only one active model
+    if (models.length === 1) {
+      monacoEditor?.dispose();
+      readOnlyEditHandler?.dispose();
+    }
+
     document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
     console.log("destroying editor");
