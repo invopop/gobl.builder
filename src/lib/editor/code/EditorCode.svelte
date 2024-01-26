@@ -216,7 +216,7 @@
       }
     });
 
-    // Obly dispose the editor if there is only one active model
+    // Only dispose the editor if there is only one active model
     if (models.length === 1) {
       monacoEditor?.dispose();
       readOnlyEditHandler?.dispose();
