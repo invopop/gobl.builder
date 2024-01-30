@@ -7,13 +7,14 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope, type Envelope } from "$lib/editor/stores.js";
+  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
   import { editorProblems as problems } from "../stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
+  import type { Envelope } from "$lib/types/envelope.js";
 
   let monaco: typeof Monaco;
 

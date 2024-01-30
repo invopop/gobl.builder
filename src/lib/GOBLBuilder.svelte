@@ -11,10 +11,8 @@
     jsonSchema,
     envelopeDocumentJSON,
     editor,
-    type Envelope,
     envelopeIsSigned,
   } from "$lib/editor/stores.js";
-  // import MenuBar from "./menubar/MenuBar.svelte";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -30,6 +28,7 @@
   import fileSaver from "file-saver";
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
+  import type { Envelope } from "./types/envelope";
 
   const dispatch = createEventDispatcher();
 

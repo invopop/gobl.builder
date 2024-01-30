@@ -3,6 +3,7 @@ import * as GOBL from "@invopop/gobl-worker";
 import type { GOBLError } from "@invopop/gobl-worker";
 import type * as monaco from "monaco-editor";
 import { objectHasEmptyProperties } from "$lib/helpers";
+import type { Document, Envelope } from "$lib/types/envelope";
 
 function createKeypairStore() {
   const { subscribe, set } = writable<GOBL.Keypair | null>(null);
@@ -68,40 +69,6 @@ export const validEditor = derived([jsonSchema, editor], ([$jsonSchema, $editor]
 
   return true;
 });
-
-export interface Envelope {
-  $schema: string;
-  doc?: Document | null;
-  head?: {
-    uuid?: string;
-    dig?: {
-      alg: string;
-      val: string;
-    };
-    stamps?: Array<{
-      prv: string;
-      val: string;
-    }>;
-    tags?: string[];
-    meta?: Record<string, unknown>;
-    notes?: string;
-    draft?: boolean;
-  };
-  sigs?: string[];
-}
-
-// Document contains the data to show in the editor
-export interface Document {
-  $schema?: string;
-  supplier?: {
-    tax_id?: {
-      country: string;
-      [key: string]: unknown;
-    };
-    [key: string]: unknown;
-  };
-  [key: string]: unknown;
-}
 
 export const envelope = writable<Envelope>(buildNewEnvelope(null));
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head?.draft === true));

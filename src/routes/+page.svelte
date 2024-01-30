@@ -3,11 +3,7 @@
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import type { State } from "$lib/types/editor";
   import BuilderNavbar from "$lib/BuilderNavbar.svelte";
-
-  interface GOBLDocument {
-    $schema: string;
-    [key: string]: unknown;
-  }
+  import type { GOBLDocument } from "$lib/types/envelope";
 
   let data = "";
   let problems: EditorProblem[] = [];
