@@ -6,7 +6,6 @@
   import {
     envelope,
     goblError,
-    newEnvelope,
     editorProblems,
     jsonSchema,
     envelopeDocumentJSON,
@@ -29,6 +28,7 @@
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
   import type { Envelope } from "./types/envelope";
+  import { newEnvelope } from "./helpers/envelope";
 
   const dispatch = createEventDispatcher();
 

@@ -2,7 +2,8 @@ import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
-import { validEditor, envelope, goblError, envelopeIsSigned, editor, envelopeGOBLSchema } from "$lib/editor/stores";
+import { validEditor, envelope, goblError, envelopeIsSigned, editor } from "$lib/editor/stores";
+import { envelopeGOBLSchema } from "$lib/helpers/envelope";
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
