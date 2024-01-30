@@ -1,22 +1,9 @@
 import { derived, writable, type Writable, type Readable } from "svelte/store";
-import * as GOBL from "@invopop/gobl-worker";
+// import * as GOBL from "@invopop/gobl-worker";
 import type { GOBLError } from "@invopop/gobl-worker";
 import type * as monaco from "monaco-editor";
 import { objectHasEmptyProperties } from "$lib/helpers";
 import type { Document, Envelope } from "$lib/types/envelope";
-
-function createKeypairStore() {
-  const { subscribe, set } = writable<GOBL.Keypair | null>(null);
-
-  return {
-    subscribe,
-    create: async () => {
-      const keypair = await GOBL.keygen();
-      set(keypair);
-      return keypair;
-    },
-  };
-}
 
 export const envelopeGOBLSchema = "https://gobl.org/draft-0/envelope";
 
@@ -54,7 +41,6 @@ export const currentEditorSchema = derived(editorJSON, ($editor) => {
 });
 
 export const jsonSchema = writable<string | null>(null);
-export const keypair = createKeypairStore();
 export const undoAvailable = writable(false);
 export const redoAvailable = writable(false);
 export const validEditor = derived([jsonSchema, editor], ([$jsonSchema, $editor]) => {

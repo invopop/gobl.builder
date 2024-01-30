@@ -1,11 +1,11 @@
 <script lang="ts">
+  import * as GOBL from "@invopop/gobl-worker";
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, setContext } from "svelte";
   import {
     envelope,
     goblError,
-    keypair,
     newEnvelope,
     editorProblems,
     jsonSchema,
@@ -73,12 +73,17 @@
   let openSignaturesModal = false;
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
+  let keypair: GOBL.Keypair | null = null;
 
   if (signEnabled) {
-    keypair.create().then((keypair) => {
+    GOBL.keygen().then((k) => {
+      keypair = k;
       console.log("Created keypair.", keypair);
     });
   }
+
+  // Create context
+  setContext("builder", { keypair });
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
@@ -194,8 +199,9 @@
   };
 
   export const sign = async () => {
-    if (!signEnabled) return;
-    const result = await actions.sign();
+    if (!keypair) return;
+
+    const result = await actions.sign(keypair);
     dispatch("sign", result);
   };
 

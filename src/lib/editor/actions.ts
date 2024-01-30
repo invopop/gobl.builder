@@ -2,15 +2,7 @@ import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
-import {
-  validEditor,
-  envelope,
-  goblError,
-  keypair,
-  envelopeIsSigned,
-  editor,
-  envelopeGOBLSchema,
-} from "$lib/editor/stores";
+import { validEditor, envelope, goblError, envelopeIsSigned, editor, envelopeGOBLSchema } from "$lib/editor/stores";
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
@@ -53,9 +45,7 @@ export async function build() {
 
 // Send a request to the GOBL worker to run the "sign" operation using the current
 // editor window contents and update with the results.
-export async function sign() {
-  const keypairValue = get(keypair);
-
+export async function sign(keypairValue: GOBL.Keypair) {
   if (!get(validEditor) || !keypairValue) {
     return;
   }
