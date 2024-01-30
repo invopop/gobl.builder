@@ -2,7 +2,7 @@
   import * as GOBL from "@invopop/gobl-worker";
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
-  import { createEventDispatcher, setContext } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import {
     envelope,
     goblError,
@@ -29,6 +29,7 @@
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
   import type { Envelope } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
+  import { createBuilderContext } from "./store/builder";
 
   const dispatch = createEventDispatcher();
 
@@ -73,17 +74,16 @@
   let openSignaturesModal = false;
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
-  let keypair: GOBL.Keypair | null = null;
+
+  const builderContext = createBuilderContext();
+  const { keypair } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
-      keypair = k;
-      console.log("Created keypair.", keypair);
+      $keypair = k;
+      console.log("Created keypair.", k);
     });
   }
-
-  // Create context
-  setContext("builder", { keypair });
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
@@ -201,7 +201,7 @@
   export const sign = async () => {
     if (!keypair) return;
 
-    const result = await actions.sign(keypair);
+    const result = await actions.sign(builderContext);
     dispatch("sign", result);
   };
 

@@ -4,6 +4,7 @@ import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
 import { validEditor, envelope, goblError, envelopeIsSigned, editor } from "$lib/editor/stores";
 import { envelopeGOBLSchema } from "$lib/helpers/envelope";
+import type { BuilderContext } from "$lib/types/editor";
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
@@ -46,7 +47,10 @@ export async function build() {
 
 // Send a request to the GOBL worker to run the "sign" operation using the current
 // editor window contents and update with the results.
-export async function sign(keypairValue: GOBL.Keypair) {
+export async function sign(ctx: BuilderContext) {
+  const { keypair } = ctx;
+  const keypairValue = get(keypair);
+
   if (!get(validEditor) || !keypairValue) {
     return;
   }
