@@ -18,12 +18,15 @@
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
   import { createEventDispatcher, onMount, setContext } from "svelte";
+  import { getBuilderContext } from "$lib/store/builder.js";
 
   createFormEditorContext(schemaUrlForm);
 
   const dispatch = createEventDispatcher();
   const { uiModel, updateSchema } = getFormEditorContext() || {};
   const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`;
+
+  const builderContext = getBuilderContext();
 
   setContext("editorId", editorId);
 
@@ -120,7 +123,7 @@
     // fields without having them deleted
     if ($someEditorValueIsEmpty) return false;
 
-    const result = await build();
+    const result = await build(builderContext);
 
     const isSuccess = !result?.error;
 

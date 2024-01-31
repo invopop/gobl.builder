@@ -7,7 +7,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, goblError, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import { editor, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
   import { editorProblems as problems } from "../stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
@@ -15,6 +15,7 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import type { Envelope } from "$lib/types/envelope.js";
+  import { getBuilderContext } from "$lib/store/builder.js";
 
   let monaco: typeof Monaco;
 
@@ -33,6 +34,8 @@
 
   const EditorUniqueId = Math.random().toString(36).slice(2, 7);
   const goblDocURL = `gobl://doc.json?${EditorUniqueId}`;
+
+  const builderContext = getBuilderContext();
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -112,7 +115,7 @@
     let currentVersion = initialVersion;
     let lastVersion = initialVersion;
 
-    goblError.subscribe((goblErr) => {
+    builderContext.goblError.subscribe((goblErr) => {
       if (!goblErr) {
         monaco.editor.setModelMarkers(model, "gobl", []);
         return;

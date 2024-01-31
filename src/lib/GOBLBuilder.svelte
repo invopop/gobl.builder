@@ -5,7 +5,6 @@
   import { createEventDispatcher } from "svelte";
   import {
     envelope,
-    goblError,
     editorProblems,
     jsonSchema,
     envelopeDocumentJSON,
@@ -76,7 +75,7 @@
   let initialEditorData = "";
 
   const builderContext = createBuilderContext();
-  const { keypair } = builderContext;
+  const { keypair, goblError } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
@@ -146,7 +145,7 @@
 
   // Exposed functions to perform the actions from outside
   export const build = async (): Promise<State> => {
-    const result = await actions.build();
+    const result = await actions.build(builderContext);
     dispatch("build", result);
 
     if (result?.error) {
@@ -168,7 +167,7 @@
   };
 
   export const correct = async () => {
-    const result = await actions.getCorrectionOptionsSchema();
+    const result = await actions.getCorrectionOptionsSchema(builderContext);
 
     if (!result?.schema) {
       state = "errored";
@@ -181,7 +180,7 @@
   };
 
   export const correctWithOptions = async (options: string) => {
-    const result = await actions.correct(options);
+    const result = await actions.correct(options, builderContext);
 
     if (result?.error) {
       state = "errored";
@@ -206,7 +205,7 @@
   };
 
   export const validate = async () => {
-    const result = await actions.validate();
+    const result = await actions.validate(builderContext);
     dispatch("validate", result);
   };
 

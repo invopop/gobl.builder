@@ -1,5 +1,4 @@
 import { derived, writable, type Writable, type Readable } from "svelte/store";
-import type { GOBLError } from "@invopop/gobl-worker";
 import type * as monaco from "monaco-editor";
 import { objectHasEmptyProperties } from "$lib/helpers";
 import type { Envelope } from "$lib/types/envelope";
@@ -57,17 +56,6 @@ export const validEditor = derived([jsonSchema, editor], ([$jsonSchema, $editor]
 export const envelope = writable<Envelope>(newEnvelope(null));
 export const envelopeIsDraft = derived(envelope, ($envelope) => Boolean($envelope?.head?.draft === true));
 export const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
-
-function createGOBLErrorStore() {
-  const { subscribe, set } = writable<GOBLError | null>(null);
-
-  return {
-    subscribe,
-    set,
-  };
-}
-
-export const goblError = createGOBLErrorStore();
 
 export function envelopeDocumentJSON(envelope: Envelope | null): string {
   if (!envelope?.doc) {

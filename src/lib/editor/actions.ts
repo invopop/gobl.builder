@@ -2,13 +2,13 @@ import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
-import { validEditor, envelope, goblError, envelopeIsSigned, editor } from "$lib/editor/stores";
+import { validEditor, envelope, envelopeIsSigned, editor } from "$lib/editor/stores";
 import { envelopeGOBLSchema } from "$lib/helpers/envelope";
 import type { BuilderContext } from "$lib/types/editor";
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
-export async function build() {
+export async function build(ctx: BuilderContext) {
   if (!get(validEditor)) {
     return;
   }
@@ -25,7 +25,7 @@ export async function build() {
     const result = JSON.parse(rawResult);
 
     envelope.set(result);
-    goblError.set(null);
+    ctx.goblError.set(null);
 
     // TODO: With autobuild in place this notification is disabled, find a way to show it manually
 
@@ -37,7 +37,7 @@ export async function build() {
     return { result };
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e);
-    goblError.set(goblErr);
+    ctx.goblError.set(goblErr);
 
     return {
       error: goblErr,
@@ -66,7 +66,7 @@ export async function sign(ctx: BuilderContext) {
     const result = JSON.parse(rawResult);
 
     envelope.set(result);
-    goblError.set(null);
+    ctx.goblError.set(null);
 
     toasts.add({
       type: "success",
@@ -76,7 +76,7 @@ export async function sign(ctx: BuilderContext) {
     return { result };
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e);
-    goblError.set(goblErr);
+    ctx.goblError.set(goblErr);
 
     return {
       error: goblErr,
@@ -86,7 +86,7 @@ export async function sign(ctx: BuilderContext) {
 
 // Send a request to the GOBL worker to run the "validate" operation using the current
 // editor window contents and update with the results.
-export async function validate() {
+export async function validate(ctx: BuilderContext) {
   if (!get(validEditor) || !get(envelopeIsSigned)) {
     return;
   }
@@ -99,7 +99,7 @@ export async function validate() {
     };
     await GOBL.validate({ payload });
 
-    goblError.set(null);
+    ctx.goblError.set(null);
 
     toasts.add({
       type: "success",
@@ -109,7 +109,7 @@ export async function validate() {
     return { isValid: true };
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e);
-    goblError.set(goblErr);
+    ctx.goblError.set(goblErr);
 
     return {
       isValid: false,
@@ -120,7 +120,7 @@ export async function validate() {
 
 // Send a request to the GOBL worker to get the adecuate correction fields using
 // editor window contents to read the tax regime.
-export async function getCorrectionOptionsSchema() {
+export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
   if (!get(validEditor)) {
     return;
   }
@@ -135,7 +135,7 @@ export async function getCorrectionOptionsSchema() {
 
     const schema = await GOBL.correct({ payload });
 
-    goblError.set(null);
+    ctx.goblError.set(null);
 
     return { schema };
   } catch (e) {
@@ -145,7 +145,7 @@ export async function getCorrectionOptionsSchema() {
 
 // Send a request to the GOBL worker to run the "correct" operation using the current
 // editor window contents and update with the results.
-export async function correct(options: string) {
+export async function correct(options: string, ctx: BuilderContext) {
   if (!get(validEditor)) {
     return;
   }
@@ -162,7 +162,7 @@ export async function correct(options: string) {
     const result = JSON.parse(rawResult);
 
     envelope.set(result);
-    goblError.set(null);
+    ctx.goblError.set(null);
 
     toasts.add({
       type: "success",
@@ -172,7 +172,7 @@ export async function correct(options: string) {
     return { result };
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e);
-    goblError.set(goblErr);
+    ctx.goblError.set(goblErr);
 
     return {
       error: goblErr,
