@@ -1,31 +1,35 @@
 <script lang="ts">
-  import {
-    createFormEditorContext,
-    getFormEditorContext,
-    recreatingUiModel,
-    schemaUrlForm,
-  } from "./context/formEditor.js";
-  import {
-    currentEditorSchema,
-    editor,
-    envelopeIsSigned,
-    jsonSchema,
-    someEditorValueIsEmpty,
-  } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
-  import { createEventDispatcher, onMount, setContext } from "svelte";
-
-  createFormEditorContext(schemaUrlForm);
+  import { createEventDispatcher, setContext } from "svelte";
+  import { getBuilderContext } from "$lib/store/builder.js";
+  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
-  const { uiModel, updateSchema } = getFormEditorContext() || {};
   const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`;
 
+  const builderContext = getBuilderContext();
+
+  const {
+    jsonSchema,
+    currentEditorSchema,
+    someEditorValueIsEmpty,
+    uiModel,
+    recreatingUiModel,
+    updateSchema,
+    envelopeIsSigned,
+  } = builderContext;
+
   setContext("editorId", editorId);
+
+  const scrollPosition = writable(0);
+
+  setContext("scrollPosition", scrollPosition);
+
+  recreateFormEditor();
 
   export let forceReadOnly = false;
 
@@ -37,7 +41,7 @@
   $: showSchemaField = isEmptySchema || !isValidSchema;
 
   $: {
-    updateSchemaIfNeeded($schemaUrlForm || "");
+    updateSchemaIfNeeded($jsonSchema || "");
   }
 
   // Update documentHeaders on editor change
@@ -78,7 +82,7 @@
     if ($currentEditorSchema !== formSchema) {
       const schemas = await getSchemas();
 
-      const schema = $currentEditorSchema || $jsonSchema;
+      const schema = $currentEditorSchema || $jsonSchema || "";
       // If is not a valid schema we dont do anything
       if (!schemas.includes(schema)) return;
 
@@ -89,8 +93,9 @@
 
   export function recreateFormEditor() {
     // Forces editor watcher to fire and rebuild the model
-    schemaUrlForm.set(null);
-    schemaUrlForm.set($jsonSchema);
+    const temp = $jsonSchema;
+    jsonSchema.set(null);
+    jsonSchema.set(temp);
   }
 
   async function handleFormUpdated(event: CustomEvent) {
@@ -112,7 +117,7 @@
   async function handleUpdateEditor(event: CustomEvent) {
     const model = event.detail;
     const value = model.root.toJSON();
-    editor.set({ value, updatedAt: Date.now() });
+    builderContext.editor.set({ value, updatedAt: Date.now() });
   }
 
   async function handleBuild() {
@@ -120,7 +125,7 @@
     // fields without having them deleted
     if ($someEditorValueIsEmpty) return false;
 
-    const result = await build();
+    const result = await build(builderContext);
 
     const isSuccess = !result?.error;
 
@@ -135,10 +140,6 @@
       scroll: true,
     };
   }
-
-  onMount(() => {
-    localStorage.setItem("scrollPosition", "0");
-  });
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />

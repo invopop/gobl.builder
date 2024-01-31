@@ -1,26 +1,14 @@
 <script lang="ts">
+  import * as GOBL from "@invopop/gobl-worker";
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
-  import {
-    envelope,
-    goblError,
-    keypair,
-    newEnvelope,
-    editorProblems,
-    jsonSchema,
-    envelopeDocumentJSON,
-    editor,
-    type Envelope,
-    envelopeIsSigned,
-  } from "$lib/editor/stores.js";
-  // import MenuBar from "./menubar/MenuBar.svelte";
+  import { envelopeDocumentJSON } from "$lib/helpers/envelope";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
-  import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
@@ -30,6 +18,9 @@
   import fileSaver from "file-saver";
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
+  import type { Envelope } from "./types/envelope";
+  import { newEnvelope } from "./helpers/envelope";
+  import { createBuilderContext } from "./store/builder";
 
   const dispatch = createEventDispatcher();
 
@@ -75,17 +66,19 @@
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
+  const builderContext = createBuilderContext();
+
+  const { editor, jsonSchema, envelope, envelopeIsSigned } = builderContext;
+
   if (signEnabled) {
-    keypair.create().then((keypair) => {
-      console.log("Created keypair.", keypair);
+    GOBL.keygen().then((k) => {
+      builderContext.keypair.set(k);
+      console.log("Created keypair.", k);
     });
   }
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
-
-  // schemaUrlForm is stored for recreating UI model
-  $: schemaUrlForm.set(jsonSchemaURL);
 
   $: editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() });
 
@@ -102,7 +95,7 @@
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
   $: {
-    goblError.set(null);
+    builderContext.goblError.set(null);
     try {
       reloadData(data);
     } catch (e) {
@@ -117,9 +110,8 @@
     dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
-  // This ensures the current error state of the editor is bound to the
-  // `hasErrors` property.
-  editorProblems.subscribe((items) => {
+  // This keeps problems array prop in sync with editor problems
+  builderContext.editorProblems.subscribe((items) => {
     problems = items.map((problem) => ({
       message: problem.message,
       severity: problemSeverityMap[problem.severity],
@@ -142,7 +134,7 @@
 
   // Exposed functions to perform the actions from outside
   export const build = async (): Promise<State> => {
-    const result = await actions.build();
+    const result = await actions.build(builderContext);
     dispatch("build", result);
 
     if (result?.error) {
@@ -164,7 +156,7 @@
   };
 
   export const correct = async () => {
-    const result = await actions.getCorrectionOptionsSchema();
+    const result = await actions.getCorrectionOptionsSchema(builderContext);
 
     if (!result?.schema) {
       state = "errored";
@@ -177,7 +169,7 @@
   };
 
   export const correctWithOptions = async (options: string) => {
-    const result = await actions.correct(options);
+    const result = await actions.correct(options, builderContext);
 
     if (result?.error) {
       state = "errored";
@@ -196,12 +188,13 @@
 
   export const sign = async () => {
     if (!signEnabled) return;
-    const result = await actions.sign();
+
+    const result = await actions.sign(builderContext);
     dispatch("sign", result);
   };
 
   export const validate = async () => {
-    const result = await actions.validate();
+    const result = await actions.validate(builderContext);
     dispatch("validate", result);
   };
 
@@ -235,7 +228,7 @@
 
     // If document loaded has the same schema as previously loaded
     // We need to force a rebuild of the UI model
-    if (parsedValue?.$schema === $schemaUrlForm) {
+    if (parsedValue?.$schema === $jsonSchema) {
       recreateVisualEditor();
     }
 

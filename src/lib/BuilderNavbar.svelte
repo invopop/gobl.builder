@@ -13,7 +13,6 @@
   import BuilderNavbarSeparator from "./BuilderNavbarSeparator.svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Menu, Close } from "@invopop/ui-icons";
-  import { envelope } from "./editor/stores";
   import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
 
   const dispatch = createEventDispatcher();
@@ -24,6 +23,7 @@
   export let editorView = "form";
   export let forceReadOnly = false;
   export let state: State = "init";
+  export let envelope = "";
 
   let mobileMenuOpen = false;
   let schemasList: ListOption[] = [];
@@ -76,7 +76,7 @@
     <BuilderNavbarSeparator />
     <BuilderNavbarOptions bind:forceReadOnly />
 
-    {#if $envelope?.doc}
+    {#if state !== "init"}
       <BuilderNavbarSeparator />
       <BuilderNavbarEnvelopeMeta on:action />
     {/if}
@@ -87,7 +87,7 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload on:action disabled={state !== "built"} />
+    <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
   </div>
   <button
     class="md:hidden p-1.5 border border-neutral-300"
@@ -138,7 +138,7 @@
         }}
       />
       <BuilderNavbarSeparator />
-      <BuilderNavbarDownload on:action disabled={state !== "built"} />
+      <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
     </div>
   </div>
 {/if}

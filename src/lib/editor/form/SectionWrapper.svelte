@@ -1,13 +1,15 @@
 <script lang="ts">
   import { intersect } from "svelte-intersection-observer-action";
   import type { UIModelField } from "./utils/model";
-  import { envelopeIsSigned } from "../stores";
   import FieldTitle from "./FieldTitle.svelte";
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import { slide } from "svelte/transition";
   import clsx from "clsx";
   import { activeItem, activeSection } from "$lib/store/visualEditor";
   import { getContext } from "svelte";
+  import { getBuilderContext } from "$lib/store/builder";
+
+  const { envelopeIsSigned } = getBuilderContext();
 
   const editorId = getContext("editorId");
 

@@ -3,11 +3,7 @@
   import GOBLBuilder from "$lib/GOBLBuilder.svelte";
   import type { State } from "$lib/types/editor";
   import BuilderNavbar from "$lib/BuilderNavbar.svelte";
-
-  interface GOBLDocument {
-    $schema: string;
-    [key: string]: unknown;
-  }
+  import type { GOBLDocument } from "$lib/types/envelope";
 
   let data = "";
   let problems: EditorProblem[] = [];
@@ -17,6 +13,7 @@
   let state: State = "init";
   let editorView = localStorage.getItem("editor-view") || "code";
   let forceReadOnly = false;
+  let envelope = "";
 
   $: localStorage.setItem("editor-view", editorView);
 
@@ -46,6 +43,7 @@
   <BuilderNavbar
     {state}
     {defaultSchema}
+    {envelope}
     bind:editorView
     bind:forceReadOnly
     on:load={handleDocLoad}
@@ -64,6 +62,7 @@
         signEnabled
         {forceReadOnly}
         on:change={(event) => {
+          envelope = event.detail.envelope;
           console.log("Received change event.", event.detail);
         }}
         on:undo={() => {
