@@ -1,10 +1,7 @@
 import { derived, writable, type Writable, type Readable } from "svelte/store";
-import type * as monaco from "monaco-editor";
 import { objectHasEmptyProperties } from "$lib/helpers";
 import type { Envelope } from "$lib/types/envelope";
 import { newEnvelope } from "$lib/helpers/envelope";
-
-export const editorProblems = writable<monaco.editor.IMarker[]>([]);
 
 // editor represents the JSON content in the editor
 export const editor: Writable<{

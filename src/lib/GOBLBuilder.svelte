@@ -3,14 +3,7 @@
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
-  import {
-    envelope,
-    editorProblems,
-    jsonSchema,
-    envelopeDocumentJSON,
-    editor,
-    envelopeIsSigned,
-  } from "$lib/editor/stores.js";
+  import { envelope, jsonSchema, envelopeDocumentJSON, editor, envelopeIsSigned } from "$lib/editor/stores.js";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -75,11 +68,10 @@
   let initialEditorData = "";
 
   const builderContext = createBuilderContext();
-  const { keypair, goblError } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
-      $keypair = k;
+      builderContext.keypair.set(k);
       console.log("Created keypair.", k);
     });
   }
@@ -105,7 +97,7 @@
   // When `data` is updated, update the internal envelope store.
   // If required instantiate a new envelope object to use.
   $: {
-    goblError.set(null);
+    builderContext.goblError.set(null);
     try {
       reloadData(data);
     } catch (e) {
@@ -120,9 +112,8 @@
     dispatch("change", { envelope: JSON.stringify(envelope) });
   });
 
-  // This ensures the current error state of the editor is bound to the
-  // `hasErrors` property.
-  editorProblems.subscribe((items) => {
+  // This keeps problems array prop in sync with editor problems
+  builderContext.editorProblems.subscribe((items) => {
     problems = items.map((problem) => ({
       message: problem.message,
       severity: problemSeverityMap[problem.severity],
@@ -198,7 +189,7 @@
   };
 
   export const sign = async () => {
-    if (!keypair) return;
+    if (!signEnabled) return;
 
     const result = await actions.sign(builderContext);
     dispatch("sign", result);

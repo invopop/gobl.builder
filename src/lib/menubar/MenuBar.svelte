@@ -1,10 +1,9 @@
 <script lang="ts">
-  import * as monaco from "monaco-editor";
   import type { SvelteComponent } from "svelte";
   import Undo from "$lib/actions/Undo.svelte";
   import Redo from "$lib/actions/Redo.svelte";
   import Modal from "$lib/ui/Modal.svelte";
-  import { envelope, envelopeIsDraft, envelopeIsSigned, editorProblems } from "$lib/editor/stores.js";
+  import { envelope, envelopeIsDraft, envelopeIsSigned } from "$lib/editor/stores.js";
   import EditorViewButton from "$lib/ui/EditorViewButton.svelte";
   import HeaderIcon from "$lib/ui/icons/HeaderIcon.svelte";
   import DraftIcon from "$lib/ui/icons/DraftIcon.svelte";
@@ -15,8 +14,6 @@
   let modalTitle = "";
   let modalComponent: typeof SvelteComponent | null = null;
   let openModal = false;
-
-  $: hasSyntaxErrors = !!$editorProblems.find((p) => p.owner === "json" && p.severity === monaco.MarkerSeverity.Error);
 
   function handleKeyDown(e: KeyboardEvent) {
     if (!e.ctrlKey) return;
@@ -56,11 +53,8 @@
   <div class="flex justify-center flex-1">
     <div class="inline-flex bg-color3 border border-grey-1 rounded">
       <EditorViewButton
-        disabled={hasSyntaxErrors}
         active={editorView === "form"}
-        label={editorView !== "form" && hasSyntaxErrors
-          ? "Resolve errors before switching to visual editor"
-          : undefined}
+        label={editorView !== "form" ? "Resolve errors before switching to visual editor" : undefined}
         on:click={() => (editorView = "form")}>Visual</EditorViewButton
       >
       <EditorViewButton active={editorView === "code"} on:click={() => (editorView = "code")}>Code</EditorViewButton>
