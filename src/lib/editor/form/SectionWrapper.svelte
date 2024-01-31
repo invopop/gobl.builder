@@ -5,7 +5,6 @@
   import ExpandButton from "$lib/ui/ExpandButton.svelte";
   import { slide } from "svelte/transition";
   import clsx from "clsx";
-  import { activeItem, activeSection } from "$lib/store/visualEditor";
   import { getContext } from "svelte";
   import { getBuilderContext } from "$lib/store/builder";
 
@@ -13,9 +12,11 @@
 
   const editorId = getContext("editorId");
 
+  const { activeSection, activeItem, scrollingSection } = getBuilderContext();
+
   function callback(entry: IntersectionObserverEntry) {
     // If we are navigating from outside
-    if (disableIntersect) return;
+    if ($scrollingSection) return;
 
     // We only care about intersecting in and off ocurring on the top side
     if (entry.boundingClientRect.top > 120) return;
@@ -31,7 +32,6 @@
 
   let element: HTMLElement;
   let open = true;
-  let disableIntersect = false;
 
   $: label = $envelopeIsSigned
     ? "Document is signed and can not be edited"
@@ -50,10 +50,10 @@
   }
 
   function scrollElementIntoView() {
-    disableIntersect = true;
+    $scrollingSection = true;
 
     setTimeout(() => {
-      disableIntersect = false;
+      $scrollingSection = false;
     }, 1000);
 
     if (!element || $activeSection.section !== field.id) return;

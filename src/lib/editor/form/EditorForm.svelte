@@ -3,7 +3,6 @@
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
-  import { activeSection } from "$lib/store/visualEditor.js";
   import { createEventDispatcher, setContext } from "svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { writable } from "svelte/store";
@@ -21,6 +20,7 @@
     recreatingUiModel,
     updateSchema,
     envelopeIsSigned,
+    activeSection,
   } = builderContext;
 
   setContext("editorId", editorId);

@@ -11,9 +11,11 @@
   import AddFieldMenu from "./AddFieldMenu.svelte";
   import BooleanField from "./BooleanField.svelte";
   import clsx from "clsx";
-  import { activeItem, highlightedItem } from "$lib/store/visualEditor";
+  import { getBuilderContext } from "$lib/store/builder";
 
   const dispatch = createEventDispatcher();
+
+  const { activeItem, highlightedItem } = getBuilderContext();
 
   export let field: UIModelField;
 
