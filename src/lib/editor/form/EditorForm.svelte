@@ -4,8 +4,9 @@
   import DynamicForm from "./DynamicForm.svelte";
   import type { DocumentHeader } from "$lib/types/editor.js";
   import { activeSection } from "$lib/store/visualEditor.js";
-  import { createEventDispatcher, onMount, setContext } from "svelte";
+  import { createEventDispatcher, setContext } from "svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
+  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
   const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`;
@@ -23,6 +24,10 @@
   } = builderContext;
 
   setContext("editorId", editorId);
+
+  const scrollPosition = writable(0);
+
+  setContext("scrollPosition", scrollPosition);
 
   recreateFormEditor();
 
@@ -135,10 +140,6 @@
       scroll: true,
     };
   }
-
-  onMount(() => {
-    localStorage.setItem("scrollPosition", "0");
-  });
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />

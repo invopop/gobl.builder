@@ -4,9 +4,12 @@
   import SchemaField from "./SchemaField.svelte";
   import AbstractField from "./AbstractField.svelte";
   import type { UIModelRootField, UIModelField } from "./utils/model";
-  import { afterUpdate, createEventDispatcher, onDestroy, onMount } from "svelte";
+  import { afterUpdate, createEventDispatcher, getContext, onDestroy, onMount } from "svelte";
+  import type { Writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
+
+  const scrollPosition = getContext("scrollPosition") as Writable<number>;
 
   let formElement: HTMLElement;
 
@@ -26,7 +29,7 @@
   });
 
   const handleScroll = () => {
-    localStorage.setItem("scrollPosition", String(formElement.scrollTop));
+    $scrollPosition = formElement.scrollTop;
   };
 
   onMount(() => {
@@ -34,8 +37,7 @@
   });
 
   afterUpdate(() => {
-    const scrollPosition = Number(localStorage.getItem("scrollPosition"));
-    formElement.scrollTo(0, scrollPosition);
+    formElement.scrollTo(0, $scrollPosition);
   });
 
   onDestroy(() => {
