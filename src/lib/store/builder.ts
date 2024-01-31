@@ -7,22 +7,33 @@ import { objectHasEmptyProperties } from "$lib/helpers";
 import { writableDerived } from "./writableDerived";
 import { getUIModel, type UIModelRootField } from "$lib/editor/form/utils/model";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce";
+import type { Envelope } from "$lib/types/envelope";
+import { newEnvelope } from "$lib/helpers/envelope";
 
 const BUILDER_CONTEXT_ID = "builder-context";
 
 export function createBuilderContext(): BuilderContext {
+  const formUniqueId = `form-${Math.random().toString(36).slice(2, 7)}`;
+
+  /** -- MAIN STORES -- */
+  const envelope = writable<Envelope>(newEnvelope(null));
   const keypair = writable(null);
   const goblError = writable<GOBLError | null>(null);
   const editorProblems = writable<monaco.editor.IMarker[]>([]);
   const jsonSchema = writable<string | null>(null);
   const recreatingUiModel = writable(false);
-  const formUniqueId = `form-${Math.random().toString(36).slice(2, 7)}`;
+  const undoAvailable = writable(false);
+  const redoAvailable = writable(false);
 
   // editor represents the stringified JSON content in the editor
   const editor: Writable<{
     updatedAt: number;
     value: string;
   }> = writable({ updatedAt: 0, value: "" });
+
+  /** -- DERIVED STORES -- */
+
+  const envelopeIsSigned = derived(envelope, ($envelope) => Boolean($envelope?.sigs));
 
   // editorJSON represents the JSON content in the editor parsed as an object
   const editorJSON = derived(editor, ($editor) => {
@@ -75,6 +86,17 @@ export function createBuilderContext(): BuilderContext {
     { value: undefined as UIModelRootField | undefined, updatedAt: 0 },
   );
 
+  /** -- METHODS -- */
+
+  async function updateSchema(value: string) {
+    const parsedValue = get(editor).value ? JSON.parse(get(editor).value) : {};
+    parsedValue.$schema = value;
+    editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() });
+    jsonSchema.set(value);
+  }
+
+  /** -- HELPER FUNCTIONS -- */
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const debouncedRecreateUIModel = getDebouncedFunction(200, recreateUIModel as any);
 
@@ -95,14 +117,8 @@ export function createBuilderContext(): BuilderContext {
     recreatingUiModel.set(false);
   }
 
-  async function updateSchema(value: string) {
-    const parsedValue = get(editor).value ? JSON.parse(get(editor).value) : {};
-    parsedValue.$schema = value;
-    editor.set({ value: JSON.stringify(parsedValue, null, 4), updatedAt: Date.now() });
-    jsonSchema.set(value);
-  }
-
   return setContext<BuilderContext>(BUILDER_CONTEXT_ID, {
+    envelope,
     keypair,
     goblError,
     editorProblems,
@@ -115,6 +131,9 @@ export function createBuilderContext(): BuilderContext {
     uiModel,
     recreatingUiModel,
     updateSchema,
+    envelopeIsSigned,
+    undoAvailable,
+    redoAvailable,
   });
 }
 

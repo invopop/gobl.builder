@@ -1,6 +1,8 @@
 <script lang="ts">
+  import { getBuilderContext } from "$lib/store/builder";
   import Modal from "$lib/ui/Modal.svelte";
-  import { envelope } from "$lib/editor/stores.js";
+
+  const { envelope } = getBuilderContext();
 
   $: sigs = $envelope?.sigs;
 </script>

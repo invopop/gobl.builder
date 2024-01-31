@@ -1,11 +1,12 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-
-  import { undoAvailable } from "$lib/editor/stores.js";
   import { iconButtonClasses } from "$lib/ui/iconButtonClasses.js";
   import UndoIcon from "$lib/ui/icons/UndoIcon.svelte";
+  import { getBuilderContext } from "$lib/store/builder";
 
   const dispatch = createEventDispatcher();
+
+  const { undoAvailable } = getBuilderContext();
 
   function handleUndo() {
     dispatch("undo");

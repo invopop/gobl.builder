@@ -3,10 +3,12 @@
   import DynamicForm from "$lib/editor/form/DynamicForm.svelte";
   import { getUIModel, type UIModelField } from "$lib/editor/form/utils/model";
   import type { SchemaValue } from "$lib/editor/form/utils/schema";
-  import { envelope } from "$lib/editor/stores.js";
   import { createEventDispatcher } from "svelte";
+  import { getBuilderContext } from "$lib/store/builder";
 
   const dispatch = createEventDispatcher();
+
+  const { envelope } = getBuilderContext();
 
   let headerModel: UIModelField | undefined;
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { envelopeIsSigned } from "$lib/editor/stores.js";
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
@@ -13,8 +12,15 @@
 
   const builderContext = getBuilderContext();
 
-  const { jsonSchema, currentEditorSchema, someEditorValueIsEmpty, uiModel, recreatingUiModel, updateSchema } =
-    builderContext;
+  const {
+    jsonSchema,
+    currentEditorSchema,
+    someEditorValueIsEmpty,
+    uiModel,
+    recreatingUiModel,
+    updateSchema,
+    envelopeIsSigned,
+  } = builderContext;
 
   setContext("editorId", editorId);
 

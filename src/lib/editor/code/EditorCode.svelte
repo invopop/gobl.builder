@@ -7,7 +7,6 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
@@ -36,7 +35,7 @@
 
   const builderContext = getBuilderContext();
 
-  const { editorProblems: problems, editor } = builderContext;
+  const { editorProblems: problems, editor, envelope } = builderContext;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -75,8 +74,8 @@
   }
 
   onMount(async () => {
-    undoAvailable.set(false);
-    redoAvailable.set(false);
+    builderContext.undoAvailable.set(false);
+    builderContext.redoAvailable.set(false);
     const monacoEditorImport = await import("monaco-editor");
     loader.config({ monaco: monacoEditorImport.default });
 
@@ -159,26 +158,26 @@
       const versionId = model.getAlternativeVersionId();
       if (versionId < currentVersion) {
         // Undo occured.
-        redoAvailable.set(true);
+        builderContext.redoAvailable.set(true);
         if (versionId === initialVersion) {
           // No more undo items.
-          undoAvailable.set(false);
+          builderContext.undoAvailable.set(false);
         }
       } else {
         if (versionId <= lastVersion) {
           // Redo occured.
           if (versionId == lastVersion) {
             // Redo of last change occured.
-            redoAvailable.set(false);
+            builderContext.redoAvailable.set(false);
           }
         } else {
           // New operation pushed. Disable redo.
-          redoAvailable.set(false);
+          builderContext.redoAvailable.set(false);
           if (currentVersion > lastVersion) {
             lastVersion = currentVersion;
           }
         }
-        undoAvailable.set(true);
+        builderContext.undoAvailable.set(true);
       }
       currentVersion = versionId;
 

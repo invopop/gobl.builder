@@ -3,7 +3,7 @@
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
-  import { envelope, envelopeDocumentJSON, envelopeIsSigned } from "$lib/editor/stores.js";
+  import { envelopeDocumentJSON } from "$lib/helpers/envelope";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
@@ -68,7 +68,7 @@
 
   const builderContext = createBuilderContext();
 
-  const { editor, jsonSchema } = builderContext;
+  const { editor, jsonSchema, envelope, envelopeIsSigned } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {

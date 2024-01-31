@@ -2,7 +2,6 @@ import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
-import { envelope, envelopeIsSigned } from "$lib/editor/stores";
 import { envelopeGOBLSchema } from "$lib/helpers/envelope";
 import type { BuilderContext } from "$lib/types/editor";
 
@@ -24,7 +23,7 @@ export async function build(ctx: BuilderContext) {
     const rawResult = await GOBL.build({ payload });
     const result = JSON.parse(rawResult);
 
-    envelope.set(result);
+    ctx.envelope.set(result);
     ctx.goblError.set(null);
 
     // TODO: With autobuild in place this notification is disabled, find a way to show it manually
@@ -65,7 +64,7 @@ export async function sign(ctx: BuilderContext) {
     const rawResult = await GOBL.sign({ payload });
     const result = JSON.parse(rawResult);
 
-    envelope.set(result);
+    ctx.envelope.set(result);
     ctx.goblError.set(null);
 
     toasts.add({
@@ -87,7 +86,7 @@ export async function sign(ctx: BuilderContext) {
 // Send a request to the GOBL worker to run the "validate" operation using the current
 // editor window contents and update with the results.
 export async function validate(ctx: BuilderContext) {
-  if (!get(ctx.validEditor) || !get(envelopeIsSigned)) {
+  if (!get(ctx.validEditor) || !get(ctx.envelopeIsSigned)) {
     return;
   }
 
@@ -161,7 +160,7 @@ export async function correct(options: string, ctx: BuilderContext) {
     const rawResult = await GOBL.correct({ payload });
     const result = JSON.parse(rawResult);
 
-    envelope.set(result);
+    ctx.envelope.set(result);
     ctx.goblError.set(null);
 
     toasts.add({
@@ -187,7 +186,7 @@ export async function getSchemas() {
 
 function getGOBLPayload(ctx: BuilderContext) {
   const editorValue = get(ctx.editor);
-  const envelopeValue = get(envelope);
+  const envelopeValue = get(ctx.envelope);
   const doc = JSON.parse(editorValue.value || "");
   if (doc.$schema == envelopeGOBLSchema) {
     return editorValue.value || ""; // send as-is

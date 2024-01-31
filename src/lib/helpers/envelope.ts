@@ -11,3 +11,10 @@ export function newEnvelope(doc: Document | null): Envelope {
     },
   };
 }
+
+export function envelopeDocumentJSON(envelope: Envelope | null): string {
+  if (!envelope?.doc) {
+    return "";
+  }
+  return JSON.stringify(envelope.doc, null, 4);
+}
