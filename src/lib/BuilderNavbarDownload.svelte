@@ -1,6 +1,5 @@
 <script lang="ts">
   import { Icon } from "@steeze-ui/svelte-icon";
-  import { envelope } from "./editor/stores";
   import { iconButtonClasses } from "./ui/iconButtonClasses";
   import { DocumentText, Download } from "@invopop/ui-icons";
   import LoadingIcon from "./ui/LoadingIcon.svelte";
@@ -15,11 +14,11 @@
 
   let generatingPDF = false;
 
-  $: envelopeExists = Boolean($envelope);
+  export let envelope = "";
 
   async function previewPDF() {
     const formData = new FormData();
-    formData.append("envelope", new Blob([JSON.stringify($envelope)]));
+    formData.append("envelope", new Blob([JSON.stringify(envelope)]));
 
     generatingPDF = true;
 
@@ -53,12 +52,7 @@
   }
 </script>
 
-<button
-  title="Preview document as PDF"
-  on:click={previewPDF}
-  class={iconButtonClasses(!envelopeExists || disabled)}
-  disabled={!envelopeExists || disabled}
->
+<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses(disabled)} {disabled}>
   {#if generatingPDF}
     <LoadingIcon />
   {:else}
@@ -71,8 +65,8 @@
   on:click={() => {
     dispatch("action", "downloadJson");
   }}
-  class={iconButtonClasses(!envelopeExists || disabled)}
-  disabled={!envelopeExists || disabled}
+  class={iconButtonClasses(disabled)}
+  {disabled}
 >
   <Icon src={Download} class="w-5 h-5" />
 </button>
