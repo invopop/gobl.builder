@@ -36,5 +36,9 @@ export type BuilderContext = {
     value: UIModelRootField | undefined;
     updatedAt: number;
   }>;
+  activeSection: Writable<{ section: null | string; scroll: boolean }>;
+  activeItem: Writable<null | string>;
+  highlightedItem: Writable<null | string>;
+  scrollingSection: Writable<boolean>;
   updateSchema(value: string): void;
 };

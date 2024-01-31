@@ -6,8 +6,11 @@
   import type { UIModelRootField, UIModelField } from "./utils/model";
   import { afterUpdate, createEventDispatcher, getContext, onDestroy, onMount } from "svelte";
   import type { Writable } from "svelte/store";
+  import { getBuilderContext } from "$lib/store/builder";
 
   const dispatch = createEventDispatcher();
+
+  const { scrollingSection } = getBuilderContext();
 
   const scrollPosition = getContext("scrollPosition") as Writable<number>;
 
@@ -37,6 +40,8 @@
   });
 
   afterUpdate(() => {
+    if ($scrollingSection) return;
+
     formElement.scrollTo(0, $scrollPosition);
   });
 

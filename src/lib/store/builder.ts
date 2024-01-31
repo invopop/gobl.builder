@@ -24,6 +24,10 @@ export function createBuilderContext(): BuilderContext {
   const recreatingUiModel = writable(false);
   const undoAvailable = writable(false);
   const redoAvailable = writable(false);
+  const activeSection = writable<{ section: null | string; scroll: boolean }>({ section: null, scroll: false });
+  const activeItem = writable<null | string>(null);
+  const highlightedItem = writable<null | string>(null);
+  const scrollingSection = writable(false);
 
   // editor represents the stringified JSON content in the editor
   const editor: Writable<{
@@ -134,6 +138,10 @@ export function createBuilderContext(): BuilderContext {
     envelopeIsSigned,
     undoAvailable,
     redoAvailable,
+    activeSection,
+    activeItem,
+    highlightedItem,
+    scrollingSection,
   });
 }
 
