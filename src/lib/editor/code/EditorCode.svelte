@@ -7,7 +7,7 @@
 
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { editor, redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
+  import { redoAvailable, undoAvailable, envelope } from "$lib/editor/stores.js";
   import EditorProblem from "../EditorProblem.svelte";
   import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
@@ -36,7 +36,7 @@
 
   const builderContext = getBuilderContext();
 
-  const { editorProblems: problems } = builderContext;
+  const { editorProblems: problems, editor } = builderContext;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);

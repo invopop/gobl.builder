@@ -1,9 +1,8 @@
 <script lang="ts">
-  import { getFormEditorContext } from "./context/formEditor";
-  import { jsonSchema } from "../stores";
   import SelectSchemas from "$lib/SelectSchemas.svelte";
+  import { getBuilderContext } from "$lib/store/builder";
 
-  const { updateSchema } = getFormEditorContext() || {};
+  const { jsonSchema, updateSchema } = getBuilderContext();
 
   export let isEmptySchema = true;
 

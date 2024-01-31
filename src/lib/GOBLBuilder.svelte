@@ -3,13 +3,12 @@
   import { ToastContainer, toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
-  import { envelope, jsonSchema, envelopeDocumentJSON, editor, envelopeIsSigned } from "$lib/editor/stores.js";
+  import { envelope, envelopeDocumentJSON, envelopeIsSigned } from "$lib/editor/stores.js";
   import EditorCode from "./editor/code/EditorCode.svelte";
   import EditorForm from "./editor/form/EditorForm.svelte";
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
-  import { schemaUrlForm } from "./editor/form/context/formEditor";
   import type { State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
@@ -69,6 +68,8 @@
 
   const builderContext = createBuilderContext();
 
+  const { editor, jsonSchema } = builderContext;
+
   if (signEnabled) {
     GOBL.keygen().then((k) => {
       builderContext.keypair.set(k);
@@ -78,9 +79,6 @@
 
   // jsonSchema is stored for validations in code editor
   $: jsonSchema.set(jsonSchemaURL);
-
-  // schemaUrlForm is stored for recreating UI model
-  $: schemaUrlForm.set(jsonSchemaURL);
 
   $: editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() });
 
@@ -230,7 +228,7 @@
 
     // If document loaded has the same schema as previously loaded
     // We need to force a rebuild of the UI model
-    if (parsedValue?.$schema === $schemaUrlForm) {
+    if (parsedValue?.$schema === $jsonSchema) {
       recreateVisualEditor();
     }
 
