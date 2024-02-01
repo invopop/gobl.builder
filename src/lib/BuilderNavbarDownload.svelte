@@ -18,7 +18,7 @@
 
   async function previewPDF() {
     const formData = new FormData();
-    formData.append("envelope", new Blob([JSON.stringify(envelope)]));
+    formData.append("envelope", new Blob([envelope]));
 
     generatingPDF = true;
 
