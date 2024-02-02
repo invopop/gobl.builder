@@ -25,7 +25,7 @@
       {/if}
     </div>
   </div>
-  <div class:pointer-events-none={readOnly} class="flex items-center justify-start w-[300px]">
+  <div class="flex items-center justify-start w-[350px]">
     <EditableField {field} {parseValue} {readOnly} on:fieldValueUpdated on:fieldKeyUpdated />
   </div>
 </div>

@@ -33,10 +33,11 @@
 <select
   id={field.id}
   value={field.value}
+  disabled={readOnly}
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="{classes} text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer"
+  class="{classes} text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default"
 >
   {#each options as opt (opt.key)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>

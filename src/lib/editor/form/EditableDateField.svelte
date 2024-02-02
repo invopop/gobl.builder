@@ -35,5 +35,6 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
+  disabled={readOnly}
   class="{classes} text-base outline-none w-full rounded h-[32px] px-3"
 />

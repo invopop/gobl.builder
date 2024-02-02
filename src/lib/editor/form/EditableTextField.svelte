@@ -2,6 +2,7 @@
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
+  import { toasts } from "svelte-toasts";
 
   export let field: UIModelField<string>;
   export let showError = false;
@@ -18,24 +19,40 @@
     "text-neutral-800": readOnly || (!field.is.calculated && !showError),
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
     "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
-    "focus:border-accent-500 border": !readOnly,
+    "focus:border-accent-500 border cursor-text": !readOnly,
     "font-medium bg-transparent": readOnly,
   });
 
   const dispatch = createEventDispatcher();
 
-  function handleBlur(e: Event & { currentTarget: HTMLInputElement }) {
-    const value = e.currentTarget.value;
+  function handleBlur(e: FocusEvent) {
+    const input = e.target as HTMLDivElement;
+    const value = input.innerText;
     dispatch("edit", value);
     dispatch("blur", value);
   }
+
+  async function handleClick(e: Event) {
+    if (!readOnly) return;
+
+    const input = e.target as HTMLDivElement;
+    await navigator.clipboard.writeText(input.innerText);
+    toasts.add({
+      type: "success",
+      description: "Copied to clipboard",
+    });
+  }
 </script>
 
-<input
-  type="text"
+<div
+  role="textbox"
+  tabindex="0"
+  contenteditable={!readOnly}
   id={iid}
-  value={val}
   on:blur={handleBlur}
   on:keypress
-  class="{classes} text-base rounded px-3 h-[32px] outline-none w-full caret-accent-500"
-/>
+  on:click={handleClick}
+  class="{classes} text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500"
+>
+  {val}
+</div>
