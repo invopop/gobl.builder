@@ -10,7 +10,6 @@
 
   export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
   export let field: UIModelField<string>;
-  export let readOnly = false;
 
   let editing = false;
   let inputValue: SchemaValue = field.key;
@@ -44,14 +43,7 @@
 <span class="flex items-center justify-start space-x-1 w-full">
   {#if editing}
     <div class="relative w-full">
-      <EditableTextField
-        {field}
-        {readOnly}
-        id={`${field.id}-key`}
-        value={field.key}
-        on:edit={handleEdit}
-        on:blur={handleSave}
-      />
+      <EditableTextField {field} id={`${field.id}-key`} value={field.key} on:edit={handleEdit} on:blur={handleSave} />
     </div>
   {:else}
     <FieldTitle {field} />
