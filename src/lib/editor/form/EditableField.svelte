@@ -6,6 +6,7 @@
   import EditableDateField from "./EditableDateField.svelte";
   import FieldError from "./FieldError.svelte";
   import { createEventDispatcher } from "svelte";
+  import ReadOnlyField from "./ReadOnlyField.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -48,22 +49,16 @@
 </script>
 
 <div class="w-full space-y-1 flex flex-col">
-  {#if field.controlType === "date"}
-    <EditableDateField {field} {showError} {readOnly} on:edit={handleEdit} on:blur={validateField} />
+  {#if readOnly}
+    <ReadOnlyField {field} />
+  {:else if field.controlType === "date"}
+    <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
-    <EditableSelectField
-      {field}
-      {showError}
-      {readOnly}
-      options={field.controlMeta}
-      on:edit={handleEdit}
-      on:blur={validateField}
-    />
+    <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.type === "boolean"}
     <EditableSelectField
       {field}
       {showError}
-      {readOnly}
       options={[
         { key: "", value: "" },
         { key: "Yes", value: true },
@@ -73,7 +68,7 @@
       on:blur={validateField}
     />
   {:else}
-    <EditableTextField {field} {showError} {readOnly} on:edit={handleEdit} on:blur={validateField} />
+    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {/if}
   {#if showError}
     <FieldError {error} />

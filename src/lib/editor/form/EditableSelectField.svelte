@@ -6,14 +6,11 @@
   export let field: UIModelField<string>;
   export let options: { key: string; value: string | boolean }[];
   export let showError = false;
-  export let readOnly = false;
 
   $: classes = clsx({
-    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated && !readOnly,
-    "text-neutral-800": readOnly || (!field.is.calculated && !showError),
+    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
+    "text-neutral-800": !field.is.calculated && !showError,
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
-    "border focus:border-accent-500 custom-select": !readOnly,
-    "font-medium bg-transparent": readOnly,
   });
 
   const dispatch = createEventDispatcher();
@@ -33,11 +30,10 @@
 <select
   id={field.id}
   value={field.value}
-  disabled={readOnly}
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="{classes} text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default"
+  class="{classes} border focus:border-accent-500 custom-select text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default"
 >
   {#each options as opt (opt.key)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
