@@ -4,6 +4,7 @@
   import FieldTitle from "./FieldTitle.svelte";
   import EditableField from "./EditableField.svelte";
   import EditableFieldKey from "./EditableFieldKey.svelte";
+  import clsx from "clsx";
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let parseKey: ((key: SchemaValue) => string) | undefined = undefined;
@@ -13,9 +14,14 @@
   $: label = readOnly
     ? "Document is read-only"
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
+
+  $: classes = clsx({
+    "py-[3px]": readOnly,
+    "py-1": !readOnly,
+  });
 </script>
 
-<div class="flex w-full space-x-2 py-1 pl-2 pr-1" title={label}>
+<div class="{classes} flex w-full space-x-2 pl-2 pr-1" title={label}>
   <div class="flex items-start justify-start flex-1">
     <div class="h-8 flex items-center w-full">
       {#if field.is.editableKey}
