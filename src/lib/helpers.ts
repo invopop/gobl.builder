@@ -37,6 +37,22 @@ export function formatErrors(error: string): string[] {
   return errors;
 }
 
+export function getErrorString(errorObj: Record<string, object | string>, currentPath = "") {
+  let errorString = "";
+
+  for (const [key, value] of Object.entries(errorObj)) {
+    const newPath = currentPath ? `${currentPath} > ${key}` : key;
+
+    if (typeof value === "object" && value !== null) {
+      errorString += getErrorString(value as Record<string, object | string>, newPath);
+    } else {
+      errorString += `${errorString.length ? " / " : ""}${newPath}: ${value}`;
+    }
+  }
+
+  return errorString.trim();
+}
+
 export function showErrorToast(description: string) {
   toasts.add({
     type: "error",
@@ -45,14 +61,9 @@ export function showErrorToast(description: string) {
 }
 
 export function displayAllErrors(error: string) {
-  try {
-    const errors = formatErrors(error);
-    errors.forEach((e) => {
-      showErrorToast(e);
-    });
-  } catch (error) {
-    showErrorToast(error as string);
-  }
+  const parsedError = JSON.parse(error);
+  const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.cause?.doc) : parsedError.message;
+  showErrorToast(errorMessage);
 }
 
 export function objectHasEmptyProperties(obj: Record<string, unknown>) {

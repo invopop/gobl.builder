@@ -14,6 +14,7 @@
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import type { Envelope } from "$lib/types/envelope.js";
   import { getBuilderContext } from "$lib/store/builder.js";
+  import { getErrorString } from "$lib/helpers";
 
   let monaco: typeof Monaco;
 
@@ -121,9 +122,14 @@
         return;
       }
 
+      const parsedError = JSON.parse(goblErr.message);
+
+      const errorString =
+        parsedError.key === "validation" ? getErrorString(parsedError.cause?.doc) : parsedError.message;
+
       monaco.editor.setModelMarkers(model, "gobl", [
         {
-          message: `${goblErr.message} (code: ${goblErr.code})`,
+          message: `${errorString} (code: ${parsedError.code})`,
           severity: monaco.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
