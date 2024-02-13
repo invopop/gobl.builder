@@ -9,25 +9,23 @@
   export let state: State = "init";
 </script>
 
-{#if state !== "init"}
+<button
+  title="Show document headers"
+  class="inline-flex items-center space-x-1.5 p-1.5 border border-neutral-300 text-sm font-medium text-white hover:text-cyan-500 hover:border-cyan-500"
+  on:click={() => {
+    dispatch("action", "showHeaders");
+  }}
+>
+  <Icon src={Header} class="h-5 w-5" />
+</button>
+{#if state === "signed"}
   <button
-    title="Show document headers"
+    title="Show document signatures"
     class="inline-flex items-center space-x-1.5 p-1.5 border border-neutral-300 text-sm font-medium text-white hover:text-cyan-500 hover:border-cyan-500"
     on:click={() => {
-      dispatch("action", "showHeaders");
+      dispatch("action", "showSignatures");
     }}
   >
-    <Icon src={Header} class="h-5 w-5" />
+    <Icon src={Signature} class="h-5 w-5" />
   </button>
-  {#if state === "signed"}
-    <button
-      title="Show document signatures"
-      class="inline-flex items-center space-x-1.5 p-1.5 border border-neutral-300 text-sm font-medium text-white hover:text-cyan-500 hover:border-cyan-500"
-      on:click={() => {
-        dispatch("action", "showSignatures");
-      }}
-    >
-      <Icon src={Signature} class="h-5 w-5" />
-    </button>
-  {/if}
 {/if}

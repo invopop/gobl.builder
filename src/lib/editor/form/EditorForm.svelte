@@ -144,32 +144,30 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<div class="h-full relative" id={editorId}>
-  {#if $recreatingUiModel}
-    <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
-  {:else}
-    {#if documentHeaders.length && !documentHeaders[0].slug.includes("root")}
-      <div class="pt-7 absolute top-1 left-1 bg-white w-36 @[1055px]:w-56 hidden @[800px]:block z-10">
-        <ul>
-          {#each documentHeaders as header}
-            <li
-              class:font-medium={$activeSection.section === header.slug}
-              class:text-neutral-800={$activeSection.section === header.slug}
-              class:text-neutral-400={$activeSection.section !== header.slug}
-              class:border-neutral-800={$activeSection.section === header.slug}
-              class:border-neutral-100={$activeSection.section !== header.slug}
-              class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
+<div class="h-full relative flex" id={editorId}>
+  {#if documentHeaders.length && !documentHeaders[0].slug.includes("root")}
+    <div class="hidden @[820px]:block w-[168px] pt-[27px]">
+      <ul>
+        {#each documentHeaders as header}
+          <li
+            class:font-medium={$activeSection.section === header.slug}
+            class:text-neutral-800={$activeSection.section === header.slug}
+            class:text-neutral-400={$activeSection.section !== header.slug}
+            class:border-neutral-800={$activeSection.section === header.slug}
+            class:border-neutral-100={$activeSection.section !== header.slug}
+            class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
+          >
+            <button
+              on:click={() => {
+                setActive(header);
+              }}>{header.label}</button
             >
-              <button
-                on:click={() => {
-                  setActive(header);
-                }}>{header.label}</button
-              >
-            </li>
-          {/each}
-        </ul>
-      </div>
-    {/if}
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
+  <div class="flex-1">
     <DynamicForm
       model={$uiModel.value}
       readOnly={$envelopeIsSigned || forceReadOnly}
@@ -179,5 +177,9 @@
       on:fieldKeyUpdated={handleFieldUpdated}
       on:fieldValueUpdated={handleFieldUpdated}
     />
+  </div>
+
+  {#if $recreatingUiModel}
+    <div class="text-center mt-6 w-full flex items-center justify-center"><LoadingIcon /></div>
   {/if}
 </div>

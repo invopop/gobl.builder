@@ -62,7 +62,7 @@ export function showErrorToast(description: string) {
 
 export function displayAllErrors(error: string) {
   const parsedError = JSON.parse(error);
-  const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.cause?.doc) : parsedError.message;
+  const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
   showErrorToast(errorMessage);
 }
 

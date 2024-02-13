@@ -23,12 +23,14 @@
   export let modal = false;
 
   $: wrapperClasses = clsx({
-    "px-16 py-8 pb-40 justify-center": !modal,
+    "py-5 pb-40 justify-center": !modal,
+    "px-8": !modal && readOnly,
+    "px-36": !modal && !readOnly,
   });
 
   $: classes = clsx({
     "w-[500px]": modal,
-    "w-full max-w-[500px] @[1055px]:max-w-[550px] @[1200px]:max-w-[632px]": !modal,
+    "w-full max-w-[632px]": !modal,
   });
 
   const handleScroll = () => {
@@ -50,7 +52,7 @@
   });
 </script>
 
-<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden">
+<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
   <div class="{wrapperClasses} flex text-sm">
     <div class={classes}>
       {#if showSchemaField}
@@ -82,3 +84,13 @@
     </div>
   </div>
 </div>
+
+<style>
+  .hideScroll::-webkit-scrollbar {
+    display: none;
+  }
+  .hidescroll {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+</style>

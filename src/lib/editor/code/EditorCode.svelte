@@ -51,6 +51,8 @@
 
   $: forceReadOnly, setEditorReadOnly();
 
+  $: showErrorConsole = !forceReadOnly && !$envelope?.sigs;
+
   function setSchemaURI(uri: string) {
     if (!monaco) {
       return;
@@ -96,8 +98,12 @@
       automaticLayout: true,
       fontFamily: `ui-monospace, "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
       scrollbar: {
+        vertical: "hidden",
         useShadows: false,
       },
+      overviewRulerLanes: 0,
+      hideCursorInOverviewRuler: true,
+      overviewRulerBorder: false,
       renderLineHighlight: "line",
       renderLineHighlightOnlyWhenFocus: true,
       padding: {
@@ -125,7 +131,7 @@
       const parsedError = JSON.parse(goblErr.message);
 
       const errorString =
-        parsedError.key === "validation" ? getErrorString(parsedError.cause?.doc) : parsedError.message;
+        parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
 
       monaco.editor.setModelMarkers(model, "gobl", [
         {
@@ -304,88 +310,91 @@
 
 <div class="flex flex-col h-full border-t-2 border-t-slate-200">
   <div class="flex-1 overflow-hidden" bind:this={editorEl} />
+  {#if showErrorConsole}
+    <div class="absolute w-full bottom-0 z-10">
+      <div
+        class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
+        on:dblclick={handleDrawerToggle}
+        role="log"
+      >
+        <div>
+          <span class="mr-1">
+            {#if errorCount > 0}
+              <ErrorIcon />
+            {:else}
+              <SuccessIcon />
+            {/if}
+          </span>
+          <span class="align-middle">
+            {errorCount}
+            {errorCount === 1 ? "error" : "errors"}
+          </span>
+        </div>
+        <div class="flex-1">
+          <span class="mr-1">
+            {#if warningCount > 0}
+              <WarningIcon />
+            {:else}
+              <SuccessIcon />
+            {/if}
+          </span>
+          <span class="align-middle">
+            {warningCount}
+            {warningCount === 1 ? "warning" : "warnings"}
+          </span>
+        </div>
+        <div>Ln {lineNumber}, Col {column}</div>
+        <button class="align-middle" on:click={handleDrawerToggle}>
+          {#if drawerClosed}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          {:else}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fill-rule="evenodd"
+                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                clip-rule="evenodd"
+              />
+            </svg>
+          {/if}
+        </button>
+      </div>
 
-  <div
-    class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
-    on:dblclick={handleDrawerToggle}
-    role="log"
-  >
-    <div>
-      <span class="mr-1">
-        {#if errorCount > 0}
-          <ErrorIcon />
-        {:else}
-          <SuccessIcon />
-        {/if}
-      </span>
-      <span class="align-middle">
-        {errorCount}
-        {errorCount === 1 ? "error" : "errors"}
-      </span>
-    </div>
-    <div class="flex-1">
-      <span class="mr-1">
-        {#if warningCount > 0}
-          <WarningIcon />
-        {:else}
-          <SuccessIcon />
-        {/if}
-      </span>
-      <span class="align-middle">
-        {warningCount}
-        {warningCount === 1 ? "warning" : "warnings"}
-      </span>
-    </div>
-    <div>Ln {lineNumber}, Col {column}</div>
-    <button class="align-middle" on:click={handleDrawerToggle}>
-      {#if drawerClosed}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fill-rule="evenodd"
-            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
-            clip-rule="evenodd"
-          />
-        </svg>
-      {:else}
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
-        </svg>
+      {#if !drawerClosed}
+        <div
+          class="flex-none h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800"
+          transition:slide={{ duration: 300 }}
+        >
+          {#if $editor.value === ""}
+            <p class="m-4">
+              <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
+                >Warnings, errors and tips are shown in this area.</span
+              >
+            </p>
+          {/if}
+          {#if $editor.value !== "" && $problems.length === 0}
+            <p class="m-4">
+              <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
+                >Use the action buttons in the menu bar.</span
+              >
+            </p>
+          {/if}
+          <ul>
+            {#each sortedProblems as problem}
+              <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
+                <button on:click={handleProblemClick(problem)}>
+                  <EditorProblem {problem} />
+                </button>
+              </li>
+            {/each}
+          </ul>
+        </div>
       {/if}
-    </button>
-  </div>
-
-  {#if !drawerClosed}
-    <div
-      class="flex-none h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800"
-      transition:slide={{ duration: 300 }}
-    >
-      {#if $editor.value === ""}
-        <p class="m-4">
-          <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
-            >Warnings, errors and tips are shown in this area.</span
-          >
-        </p>
-      {/if}
-      {#if $editor.value !== "" && $problems.length === 0}
-        <p class="m-4">
-          <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
-            >Use the action buttons in the menu bar.</span
-          >
-        </p>
-      {/if}
-      <ul>
-        {#each sortedProblems as problem}
-          <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
-            <button on:click={handleProblemClick(problem)}>
-              <EditorProblem {problem} />
-            </button>
-          </li>
-        {/each}
-      </ul>
     </div>
   {/if}
 </div>
