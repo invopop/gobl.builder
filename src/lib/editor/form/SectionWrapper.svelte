@@ -73,9 +73,9 @@
   {#if isSection}
     <div use:intersect={intersectOptions}></div>
   {/if}
-  <div class:pl-2={isParent} class="mt-1 py-1 pr-2">
+  <div class:pl-2={isParent} class="py-1.5 pr-2">
     <button
-      class="flex items-center justify-start cursor-pointer h-8"
+      class="flex items-center justify-start cursor-pointer"
       on:click={() => {
         open = !open;
       }}

@@ -6,7 +6,6 @@
   import type { ListOption } from "./types/ui";
   import type { State } from "./types/editor";
   import SelectSchemas from "./SelectSchemas.svelte";
-  import BuilderNavbarViews from "./BuilderNavbarViews.svelte";
   import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
   import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
   import BuilderNavbarEnvelopeMeta from "./BuilderNavbarEnvelopeMeta.svelte";
@@ -20,7 +19,6 @@
   const GOBL_URL = "https://gobl.org/draft-0/";
 
   export let defaultSchema = "";
-  export let editorView = "form";
   export let forceReadOnly = false;
   export let state: State = "init";
   export let envelope = "";
@@ -72,13 +70,11 @@
   </div>
 
   <div class="hidden md:flex items-center space-x-3">
-    <BuilderNavbarViews bind:editorView />
-    <BuilderNavbarSeparator />
     <BuilderNavbarOptions bind:forceReadOnly />
 
     {#if state !== "init"}
       <BuilderNavbarSeparator />
-      <BuilderNavbarEnvelopeMeta on:action />
+      <BuilderNavbarEnvelopeMeta {state} on:action />
     {/if}
 
     <BuilderNavbarSeparator />
@@ -123,11 +119,11 @@
       </div>
     </div>
     <hr class="my-5 border-neutral-300" />
-    <BuilderNavbarViews bind:editorView />
-    <hr class="my-5 border-neutral-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
-    <hr class="my-5 border-neutral-300" />
-    <BuilderNavbarEnvelopeMeta on:action />
+    {#if state !== "init"}
+      <hr class="my-5 border-neutral-300" />
+      <BuilderNavbarEnvelopeMeta {state} on:action />
+    {/if}
     <hr class="my-5 border-neutral-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions

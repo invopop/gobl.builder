@@ -27,6 +27,17 @@
     dispatch("edit", value);
     dispatch("blur", value);
   }
+
+  function handleKeydown(e: KeyboardEvent) {
+    if (e.key !== "Enter") return;
+
+    if (e.shiftKey) {
+      e.stopPropagation();
+      return;
+    }
+
+    e.preventDefault();
+  }
 </script>
 
 <div
@@ -35,7 +46,7 @@
   contenteditable
   id={iid}
   on:blur={handleBlur}
-  on:keypress
+  on:keydown={handleKeydown}
   class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500"
 >
   {val}

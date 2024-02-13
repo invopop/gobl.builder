@@ -10,6 +10,7 @@
 
   export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
   export let field: UIModelField<string>;
+  export let readOnly = false;
 
   let editing = false;
   let inputValue: SchemaValue = field.key;
@@ -47,8 +48,10 @@
     </div>
   {:else}
     <FieldTitle {field} />
-    <button on:click={handleEditing}>
-      <Icon src={Pencil} class="h-4 w-4 text-accent-500" />
-    </button>
+    {#if !readOnly}
+      <button on:click={handleEditing}>
+        <Icon src={Pencil} class="h-4 w-4 text-accent-500" />
+      </button>
+    {/if}
   {/if}
 </span>

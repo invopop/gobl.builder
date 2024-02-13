@@ -11,11 +11,8 @@
   let defaultSchema = "";
   let builder: GOBLBuilder;
   let state: State = "init";
-  let editorView = localStorage.getItem("editor-view") || "code";
   let forceReadOnly = false;
   let envelope = "";
-
-  $: localStorage.setItem("editor-view", editorView);
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -44,7 +41,6 @@
     {state}
     {defaultSchema}
     {envelope}
-    bind:editorView
     bind:forceReadOnly
     on:load={handleDocLoad}
     on:action={handleAction}
@@ -58,7 +54,7 @@
         bind:data
         bind:problems
         {jsonSchemaURL}
-        {editorView}
+        editorView="code"
         signEnabled
         {forceReadOnly}
         on:change={(event) => {
