@@ -47,7 +47,7 @@
   id={iid}
   on:blur={handleBlur}
   on:keydown={handleKeydown}
-  class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500"
+  class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight"
 >
   {val}
 </div>

@@ -293,7 +293,7 @@
       </div>
       <div>
         <div class="pt-[18px] pr-5">
-          <div class="inline-flex space-x-0.5 p-0.5 rounded bg-neutral-50">
+          <div class="inline-flex space-x-0.5 p-0.5 rounded bg-neutral-100">
             <button
               title="Form view"
               class:bg-white={editorView === "form"}

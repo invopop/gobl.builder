@@ -160,8 +160,11 @@
             <button
               on:click={() => {
                 setActive(header);
-              }}>{header.label}</button
+              }}
+              class="tracking-normal"
             >
+              {header.label}
+            </button>
           </li>
         {/each}
       </ul>
