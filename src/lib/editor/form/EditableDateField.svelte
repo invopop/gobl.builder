@@ -32,7 +32,7 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
-  class="{classes} border focus:border-accent-500 text-base outline-none w-full rounded h-[32px] px-3"
+  class="{classes} border focus:border-accent-500 text-base outline-none w-full rounded h-[32px] px-3 tracking-tight"
 />
 
 <style>

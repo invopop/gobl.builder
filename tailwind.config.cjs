@@ -71,6 +71,13 @@ module.exports = {
           900: "#A5371B",
         },
       },
+      letterSpacing: {
+        tightest: "-0.567px",
+        tighter: "-0.304px",
+        tight: "-0.135px",
+        normal: "-0.039px",
+        wide: "0.055px",
+      },
     },
   },
   plugins: [

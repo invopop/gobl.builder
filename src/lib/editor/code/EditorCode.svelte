@@ -308,7 +308,7 @@
   }
 </script>
 
-<div class="flex flex-col h-full border-t-2 border-t-slate-200">
+<div class="flex flex-col h-full">
   <div class="flex-1 overflow-hidden" bind:this={editorEl} />
   {#if showErrorConsole}
     <div class="absolute w-full bottom-0 z-10">
