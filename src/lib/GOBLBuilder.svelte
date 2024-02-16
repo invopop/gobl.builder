@@ -21,8 +21,8 @@
   import type { Envelope } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
   import { createBuilderContext } from "./store/builder";
-  import { Icon } from "svelte-hero-icons";
-  import { Code, List } from "@invopop/ui-icons";
+  import EditorBar from "./editor/bar/EditorBar.svelte";
+  import EditorBarSections from "./editor/bar/EditorBarSections.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -277,8 +277,19 @@
 
 <div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
-    <div class="h-full absolute inset-0 flex">
-      <div class="flex-1">
+    <div class="h-full absolute inset-0 flex flex-col">
+      <div class="py-2 pl-16 pr-5 flex items-center justify-between border-b border-neutral-100">
+        <div class="overflow-x-auto">
+          {#if editorView === "code"}
+            <p class="text-sm text-neutral-500">You are in developer mode</p>
+          {:else}
+            <EditorBarSections />
+          {/if}
+        </div>
+
+        <EditorBar bind:editorView />
+      </div>
+      <div class="flex-1 overflow-auto">
         {#if editorView === "code"}
           <EditorCode {jsonSchemaURL} {forceReadOnly} />
         {:else}
@@ -290,36 +301,6 @@
             }}
           />
         {/if}
-      </div>
-      <div>
-        <div class="pt-[18px] pr-5">
-          <div class="inline-flex space-x-0.5 p-0.5 rounded bg-neutral-100">
-            <button
-              title="Form view"
-              class:bg-white={editorView === "form"}
-              class="{editorView === 'form'
-                ? 'text-neutral-800'
-                : 'text-neutral-500 '} rounded p-1 hover:bg-white hover:text-neutral-800"
-              on:click={() => {
-                editorView = "form";
-              }}
-            >
-              <Icon src={List} class="h-5 w-5" />
-            </button>
-            <button
-              title="Code view"
-              class:bg-white={editorView === "code"}
-              class="{editorView === 'code'
-                ? 'text-neutral-800'
-                : 'text-neutral-500 '} rounded p-1 hover:bg-white hover:text-neutral-800"
-              on:click={() => {
-                editorView = "code";
-              }}
-            >
-              <Icon src={Code} class="h-5 w-5" />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>

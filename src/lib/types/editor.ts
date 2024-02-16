@@ -40,5 +40,6 @@ export type BuilderContext = {
   activeItem: Writable<null | string>;
   highlightedItem: Writable<null | string>;
   scrollingSection: Writable<boolean>;
+  documentHeaders: Readable<DocumentHeader[]>;
   updateSchema(value: string): void;
 };

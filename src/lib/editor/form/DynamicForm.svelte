@@ -23,9 +23,9 @@
   export let modal = false;
 
   $: wrapperClasses = clsx({
-    "py-5 pb-40 justify-center": !modal,
+    "py-5 pb-40 justify-start": !modal,
     "px-8": !modal && readOnly,
-    "px-36": !modal && !readOnly,
+    "px-[48px]": !modal && !readOnly,
   });
 
   $: classes = clsx({
