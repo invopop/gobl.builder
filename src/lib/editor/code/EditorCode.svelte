@@ -404,3 +404,9 @@
     </div>
   {/if}
 </div>
+
+<style>
+  :global(.monaco-editor) {
+    position: absolute !important;
+  }
+</style>
