@@ -534,9 +534,11 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
     switch (option.schema?.type) {
       case "object": {
+        const recommendedFields = option.schema.recommended || [];
         const requiredFields = option.schema.required || [];
+        const displayFields = [...recommendedFields, ...requiredFields];
 
-        value = requiredFields.reduce(
+        value = displayFields.reduce(
           (acc, key) => {
             const schema = (option.schema.properties || {})[key] as Schema;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -597,7 +599,7 @@ export type ControlType = "text" | "select" | "date" | "dictionary";
 export type SchemaOption = {
   key: string;
   required: boolean;
-  schema: Schema & { calculated?: boolean };
+  schema: Schema & { calculated?: boolean; recommended?: string[] };
 };
 
 export type UIModelFieldFlags = {
