@@ -66,10 +66,17 @@ export function showErrorToast(description: string) {
   });
 }
 
-export function displayAllErrors(error: string) {
+export async function displayAllErrors(error: string) {
   const parsedError = JSON.parse(error);
   const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
-  showErrorToast(errorMessage);
+  const errorsArr = errorMessage.split(" / ");
+
+  for (let i = 0; i < errorsArr.length; i++) {
+    showErrorToast(errorsArr[i]);
+    // Force to await 10 ms so toast component does not break
+    // https://github.com/mzohaibqc/svelte-toasts/issues/6
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
 }
 
 export function objectHasEmptyProperties(obj: Record<string, unknown>) {

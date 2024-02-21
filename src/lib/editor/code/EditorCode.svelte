@@ -144,8 +144,8 @@
       monaco.editor.setModelMarkers(
         model,
         "gobl",
-        errorsArr.map((err: string) => ({
-          message: `${err} (code: ${parsedError.code})`,
+        errorsArr.map((message: string) => ({
+          message,
           severity: monaco.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
