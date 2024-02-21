@@ -35,7 +35,7 @@
     autoclose
   >
     <div slot="header" class="p-2">
-      <p class="font-semibold text-3xl text-neutral-800">Load Template</p>
+      <p class="font-semibold text-3xl text-neutral-800">Load Example</p>
     </div>
     <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
   </Modal>

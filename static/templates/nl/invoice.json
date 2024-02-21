@@ -7,7 +7,7 @@
   "supplier": {
     "tax_id": {
       "country": "NL",
-      "code": "123456789B01.1"
+      "code": "000099995B57"
     },
     "name": "Foobar BV",
     "addresses": [
@@ -29,7 +29,7 @@
   "customer": {
     "tax_id": {
       "country": "NL",
-      "code": "112233445B01.1"
+      "code": "808661863B01"
     },
     "name": "Lorem Ipsum BV"
   },
