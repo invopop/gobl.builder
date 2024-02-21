@@ -139,16 +139,20 @@
       const errorString =
         parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
 
-      monaco.editor.setModelMarkers(model, "gobl", [
-        {
-          message: `${errorString} (code: ${parsedError.code})`,
+      const errorsArr = errorString.split(" / ");
+
+      monaco.editor.setModelMarkers(
+        model,
+        "gobl",
+        errorsArr.map((err: string) => ({
+          message: `${err} (code: ${parsedError.code})`,
           severity: monaco.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
           endColumn: 1,
-        },
-      ]);
+        })),
+      );
     });
 
     unsubscribeEditor = editor.subscribe(({ value }) => {

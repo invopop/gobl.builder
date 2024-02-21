@@ -37,20 +37,26 @@ export function formatErrors(error: string): string[] {
   return errors;
 }
 
-export function getErrorString(errorObj: Record<string, object | string>, currentPath = "") {
+export function getErrorString(errorObj: Record<string, object | string>) {
+  const errorString = parseErrorString(errorObj);
+
+  return errorString.substring(3);
+}
+
+export function parseErrorString(errorObj: Record<string, object | string>, currentPath = "") {
   let errorString = "";
 
   for (const [key, value] of Object.entries(errorObj)) {
     const newPath = currentPath ? `${currentPath} > ${key}` : key;
 
     if (typeof value === "object" && value !== null) {
-      errorString += getErrorString(value as Record<string, object | string>, newPath);
+      errorString += parseErrorString(value as Record<string, object | string>, newPath);
     } else {
-      errorString += `${errorString.length ? " / " : ""}${newPath}: ${value}`;
+      errorString += ` / ${newPath}: ${value}`;
     }
   }
 
-  return errorString.trim();
+  return errorString;
 }
 
 export function showErrorToast(description: string) {
