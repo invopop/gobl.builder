@@ -43,6 +43,12 @@ export function getErrorString(errorObj: Record<string, object | string>) {
   return errorString.substring(3);
 }
 
+export function getErrorPathFromMessage(message: string) {
+  const parts = message.split(":")[0];
+
+  return parts.split(" > ");
+}
+
 export function parseErrorString(errorObj: Record<string, object | string>, currentPath = "") {
   let errorString = "";
 
