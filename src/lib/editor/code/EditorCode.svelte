@@ -14,7 +14,7 @@
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import type { Envelope } from "$lib/types/envelope.js";
   import { getBuilderContext } from "$lib/store/builder.js";
-  import { getErrorString } from "$lib/helpers";
+  import { getErrorPathFromMessage, getErrorString } from "$lib/helpers";
   import clsx from "clsx";
 
   let monaco: typeof Monaco;
@@ -144,14 +144,26 @@
       monaco.editor.setModelMarkers(
         model,
         "gobl",
-        errorsArr.map((message: string) => ({
-          message,
-          severity: monaco.MarkerSeverity.Error,
-          startLineNumber: 1,
-          startColumn: 1,
-          endLineNumber: 1,
-          endColumn: 1,
-        })),
+        errorsArr.map((message: string) => {
+          const models = monaco.editor.getModels();
+          const model = models.find((m) => m.uri.query === EditorUniqueId);
+          if (model && parsedError.fields) {
+            const path = getErrorPathFromMessage(message);
+            const regexString = `"${path.join('": \\{\\n[\\s\\S]*?"')}":`;
+            const regex = new RegExp(regexString);
+            const matches = model.findMatches(regex.source, true, true, false, null, true);
+            console.log(matches);
+          }
+
+          return {
+            message,
+            severity: monaco.MarkerSeverity.Error,
+            startLineNumber: 1,
+            startColumn: 1,
+            endLineNumber: 1,
+            endColumn: 1,
+          };
+        }),
       );
     });
 
