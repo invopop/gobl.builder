@@ -23,7 +23,7 @@
 
 <div class="{classes} flex w-full space-x-2 pl-2 pr-1" title={label}>
   <div class="flex items-center justify-start flex-1">
-    <div class="flex items-center w-full">
+    <div class="flex items-center w-full max-w-[160px] @[780px]:max-w-full">
       {#if field.is.editableKey}
         <EditableFieldKey {field} {parseKey} {readOnly} on:fieldKeyUpdated />
       {:else}
