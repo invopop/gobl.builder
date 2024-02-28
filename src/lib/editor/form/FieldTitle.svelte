@@ -12,7 +12,7 @@
     "font-semibold text-neutral-900 text-base": isParent,
     "tracking-tight": isParent && !isSection,
     "text-xl text-neutral-900 tracking-tighter": isSection,
-    "text-neutral-500 text-sm tracking-normal": !isSection && !isParent,
+    "text-neutral-500 text-sm tracking-normal truncate": !isSection && !isParent,
   });
 </script>
 
