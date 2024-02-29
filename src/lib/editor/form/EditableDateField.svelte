@@ -9,7 +9,7 @@
   const uniqueId = `date-input-${Math.random().toString(36).slice(2, 7)}`;
 
   export let field: UIModelField<string>;
-  export let showError = true;
+  export let showError = false;
 
   let input: HTMLInputElement | undefined;
 
