@@ -25,7 +25,7 @@
   $: wrapperClasses = clsx({
     "py-5 pb-40 justify-center": !modal,
     "px-8": !modal && readOnly,
-    "px-36": !modal && !readOnly,
+    "sm:px-36": !modal && !readOnly,
   });
 
   $: classes = clsx({
@@ -52,7 +52,7 @@
   });
 </script>
 
-<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
+<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-auto sm:overflow-x-hidden hideScroll">
   <div class="{wrapperClasses} flex text-sm">
     <div class={classes}>
       {#if showSchemaField}
