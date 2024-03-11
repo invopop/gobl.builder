@@ -16,7 +16,7 @@
 
 <button
   title="Load a GOBL document from a template, file upload or your library."
-  class="border border-cyan-500 py-[5px] pl-2 pr-3 text-cyan-500 rounded text-base font-medium flex items-center space-x-1"
+  class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-base font-medium flex items-center space-x-1"
   on:click={() => {
     openModal = true;
   }}

@@ -125,7 +125,7 @@
 >
   <div class="p-2">
     <input
-      class="rounded py-1.5 pr-3 pl-2 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border"
+      class="rounded py-1.5 pr-3 pl-2 outline-none w-full placeholder-neutral-500 focus:placeholder-neutral-500 border"
       placeholder="Search"
       bind:value={filterStr}
       bind:this={inputRef}
@@ -163,11 +163,8 @@
         {/each}
       {:else}
         <li>
-          <span class="w-full py-3 px-6 text-grey-5 text-left">
+          <span class="w-full py-3 px-6 text-neutral-500 text-left">
             <span>No items found</span>
-            {#if filterStr}
-              <span>matching filter: <strong>"{filterStr}"</strong></span>
-            {/if}
           </span>
         </li>
       {/if}

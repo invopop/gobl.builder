@@ -41,7 +41,7 @@
 </script>
 
 <nav
-  class="fixed w-full z-50 h-14 flex items-center justify-between bg-background-500 py-2 px-5 space-x-1"
+  class="fixed w-full z-50 h-14 flex items-center justify-between bg-gobl-900 py-2 px-5 space-x-1"
   aria-label="main navigation"
 >
   <div class="flex items-center">
@@ -86,7 +86,7 @@
     <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
   </div>
   <button
-    class="md:hidden p-1.5 border border-neutral-300"
+    class="md:hidden p-1.5 border border-gobl-300"
     on:click={() => {
       mobileMenuOpen = !mobileMenuOpen;
     }}
@@ -99,7 +99,7 @@
   </button>
 </nav>
 {#if mobileMenuOpen}
-  <div class="absolute md:hidden mt-14 bg-background-500 inset-0 z-10 px-3 py-2">
+  <div class="absolute md:hidden mt-14 bg-gobl-900 inset-0 z-10 px-3 py-2">
     <div class="flex">
       <DocLoader
         on:load={(event) => {
@@ -118,13 +118,13 @@
         />
       </div>
     </div>
-    <hr class="my-5 border-neutral-300" />
+    <hr class="my-5 border-gobl-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
     {#if state !== "init"}
-      <hr class="my-5 border-neutral-300" />
+      <hr class="my-5 border-gobl-300" />
       <BuilderNavbarEnvelopeMeta {state} on:action />
     {/if}
-    <hr class="my-5 border-neutral-300" />
+    <hr class="my-5 border-gobl-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
         {state}

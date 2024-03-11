@@ -278,7 +278,7 @@
 <div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
     <div class="h-full absolute inset-0 flex flex-col">
-      <div class="py-2 pl-16 pr-5 flex items-center justify-between border-b border-neutral-100">
+      <div class="h-12 pl-[54px] pr-[14px] flex items-center justify-between border-b border-neutral-100">
         <div class="overflow-x-auto">
           {#if editorView === "code"}
             <p class="text-sm text-neutral-500">You are in developer mode</p>
