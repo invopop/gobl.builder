@@ -21,11 +21,14 @@
   export let model: UIModelRootField | UIModelField | undefined = undefined;
   export let readOnly = false;
   export let modal = false;
+  export let center = false;
 
   $: wrapperClasses = clsx({
-    "py-5 pb-40 justify-start": !modal,
+    "py-5 pb-40": !modal,
     "px-8": !modal && readOnly,
     "px-[48px]": !modal && !readOnly,
+    "justify-center": center,
+    "justify-start": !center,
   });
 
   $: classes = clsx({
@@ -53,7 +56,7 @@
 </script>
 
 <div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
-  <div class="{wrapperClasses} flex text-sm">
+  <div class="{wrapperClasses} flex">
     <div class={classes}>
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />

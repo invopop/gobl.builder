@@ -56,6 +56,7 @@
         {jsonSchemaURL}
         editorView="code"
         signEnabled
+        centerEditor
         {forceReadOnly}
         on:change={(event) => {
           envelope = event.detail.envelope;

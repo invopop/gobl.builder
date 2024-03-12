@@ -58,6 +58,9 @@
   // Whether shows the code or the form editor
   export let editorView = "code";
 
+  // Whether centers the form editor on the screen
+  export let centerEditor = false;
+
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
 
@@ -296,6 +299,7 @@
           <EditorForm
             bind:this={editorForm}
             {forceReadOnly}
+            center={centerEditor}
             on:setState={(event) => {
               state = event.detail;
             }}
