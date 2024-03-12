@@ -19,7 +19,7 @@ module.exports = {
     extend: {
       fontSize: {
         sm: ["13px", "18.20px"],
-        base: ["15px", "21.75px"],
+        base: ["14px", "20px"],
         xl: ["19px", "28px"],
         "3xl": ["27px", "32px"],
       },
@@ -67,7 +67,7 @@ module.exports = {
         tightest: "-0.567px",
         tighter: "-0.304px",
         tight: "-0.135px",
-        normal: "-0.039px",
+        normal: "-0.07px",
         wide: "0.055px",
       },
     },

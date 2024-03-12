@@ -15,7 +15,7 @@
 </script>
 
 {#if $documentHeaders.length && !$documentHeaders[0].slug.includes("root")}
-  <ul class="flex space-x-5">
+  <ul class="flex items-center space-x-5 h-full">
     {#each $documentHeaders as header}
       <li
         class:font-medium={$activeSection.section === header.slug}
@@ -32,7 +32,7 @@
           {header.label}
         </button>
         {#if $activeSection.section === header.slug}
-          <div class="border-b absolute -bottom-[14px] border-black w-full"></div>
+          <div class="border-b absolute bottom-[-14px] border-black w-full z-20"></div>
         {/if}
       </li>
     {/each}
