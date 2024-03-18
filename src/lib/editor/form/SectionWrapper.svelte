@@ -69,7 +69,7 @@
   }
 </script>
 
-<div bind:this={element} id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r rounded-r">
+<div bind:this={element} id={field.id} title={label} class="{wrapperClasses} border-t border-b border-r">
   {#if isSection}
     <div use:intersect={intersectOptions}></div>
   {/if}

@@ -58,9 +58,6 @@
   // Whether shows the code or the form editor
   export let editorView = "code";
 
-  // Whether centers the form editor on the screen
-  export let centerEditor = false;
-
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
 
@@ -281,7 +278,9 @@
 <div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
     <div class="h-full absolute inset-0 flex flex-col">
-      <div class="h-12 pl-[54px] pr-[14px] flex items-center justify-between border-b border-neutral-100 space-x-2">
+      <div
+        class="h-12 editor-bar-padding-left pr-[14px] flex items-center justify-between border-b border-neutral-100 space-x-2"
+      >
         <div class="overflow-x-auto h-full hidescroll">
           {#if editorView === "code"}
             <p class="text-base text-neutral-400 h-full flex items-center">{`{ Developer mode }`}</p>
@@ -299,7 +298,6 @@
           <EditorForm
             bind:this={editorForm}
             {forceReadOnly}
-            center={centerEditor}
             on:setState={(event) => {
               state = event.detail;
             }}
@@ -356,3 +354,9 @@
     </div>
   </div>
 </ToastContainer>
+
+<style>
+  .editor-bar-padding-left {
+    padding-left: var(--editor-padding-left, 54px);
+  }
+</style>

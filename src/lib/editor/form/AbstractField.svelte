@@ -47,7 +47,7 @@
   $: wrapperClasses = clsx({
     "bg-neutral-50 border-neutral-100": isHover && !isParent,
     "border-transparent": !isHover,
-    border: !isParent,
+    "border-l border-t border-b": !isParent,
     "pl-2": isParent && !isSection,
   });
   $: classes = clsx({
@@ -56,7 +56,7 @@
     "border-neutral-200": !highlight,
   });
   $: contextMenuClasses = clsx({
-    "pt-2": isParent && !isSection && !field.is.root,
+    "mt-1": isParent && !isSection && !field.is.root,
   });
 
   function handleHover(e: CustomEvent<boolean>) {
@@ -153,7 +153,7 @@
   on:keydown={handleKeyDown}
   on:focusin={handleFocusIn}
 >
-  <div class="{wrapperClasses} rounded flex" class:my-1={isParent}>
+  <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
       <div class="{classes} w-2 border-l border-t border-b flex-none rounded-l"></div>
     {/if}
@@ -171,8 +171,11 @@
       />
     </div>
   </div>
-  <div class="absolute top-0 right-0">
-    <span class="{contextMenuClasses} absolute top-0 left-0 mt-1 pl-2" class:invisible={!showContextMenu}>
+  <div class="absolute top-0 right-0 w-9 h-10 -mr-9">
+    <span
+      class="{contextMenuClasses} absolute top-0 left-0 -ml-px pt-[7px] pr-2 pb-[5.5px] bg-neutral-50 border-t border-b border-r border-neutral-100 rounded-r border-l-neutral-50 border-l"
+      class:invisible={!showContextMenu}
+    >
       <FieldContextMenu
         {field}
         on:addField={handleAddField}

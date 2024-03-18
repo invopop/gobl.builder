@@ -30,7 +30,6 @@
   recreateFormEditor();
 
   export let forceReadOnly = false;
-  export let center = false;
 
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
@@ -119,7 +118,6 @@
       model={$uiModel.value}
       readOnly={$envelopeIsSigned || forceReadOnly}
       {showSchemaField}
-      {center}
       {isEmptySchema}
       on:uiRefreshNeeded={handleFormUpdated}
       on:fieldKeyUpdated={handleFieldUpdated}
