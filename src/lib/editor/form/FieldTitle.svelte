@@ -9,10 +9,10 @@
   $: isParent = ["object", "array"].includes(field.type);
   $: isSection = field.is.root || (field.parent?.is.root && isParent);
   $: classes = clsx({
-    "font-semibold text-neutral-900 text-base": isParent,
-    "tracking-tight": isParent && !isSection,
-    "text-xl text-neutral-900 tracking-tighter": isSection,
-    "text-neutral-500 text-sm tracking-normal": !isSection && !isParent,
+    "font-medium text-neutral-800": isParent,
+    "tracking-normal text-base": isParent && !isSection,
+    "text-lg tracking-tighter": isSection,
+    "text-neutral-500 text-base tracking-normal": !isSection && !isParent,
   });
 </script>
 

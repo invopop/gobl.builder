@@ -52,6 +52,6 @@
     </li>
   {/if}
   <li>
-    <FieldButton icon={Options} />
+    <FieldButton icon={Options} disabled />
   </li>
 </ul>

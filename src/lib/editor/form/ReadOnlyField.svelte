@@ -44,7 +44,7 @@
 <button
   id={field.id}
   on:click={handleClick}
-  class="{classes} font-medium text-neutral-800 text-base px-3 outline-none w-full tracking-tight"
+  class="{classes} text-neutral-800 text-base px-3 outline-none w-full tracking-normal"
 >
   {value}
 </button>
