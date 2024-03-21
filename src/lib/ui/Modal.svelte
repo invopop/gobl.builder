@@ -14,7 +14,7 @@
 
 <!-- Main modal -->
 <div>
-  <div class="bg-neutral-800/80 backdrop-blur-[20px] fixed inset-0 z-40" />
+  <div class="editor-modal fixed inset-0 z-40" />
   <div
     tabindex="-1"
     class="fixed top-0 left-0 right-0 z-50 w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full justify-center items-center flex"
@@ -50,3 +50,10 @@
     </div>
   </div>
 </div>
+
+<style>
+  .editor-modal {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+  }
+</style>

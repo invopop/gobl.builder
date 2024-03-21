@@ -15,6 +15,7 @@
   import type { Envelope } from "$lib/types/envelope.js";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { getErrorString } from "$lib/helpers";
+  import clsx from "clsx";
 
   let monaco: typeof Monaco;
 
@@ -52,6 +53,11 @@
   $: forceReadOnly, setEditorReadOnly();
 
   $: showErrorConsole = !forceReadOnly && !$envelope?.sigs;
+
+  $: editorClasses = clsx({
+    "pb-9": showErrorConsole && drawerClosed,
+    "pb-[180px]": showErrorConsole && !drawerClosed,
+  });
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
@@ -133,16 +139,20 @@
       const errorString =
         parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
 
-      monaco.editor.setModelMarkers(model, "gobl", [
-        {
-          message: `${errorString} (code: ${parsedError.code})`,
+      const errorsArr = errorString.split(" / ");
+
+      monaco.editor.setModelMarkers(
+        model,
+        "gobl",
+        errorsArr.map((message: string) => ({
+          message,
           severity: monaco.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
           endColumn: 1,
-        },
-      ]);
+        })),
+      );
     });
 
     unsubscribeEditor = editor.subscribe(({ value }) => {
@@ -309,7 +319,7 @@
 </script>
 
 <div class="flex flex-col h-full">
-  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
+  <div class="{editorClasses} flex-1 overflow-hidden" bind:this={editorEl} />
   {#if showErrorConsole}
     <div class="w-full">
       <div
@@ -398,3 +408,9 @@
     </div>
   {/if}
 </div>
+
+<style>
+  :global(.monaco-editor) {
+    position: absolute !important;
+  }
+</style>

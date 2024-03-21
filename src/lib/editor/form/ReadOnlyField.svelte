@@ -22,11 +22,7 @@
     if (field.controlType === "date") {
       const dateObject = new Date(value);
 
-      return dateObject.toLocaleDateString(Intl.DateTimeFormat().resolvedOptions().locale, {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      return dateObject.toISOString().split("T")[0];
     }
 
     return value;

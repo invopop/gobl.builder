@@ -37,20 +37,26 @@ export function formatErrors(error: string): string[] {
   return errors;
 }
 
-export function getErrorString(errorObj: Record<string, object | string>, currentPath = "") {
+export function getErrorString(errorObj: Record<string, object | string>) {
+  const errorString = parseErrorString(errorObj);
+
+  return errorString.substring(3);
+}
+
+export function parseErrorString(errorObj: Record<string, object | string>, currentPath = "") {
   let errorString = "";
 
   for (const [key, value] of Object.entries(errorObj)) {
     const newPath = currentPath ? `${currentPath} > ${key}` : key;
 
     if (typeof value === "object" && value !== null) {
-      errorString += getErrorString(value as Record<string, object | string>, newPath);
+      errorString += parseErrorString(value as Record<string, object | string>, newPath);
     } else {
-      errorString += `${errorString.length ? " / " : ""}${newPath}: ${value}`;
+      errorString += ` / ${newPath}: ${value}`;
     }
   }
 
-  return errorString.trim();
+  return errorString;
 }
 
 export function showErrorToast(description: string) {
@@ -60,10 +66,17 @@ export function showErrorToast(description: string) {
   });
 }
 
-export function displayAllErrors(error: string) {
+export async function displayAllErrors(error: string) {
   const parsedError = JSON.parse(error);
   const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
-  showErrorToast(errorMessage);
+  const errorsArr = errorMessage.split(" / ");
+
+  for (let i = 0; i < errorsArr.length; i++) {
+    showErrorToast(errorsArr[i]);
+    // Force to await 10 ms so toast component does not break
+    // https://github.com/mzohaibqc/svelte-toasts/issues/6
+    await new Promise((resolve) => setTimeout(resolve, 10));
+  }
 }
 
 export function objectHasEmptyProperties(obj: Record<string, unknown>) {
