@@ -86,6 +86,12 @@
 <style>
   .editor-wrapper {
     justify-content: var(--editor-justify-content, center);
-    padding-left: calc(var(--editor-padding-left, 54px) - 20px);
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+  @media (min-width: 768px) {
+    .editor-wrapper {
+      padding-left: calc(var(--editor-padding-left, 54px) - 20px);
+    }
   }
 </style>
