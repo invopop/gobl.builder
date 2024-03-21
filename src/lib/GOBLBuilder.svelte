@@ -9,7 +9,7 @@
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
-  import type { State } from "./types/editor";
+  import type { DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
   import EditorFormModalSignatures from "./editor/form/modals/EditorFormModalSignatures.svelte";
@@ -59,6 +59,12 @@
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
 
+  // Expose document headers to navigate to a specific section from outside
+  export let headers: DocumentHeader[] = [];
+
+  // Expose activeHeader
+  export let activeHeader: DocumentHeader | undefined = undefined;
+
   let editorForm: EditorForm | null = null;
   let openCorrectModal = false;
   let openHeadersModal = false;
@@ -68,7 +74,7 @@
 
   const builderContext = createBuilderContext();
 
-  const { editor, jsonSchema, envelope, envelopeIsSigned } = builderContext;
+  const { editor, jsonSchema, envelope, envelopeIsSigned, activeSection, documentHeaders } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
@@ -116,6 +122,22 @@
       message: problem.message,
       severity: problemSeverityMap[problem.severity],
     }));
+  });
+
+  // This keeps headers array prop in sync with document headers
+  documentHeaders.subscribe((h) => {
+    headers = h;
+  });
+
+  // This keeps activeHeader prop in sync with active section
+  activeSection.subscribe((section) => {
+    const header = $documentHeaders.find((h) => h.slug === section.section);
+
+    if (header) {
+      header.active = true;
+    }
+
+    activeHeader = header;
   });
 
   const setState = (editorValue: string) => {
@@ -270,6 +292,13 @@
       type: "success",
       description: "Downloaded JSON file of GOBL document.",
     });
+  };
+
+  export const setActive = (header: DocumentHeader) => {
+    $activeSection = {
+      section: header.slug,
+      scroll: true,
+    };
   };
 </script>
 
