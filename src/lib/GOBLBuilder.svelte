@@ -146,12 +146,17 @@
       return;
     }
 
+    if ($envelope?.sigs) {
+      state = "signed";
+      return;
+    }
+
     if (editorValue !== initialEditorData) {
       state = "modified";
       return;
     }
 
-    state = $envelope?.sigs ? "signed" : "loaded";
+    state = "loaded";
   };
 
   // Exposed functions to perform the actions from outside
