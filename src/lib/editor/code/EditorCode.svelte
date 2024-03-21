@@ -15,7 +15,6 @@
   import type { Envelope } from "$lib/types/envelope.js";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { getErrorString } from "$lib/helpers";
-  import clsx from "clsx";
 
   let monaco: typeof Monaco;
 
@@ -53,11 +52,6 @@
   $: forceReadOnly, setEditorReadOnly();
 
   $: showErrorConsole = !forceReadOnly && !$envelope?.sigs;
-
-  $: editorClasses = clsx({
-    "pb-9": showErrorConsole && drawerClosed,
-    "pb-[180px]": showErrorConsole && !drawerClosed,
-  });
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
@@ -319,7 +313,7 @@
 </script>
 
 <div class="flex flex-col h-full">
-  <div class="{editorClasses} flex-1 overflow-hidden" bind:this={editorEl} />
+  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
   {#if showErrorConsole}
     <div class="w-full">
       <div

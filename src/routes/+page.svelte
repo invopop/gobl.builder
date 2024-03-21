@@ -13,6 +13,7 @@
   let state: State = "init";
   let forceReadOnly = false;
   let envelope = "";
+  let editorView = "code";
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -42,6 +43,7 @@
     {defaultSchema}
     {envelope}
     bind:forceReadOnly
+    bind:editorView
     on:load={handleDocLoad}
     on:action={handleAction}
     on:schemaChanged={handleSchemaChange}
@@ -54,7 +56,7 @@
         bind:data
         bind:problems
         {jsonSchemaURL}
-        editorView="code"
+        {editorView}
         signEnabled
         {forceReadOnly}
         on:change={(event) => {

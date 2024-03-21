@@ -21,8 +21,6 @@
   import type { Envelope } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
   import { createBuilderContext } from "./store/builder";
-  import EditorBar from "./editor/bar/EditorBar.svelte";
-  import EditorBarSections from "./editor/bar/EditorBarSections.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -278,19 +276,6 @@
 <div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
     <div class="h-full absolute inset-0 flex flex-col">
-      <div
-        class="h-12 editor-bar-padding-left pr-[14px] flex items-center justify-between border-b border-neutral-100 space-x-2"
-      >
-        <div class="overflow-x-auto h-full hidescroll">
-          {#if editorView === "code"}
-            <p class="text-base text-neutral-400 h-full flex items-center">{`{ Developer mode }`}</p>
-          {:else}
-            <EditorBarSections />
-          {/if}
-        </div>
-
-        <EditorBar bind:editorView />
-      </div>
       <div class="flex-1 overflow-auto">
         {#if editorView === "code"}
           <EditorCode {jsonSchemaURL} {forceReadOnly} />
@@ -354,9 +339,3 @@
     </div>
   </div>
 </ToastContainer>
-
-<style>
-  .editor-bar-padding-left {
-    padding-left: var(--editor-padding-left, 54px);
-  }
-</style>

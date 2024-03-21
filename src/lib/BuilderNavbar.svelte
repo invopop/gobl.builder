@@ -13,6 +13,7 @@
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Menu, Close } from "@invopop/ui-icons";
   import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
+  import BuilderNavbarView from "./BuilderNavbarView.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -22,6 +23,7 @@
   export let forceReadOnly = false;
   export let state: State = "init";
   export let envelope = "";
+  export let editorView = "code";
 
   let mobileMenuOpen = false;
   let schemasList: ListOption[] = [];
@@ -70,6 +72,10 @@
   </div>
 
   <div class="hidden md:flex items-center space-x-3">
+    <BuilderNavbarView bind:editorView />
+
+    <BuilderNavbarSeparator />
+
     <BuilderNavbarOptions bind:forceReadOnly />
 
     {#if state !== "init"}
@@ -118,6 +124,8 @@
         />
       </div>
     </div>
+    <hr class="my-5 border-gobl-300" />
+    <BuilderNavbarView bind:editorView />
     <hr class="my-5 border-gobl-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
     {#if state !== "init"}
