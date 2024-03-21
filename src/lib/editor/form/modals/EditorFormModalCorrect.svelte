@@ -17,5 +17,5 @@
   on:close
   on:confirm={() => dispatch("correct")}
 >
-  <DynamicForm modal model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
+  <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
 </Modal>

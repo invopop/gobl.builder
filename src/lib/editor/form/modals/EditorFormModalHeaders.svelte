@@ -28,6 +28,6 @@
 
 <Modal title="Headers" on:close on:confirm={handleConfirm}>
   {#if headerModel}
-    <DynamicForm modal model={headerModel} on:uiRefreshNeeded={(event) => (headerModel = event.detail)} />
+    <DynamicForm model={headerModel} on:uiRefreshNeeded={(event) => (headerModel = event.detail)} />
   {/if}
 </Modal>

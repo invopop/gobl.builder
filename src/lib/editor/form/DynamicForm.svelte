@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { clsx } from "clsx";
-
   import SchemaField from "./SchemaField.svelte";
   import AbstractField from "./AbstractField.svelte";
   import type { UIModelRootField, UIModelField } from "./utils/model";
@@ -20,16 +18,6 @@
   export let isEmptySchema = false;
   export let model: UIModelRootField | UIModelField | undefined = undefined;
   export let readOnly = false;
-  export let modal = false;
-
-  $: wrapperClasses = clsx({
-    "pt-5 pb-40": !modal,
-  });
-
-  $: classes = clsx({
-    "w-[500px]": modal,
-    "w-full max-w-[632px]": !modal,
-  });
 
   const handleScroll = () => {
     $scrollPosition = formElement.scrollTop;
@@ -51,8 +39,8 @@
 </script>
 
 <div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
-  <div class="{wrapperClasses} flex editor-wrapper">
-    <div class={classes}>
+  <div class="pt-5 pb-40 flex editor-wrapper">
+    <div class="w-full max-w-[632px]">
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />
       {:else if model}
@@ -86,7 +74,6 @@
 <style>
   .editor-wrapper {
     justify-content: var(--editor-justify-content, center);
-    padding-left: 40px;
     padding-right: 40px;
   }
   @media (min-width: 768px) {

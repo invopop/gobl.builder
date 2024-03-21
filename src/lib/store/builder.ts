@@ -93,8 +93,6 @@ export function createBuilderContext(): BuilderContext {
   const documentHeaders = derived(uiModel, ($uiModel) => {
     const fields = $uiModel.value;
 
-    console.log(fields);
-
     if (!fields) return [];
 
     const rootKey = fields.key;
