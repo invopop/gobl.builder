@@ -1,18 +1,25 @@
 <script lang="ts">
   import type { EditorProblem } from "$lib/editor/EditorProblem.js";
-  import GOBLBuilder from "$lib/GOBLBuilder.svelte";
+  import EnvelopeEditor from "$lib/EnvelopeEditor.svelte";
   import type { State } from "$lib/types/editor";
   import BuilderNavbar from "$lib/BuilderNavbar.svelte";
-  import type { GOBLDocument } from "$lib/types/envelope";
+  import type { EnvelopeHeader, GOBLDocument } from "$lib/types/envelope";
+  import EditorFormModalSignatures from "$lib/editor/form/modals/EditorFormModalSignatures.svelte";
+  import EditorFormModalHeaders from "$lib/editor/form/modals/EditorFormModalHeaders.svelte";
 
   let data = "";
   let problems: EditorProblem[] = [];
   let jsonSchemaURL = "";
   let defaultSchema = "";
-  let builder: GOBLBuilder;
+  let builder: EnvelopeEditor;
   let state: State = "init";
   let forceReadOnly = false;
   let envelope = "";
+  let editorView = "code";
+  let openSignaturesModal = false;
+  let sigs: string[] | null = null;
+  let openHeadersModal = false;
+  let header: EnvelopeHeader | null = null;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -31,30 +38,43 @@
     jsonSchemaURL = event.detail;
   }
 
-  function handleAction(event: CustomEvent) {
+  async function handleAction(event: CustomEvent) {
+    if (event.detail === "showSignatures") {
+      sigs = await builder.getSignatures();
+      openSignaturesModal = true;
+      return;
+    }
+
+    if (event.detail === "showHeaders") {
+      header = await builder.getHeaders();
+      openHeadersModal = true;
+      return;
+    }
+
     builder[event.detail]();
   }
 </script>
 
-<div class="flex flex-col h-screen bg-background-500">
+<div class="flex flex-col h-screen bg-gobl-900">
   <BuilderNavbar
     {state}
     {defaultSchema}
     {envelope}
     bind:forceReadOnly
+    bind:editorView
     on:load={handleDocLoad}
     on:action={handleAction}
     on:schemaChanged={handleSchemaChange}
   />
   <div class="flex-1 h-full p-1 pt-14">
     <div class="h-full bg-white rounded-t-lg">
-      <GOBLBuilder
+      <EnvelopeEditor
         bind:this={builder}
         bind:state
         bind:data
         bind:problems
         {jsonSchemaURL}
-        editorView="code"
+        {editorView}
         signEnabled
         {forceReadOnly}
         on:change={(event) => {
@@ -80,3 +100,26 @@
     </div>
   </div>
 </div>
+{#if openSignaturesModal}
+  <EditorFormModalSignatures
+    {sigs}
+    on:close={() => {
+      openSignaturesModal = false;
+      sigs = null;
+    }}
+  />
+{/if}
+
+{#if openHeadersModal}
+  <EditorFormModalHeaders
+    {header}
+    on:close={() => {
+      openHeadersModal = false;
+      header = null;
+    }}
+    on:confirm={(event) => {
+      builder.setHeaders(event.detail);
+      openHeadersModal = false;
+    }}
+  />
+{/if}

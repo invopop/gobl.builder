@@ -9,20 +9,16 @@
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
-  import type { State } from "./types/editor";
+  import type { DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
-  import EditorFormModalSignatures from "./editor/form/modals/EditorFormModalSignatures.svelte";
-  import EditorFormModalHeaders from "./editor/form/modals/EditorFormModalHeaders.svelte";
   import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
   import fileSaver from "file-saver";
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
-  import type { Envelope } from "./types/envelope";
+  import type { Envelope, EnvelopeHeader } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
   import { createBuilderContext } from "./store/builder";
-  import { Icon } from "svelte-hero-icons";
-  import { Code, List } from "@invopop/ui-icons";
 
   const dispatch = createEventDispatcher();
 
@@ -61,16 +57,20 @@
   // When enabled, it sets the editor as readOnly even if the document is not signed
   export let forceReadOnly = false;
 
+  // Expose document headers to navigate to a specific section from outside
+  export let headers: DocumentHeader[] = [];
+
+  // Expose activeHeader
+  export let activeHeader: DocumentHeader | undefined = undefined;
+
   let editorForm: EditorForm | null = null;
   let openCorrectModal = false;
-  let openHeadersModal = false;
-  let openSignaturesModal = false;
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
   const builderContext = createBuilderContext();
 
-  const { editor, jsonSchema, envelope, envelopeIsSigned } = builderContext;
+  const { editor, jsonSchema, envelope, envelopeIsSigned, activeSection, documentHeaders } = builderContext;
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
@@ -120,9 +120,30 @@
     }));
   });
 
+  // This keeps headers array prop in sync with document headers
+  documentHeaders.subscribe((h) => {
+    headers = h;
+  });
+
+  // This keeps activeHeader prop in sync with active section
+  activeSection.subscribe((section) => {
+    const header = $documentHeaders.find((h) => h.slug === section.section);
+
+    if (header) {
+      header.active = true;
+    }
+
+    activeHeader = header;
+  });
+
   const setState = (editorValue: string) => {
     if (!editorValue) {
       state = "empty";
+      return;
+    }
+
+    if ($envelope?.sigs) {
+      state = "signed";
       return;
     }
 
@@ -131,7 +152,7 @@
       return;
     }
 
-    state = $envelope?.sigs ? "signed" : "loaded";
+    state = "loaded";
   };
 
   // Exposed functions to perform the actions from outside
@@ -248,16 +269,22 @@
     editorForm.recreateFormEditor();
   };
 
-  export const showHeaders = async () => {
-    openHeadersModal = true;
+  export const getHeaders = async () => {
+    return $envelope.head || null;
   };
 
-  export const showSignatures = async () => {
+  export const setHeaders = async (headers: EnvelopeHeader) => {
+    if (!$envelope) return;
+
+    $envelope.head = headers;
+  };
+
+  export const getSignatures = async () => {
     if (!$envelopeIsSigned) {
-      return;
+      return null;
     }
 
-    openSignaturesModal = true;
+    return $envelope.sigs || null;
   };
 
   export const downloadJson = () => {
@@ -273,12 +300,19 @@
       description: "Downloaded JSON file of GOBL document.",
     });
   };
+
+  export const setActive = (header: DocumentHeader) => {
+    $activeSection = {
+      section: header.slug,
+      scroll: true,
+    };
+  };
 </script>
 
 <div class="@container flex flex-col h-full editor">
   <div class="flex-1 overflow-hidden">
-    <div class="h-full absolute inset-0 flex">
-      <div class="flex-1">
+    <div class="h-full absolute inset-0 flex flex-col">
+      <div class="flex-1 overflow-auto">
         {#if editorView === "code"}
           <EditorCode {jsonSchemaURL} {forceReadOnly} />
         {:else}
@@ -290,36 +324,6 @@
             }}
           />
         {/if}
-      </div>
-      <div>
-        <div class="pt-[18px] pr-5">
-          <div class="inline-flex space-x-0.5 p-0.5 rounded bg-neutral-100">
-            <button
-              title="Form view"
-              class:bg-white={editorView === "form"}
-              class="{editorView === 'form'
-                ? 'text-neutral-800'
-                : 'text-neutral-500 '} rounded p-1 hover:bg-white hover:text-neutral-800"
-              on:click={() => {
-                editorView = "form";
-              }}
-            >
-              <Icon src={List} class="h-5 w-5" />
-            </button>
-            <button
-              title="Code view"
-              class:bg-white={editorView === "code"}
-              class="{editorView === 'code'
-                ? 'text-neutral-800'
-                : 'text-neutral-500 '} rounded p-1 hover:bg-white hover:text-neutral-800"
-              on:click={() => {
-                editorView = "code";
-              }}
-            >
-              <Icon src={Code} class="h-5 w-5" />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -333,22 +337,6 @@
     }}
     on:correct={() => {
       correctWithOptions(correctionModel?.root.toJSON() || "");
-    }}
-  />
-{/if}
-
-{#if openHeadersModal}
-  <EditorFormModalHeaders
-    on:close={() => {
-      openHeadersModal = false;
-    }}
-  />
-{/if}
-
-{#if openSignaturesModal}
-  <EditorFormModalSignatures
-    on:close={() => {
-      openSignaturesModal = false;
     }}
   />
 {/if}

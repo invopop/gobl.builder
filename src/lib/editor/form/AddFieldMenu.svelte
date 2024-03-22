@@ -5,6 +5,8 @@
   import { sleep } from "./utils/sleep.js";
   import type { SchemaOption, UIModelField } from "./utils/model.js";
   import clickOutside from "$lib/clickOutside.js";
+  import { Icon } from "svelte-hero-icons";
+  import { Search } from "@invopop/ui-icons";
 
   export let field: UIModelField;
   export let inputRef: HTMLElement | undefined = undefined;
@@ -123,28 +125,31 @@
   use:clickOutside
   on:close={handleCloseMenu}
 >
-  <div class="p-2">
+  <div class="px-2 pt-2 pb-1 relative">
     <input
-      class="rounded py-1.5 pr-3 pl-2 outline-none w-full placeholder-grey-3 focus:placeholder-grey-3 border"
+      class="rounded-md py-1.5 pr-3 pl-7 outline-none w-full placeholder-neutral-500 focus:placeholder-neutral-500 border text-base tracking-normal"
       placeholder="Search"
       bind:value={filterStr}
       bind:this={inputRef}
       on:focus={handleOpenMenu}
       on:keydown={handleKeyDown}
     />
+    <span class="absolute top-4 left-4 mt-px text-neutral-500">
+      <Icon src={Search} class="w-4 h-4" />
+    </span>
   </div>
   <div transition:fade={{ duration: 200 }}>
-    <ul class="list-none max-h-80 overflow-auto p-1" role="menu" bind:this={menuRef}>
+    <ul class="list-none max-h-80 overflow-auto p-1 space-y-0.5" role="menu" bind:this={menuRef}>
       {#if options.length}
         {#each options as opt, i (opt.key)}
           <li
-            class="px-2 py-1.5 rounded flex items-center justify-between space-x-2"
+            class="pl-2 pr-1.5 py-1.5 rounded flex items-center justify-between space-x-2"
             class:bg-neutral-50={i === focusedOptionIndex}
             on:hover={() => handleHoverListItem(i)}
             use:hover
           >
             <label class="flex justify-between w-full">
-              <span class="text-neutral-800 text-sm font-medium">
+              <span class="text-neutral-800 text-base font-medium">
                 <span>{opt.schema.title || opt.key}</span>
                 {#if opt.schema.calculated}
                   <span class="text-xs text-gray-700">(Calculated)</span>
@@ -163,11 +168,8 @@
         {/each}
       {:else}
         <li>
-          <span class="w-full py-3 px-6 text-grey-5 text-left">
+          <span class="w-full py-3 px-6 text-neutral-500 text-left">
             <span>No items found</span>
-            {#if filterStr}
-              <span>matching filter: <strong>"{filterStr}"</strong></span>
-            {/if}
           </span>
         </li>
       {/if}
@@ -175,9 +177,10 @@
     <div class="pb-2 pt-1 px-2">
       <button
         on:click={handleAddFields}
-        class="flex items-center justify-center rounded border font-medium bg-accent-500 text-white px-3 py-1.5 w-full"
-        >Add items</button
+        class="flex items-center justify-center rounded-md font-medium bg-accent-500 text-white px-2 py-1 w-full text-base"
       >
+        Add items
+      </button>
     </div>
   </div>
 </div>

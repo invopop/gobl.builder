@@ -3,24 +3,26 @@ export interface GOBLDocument {
   [key: string]: unknown;
 }
 
+export interface EnvelopeHeader {
+  uuid?: string;
+  dig?: {
+    alg: string;
+    val: string;
+  };
+  stamps?: Array<{
+    prv: string;
+    val: string;
+  }>;
+  tags?: string[];
+  meta?: Record<string, unknown>;
+  notes?: string;
+  draft?: boolean;
+}
+
 export interface Envelope {
   $schema: string;
   doc?: Document | null;
-  head?: {
-    uuid?: string;
-    dig?: {
-      alg: string;
-      val: string;
-    };
-    stamps?: Array<{
-      prv: string;
-      val: string;
-    }>;
-    tags?: string[];
-    meta?: Record<string, unknown>;
-    notes?: string;
-    draft?: boolean;
-  };
+  head?: EnvelopeHeader;
   sigs?: string[];
 }
 

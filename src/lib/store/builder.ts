@@ -90,6 +90,27 @@ export function createBuilderContext(): BuilderContext {
     { value: undefined as UIModelRootField | undefined, updatedAt: 0 },
   );
 
+  const documentHeaders = derived(uiModel, ($uiModel) => {
+    const fields = $uiModel.value;
+
+    if (!fields) return [];
+
+    const rootKey = fields.key;
+    const root = { slug: fields.id, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
+    const items =
+      fields.children
+        ?.filter((f) => ["object", "array"].includes(f.type))
+        .map((f) => ({
+          slug: f.id,
+          label: f.schema.title || "",
+          active: false,
+        })) || [];
+
+    items.unshift(root);
+
+    return items;
+  });
+
   /** -- METHODS -- */
 
   async function updateSchema(value: string) {
@@ -142,6 +163,7 @@ export function createBuilderContext(): BuilderContext {
     activeItem,
     highlightedItem,
     scrollingSection,
+    documentHeaders,
   });
 }
 

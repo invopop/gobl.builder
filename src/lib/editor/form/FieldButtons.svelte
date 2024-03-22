@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import type { UIModelField } from "./utils/model.js";
   import FieldButton from "./FieldButton.svelte";
+  import { Options } from "@invopop/ui-icons";
 
   export let field: UIModelField | undefined = undefined;
 
@@ -15,7 +16,10 @@
   $: canMoveDown = canMove && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
 </script>
 
-<ul class="flex space-x-2 rounded border border-neutral-200 p-1">
+<ul
+  style="box-shadow: 0px 8px 30px 0px rgba(10, 10, 10, 0.12)"
+  class="flex space-x-2 rounded-md border border-neutral-200 py-1 px-[5px] bg-white"
+>
   {#if showAdd}
     <li>
       <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
@@ -47,4 +51,7 @@
       />
     </li>
   {/if}
+  <li>
+    <FieldButton icon={Options} disabled />
+  </li>
 </ul>

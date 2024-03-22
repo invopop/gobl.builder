@@ -27,7 +27,7 @@
           <h3 class="text-3xl font-semibold text-gray-800">{title}</h3>
         </div>
         <!-- Modal body -->
-        <div class="px-6 overflow-x-auto">
+        <div class="overflow-x-auto">
           <slot />
         </div>
         <div class="px-6 pb-6 pt-5 flex items-center justify-end space-x-3">

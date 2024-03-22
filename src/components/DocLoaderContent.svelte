@@ -46,7 +46,7 @@
             class="pl-2 pr-3 py-[5px] border rounded border-transparent hover:border-neutral-200 hover:bg-neutral-100"
           >
             <button
-              class="text-left w-full text-sm font-medium text-background-500"
+              class="text-left w-full text-sm font-medium text-gobl-900"
               on:click={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}
             >
               {template.name}
@@ -83,7 +83,7 @@
             class="pl-2 pr-3 py-[5px] border rounded border-transparent hover:border-neutral-200 hover:bg-neutral-100"
           >
             <button
-              class="text-left w-full text-sm font-medium text-background-500"
+              class="text-left w-full text-sm font-medium text-gobl-900"
               on:click={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}
             >
               {template.name}

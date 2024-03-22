@@ -2,7 +2,6 @@
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
-  import type { DocumentHeader } from "$lib/types/editor.js";
   import { createEventDispatcher, setContext } from "svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { writable } from "svelte/store";
@@ -20,7 +19,6 @@
     recreatingUiModel,
     updateSchema,
     envelopeIsSigned,
-    activeSection,
   } = builderContext;
 
   setContext("editorId", editorId);
@@ -33,8 +31,6 @@
 
   export let forceReadOnly = false;
 
-  let documentHeaders: DocumentHeader[] = [];
-
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
@@ -43,27 +39,6 @@
   $: {
     updateSchemaIfNeeded($jsonSchema || "");
   }
-
-  // Update documentHeaders on editor change
-  uiModel.subscribe((model) => {
-    const fields = model.value;
-    if (!fields) return;
-
-    const rootKey = fields.key;
-    const root = { slug: fields.id, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
-    const items =
-      fields.children
-        ?.filter((f) => ["object", "array"].includes(f.type))
-        .map((f) => ({
-          slug: f.id,
-          label: f.schema.title || "",
-          active: false,
-        })) || [];
-
-    items.unshift(root);
-
-    documentHeaders = items;
-  });
 
   function handleKeyDown(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") {
@@ -133,43 +108,11 @@
 
     return isSuccess;
   }
-
-  function setActive(header: DocumentHeader) {
-    $activeSection = {
-      section: header.slug,
-      scroll: true,
-    };
-  }
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="h-full relative flex" id={editorId}>
-  {#if documentHeaders.length && !documentHeaders[0].slug.includes("root")}
-    <div class="hidden @[820px]:block w-[168px] pt-[27px]">
-      <ul>
-        {#each documentHeaders as header}
-          <li
-            class:font-medium={$activeSection.section === header.slug}
-            class:text-neutral-800={$activeSection.section === header.slug}
-            class:text-neutral-400={$activeSection.section !== header.slug}
-            class:border-neutral-800={$activeSection.section === header.slug}
-            class:border-neutral-100={$activeSection.section !== header.slug}
-            class="text-right px-3 py-1.5 text-sm border-r whitespace-nowrap"
-          >
-            <button
-              on:click={() => {
-                setActive(header);
-              }}
-              class="tracking-normal"
-            >
-              {header.label}
-            </button>
-          </li>
-        {/each}
-      </ul>
-    </div>
-  {/if}
   <div class="flex-1">
     <DynamicForm
       model={$uiModel.value}

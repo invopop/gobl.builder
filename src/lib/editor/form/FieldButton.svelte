@@ -1,4 +1,5 @@
 <script lang="ts">
+  import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
   import { Icon, type IconSource } from "svelte-hero-icons";
 
@@ -6,10 +7,18 @@
   export let confirmationIcon: IconSource | null = null;
   export let tooltipText = "";
   export let isDestructive = false;
+  export let disabled = false;
 
   let needsConfirmation = false;
 
   $: buttonIcon = !isDestructive ? icon : needsConfirmation ? confirmationIcon : icon;
+
+  $: classes = clsx({
+    "hover:bg-danger-500 hover:text-white text-danger-500": isDestructive,
+    "hover:bg-neutral-100 text-neutral-800": !isDestructive && !disabled,
+    "bg-neutral-100 text-neutral-500": disabled,
+    "bg-white": !disabled,
+  });
 
   const dispatch = createEventDispatcher();
 
@@ -30,10 +39,9 @@
 
 <button
   title={tooltipText}
+  {disabled}
   on:click={handleClick}
-  class="flex items-center justify-start w-full h-6 px-[4px] py-[3px] bg-white rounded {isDestructive
-    ? 'hover:bg-danger-500 hover:text-white text-danger-500'
-    : 'hover:bg-neutral-100 text-neutral-800'}"
+  class="{classes} flex items-center justify-start w-full h-6 px-[4px] py-[3px] rounded"
 >
   <Icon src={buttonIcon} class="h-4 w-4" />
   {#if isDestructive && needsConfirmation}

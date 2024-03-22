@@ -34,8 +34,8 @@
     const value = e.detail;
     const parsedValue = parseValue(value);
 
-    if (field.is.required) {
-      error = isEmpty(parsedValue) ? "Required field" : "";
+    if (field.is.required && isEmpty(parsedValue)) {
+      error = "Required field";
       return;
     }
 
