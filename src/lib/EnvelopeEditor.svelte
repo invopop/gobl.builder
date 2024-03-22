@@ -12,13 +12,11 @@
   import type { DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
-  import EditorFormModalSignatures from "./editor/form/modals/EditorFormModalSignatures.svelte";
-  import EditorFormModalHeaders from "./editor/form/modals/EditorFormModalHeaders.svelte";
   import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
   import fileSaver from "file-saver";
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
-  import type { Envelope } from "./types/envelope";
+  import type { Envelope, EnvelopeHeader } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
   import { createBuilderContext } from "./store/builder";
 
@@ -67,8 +65,6 @@
 
   let editorForm: EditorForm | null = null;
   let openCorrectModal = false;
-  let openHeadersModal = false;
-  let openSignaturesModal = false;
   let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
@@ -273,16 +269,22 @@
     editorForm.recreateFormEditor();
   };
 
-  export const showHeaders = async () => {
-    openHeadersModal = true;
+  export const getHeaders = async () => {
+    return $envelope.head || null;
   };
 
-  export const showSignatures = async () => {
+  export const setHeaders = async (headers: EnvelopeHeader) => {
+    if (!$envelope) return;
+
+    $envelope.head = headers;
+  };
+
+  export const getSignatures = async () => {
     if (!$envelopeIsSigned) {
-      return;
+      return null;
     }
 
-    openSignaturesModal = true;
+    return $envelope.sigs || null;
   };
 
   export const downloadJson = () => {
@@ -335,22 +337,6 @@
     }}
     on:correct={() => {
       correctWithOptions(correctionModel?.root.toJSON() || "");
-    }}
-  />
-{/if}
-
-{#if openHeadersModal}
-  <EditorFormModalHeaders
-    on:close={() => {
-      openHeadersModal = false;
-    }}
-  />
-{/if}
-
-{#if openSignaturesModal}
-  <EditorFormModalSignatures
-    on:close={() => {
-      openSignaturesModal = false;
     }}
   />
 {/if}

@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { getBuilderContext } from "$lib/store/builder";
   import Modal from "$lib/ui/Modal.svelte";
 
-  const { envelope } = getBuilderContext();
-
-  $: sigs = $envelope?.sigs;
+  export let sigs: string[] | null = null;
 </script>
 
 <Modal title="Signatures" hideConfirmButton on:close>
