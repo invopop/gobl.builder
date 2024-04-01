@@ -1,4 +1,4 @@
 import EnvelopeEditor from "./EnvelopeEditor.svelte";
+import ObjectEditor from "./ObjectEditor.svelte";
 
-export const GOBLBuilder = { EnvelopeEditor };
-export default GOBLBuilder;
+export { EnvelopeEditor, ObjectEditor };
