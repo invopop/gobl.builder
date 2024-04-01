@@ -19,7 +19,7 @@
     if ($scrollingSection) return;
 
     // We only care about intersecting in and off ocurring on the top side
-    if (entry.boundingClientRect.top > 120) return;
+    if (entry.boundingClientRect.top > 300) return;
 
     $activeSection = {
       section: field.id,
