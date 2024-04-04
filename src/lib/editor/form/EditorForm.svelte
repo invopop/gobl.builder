@@ -11,15 +11,8 @@
 
   const builderContext = getBuilderContext();
 
-  const {
-    jsonSchema,
-    currentEditorSchema,
-    someEditorValueIsEmpty,
-    uiModel,
-    recreatingUiModel,
-    updateSchema,
-    envelopeIsSigned,
-  } = builderContext;
+  const { jsonSchema, currentEditorSchema, someEditorValueIsEmpty, uiModel, recreatingUiModel, updateSchema } =
+    builderContext;
 
   setContext("editorId", editorId);
 
@@ -116,7 +109,7 @@
   <div class="flex-1">
     <DynamicForm
       model={$uiModel.value}
-      readOnly={$envelopeIsSigned || forceReadOnly}
+      readOnly={forceReadOnly}
       {showSchemaField}
       {isEmptySchema}
       on:uiRefreshNeeded={handleFormUpdated}
