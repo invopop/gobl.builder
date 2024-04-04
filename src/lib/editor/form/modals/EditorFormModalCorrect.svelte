@@ -1,21 +1,20 @@
 <script lang="ts">
   import Modal from "$lib/ui/Modal.svelte";
-  import { Edit } from "@invopop/ui-icons";
-  import DynamicForm from "../DynamicForm.svelte";
   import type { UIModelField } from "../utils/model";
   import { createEventDispatcher } from "svelte";
+  import ObjectEditor from "$lib/ObjectEditor.svelte";
 
   const dispatch = createEventDispatcher();
 
-  export let correctionModel: UIModelField | undefined;
+  export let model: UIModelField | undefined;
+
+  let editor: ObjectEditor;
+
+  function handleConfirm() {
+    dispatch("confirm", editor.getJson());
+  }
 </script>
 
-<Modal
-  title="Correct"
-  confirmButtonIcon={Edit}
-  confirmButtonText="Correct"
-  on:close
-  on:confirm={() => dispatch("correct")}
->
-  <DynamicForm model={correctionModel} on:uiRefreshNeeded={(event) => (correctionModel = event.detail)} />
+<Modal title="Correct" on:close on:confirm={handleConfirm}>
+  <ObjectEditor bind:this={editor} {model} id="correct" />
 </Modal>
