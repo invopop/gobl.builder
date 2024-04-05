@@ -8,6 +8,7 @@
   const dispatch = createEventDispatcher();
 
   export let state: State = "init";
+  export let isSigned = false;
 </script>
 
 <div class="flex space-x-1 items-center">
@@ -46,8 +47,8 @@
     on:click={() => {
       dispatch("action", "validate");
     }}
-    class={iconButtonClasses(state === "errored")}
-    disabled={state === "errored"}
+    class={iconButtonClasses(state === "errored" || !isSigned)}
+    disabled={state === "errored" || !isSigned}
   >
     <Icon src={SquareCheck} class="w-5 h-5" />
   </button>
