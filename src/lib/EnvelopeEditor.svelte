@@ -11,8 +11,7 @@
   import * as actions from "./editor/actions";
   import type { DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
-  import { generateCorrectOptionsModel, type UIModelField } from "./editor/form/utils/model";
-  import EditorFormModalCorrect from "./editor/form/modals/EditorFormModalCorrect.svelte";
+  import { generateCorrectOptionsModel } from "./editor/form/utils/model";
   import fileSaver from "file-saver";
   import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
   import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
@@ -64,8 +63,6 @@
   export let activeHeader: DocumentHeader | undefined = undefined;
 
   let editorForm: EditorForm | null = null;
-  let openCorrectModal = false;
-  let correctionModel: UIModelField | undefined;
   let initialEditorData = "";
 
   const builderContext = createBuilderContext();
@@ -178,7 +175,7 @@
     return state;
   };
 
-  export const correct = async () => {
+  export const getCorrectionOptionsModel = async () => {
     const result = await actions.getCorrectionOptionsSchema(builderContext);
 
     if (!result?.schema) {
@@ -187,8 +184,7 @@
       return;
     }
 
-    correctionModel = await generateCorrectOptionsModel(result?.schema || "");
-    openCorrectModal = true;
+    return await generateCorrectOptionsModel(result?.schema || "");
   };
 
   export const correctWithOptions = async (options: string) => {
@@ -197,16 +193,16 @@
     if (result?.error) {
       state = "errored";
       displayAllErrors(result?.error?.message || "");
-      return;
+      return false;
     }
-
-    openCorrectModal = false;
 
     state = "corrected";
 
-    if (!editorForm) return;
+    if (!editorForm) return true;
 
     editorForm.recreateFormEditor();
+
+    return true;
   };
 
   export const sign = async () => {
@@ -328,18 +324,6 @@
     </div>
   </div>
 </div>
-
-{#if openCorrectModal}
-  <EditorFormModalCorrect
-    bind:correctionModel
-    on:close={() => {
-      openCorrectModal = false;
-    }}
-    on:correct={() => {
-      correctWithOptions(correctionModel?.root.toJSON() || "");
-    }}
-  />
-{/if}
 
 <ToastContainer let:data placement="bottom-right" width="" duration={3000}>
   <div class="bg-neutral-800 rounded">

@@ -12,7 +12,6 @@
   import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
-  import type { Envelope } from "$lib/types/envelope.js";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { getErrorString } from "$lib/helpers";
 
@@ -213,10 +212,6 @@
       monaco.editor.remeasureFonts();
     });
 
-    envelope.subscribe(async (value) => {
-      setEditorReadOnly(value);
-    });
-
     document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
   });
@@ -247,11 +242,10 @@
     console.log("destroying editor");
   });
 
-  async function setEditorReadOnly(envelopeValue: Envelope | null = null) {
+  async function setEditorReadOnly() {
     if (!monacoEditor) return;
-    const signatures = envelopeValue?.sigs || $envelope?.sigs;
-    const isSigned = Boolean(signatures) || forceReadOnly;
-    if (!isSigned) {
+
+    if (!forceReadOnly) {
       monacoEditor.updateOptions({ readOnly: false });
       return;
     }
