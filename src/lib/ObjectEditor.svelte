@@ -8,7 +8,7 @@
   export let data: unknown = undefined;
   export let id = `editor-${Math.random().toString(36).slice(2, 7)}`;
 
-  export let model: UIModelField | undefined;
+  export let model: UIModelField | undefined = undefined;
 
   createBuilderContext();
 
