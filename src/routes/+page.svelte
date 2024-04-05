@@ -149,7 +149,6 @@
     }}
     on:confirm={async (event) => {
       const result = await builder.correctWithOptions(event.detail);
-      console.log(result);
       openCorrectModal = !result;
     }}
   />

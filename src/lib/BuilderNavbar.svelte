@@ -86,7 +86,7 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarActions {state} {isSigned} on:action />
+    <BuilderNavbarActions {state} {isSigned} readOnly={forceReadOnly} on:action />
 
     <BuilderNavbarSeparator />
 
@@ -138,6 +138,7 @@
       <BuilderNavbarActions
         {state}
         {isSigned}
+        readOnly={forceReadOnly}
         on:action={(event) => {
           mobileMenuOpen = false;
           dispatch("action", event.detail);

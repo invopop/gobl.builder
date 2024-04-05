@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Header, Signature } from "@invopop/ui-icons";
+  import { iconButtonClasses } from "./ui/iconButtonClasses";
 
   const dispatch = createEventDispatcher();
 
@@ -17,14 +18,13 @@
 >
   <Icon src={Header} class="h-5 w-5" />
 </button>
-{#if isSigned}
-  <button
-    title="Show document signatures"
-    class="inline-flex items-center space-x-1.5 p-1.5 border border-gobl-300 text-sm font-medium text-white hover:text-gobl-50 hover:border-gobl-50"
-    on:click={() => {
-      dispatch("action", "showSignatures");
-    }}
-  >
-    <Icon src={Signature} class="h-5 w-5" />
-  </button>
-{/if}
+<button
+  title="Show document signatures"
+  class={iconButtonClasses(!isSigned)}
+  disabled={!isSigned}
+  on:click={() => {
+    dispatch("action", "showSignatures");
+  }}
+>
+  <Icon src={Signature} class="h-5 w-5" />
+</button>
