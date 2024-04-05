@@ -24,6 +24,7 @@
   export let state: State = "init";
   export let envelope = "";
   export let editorView = "code";
+  export let isSigned = false;
 
   let mobileMenuOpen = false;
   let schemasList: ListOption[] = [];
@@ -80,7 +81,7 @@
 
     {#if state !== "init"}
       <BuilderNavbarSeparator />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
+      <BuilderNavbarEnvelopeMeta {isSigned} on:action />
     {/if}
 
     <BuilderNavbarSeparator />
@@ -130,7 +131,7 @@
     <BuilderNavbarOptions bind:forceReadOnly />
     {#if state !== "init"}
       <hr class="my-5 border-gobl-300" />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
+      <BuilderNavbarEnvelopeMeta {isSigned} on:action />
     {/if}
     <hr class="my-5 border-gobl-300" />
     <div class="flex items-center space-x-3">

@@ -26,8 +26,8 @@
     on:click={() => {
       dispatch("action", "correct");
     }}
-    class={iconButtonClasses(!["loaded", "built", "signed"].includes(state))}
-    disabled={!["loaded", "built", "signed"].includes(state)}
+    class={iconButtonClasses(!["loaded", "built"].includes(state))}
+    disabled={!["loaded", "built"].includes(state)}
   >
     <Icon src={Erase} class="w-5 h-5" />
   </button>
@@ -46,8 +46,8 @@
     on:click={() => {
       dispatch("action", "validate");
     }}
-    class={iconButtonClasses(state === "errored" || state !== "signed")}
-    disabled={state === "errored" || state !== "signed"}
+    class={iconButtonClasses(state === "errored")}
+    disabled={state === "errored"}
   >
     <Icon src={SquareCheck} class="w-5 h-5" />
   </button>

@@ -39,7 +39,6 @@
   // invalid: there are syntax errors, cannot be built
   // errored: build was attempted, but failed
   // built: document has been built, is valid, and can be modified again
-  // signed: signature applied, main content is now read-only, headers could still be modified, but we don't need to worry about that yet
   export let state: State = "init";
 
   // Problems is an array of Monaco Editor problem markers. It can be used
@@ -53,7 +52,7 @@
   // Whether shows the code or the form editor
   export let editorView = "code";
 
-  // When enabled, it sets the editor as readOnly even if the document is not signed
+  // When enabled, it sets the editor as readOnly
   export let forceReadOnly = false;
 
   // Expose document headers to navigate to a specific section from outside
@@ -61,6 +60,9 @@
 
   // Expose activeHeader
   export let activeHeader: DocumentHeader | undefined = undefined;
+
+  // Whether envelope is signed
+  export let isSigned = false;
 
   let editorForm: EditorForm | null = null;
   let initialEditorData = "";
@@ -104,9 +106,12 @@
     }
   }
 
-  // Dispatch all `change` events when the envelope is built.
   envelope.subscribe((envelope) => {
+    // Dispatch all `change` events when the envelope is built.
     dispatch("change", { envelope: JSON.stringify(envelope) });
+
+    // Update isSigned flag
+    isSigned = Boolean(envelope?.sigs);
   });
 
   // This keeps problems array prop in sync with editor problems
@@ -136,11 +141,6 @@
   const setState = (editorValue: string) => {
     if (!editorValue) {
       state = "empty";
-      return;
-    }
-
-    if ($envelope?.sigs) {
-      state = "signed";
       return;
     }
 
