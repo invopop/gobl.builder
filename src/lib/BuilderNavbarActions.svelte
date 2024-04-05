@@ -8,13 +8,15 @@
   const dispatch = createEventDispatcher();
 
   export let state: State = "init";
+  export let isSigned = false;
+  export let readOnly = false;
 </script>
 
 <div class="flex space-x-1 items-center">
   <button
     title="Build the GOBL document."
-    class={iconButtonClasses(state !== "modified" && state !== "loaded" && state !== "errored")}
-    disabled={state !== "modified" && state !== "loaded" && state !== "errored"}
+    class={iconButtonClasses((state !== "modified" && state !== "loaded" && state !== "errored") || readOnly)}
+    disabled={(state !== "modified" && state !== "loaded" && state !== "errored") || readOnly}
     on:click={() => {
       dispatch("action", "build");
     }}
@@ -26,8 +28,8 @@
     on:click={() => {
       dispatch("action", "correct");
     }}
-    class={iconButtonClasses(!["loaded", "built", "signed"].includes(state))}
-    disabled={!["loaded", "built", "signed"].includes(state)}
+    class={iconButtonClasses(!["loaded", "built"].includes(state) || readOnly)}
+    disabled={!["loaded", "built"].includes(state) || readOnly}
   >
     <Icon src={Erase} class="w-5 h-5" />
   </button>
@@ -46,8 +48,8 @@
     on:click={() => {
       dispatch("action", "validate");
     }}
-    class={iconButtonClasses(state === "errored" || state !== "signed")}
-    disabled={state === "errored" || state !== "signed"}
+    class={iconButtonClasses(state === "errored" || !isSigned)}
+    disabled={state === "errored" || !isSigned}
   >
     <Icon src={SquareCheck} class="w-5 h-5" />
   </button>

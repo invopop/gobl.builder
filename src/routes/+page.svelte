@@ -24,6 +24,11 @@
   let header: EnvelopeHeader | null = null;
   let openCorrectModal = false;
   let correctionModel: UIModelField | undefined;
+  let isSigned = false;
+
+  $: if (isSigned) {
+    forceReadOnly = true;
+  }
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -70,6 +75,7 @@
     {state}
     {defaultSchema}
     {envelope}
+    {isSigned}
     bind:forceReadOnly
     bind:editorView
     on:load={handleDocLoad}
@@ -83,6 +89,7 @@
         bind:state
         bind:data
         bind:problems
+        bind:isSigned
         {jsonSchemaURL}
         {editorView}
         signEnabled
@@ -142,7 +149,6 @@
     }}
     on:confirm={async (event) => {
       const result = await builder.correctWithOptions(event.detail);
-      console.log(result);
       openCorrectModal = !result;
     }}
   />
