@@ -86,7 +86,7 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarActions {state} on:action />
+    <BuilderNavbarActions {state} {isSigned} on:action />
 
     <BuilderNavbarSeparator />
 
@@ -137,6 +137,7 @@
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
         {state}
+        {isSigned}
         on:action={(event) => {
           mobileMenuOpen = false;
           dispatch("action", event.detail);
