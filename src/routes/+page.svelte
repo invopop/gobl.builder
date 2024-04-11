@@ -6,6 +6,8 @@
   import type { EnvelopeHeader, GOBLDocument } from "$lib/types/envelope";
   import EditorFormModalSignatures from "$lib/editor/form/modals/EditorFormModalSignatures.svelte";
   import EditorFormModalHeaders from "$lib/editor/form/modals/EditorFormModalHeaders.svelte";
+  import EditorFormModalCorrect from "$lib/editor/form/modals/EditorFormModalCorrect.svelte";
+  import type { UIModelField } from "$lib/editor/form/utils/model";
 
   let data = "";
   let problems: EditorProblem[] = [];
@@ -20,6 +22,8 @@
   let sigs: string[] | null = null;
   let openHeadersModal = false;
   let header: EnvelopeHeader | null = null;
+  let openCorrectModal = false;
+  let correctionModel: UIModelField | undefined;
 
   function handleDocLoad(event: CustomEvent<GOBLDocument>) {
     const newData = JSON.stringify(event.detail, null, 4);
@@ -48,6 +52,12 @@
     if (event.detail === "showHeaders") {
       header = await builder.getHeaders();
       openHeadersModal = true;
+      return;
+    }
+
+    if (event.detail === "correct") {
+      correctionModel = await builder.getCorrectionOptionsModel();
+      openCorrectModal = true;
       return;
     }
 
@@ -120,6 +130,20 @@
     on:confirm={(event) => {
       builder.setHeaders(event.detail);
       openHeadersModal = false;
+    }}
+  />
+{/if}
+
+{#if openCorrectModal}
+  <EditorFormModalCorrect
+    model={correctionModel}
+    on:close={() => {
+      openCorrectModal = false;
+    }}
+    on:confirm={async (event) => {
+      const result = await builder.correctWithOptions(event.detail);
+      console.log(result);
+      openCorrectModal = !result;
     }}
   />
 {/if}

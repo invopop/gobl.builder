@@ -5,10 +5,10 @@
   import { createBuilderContext } from "./store/builder";
 
   export let jsonSchemaURL = "";
-  export let data: unknown;
+  export let data: unknown = undefined;
   export let id = `editor-${Math.random().toString(36).slice(2, 7)}`;
 
-  let model: UIModelField | undefined;
+  export let model: UIModelField | undefined = undefined;
 
   createBuilderContext();
 
