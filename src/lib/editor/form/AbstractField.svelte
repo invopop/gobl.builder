@@ -48,6 +48,7 @@
     "bg-neutral-50 border-neutral-100": isHover && !isParent,
     "border-transparent": !isHover,
     "border-l border-t border-b": !isParent,
+    "border-r rounded-r": readOnly && !isParent,
     "pl-2": isParent && !isSection,
   });
   $: classes = clsx({

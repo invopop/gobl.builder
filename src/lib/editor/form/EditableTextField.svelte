@@ -38,6 +38,15 @@
 
     e.preventDefault();
   }
+
+  function handlePaste(event: Event) {
+    event.preventDefault();
+    let clipboardEvent = event as ClipboardEvent;
+    if (!clipboardEvent.clipboardData) return;
+    const target = event.target as HTMLDivElement;
+    if (!target) return;
+    target.innerText = clipboardEvent.clipboardData.getData("text/plain");
+  }
 </script>
 
 <div
@@ -47,6 +56,7 @@
   id={iid}
   on:blur={handleBlur}
   on:keydown={handleKeydown}
+  on:paste={handlePaste}
   class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight"
 >
   {val}

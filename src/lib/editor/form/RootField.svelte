@@ -14,7 +14,7 @@
   $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
 </script>
 
-<SectionWrapper {field}>
+<SectionWrapper {readOnly} {field}>
   {#each simpleFields as field (field.id)}
     <AbstractField
       {field}

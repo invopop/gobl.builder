@@ -29,6 +29,7 @@
   const intersectOptions = { callback, root: document.querySelector(`#${editorId}`) };
 
   export let field: UIModelField;
+  export let readOnly = false;
 
   let element: HTMLElement;
   let open = true;
@@ -39,6 +40,7 @@
   $: isParent = ["object", "array"].includes(field.type);
   $: isSection = field.is.root || (isParent && field.parent?.is.root);
   $: wrapperClasses = clsx({
+    "rounded-r": readOnly,
     "border-neutral-100 bg-neutral-50": isActive,
     "border-l rounded-l": isSection,
     "border-transparent": !isActive,
