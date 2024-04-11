@@ -28,7 +28,7 @@
     on:fieldKeyUpdated
   />
 {:else}
-  <SectionWrapper {field}>
+  <SectionWrapper {readOnly} {field}>
     {#each children as childField (childField.id)}
       <AbstractField
         field={childField}

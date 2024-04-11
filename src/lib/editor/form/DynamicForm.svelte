@@ -39,7 +39,7 @@
 </script>
 
 <div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
-  <div class="pt-5 pb-40 flex editor-wrapper">
+  <div class="pb-40 flex editor-wrapper">
     <div class="w-full max-w-[632px]">
       {#if showSchemaField}
         <SchemaField {isEmptySchema} />
@@ -75,6 +75,7 @@
   .editor-wrapper {
     justify-content: var(--editor-justify-content, center);
     padding-right: 40px;
+    padding-top: var(--editor-padding-top, 12px);
   }
   @media (min-width: 768px) {
     .editor-wrapper {
