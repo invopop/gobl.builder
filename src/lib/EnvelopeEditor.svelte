@@ -1,6 +1,6 @@
 <script lang="ts">
   import * as GOBL from "@invopop/gobl-worker";
-  import { ToastContainer, toasts } from "svelte-toasts";
+  import { toasts } from "svelte-toasts";
   import hash from "object-hash";
   import { createEventDispatcher } from "svelte";
   import { envelopeDocumentJSON } from "$lib/helpers/envelope";
@@ -13,8 +13,6 @@
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel } from "./editor/form/utils/model";
   import fileSaver from "file-saver";
-  import SuccessToastIcon from "./ui/icons/SuccessToastIcon.svelte";
-  import ErrorToastIcon from "./ui/icons/ErrorToastIcon.svelte";
   import type { Envelope, EnvelopeHeader } from "./types/envelope";
   import { newEnvelope } from "./helpers/envelope";
   import { createBuilderContext } from "./store/builder";
@@ -324,22 +322,3 @@
     </div>
   </div>
 </div>
-
-<ToastContainer let:data placement="bottom-right" width="" duration={3000}>
-  <div class="bg-neutral-800 rounded">
-    <div
-      class="{data.type === 'success' ? 'from-positive-500/30' : ''} {data.type === 'error'
-        ? 'from-danger-500/30'
-        : ''} py-[7px] pl-2 pr-3 flex space-x-1 bg-opacity-30 bg-gradient-to-r via-transparent to-transparent rounded"
-    >
-      <div class="flex-nowrap">
-        {#if data.type === "success"}
-          <SuccessToastIcon />
-        {:else if data.type === "error"}
-          <ErrorToastIcon />
-        {/if}
-      </div>
-      <p class="text-white font-medium text-sm">{data.description}</p>
-    </div>
-  </div>
-</ToastContainer>
