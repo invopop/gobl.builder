@@ -60,9 +60,9 @@
       {field}
       {showError}
       options={[
-        { key: "", value: "" },
-        { key: "Yes", value: true },
-        { key: "No", value: false },
+        { label: "", value: "" },
+        { label: "Yes", value: true },
+        { label: "No", value: false },
       ]}
       on:edit={handleEdit}
       on:blur={validateField}

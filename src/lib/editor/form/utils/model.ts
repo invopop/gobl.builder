@@ -503,19 +503,19 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const controlType = this.getControlType(schema);
 
     if (controlType === "select") {
-      let options: { key: string; value: string }[] = [];
+      let options: { label: string; value: string }[] = [];
 
       if ("oneOf" in schema) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options = (schema.oneOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
+        options = (schema.oneOf || []).map((v: any) => ({ label: v.title || v.description, value: v.const }));
       }
 
       if ("anyOf" in schema) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        options = (schema.anyOf || []).map((v: any) => ({ key: v.title || v.description, value: v.const }));
+        options = (schema.anyOf || []).map((v: any) => ({ label: v.title || v.description, value: v.const }));
       }
 
-      return [{ key: "", value: "" }, ...options.sort((a, b) => a.key.localeCompare(b.key))];
+      return [{ label: "", value: "" }, ...options.sort((a, b) => a.label.localeCompare(b.label))];
     }
 
     if (controlType === "dictionary" && !!schema.patternProperties?.[".*"]) {

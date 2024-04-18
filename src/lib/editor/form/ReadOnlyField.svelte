@@ -15,8 +15,8 @@
 
   function getValue(value: string): string {
     if (field.controlType === "select") {
-      const option = field.controlMeta.find((o: { key: string; value: string }) => o.value === value);
-      return option ? option.key : "";
+      const option = field.controlMeta.find((o: { label: string; value: string }) => o.value === value);
+      return option ? option.label : "";
     }
 
     if (field.controlType === "date") {
