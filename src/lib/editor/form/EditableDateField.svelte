@@ -80,13 +80,14 @@
     letter-spacing: -0.135px;
     background-color: white !important;
   }
+
   :global(.date-time-field.is-calculated > input) {
     background-color: #fafbfb !important;
     color: #7e7f7f !important;
   }
   :global(.date-time-field > input:focus) {
     border: 1px solid #169958 !important;
-    box-shadow: none !important;
+    box-shadow: 0px 0px 0px 2px rgba(22, 153, 88, 0.12) !important;
   }
   :global(.date-time-field > input.invalid:focus, .date-time-field.has-error > input) {
     color: #ec4e46 !important;

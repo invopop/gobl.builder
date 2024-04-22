@@ -57,7 +57,13 @@
   on:blur={handleBlur}
   on:keydown={handleKeydown}
   on:paste={handlePaste}
-  class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight"
+  class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight custom-input"
 >
   {val}
 </div>
+
+<style>
+  .custom-input:focus {
+    box-shadow: 0px 0px 0px 2px rgba(22, 153, 88, 0.12);
+  }
+</style>
