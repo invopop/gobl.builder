@@ -4,7 +4,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let field: UIModelField<string>;
-  export let options: { key: string; value: string | boolean }[];
+  export let options: { label: string; value: string | boolean }[];
   export let showError = false;
 
   $: classes = clsx({
@@ -35,8 +35,8 @@
   on:blur={handleBlur}
   class="{classes} border focus:border-accent-500 custom-select text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight"
 >
-  {#each options as opt (opt.key)}
-    <option value={opt.value} selected={field.value === opt.value}>{opt.key || opt.value}</option>
+  {#each options as opt (opt.value)}
+    <option value={opt.value} selected={field.value === opt.value}>{opt.label || opt.value}</option>
   {/each}
 </select>
 
