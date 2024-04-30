@@ -66,20 +66,38 @@ async function fetchSchema(id: string): Promise<Schema> {
   return schema;
 }
 
-export async function parseSchema(id: string, schema: Schema): Promise<Schema> {
-  const pSchema = { ...schema, $id: id };
+export async function parseSchema(
+  id: string,
+  schema: Schema,
+  value: SchemaValue,
+  key: string | undefined = undefined,
+): Promise<Schema> {
+  const pSchema = { ...schema };
   delete pSchema.$ref;
   delete pSchema.$defs;
 
   const ref = schema.$ref;
 
   if (ref) {
-    const relId = ref.startsWith("#") ? `${id.split("#")[0]}${ref}` : ref;
-    const refSchema = await getSchema(relId);
+    let relId = ref.startsWith("#") ? `${id.split("#")[0]}${ref}` : ref;
+
+    if (relId.includes("schema/object") && value && key) {
+      const targetValue = value as Record<string, unknown>;
+      const prop = targetValue[key];
+
+      if (prop && Array.isArray(prop) && prop.length) {
+        relId = prop[0].$schema;
+      }
+
+      // TODO: Loop other objects an array if the key is not at root level
+      // TODO: Support object types (not array)
+    }
+    const refSchema = await getSchema(relId, value);
 
     return {
       ...refSchema,
       ...pSchema,
+      $id: relId,
       // type: "number" is used to display the content right aligned
       type: relId.includes("num/amount") || relId.includes("num/percent") ? "number" : refSchema.type,
     };
@@ -88,7 +106,7 @@ export async function parseSchema(id: string, schema: Schema): Promise<Schema> {
   // Object type
   if (pSchema.type === "object" && pSchema.properties) {
     for (const [k, v] of Object.entries(pSchema.properties)) {
-      pSchema.properties[k] = await parseSchema(id, v as Schema);
+      pSchema.properties[k] = await parseSchema(id, v as Schema, value, k);
     }
   }
 
@@ -96,33 +114,25 @@ export async function parseSchema(id: string, schema: Schema): Promise<Schema> {
   if (pSchema.type === "array" && pSchema.items) {
     if (Array.isArray(pSchema.items)) {
       for (const [i, v] of pSchema.items.entries()) {
-        pSchema.items[i] = await parseSchema(id, v as Schema);
+        pSchema.items[i] = await parseSchema(id, v as Schema, value, String(i));
       }
     } else {
-      pSchema.items = await parseSchema(id, pSchema.items as Schema);
+      pSchema.items = await parseSchema(id, pSchema.items as Schema, value, key);
     }
   }
 
   return pSchema;
 }
 
-async function getSchema(id: string) {
-  // let schema = ParsedSchemaRegistry[id];
-  // if (schema) return schema;
-
+async function getSchema(id: string, value: SchemaValue) {
   let schema = await fetchSchema(id);
-  schema = await parseSchema(id, schema);
-
-  // ParsedSchemaRegistry[id] = schema;
-
-  // console.log('SchemaRegistry', SchemaRegistry)
-  // console.log('ParsedSchemaRegistry', ParsedSchemaRegistry)
+  schema = await parseSchema(id, schema, value);
 
   return schema;
 }
 
-export async function getRootSchema(id: string) {
-  const schema = await getSchema(id);
+export async function getRootSchema(id: string, value: SchemaValue) {
+  const schema = await getSchema(id, value);
   schema.properties = schema.properties || {};
 
   const schemaKey = "$schema";
