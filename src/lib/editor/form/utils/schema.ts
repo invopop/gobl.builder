@@ -55,6 +55,7 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
 
 async function fetchSchema(id: string): Promise<Schema> {
   let schema = SchemaRegistry[id];
+
   if (schema) return schema;
 
   const [absId, relId] = id.split("#/");
@@ -72,16 +73,26 @@ export async function parseSchema(
   value: SchemaValue,
   key: string | undefined = undefined,
 ): Promise<Schema> {
-  const pSchema = { ...schema };
-  delete pSchema.$ref;
-  delete pSchema.$defs;
+  const ref = schema.$ref || "";
 
-  const ref = schema.$ref;
+  const isSchemaObject = ref.includes("schema/object") && value && key;
+
+  const pSchema = { ...schema };
+
+  // We need to keep the original ref in order to refetch the subSchema
+  if (!isSchemaObject) {
+    delete pSchema.$ref;
+  }
+
+  delete pSchema.$defs;
 
   if (ref) {
     let relId = ref.startsWith("#") ? `${id.split("#")[0]}${ref}` : ref;
 
-    if (relId.includes("schema/object") && value && key) {
+    let addSchemaProp = false;
+
+    if (isSchemaObject) {
+      addSchemaProp = true;
       const targetValue = value as Record<string, unknown>;
       const prop = targetValue[key];
 
@@ -92,12 +103,25 @@ export async function parseSchema(
       // TODO: Loop other objects an array if the key is not at root level
       // TODO: Support object types (not array)
     }
-    const refSchema = await getSchema(relId, value);
+    let refSchema = await getSchema(relId, value);
+
+    if (addSchemaProp) {
+      const props = refSchema.properties || {};
+      const required = refSchema.required || [];
+      refSchema = {
+        ...refSchema,
+        properties: {
+          ...props,
+          $schema: { description: "Schema used for this schema object.", title: "$schema", type: "string" },
+        },
+        required: ["$schema", ...required],
+      };
+    }
 
     return {
-      ...refSchema,
       ...pSchema,
-      $id: relId,
+      ...refSchema,
+      $id: pSchema.$id || relId,
       // type: "number" is used to display the content right aligned
       type: relId.includes("num/amount") || relId.includes("num/percent") ? "number" : refSchema.type,
     };

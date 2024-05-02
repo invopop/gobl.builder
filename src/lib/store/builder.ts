@@ -142,6 +142,12 @@ export function createBuilderContext(): BuilderContext {
     recreatingUiModel.set(false);
   }
 
+  function recreateEditor() {
+    const temp = get(jsonSchema);
+    jsonSchema.set(null);
+    jsonSchema.set(temp);
+  }
+
   return setContext<BuilderContext>(BUILDER_CONTEXT_ID, {
     envelope,
     keypair,
@@ -164,6 +170,7 @@ export function createBuilderContext(): BuilderContext {
     highlightedItem,
     scrollingSection,
     documentHeaders,
+    recreateEditor,
   });
 }
 
