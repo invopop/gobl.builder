@@ -117,6 +117,33 @@ export async function validate(ctx: BuilderContext) {
   }
 }
 
+// Send a request to the GOBL worker to run the "replicate" operation using the current editor window contents.
+export async function replicate(ctx: BuilderContext) {
+  if (!get(ctx.validEditor)) {
+    return;
+  }
+
+  try {
+    const sendData = getGOBLPayload(ctx);
+
+    const payload: GOBL.ValidatePayload = {
+      data: encodeUTF8ToBase64(sendData),
+    };
+
+    const rawResult = await GOBL.replicate({ payload });
+    const result = JSON.parse(rawResult);
+
+    return { result };
+  } catch (e) {
+    const goblErr = GOBL.parseGOBLError(e);
+    ctx.goblError.set(goblErr);
+
+    return {
+      error: goblErr,
+    };
+  }
+}
+
 // Send a request to the GOBL worker to get the adecuate correction fields using
 // editor window contents to read the tax regime.
 export async function getCorrectionOptionsSchema(ctx: BuilderContext) {

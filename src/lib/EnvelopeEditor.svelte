@@ -215,6 +215,11 @@
     dispatch("validate", result);
   };
 
+  export const replicate = async () => {
+    const result = await actions.replicate(builderContext);
+    dispatch("replicate", result);
+  };
+
   export const reloadData = async (d: string | null = null) => {
     let parsedValue = null;
     let envelopeValue: Envelope | null = null;
