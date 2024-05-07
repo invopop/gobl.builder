@@ -214,6 +214,8 @@
 
     document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
     document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
+
+    setEditorReadOnly();
   });
 
   onDestroy(() => {
