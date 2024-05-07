@@ -5,7 +5,7 @@ import { sleep } from "./sleep.js";
 export async function generateCorrectOptionsModel(schema: string) {
   const schemaObj = JSON.parse(schema);
   const options = schemaObj.$defs.CorrectionOptions;
-  const parsedSchema = await parseSchema(schemaObj.$id, options);
+  const parsedSchema = await parseSchema(schemaObj.$id, options, schemaObj);
 
   const CORRECTION_OPTIONS_SCHEMA_URL = "https://gobl.org/draft-0/bill/correction-options?tax_regime=";
   parsedSchema.title = `Correction Options [${parsedSchema.$id?.replace(CORRECTION_OPTIONS_SCHEMA_URL, "")}]`;
@@ -18,7 +18,7 @@ export async function getUIModel<V extends SchemaValue>(
   value: V,
   uniqueId: string | undefined = undefined,
 ): Promise<UIModelField<V> | undefined> {
-  schema = typeof schema === "string" ? await getRootSchema(schema) : schema;
+  schema = typeof schema === "string" ? await getRootSchema(schema, value) : schema;
   if (!schema) return;
 
   return new UIModelField<V>(schema, value, uniqueId);

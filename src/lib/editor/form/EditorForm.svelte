@@ -11,8 +11,15 @@
 
   const builderContext = getBuilderContext();
 
-  const { jsonSchema, currentEditorSchema, someEditorValueIsEmpty, uiModel, recreatingUiModel, updateSchema } =
-    builderContext;
+  const {
+    jsonSchema,
+    currentEditorSchema,
+    someEditorValueIsEmpty,
+    uiModel,
+    recreatingUiModel,
+    updateSchema,
+    recreateEditor,
+  } = builderContext;
 
   setContext("editorId", editorId);
 
@@ -61,9 +68,7 @@
 
   export function recreateFormEditor() {
     // Forces editor watcher to fire and rebuild the model
-    const temp = $jsonSchema;
-    jsonSchema.set(null);
-    jsonSchema.set(temp);
+    recreateEditor();
   }
 
   async function handleFormUpdated(event: CustomEvent) {

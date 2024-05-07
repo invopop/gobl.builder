@@ -36,7 +36,7 @@
   });
 
   $: border = navBar ? "1px #4C515A solid" : "1px #E9EBEF solid";
-  $: placeholderColor = navBar ? "#FBFBFC" : "#212936";
+  $: placeholderColor = navBar ? "#FBFBFC" : "#030712";
 </script>
 
 <Select
@@ -46,7 +46,7 @@
   --border-radius="4px"
   --border={border}
   --border-focused="1px #15C6F6 solid"
-  --selected-item-color="#FBFBFC"
+  --selected-item-color={placeholderColor}
   --placeholder-color={placeholderColor}
   --font-size="15px"
   --list-background="#212936"

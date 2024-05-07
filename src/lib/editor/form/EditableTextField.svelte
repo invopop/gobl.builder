@@ -1,5 +1,7 @@
 <script lang="ts">
+  import SelectSchemas from "$lib/SelectSchemas.svelte";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import { getBuilderContext } from "$lib/store/builder";
   import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
@@ -19,6 +21,10 @@
     "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
   });
 
+  const builderContext = getBuilderContext();
+
+  const { recreateEditor } = builderContext;
+
   const dispatch = createEventDispatcher();
 
   function handleBlur(e: FocusEvent) {
@@ -26,6 +32,13 @@
     const value = input.innerText;
     dispatch("edit", value);
     dispatch("blur", value);
+  }
+
+  function handleSchemaChange(event: CustomEvent) {
+    field.setValue(event.detail);
+    const value = field.root.toJSON();
+    builderContext.editor.set({ value, updatedAt: Date.now() });
+    recreateEditor();
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -49,18 +62,22 @@
   }
 </script>
 
-<div
-  role="textbox"
-  tabindex="0"
-  contenteditable
-  id={iid}
-  on:blur={handleBlur}
-  on:keydown={handleKeydown}
-  on:paste={handlePaste}
-  class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight custom-input"
->
-  {val}
-</div>
+{#if field.schema.title === "$schema"}
+  <SelectSchemas placeholder="Select a $schema..." on:change={handleSchemaChange} value={val} />
+{:else}
+  <div
+    role="textbox"
+    tabindex="0"
+    contenteditable
+    id={iid}
+    on:blur={handleBlur}
+    on:keydown={handleKeydown}
+    on:paste={handlePaste}
+    class="{classes} focus:border-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-accent-500 tracking-tight custom-input"
+  >
+    {val}
+  </div>
+{/if}
 
 <style>
   .custom-input:focus {

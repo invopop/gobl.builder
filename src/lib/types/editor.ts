@@ -43,4 +43,5 @@ export type BuilderContext = {
   scrollingSection: Writable<boolean>;
   documentHeaders: Readable<DocumentHeader[]>;
   updateSchema(value: string): void;
+  recreateEditor(): void;
 };
