@@ -121,6 +121,7 @@ export async function parseSchema(
     return {
       ...pSchema,
       ...refSchema,
+      title: pSchema.title,
       $id: pSchema.$id || relId,
       // type: "number" is used to display the content right aligned
       type: relId.includes("num/amount") || relId.includes("num/percent") ? "number" : refSchema.type,
