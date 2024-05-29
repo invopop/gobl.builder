@@ -306,6 +306,10 @@
       scroll: true,
     };
   };
+
+  export const getEditorValue = () => {
+    return JSON.parse($editor.value);
+  };
 </script>
 
 <div class="@container flex flex-col h-full editor">
