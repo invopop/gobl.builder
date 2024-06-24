@@ -1,10 +1,10 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import hover from "./action/hover.js";
+  import hover from "$lib/actions/hover.js";
   import { createEventDispatcher } from "svelte";
   import { sleep } from "./utils/sleep.js";
   import type { SchemaOption, UIModelField } from "./utils/model.js";
-  import clickOutside from "$lib/clickOutside.js";
+  import clickOutside from "$lib/actions/clickOutside.js";
   import { Icon } from "svelte-hero-icons";
   import { Search } from "@invopop/ui-icons";
 

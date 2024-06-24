@@ -3,7 +3,7 @@ import type { GOBLError } from "@invopop/gobl-worker";
 import { getContext, setContext } from "svelte";
 import { derived, get, writable, type Writable } from "svelte/store";
 import type * as monaco from "monaco-editor";
-import { objectHasEmptyProperties } from "$lib/helpers";
+import { objectHasEmptyProperties } from "$lib/helpers/notification";
 import { writableDerived } from "./writableDerived";
 import { getUIModel, type UIModelRootField } from "$lib/editor/form/utils/model";
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce";

@@ -10,7 +10,7 @@
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
   import type { DocumentHeader, State } from "./types/editor";
-  import { displayAllErrors, showErrorToast } from "./helpers";
+  import { displayAllErrors, showErrorToast } from "./helpers/notification";
   import { generateCorrectOptionsModel } from "./editor/form/utils/model";
   import fileSaver from "file-saver";
   import type { Envelope, EnvelopeHeader } from "./types/envelope";

@@ -13,7 +13,7 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
-  import { getErrorString } from "$lib/helpers";
+  import { getErrorString } from "$lib/helpers/notification";
 
   let monaco: typeof Monaco;
 

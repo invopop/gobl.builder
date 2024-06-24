@@ -1,5 +1,5 @@
 <script lang="ts">
-  import clickOutside from "$lib/clickOutside.js";
+  import clickOutside from "$lib/actions/clickOutside.js";
   import { createEventDispatcher } from "svelte";
   import BaseButton from "./BaseButton.svelte";
   import type { IconSource } from "@steeze-ui/svelte-icon";

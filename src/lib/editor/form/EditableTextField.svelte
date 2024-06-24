@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SelectSchemas from "$lib/SelectSchemas.svelte";
+  import SelectSchemas from "$lib/editor/form/SelectSchemas.svelte";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import { getBuilderContext } from "$lib/store/builder";
   import clsx from "clsx";
