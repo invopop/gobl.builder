@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { iconButtonClasses } from "./ui/iconButtonClasses";
-  import type { State } from "./types/editor";
+  import { iconButtonClasses } from "./iconButtonClasses";
+  import type { State } from "../lib/types/editor";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Calculator, Erase, Sign, SquareCheck } from "@invopop/ui-icons";
   import { createEventDispatcher } from "svelte";
