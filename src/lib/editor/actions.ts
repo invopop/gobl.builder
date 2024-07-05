@@ -171,7 +171,7 @@ export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
 
 // Send a request to the GOBL worker to run the "correct" operation using the current
 // editor window contents and update with the results.
-export async function correct(options: string, ctx: BuilderContext) {
+export async function correct(options: string, ctx: BuilderContext, autocorrect = true) {
   if (!get(ctx.validEditor)) {
     return;
   }
@@ -187,7 +187,10 @@ export async function correct(options: string, ctx: BuilderContext) {
     const rawResult = await GOBL.correct({ payload });
     const result = JSON.parse(rawResult);
 
-    ctx.envelope.set(result);
+    if (autocorrect) {
+      ctx.envelope.set(result);
+    }
+
     ctx.goblError.set(null);
 
     toasts.add({

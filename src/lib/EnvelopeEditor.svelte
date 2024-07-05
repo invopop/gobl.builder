@@ -60,6 +60,9 @@
   // Expose activeHeader
   export let activeHeader: DocumentHeader | undefined = undefined;
 
+  // If autocorrect is set to false the envelope is not updated automatically. Event `corrected` is always fired with the result
+  export let autocorrect = true;
+
   let editorForm: EditorForm | null = null;
   let initialEditorData = "";
 
@@ -186,13 +189,15 @@
   };
 
   export const correctWithOptions = async (options: string) => {
-    const result = await actions.correct(options, builderContext);
+    const result = await actions.correct(options, builderContext, autocorrect);
 
     if (result?.error) {
       state = "errored";
       displayAllErrors(result?.error?.message || "");
       return false;
     }
+
+    dispatch("correct", result);
 
     state = "corrected";
 

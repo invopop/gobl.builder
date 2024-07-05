@@ -106,6 +106,9 @@
         on:validate={(event) => {
           console.log("Received validate result.", event.detail);
         }}
+        on:correct={(event) => {
+          console.log("Received correct result.", event.detail);
+        }}
       />
     </div>
   </div>
@@ -142,7 +145,6 @@
     }}
     on:confirm={async (event) => {
       const result = await builder.correctWithOptions(event.detail);
-      console.log(result);
       openCorrectModal = !result;
     }}
   />
