@@ -38,7 +38,7 @@
   "payment": {
     "advances": [
       {
-        "desc": "Prepaid",
+        "description": "Prepaid",
         "percent": "100%",
         "amount": "238000.00"
       }
