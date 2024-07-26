@@ -1,11 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
-  import { getSchemas } from "./editor/actions";
-  import DocLoader from "../components/DocLoader.svelte";
+  import { getSchemas } from "../lib/editor/actions";
+  import DocLoader from "./DocLoader.svelte";
   import logo from "../static/logo-name.svg";
-  import type { ListOption } from "./types/ui";
-  import type { State } from "./types/editor";
-  import SelectSchemas from "./SelectSchemas.svelte";
+  import type { ListOption } from "../lib/types/ui";
+  import type { State } from "../lib/types/editor";
+  import SelectSchemas from "../lib/editor/form/SelectSchemas.svelte";
   import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
   import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
   import BuilderNavbarEnvelopeMeta from "./BuilderNavbarEnvelopeMeta.svelte";

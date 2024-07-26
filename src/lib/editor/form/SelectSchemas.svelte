@@ -1,8 +1,8 @@
 <script lang="ts">
   import Select from "svelte-select";
   import { createEventDispatcher, onMount } from "svelte";
-  import { getSchemas } from "./editor/actions";
-  import type { ListOption } from "./types/ui";
+  import { getSchemas } from "../actions";
+  import type { ListOption } from "../../types/ui";
 
   const dispatch = createEventDispatcher();
 

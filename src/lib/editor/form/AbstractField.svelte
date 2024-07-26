@@ -5,7 +5,7 @@
   import StringField from "./StringField.svelte";
   import FallbackField from "./FallbackField.svelte";
   import FieldContextMenu from "./FieldContextMenu.svelte";
-  import hover from "./action/hover.js";
+  import hover from "../../actions/hover.js";
   import IntegerField from "./IntegerField.svelte";
   import type { UIModelField } from "./utils/model.js";
   import AddFieldMenu from "./AddFieldMenu.svelte";

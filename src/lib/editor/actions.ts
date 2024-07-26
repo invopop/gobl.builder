@@ -1,9 +1,14 @@
 import { get } from "svelte/store";
 import * as GOBL from "@invopop/gobl-worker";
-import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
 import { envelopeGOBLSchema } from "$lib/helpers/envelope";
 import type { BuilderContext } from "$lib/types/editor";
+import utf8 from "utf8";
+import base64 from "base-64";
+
+export function encodeUTF8ToBase64(value: string): string {
+  return base64.encode(utf8.encode(value));
+}
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.

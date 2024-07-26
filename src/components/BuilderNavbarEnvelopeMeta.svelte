@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Header, Signature } from "@invopop/ui-icons";
-  import type { State } from "./types/editor";
+  import type { State } from "../lib/types/editor";
 
   const dispatch = createEventDispatcher();
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SelectSchemas from "$lib/SelectSchemas.svelte";
+  import SelectSchemas from "$lib/editor/form/SelectSchemas.svelte";
   import { getBuilderContext } from "$lib/store/builder";
 
   const { jsonSchema, updateSchema } = getBuilderContext();
