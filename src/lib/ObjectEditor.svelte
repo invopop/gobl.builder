@@ -7,7 +7,7 @@
   export let jsonSchemaURL = "";
   export let data: unknown = undefined;
   export let id = `editor-${Math.random().toString(36).slice(2, 7)}`;
-
+  export let readOnly = false;
   export let model: UIModelField | undefined = undefined;
 
   createBuilderContext();
@@ -26,5 +26,5 @@
 </script>
 
 {#if model}
-  <DynamicForm {model} on:uiRefreshNeeded={(event) => (model = event.detail)} />
+  <DynamicForm {model} {readOnly} on:uiRefreshNeeded={(event) => (model = event.detail)} />
 {/if}
