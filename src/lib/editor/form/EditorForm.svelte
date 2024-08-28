@@ -1,5 +1,5 @@
 <script lang="ts">
-  import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
+  import LoadingIcon from "$lib/ui/icons/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
   import { createEventDispatcher, setContext } from "svelte";

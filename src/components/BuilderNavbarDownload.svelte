@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Icon } from "@steeze-ui/svelte-icon";
-  import { iconButtonClasses } from "./ui/iconButtonClasses";
+  import { iconButtonClasses } from "./iconButtonClasses";
   import { DocumentText, Download } from "@invopop/ui-icons";
-  import LoadingIcon from "./ui/LoadingIcon.svelte";
+  import LoadingIcon from "../lib/ui/icons/LoadingIcon.svelte";
   import { createEventDispatcher } from "svelte";
   import { toasts } from "svelte-toasts";
 
