@@ -10,7 +10,7 @@
 
   $: buttonStyles = clsx(
     { "opacity-30 pointer-events-none": disabled },
-    { "bg-accent-500": variant === "primary" },
+    { "bg-workspace-accent-500": variant === "primary" },
     { "bg-neutral-100": variant === "default" },
     { "bg-danger-500": variant === "danger" },
     { "px-3": $$slots.default && !icon },

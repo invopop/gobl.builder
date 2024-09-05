@@ -6,14 +6,14 @@ module.exports = {
     fontFamily: {
       sans: ["Inter", "sans-serif"],
       mono: [
+        "CommitMono",
         "ui-monospace",
-        `"Fira Code"`,
-        "SFMono-Regular",
         "Menlo",
         "Monaco",
         "Consolas",
-        `"Liberation Mono"`,
-        `"Courier New"`,
+        '"Ubuntu Mono"',
+        '"Roboto Mono"',
+        '"DejaVu Sans Mono"',
         "monospace",
       ],
     },
@@ -26,6 +26,15 @@ module.exports = {
         "3xl": ["27px", "32px"],
       },
       colors: {
+        workspace: {
+          accent: {
+            DEFAULT: "var(--workspace-accent-color, #169958)",
+            50: "color-mix(in lab, transparent 95%, var(--workspace-accent-color, #169958))",
+            100: "color-mix(in lab, transparent 90%, var(--workspace-accent-color, #169958))",
+            200: "color-mix(in lab, transparent 80%, var(--workspace-accent-color, #169958))",
+            500: "var(--workspace-accent-color, #169958)",
+          },
+        },
         neutral: {
           50: "#F9FAFB",
           100: "#F3F4F6",
@@ -40,9 +49,6 @@ module.exports = {
           50: "#15C6F6",
           300: "#38455B",
           900: "#212936",
-        },
-        accent: {
-          500: "#169958",
         },
         positive: {
           500: "#45A557",
@@ -71,6 +77,9 @@ module.exports = {
         tight: "-0.135px",
         normal: "-0.07px",
         wide: "0.055px",
+      },
+      boxShadow: {
+        active: "0px 0px 0px 2px color-mix(in lab, transparent 88%, var(--workspace-accent-color, #169958))",
       },
     },
   },
