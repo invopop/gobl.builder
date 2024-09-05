@@ -53,7 +53,7 @@
   });
   $: classes = clsx({
     "bg-neutral-50": isHover,
-    "border-accent-500": highlight,
+    "border-workspace-accent-500": highlight,
     "border-neutral-200": !highlight,
   });
   $: contextMenuClasses = clsx({

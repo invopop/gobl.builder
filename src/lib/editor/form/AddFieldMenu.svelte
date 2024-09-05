@@ -7,6 +7,7 @@
   import clickOutside from "$lib/clickOutside.js";
   import { Icon } from "svelte-hero-icons";
   import { Search } from "@invopop/ui-icons";
+  import BaseButton from "$lib/ui/BaseButton.svelte";
 
   export let field: UIModelField;
   export let inputRef: HTMLElement | undefined = undefined;
@@ -161,7 +162,7 @@
                 bind:group={selection}
                 value={opt.key}
                 on:keydown={handleKeyDown}
-                class="form-checkbox w-5 h-5 text-accent-500 focus:text-accent-500 rounded border border-neutral-200 focus:ring-0 focus:ring-offset-0"
+                class="form-checkbox w-5 h-5 text-workspace-accent-500 focus:text-workspace-accent-500 rounded border border-neutral-200 focus:ring-0 focus:ring-offset-0"
               />
             </label>
           </li>
@@ -174,13 +175,8 @@
         </li>
       {/if}
     </ul>
-    <div class="pb-2 pt-1 px-2">
-      <button
-        on:click={handleAddFields}
-        class="flex items-center justify-center rounded-md font-medium bg-accent-500 text-white px-2 py-1 w-full text-base"
-      >
-        Add items
-      </button>
+    <div class="pb-2 pt-1 px-2 flex items-center justify-center">
+      <BaseButton variant="primary" on:click={handleAddFields}>Add items</BaseButton>
     </div>
   </div>
 </div>
