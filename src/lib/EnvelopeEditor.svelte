@@ -63,6 +63,9 @@
   // If autocorrect is set to false the envelope is not updated automatically. Event `corrected` is always fired with the result
   export let autocorrect = true;
 
+  // If hideConsoleBar is true will force to hide the error suggestions in Code View
+  export let hideConsoleBar = false;
+
   let editorForm: EditorForm | null = null;
   let initialEditorData = "";
 
@@ -322,7 +325,7 @@
     <div class="h-full absolute inset-0 flex flex-col">
       <div class="flex-1 overflow-auto">
         {#if editorView === "code"}
-          <EditorCode {jsonSchemaURL} {forceReadOnly} />
+          <EditorCode {hideConsoleBar} {jsonSchemaURL} {forceReadOnly} />
         {:else}
           <EditorForm
             bind:this={editorForm}

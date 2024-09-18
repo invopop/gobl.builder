@@ -19,6 +19,7 @@
 
   export let jsonSchemaURL: string;
   export let forceReadOnly = false;
+  export let hideConsoleBar = false;
 
   let editorEl: HTMLElement;
   let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
@@ -50,7 +51,7 @@
 
   $: forceReadOnly, setEditorReadOnly();
 
-  $: showErrorConsole = !forceReadOnly && !$envelope?.sigs;
+  $: showErrorConsole = !hideConsoleBar && !forceReadOnly && !$envelope?.sigs;
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
