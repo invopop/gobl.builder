@@ -320,8 +320,8 @@
   };
 </script>
 
-<div class="@container flex flex-col h-full editor">
-  <div class="flex-1 overflow-hidden">
+<div class="@container flex flex-col h-full">
+  <div class="flex-1 overflow-hidden relative">
     <div class="h-full absolute inset-0 flex flex-col">
       <div class="flex-1 overflow-auto">
         {#if editorView === "code"}
