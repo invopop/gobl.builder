@@ -22,9 +22,11 @@
   export let hideConsoleBar = false;
 
   let editorEl: HTMLElement;
+  let modelUri: Monaco.Uri;
   let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
   let model: Monaco.editor.ITextModel;
   let readOnlyEditHandler: Monaco.IDisposable;
+  let markerListener: Monaco.IDisposable;
   let lineNumber = 1;
   let column = 1;
   let drawerClosed = false;
@@ -83,8 +85,7 @@
     loader.config({ monaco: monacoEditorImport.default });
 
     monaco = await loader.init();
-
-    let modelUri = monaco.Uri.parse(goblDocURL);
+    modelUri = monaco.Uri.parse(goblDocURL);
     model = monaco.editor.createModel("", "json", modelUri);
 
     setSchemaURI(jsonSchemaURL);
@@ -208,8 +209,9 @@
       validateSchema(value);
     });
 
-    monaco.editor.onDidChangeMarkers(() => {
-      problems.set(monaco.editor.getModelMarkers({}));
+    markerListener = monaco.editor.onDidChangeMarkers(() => {
+      const markers = monaco.editor.getModelMarkers({ resource: modelUri });
+      problems.set(markers);
     });
 
     monacoEditor.onDidChangeCursorPosition((event) => {
@@ -229,6 +231,10 @@
 
   onDestroy(() => {
     $problems = []; // reset problems
+    if (markerListener) {
+      markerListener.dispose();
+    }
+
     if (unsubscribeEditor != null) {
       unsubscribeEditor();
     }
