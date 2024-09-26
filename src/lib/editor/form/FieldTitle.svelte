@@ -29,7 +29,7 @@
       class="flex items-center w-full"
     >
       <span>
-        {#if field.key === "0"}
+        {#if field.key === "0" && field.type === "string"}
           {field.parent.schema.title || field.parent.key}
         {/if}
       </span>
