@@ -9,11 +9,13 @@
 
   const dispatch = createEventDispatcher();
 
-  $: showAdd = ["object", "array"].includes(field?.type || "");
+  $: parentIsArray = field?.parent?.type === "array";
+  $: isArrayStringChildren = parentIsArray && field?.type === "string";
+  $: showAdd = ["object", "array"].includes(field?.type || "") || isArrayStringChildren;
   $: addLabel = field?.type === "array" ? "Add Row" : "Add Property";
-  $: canMove = field?.parent?.type === "array";
-  $: canMoveUp = canMove && Number(field?.key) > 0;
-  $: canMoveDown = canMove && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
+  $: canDuplicate = field?.is.duplicable && !isArrayStringChildren;
+  $: canMoveUp = parentIsArray && Number(field?.key) > 0;
+  $: canMoveDown = parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
 </script>
 
 <ul
@@ -25,7 +27,7 @@
       <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
     </li>
   {/if}
-  {#if field?.is.duplicable}
+  {#if canDuplicate}
     <li>
       <FieldButton icon={DocumentDuplicate} tooltipText="Duplicate" on:click={() => dispatch("duplicate")} />
     </li>
