@@ -13,7 +13,7 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
-  import { getErrorString } from "$lib/helpers";
+  import { getGOBLErrorMessage } from "$lib/helpers";
 
   let monaco: typeof Monaco;
 
@@ -137,10 +137,7 @@
         return;
       }
 
-      const parsedError = JSON.parse(goblErr.message);
-
-      const errorString =
-        parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
+      const errorString = getGOBLErrorMessage(goblErr.message);
 
       const errorsArr = errorString.split(" / ");
 
