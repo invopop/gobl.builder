@@ -216,6 +216,16 @@
 
     const result = await actions.sign(builderContext);
     dispatch("sign", result);
+
+    // There is no need to set the state here as it is
+    // handled by setState watcher. We return the value
+    // to inform external caller
+    if (result?.error) {
+      displayAllErrors(result?.error?.message || "");
+      return "errored";
+    }
+
+    return "signed"
   };
 
   export const validate = async () => {
