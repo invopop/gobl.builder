@@ -9,6 +9,7 @@ import { getUIModel, type UIModelRootField } from "$lib/editor/form/utils/model"
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce";
 import type { Envelope } from "$lib/types/envelope";
 import { newEnvelope } from "$lib/helpers/envelope";
+import type { Schema } from "$lib/editor/form/utils/schema";
 
 const BUILDER_CONTEXT_ID = "builder-context";
 
@@ -99,7 +100,10 @@ export function createBuilderContext(): BuilderContext {
     const root = { slug: fields.id, label: `${rootKey.charAt(0).toUpperCase()}${rootKey.slice(1)}`, active: true };
     const items =
       fields.children
-        ?.filter((f) => ["object", "array"].includes(f.type))
+        ?.filter((f) => {
+          const childrenType = (f.schema.items as Schema)?.type;
+          return ["object", "array"].includes(f.type) && childrenType !== "string";
+        })
         .map((f) => ({
           slug: f.id,
           label: f.schema.title || "",
