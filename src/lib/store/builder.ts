@@ -9,7 +9,7 @@ import { getUIModel, type UIModelRootField } from "$lib/editor/form/utils/model"
 import { getDebouncedFunction } from "$lib/editor/form/utils/debounce";
 import type { Envelope } from "$lib/types/envelope";
 import { newEnvelope } from "$lib/helpers/envelope";
-import { Schema } from "$lib/editor/form/utils/schema";
+import type { Schema } from "$lib/editor/form/utils/schema";
 
 const BUILDER_CONTEXT_ID = "builder-context";
 
