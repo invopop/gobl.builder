@@ -66,9 +66,18 @@ export function showErrorToast(description: string) {
   });
 }
 
+export function getGOBLErrorMessage(message: string) {
+  const parsedError = JSON.parse(message);
+
+  return parsedError.key === "validation"
+    ? getErrorString(parsedError.fields?.doc || parsedError.fields?.head || {})
+    : parsedError.key === "calculation"
+    ? getErrorString(parsedError.fields || {})
+    : parsedError.message;
+}
+
 export async function displayAllErrors(error: string) {
-  const parsedError = JSON.parse(error);
-  const errorMessage = parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
+  const errorMessage = getGOBLErrorMessage(error);
   const errorsArr = errorMessage.split(" / ");
 
   for (let i = 0; i < errorsArr.length; i++) {

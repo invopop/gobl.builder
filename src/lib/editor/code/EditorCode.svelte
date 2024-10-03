@@ -13,7 +13,7 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
-  import { getErrorString } from "$lib/helpers";
+  import { getGOBLErrorMessage } from "$lib/helpers";
 
   let monaco: typeof Monaco;
 
@@ -38,7 +38,7 @@
 
   const builderContext = getBuilderContext();
 
-  const { editorProblems: problems, editor, envelope } = builderContext;
+  const { editorProblems: problems, editor } = builderContext;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -53,7 +53,7 @@
 
   $: forceReadOnly, setEditorReadOnly();
 
-  $: showErrorConsole = !hideConsoleBar && !forceReadOnly && !$envelope?.sigs;
+  $: showErrorConsole = !hideConsoleBar && !forceReadOnly;
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
@@ -137,10 +137,7 @@
         return;
       }
 
-      const parsedError = JSON.parse(goblErr.message);
-
-      const errorString =
-        parsedError.key === "validation" ? getErrorString(parsedError.fields?.doc) : parsedError.message;
+      const errorString = getGOBLErrorMessage(goblErr.message);
 
       const errorsArr = errorString.split(" / ");
 
