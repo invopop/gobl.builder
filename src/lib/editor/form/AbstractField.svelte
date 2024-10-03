@@ -12,6 +12,7 @@
   import BooleanField from "./BooleanField.svelte";
   import clsx from "clsx";
   import { getBuilderContext } from "$lib/store/builder";
+  import type { Schema } from "./utils/schema";
 
   const dispatch = createEventDispatcher();
 
@@ -34,6 +35,7 @@
 
   export let readOnly = false;
 
+  $: childrenType = (field.schema.items as Schema)?.type;
   $: isHover = $activeItem === field.id;
   $: highlight = $highlightedItem === field.id;
   $: showContextMenu = !readOnly && isHover;
@@ -42,12 +44,12 @@
     const offset = top + height - window.innerHeight;
     contextMenuOffset = offset > 0 ? offset : 0;
   }
-  $: isParent = ["object", "array"].includes(field.type);
+  $: isParent = ["object", "array"].includes(field.type) && childrenType !== "string";
   $: isSection = isParent && field.parent?.is.root;
   $: wrapperClasses = clsx({
     "bg-neutral-50 border-neutral-100": isHover && !isParent,
     "border-transparent": !isHover,
-    "border-l border-t border-b": !isParent,
+    "border-l border-t border-b": !["object", "array"].includes(field.type),
     "border-r rounded-r": readOnly && !isParent,
     "pl-2": isParent && !isSection,
   });
@@ -55,6 +57,7 @@
     "bg-neutral-50": isHover,
     "border-workspace-accent-500": highlight,
     "border-neutral-200": !highlight,
+    "border-l border-t border-b": childrenType !== "string",
   });
   $: contextMenuClasses = clsx({
     "mt-1": isParent && !isSection && !field.is.root,
@@ -78,18 +81,27 @@
   function handleAddField() {
     showAddMenu = false;
 
+    // Children of string arrays can add items directly from the row
+    if (field.type === "string" && field.parent?.type === "array") {
+      addFieldToArray(field.parent);
+      return;
+    }
+
     // @note: Add field directly instead of showing the dropdown option list
     if (field.type === "array" || field.controlType === "dictionary") {
-      const [childOption] = field.options || [];
-
-      const newField = field.addChildField(childOption);
-      newField?.tryFocus();
-      dispatch("fieldAdded", newField);
-
+      addFieldToArray(field);
       return;
     }
 
     showAddMenu = true;
+  }
+
+  function addFieldToArray(f: UIModelField) {
+    const [childOption] = f.options || [];
+
+    const newField = f.addChildField(childOption);
+    newField?.tryFocus();
+    dispatch("fieldAdded", newField);
   }
 
   function focusNextField(nextField = field.getNextFocusableField()) {
@@ -156,7 +168,7 @@
 >
   <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
-      <div class="{classes} w-2 border-l border-t border-b flex-none rounded-l"></div>
+      <div class="{classes} w-2 flex-none rounded-l"></div>
     {/if}
     <div class="flex-1">
       <svelte:component
@@ -172,31 +184,33 @@
       />
     </div>
   </div>
-  <div class="absolute top-0 right-0 w-9 h-10 -mr-9">
-    <span
-      class="{contextMenuClasses} absolute top-0 left-0 -ml-px pt-[7px] pr-2 pb-[5.5px] bg-neutral-50 border-t border-b border-r border-neutral-100 rounded-r border-l-neutral-50 border-l"
-      class:invisible={!showContextMenu}
-    >
-      <FieldContextMenu
-        {field}
-        on:addField={handleAddField}
-        on:fieldDeleted
-        on:fieldDuplicated
-        on:fieldMoved
-        on:fieldValueUpdated
-        on:fieldKeyUpdated
-      />
-    </span>
-    {#if showAddMenu}
-      <div
-        class="absolute top-12 -right-8 w-64 z-20"
-        style={`margin-top: -${contextMenuOffset}px`}
-        bind:this={addMenuRef}
+  {#if childrenType !== "string"}
+    <div class="absolute top-0 right-0 w-9 h-10 -mr-9 bg-transparent">
+      <span
+        class="{contextMenuClasses} absolute top-0 left-0 -ml-px pt-[7px] pr-2 pb-[5.5px] bg-neutral-50 border-t border-b border-r border-neutral-100 rounded-r border-l-neutral-50 border-l"
+        class:invisible={!showContextMenu}
       >
-        <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
-      </div>
-    {/if}
-  </div>
+        <FieldContextMenu
+          {field}
+          on:addField={handleAddField}
+          on:fieldDeleted
+          on:fieldDuplicated
+          on:fieldMoved
+          on:fieldValueUpdated
+          on:fieldKeyUpdated
+        />
+      </span>
+      {#if showAddMenu}
+        <div
+          class="absolute top-12 -right-8 w-64 z-20"
+          style={`margin-top: -${contextMenuOffset}px`}
+          bind:this={addMenuRef}
+        >
+          <AddFieldMenu on:fieldAdded {field} on:closeAddFieldMenu={() => (showAddMenu = false)} />
+        </div>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style>

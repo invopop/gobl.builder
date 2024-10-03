@@ -2,6 +2,7 @@
   import type { UIModelRootField, UIModelField } from "$lib/editor/form/utils/model.js";
   import AbstractField from "./AbstractField.svelte";
   import SectionWrapper from "./SectionWrapper.svelte";
+  import type { Schema } from "./utils/schema";
 
   export let field: UIModelRootField;
   export let readOnly = false;
@@ -10,8 +11,18 @@
 
   $: children = field.children?.filter((f) => f.key !== "$schema") || emptyChildren;
   // @todo: Add title field to schema object on gobl
-  $: complexFields = children.filter((f) => ["array", "object"].includes(f.type));
-  $: simpleFields = children.filter((f) => !["array", "object"].includes(f.type));
+  $: complexFields = children.filter((f) => {
+    if ((f.schema.items as Schema)?.type === "string") {
+      return false;
+    }
+    return ["array", "object"].includes(f.type);
+  });
+  $: simpleFields = children.filter((f) => {
+    if ((f.schema.items as Schema)?.type === "string") {
+      return true;
+    }
+    return !["array", "object"].includes(f.type);
+  });
 </script>
 
 <SectionWrapper {readOnly} {field}>

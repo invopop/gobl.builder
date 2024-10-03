@@ -49,7 +49,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     root?: UIModelRootField,
   ) {
     this.id = `${this.parent?.id ? `${this.parent.id}` : `${this.uniqueId}`}-${this.key}`.replace(
-      /[^a-zA-Z0-9-_\\$]/g,
+      /[^a-zA-Z0-9-_]/g,
       "",
     );
     this.type = this.schema.type as string;
