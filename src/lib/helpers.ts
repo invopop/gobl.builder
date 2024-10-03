@@ -70,9 +70,9 @@ export function getGOBLErrorMessage(message: string) {
   const parsedError = JSON.parse(message);
 
   return parsedError.key === "validation"
-    ? getErrorString(parsedError.fields?.doc)
+    ? getErrorString(parsedError.fields?.doc || parsedError.fields?.head || {})
     : parsedError.key === "calculation"
-    ? getErrorString(parsedError.fields)
+    ? getErrorString(parsedError.fields || {})
     : parsedError.message;
 }
 
