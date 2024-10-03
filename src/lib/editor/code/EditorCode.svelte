@@ -38,7 +38,7 @@
 
   const builderContext = getBuilderContext();
 
-  const { editorProblems: problems, editor, envelope } = builderContext;
+  const { editorProblems: problems, editor } = builderContext;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -53,7 +53,7 @@
 
   $: forceReadOnly, setEditorReadOnly();
 
-  $: showErrorConsole = !hideConsoleBar && !forceReadOnly && !$envelope?.sigs;
+  $: showErrorConsole = !hideConsoleBar && !forceReadOnly;
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
