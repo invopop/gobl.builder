@@ -106,10 +106,10 @@
         "Roboto Mono",
         "DejaVu Sans Mono",
         monospace`,
-      scrollbar: {
-        vertical: "hidden",
-        useShadows: false,
-      },
+      // scrollbar: {
+      //   vertical: "hidden",
+      //   useShadows: false,
+      // },
       overviewRulerLanes: 0,
       hideCursorInOverviewRuler: true,
       overviewRulerBorder: false,
