@@ -109,7 +109,7 @@
         "DejaVu Sans Mono",
         monospace`,
       scrollbar: {
-        vertical: OS === "windows" ? "visible" : "visible",
+        vertical: OS === "windows" ? "visible" : "auto",
         verticalHasArrows: true,
         useShadows: false,
         horizontalScrollbarSize: OS === "windows" ? 18 : 11,
