@@ -38,7 +38,7 @@
   });
 </script>
 
-<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden hideScroll">
+<div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden">
   <div class="pb-40 flex editor-wrapper">
     <div class="w-full max-w-[632px]">
       {#if showSchemaField}
