@@ -115,3 +115,17 @@ export function objectHasEmptyProperties(obj: Record<string, unknown>) {
 
   return false; // No empty string found
 }
+
+export function getAgentSystem() {
+  if (!("navigator" in window)) {
+    return "unknown";
+  }
+
+  if (navigator.userAgent.indexOf("Win") > -1) return "windows";
+  if (navigator.userAgent.indexOf("Mac") > -1) return "mac";
+  if (navigator.userAgent.indexOf("Linux") > -1) return "linux";
+  if (navigator.userAgent.indexOf("Android") > -1) return "android";
+  if (navigator.userAgent.indexOf("like Mac") > -1) return "ios";
+
+  return "unknown";
+}

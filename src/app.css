@@ -8,14 +8,6 @@
   }
 }
 
-.hideScroll::-webkit-scrollbar {
-  display: none;
-}
-.hidescroll {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
 /* Uncomment for custom theme */
 /* :root {
   --workspace-accent-color: rgba(112, 69, 212, 1);
