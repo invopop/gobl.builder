@@ -13,7 +13,7 @@
   import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
   import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
-  import { getGOBLErrorMessage } from "$lib/helpers";
+  import { getAgentSystem, getGOBLErrorMessage } from "$lib/helpers";
 
   let monaco: typeof Monaco;
 
@@ -90,6 +90,8 @@
 
     setSchemaURI(jsonSchemaURL);
 
+    const OS = getAgentSystem();
+
     monacoEditor = monaco.editor.create(editorEl, {
       model,
       minimap: {
@@ -106,10 +108,16 @@
         "Roboto Mono",
         "DejaVu Sans Mono",
         monospace`,
-      // scrollbar: {
-      //   vertical: "hidden",
-      //   useShadows: false,
-      // },
+      scrollbar: {
+        vertical: OS === "windows" ? "visible" : "visible",
+        verticalHasArrows: true,
+        useShadows: false,
+        horizontalScrollbarSize: OS === "windows" ? 18 : 11,
+        verticalScrollbarSize: OS === "windows" ? 18 : 11,
+        horizontalSliderSize: OS === "windows" ? 14 : 7,
+        verticalSliderSize: OS === "windows" ? 14 : 7,
+        arrowSize: OS === "windows" ? 18 : 2,
+      },
       overviewRulerLanes: 0,
       hideCursorInOverviewRuler: true,
       overviewRulerBorder: false,
@@ -224,6 +232,12 @@
     document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
 
     setEditorReadOnly();
+
+    const scrollableElement = document.querySelector(".monaco-scrollable-element");
+
+    if (scrollableElement && OS === "windows") {
+      scrollableElement.classList.add("win");
+    }
   });
 
   onDestroy(() => {
@@ -414,5 +428,45 @@
 <style>
   :global(.monaco-editor) {
     position: absolute !important;
+  }
+
+  :global(.monaco-scrollable-element > .scrollbar.invisible) {
+    visibility: visible;
+  }
+
+  :global(.monaco-scrollable-element > .scrollbar > .slider) {
+    border-radius: 4px;
+  }
+
+  :global(.monaco-scrollable-element.win > .scrollbar > .slider) {
+    border-radius: 0px;
+  }
+
+  :global(.monaco-scrollable-element > .scrollbar > .codicon-scrollbar-button-up),
+  :global(.monaco-scrollable-element > .scrollbar > .codicon-scrollbar-button-down) {
+    opacity: 0;
+  }
+  :global(.monaco-scrollable-element.win > .scrollbar > .codicon-scrollbar-button-up),
+  :global(.monaco-scrollable-element.win > .scrollbar > .codicon-scrollbar-button-down) {
+    opacity: 1;
+  }
+  :global(.monaco-scrollable-element.win > .scrollbar > .codicon-scrollbar-button-up:before),
+  :global(.monaco-scrollable-element.win > .scrollbar > .codicon-scrollbar-button-down:before) {
+    font-size: 9px;
+  }
+
+  :global(:root .monaco-scrollable-element > .scrollbar) {
+    --vscode-scrollbarSlider-background: rgba(0, 0, 0, 0.5);
+    --vscode-scrollbarSlider-hoverBackground: rgba(0, 0, 0, 0.5);
+  }
+
+  :global(:root .monaco-scrollable-element.win > .scrollbar) {
+    background-color: #f3f3f3;
+    --vscode-scrollbarSlider-background: rgba(0, 0, 0, 0.2);
+    --vscode-scrollbarSlider-hoverBackground: rgba(0, 0, 0, 0.3);
+  }
+
+  :global(.monaco-scrollable-element > .scrollbar.fade.invisible) {
+    transition-duration: 300ms;
   }
 </style>
