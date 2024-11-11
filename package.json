@@ -31,13 +31,17 @@
       "svelte": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./editor/EditorProblem.svelte": {
-      "svelte": "./dist/editor/EditorProblem.svelte",
-      "types": "./dist/editor/EditorProblem.svelte.d.ts"
+    "./types/editor": {
+      "types": "./dist/types/editor.d.ts",
+      "default": "./dist//editor.d.ts"
     },
-    "./editor/EditorProblem": {
-      "import": "./dist/editor/EditorProblem.js",
-      "types": "./dist/editor/EditorProblem.d.ts"
+    "./types/envelope": {
+      "types": "./dist/types/envelope.d.ts",
+      "default": "./dist/types/envelope.d.ts"
+    },
+    "./types/editor/model": {
+      "types": "./dist/editor/form/utils/model.d.ts",
+      "default": "./dist/editor/form/utils/model.d.ts"
     }
   },
   "files": [
