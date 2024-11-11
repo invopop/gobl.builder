@@ -33,7 +33,7 @@
     },
     "./types/editor": {
       "types": "./dist/types/editor.d.ts",
-      "default": "./dist//editor.d.ts"
+      "default": "./dist/types/editor.d.ts"
     },
     "./types/envelope": {
       "types": "./dist/types/envelope.d.ts",
