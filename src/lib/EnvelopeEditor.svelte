@@ -60,7 +60,7 @@
   // Expose activeHeader
   export let activeHeader: DocumentHeader | undefined = undefined;
 
-  // If autocorrect is set to false the envelope is not updated automatically. Event `corrected` is always fired with the result
+  // If autocorrect is set to false the envelope is not updated automatically. Event `correct` is always fired with the result
   export let autocorrect = true;
 
   // If hideConsoleBar is true will force to hide the error suggestions in Code View
@@ -202,7 +202,7 @@
 
     dispatch("correct", result);
 
-    state = "corrected";
+    state = "built";
 
     if (!editorForm) return true;
 
@@ -225,7 +225,7 @@
       return "errored";
     }
 
-    return "signed"
+    return "signed";
   };
 
   export const validate = async () => {

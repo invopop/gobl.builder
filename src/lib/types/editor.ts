@@ -4,7 +4,7 @@ import type { Readable, Writable } from "svelte/store";
 import type { UIModelRootField } from "$lib/editor/form/utils/model";
 import type { Envelope } from "./envelope";
 
-export type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed" | "corrected";
+export type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed";
 
 export type DocumentHeader = {
   label: string;
