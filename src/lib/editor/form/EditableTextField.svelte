@@ -55,10 +55,26 @@
   function handlePaste(event: Event) {
     event.preventDefault();
     let clipboardEvent = event as ClipboardEvent;
+
     if (!clipboardEvent.clipboardData) return;
+
     const target = event.target as HTMLDivElement;
+
     if (!target) return;
-    target.innerText = clipboardEvent.clipboardData.getData("text/plain");
+
+    const pasteText = clipboardEvent.clipboardData.getData("text/plain");
+    const selection = window.getSelection();
+
+    if (!selection || !selection.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    const textNode = document.createTextNode(pasteText);
+    range.insertNode(textNode);
+    range.setStartAfter(textNode);
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
   }
 </script>
 
