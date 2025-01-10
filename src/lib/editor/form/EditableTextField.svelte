@@ -29,7 +29,7 @@
 
   function handleBlur(e: FocusEvent) {
     const input = e.target as HTMLDivElement;
-    const value = input.innerText;
+    const value = input.innerText.trim();
     dispatch("edit", value);
     dispatch("blur", value);
   }
