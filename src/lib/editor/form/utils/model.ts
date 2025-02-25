@@ -517,7 +517,11 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         options = (schema.anyOf || []).map((v: any) => ({ label: v.title || v.description, value: v.const }));
       }
 
-      return [{ label: "", value: "" }, ...options.sort((a, b) => a.label.localeCompare(b.label))];
+      // We add a default empty option and remove any empty value that may cause duplications
+      return [
+        { label: "", value: "" },
+        ...options.filter((o) => o.value !== "").sort((a, b) => a.label.localeCompare(b.label)),
+      ];
     }
 
     if (controlType === "dictionary" && !!schema.patternProperties?.[".*"]) {
