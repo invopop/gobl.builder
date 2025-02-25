@@ -69,11 +69,17 @@ export function showErrorToast(description: string) {
 export function getGOBLErrorMessage(message: string) {
   const parsedError = JSON.parse(message);
 
-  return parsedError.key === "validation"
-    ? getErrorString(parsedError.fields?.doc || parsedError.fields?.head || {})
-    : parsedError.key === "calculation"
-    ? getErrorString(parsedError.fields || {})
-    : parsedError.message;
+  let m = "";
+
+  if (parsedError.key === "validation") {
+    m = getErrorString(parsedError.fields?.doc || parsedError.fields?.head || {});
+  }
+
+  if (parsedError.key === "calculation") {
+    m = getErrorString(parsedError.fields || {});
+  }
+
+  return m || parsedError.message;
 }
 
 export async function displayAllErrors(error: string) {
