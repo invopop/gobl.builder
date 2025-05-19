@@ -3,17 +3,17 @@ import * as GOBL from "@invopop/gobl-worker";
 import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
 import { toasts } from "svelte-toasts";
 import { envelopeGOBLSchema } from "$lib/helpers/envelope";
-import type { BuilderContext } from "$lib/types/editor";
+import type { BuilderContext, BuildOptions } from "$lib/types/editor";
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
-export async function build(ctx: BuilderContext) {
+export async function build(ctx: BuilderContext, options: BuildOptions = {}) {
   if (!get(ctx.validEditor)) {
     return;
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx, options);
 
     const payload: GOBL.BuildPayload = {
       data: encodeUTF8ToBase64(sendData),
@@ -214,10 +214,13 @@ export async function getSchemas() {
   return JSON.parse(schemas).list;
 }
 
-function getGOBLPayload(ctx: BuilderContext) {
+function getGOBLPayload(ctx: BuilderContext, options: BuildOptions = {}) {
   const editorValue = get(ctx.editor);
   const envelopeValue = get(ctx.envelope);
   const doc = JSON.parse(editorValue.value || "");
+  if (options.removeStamps) {
+    delete envelopeValue.head?.stamps;
+  }
   if (doc.$schema == envelopeGOBLSchema) {
     return editorValue.value || ""; // send as-is
   }
