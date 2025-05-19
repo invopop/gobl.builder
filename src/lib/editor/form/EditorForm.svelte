@@ -19,6 +19,7 @@
     recreatingUiModel,
     updateSchema,
     recreateEditor,
+    envelope,
   } = builderContext;
 
   setContext("editorId", editorId);
@@ -114,7 +115,7 @@
   <div class="flex-1">
     <DynamicForm
       model={$uiModel.value}
-      readOnly={forceReadOnly}
+      readOnly={forceReadOnly || !!$envelope.sigs}
       {showSchemaField}
       {isEmptySchema}
       on:uiRefreshNeeded={handleFormUpdated}

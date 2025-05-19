@@ -14,6 +14,7 @@
   import { Menu, Close } from "@invopop/ui-icons";
   import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
   import BuilderNavbarView from "./BuilderNavbarView.svelte";
+  import BuilderNavbarCorrect from "./BuilderNavbarCorrect.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -76,7 +77,7 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarOptions bind:forceReadOnly />
+    <BuilderNavbarOptions {state} bind:forceReadOnly />
 
     {#if state !== "init"}
       <BuilderNavbarSeparator />
@@ -88,8 +89,10 @@
     <BuilderNavbarActions {state} on:action />
 
     <BuilderNavbarSeparator />
+    <BuilderNavbarCorrect {state} on:action />
+    <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
+    <BuilderNavbarDownload {envelope} on:action disabled={!["build", "signed"].includes(state)} />
   </div>
   <button
     class="md:hidden p-1.5 border border-gobl-300"
@@ -142,6 +145,8 @@
         }}
       />
       <BuilderNavbarSeparator />
+      <BuilderNavbarSeparator />
+      <BuilderNavbarCorrect {state} on:action />
       <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
     </div>
   </div>

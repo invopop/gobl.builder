@@ -2,7 +2,7 @@
   import { iconButtonClasses } from "./ui/iconButtonClasses";
   import type { State } from "./types/editor";
   import { Icon } from "@steeze-ui/svelte-icon";
-  import { Calculator, CrumpledPaper, Erase, Sign, SquareCheck } from "@invopop/ui-icons";
+  import { Calculator, CrumpledPaper, Sign, SquareCheck } from "@invopop/ui-icons";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -20,16 +20,6 @@
     }}
   >
     <Icon src={Calculator} class="w-5 h-5" />
-  </button>
-  <button
-    title="Correct document."
-    on:click={() => {
-      dispatch("action", "correct");
-    }}
-    class={iconButtonClasses(!["loaded", "built", "signed"].includes(state))}
-    disabled={!["loaded", "built", "signed"].includes(state)}
-  >
-    <Icon src={Erase} class="w-5 h-5" />
   </button>
   <button
     title="Sign document."
