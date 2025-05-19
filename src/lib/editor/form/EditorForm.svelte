@@ -30,7 +30,6 @@
   recreateFormEditor();
 
   export let forceReadOnly = false;
-  export let removeStampsOnBuild = false;
 
   // eslint-disable-next-line
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
@@ -99,7 +98,7 @@
     // fields without having them deleted
     if ($someEditorValueIsEmpty) return false;
 
-    const result = await build(builderContext, { removeStamps: removeStampsOnBuild });
+    const result = await build(builderContext);
 
     const isSuccess = !result?.error;
 

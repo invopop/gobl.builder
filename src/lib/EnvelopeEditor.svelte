@@ -66,9 +66,6 @@
   // If hideConsoleBar is true will force to hide the error suggestions in Code View
   export let hideConsoleBar = false;
 
-  // If removeStampsOnBuild is true will reset the header stamps on build
-  export let removeStampsOnBuild = false;
-
   let editorForm: EditorForm | null = null;
   let initialEditorData = "";
 
@@ -182,6 +179,10 @@
     return state;
   };
 
+  export const removeSigs = async (): Promise<State> => {
+    return await build({ removeSignatures: true, removeStamps: true });
+  };
+
   export const getCorrectionOptionsModel = async () => {
     const result = await actions.getCorrectionOptionsSchema(builderContext);
 
@@ -279,7 +280,7 @@
     setTimeout(() => {
       if (forceReadOnly || !envelopeValue?.doc || $envelopeIsSigned) return;
 
-      build({ removeStamps: removeStampsOnBuild });
+      build();
     }, 100);
   };
 
@@ -343,7 +344,6 @@
           <EditorForm
             bind:this={editorForm}
             {forceReadOnly}
-            {removeStampsOnBuild}
             on:setState={(event) => {
               state = event.detail;
             }}

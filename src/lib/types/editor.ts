@@ -8,6 +8,7 @@ export type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "erro
 
 export type BuildOptions = {
   removeStamps?: boolean;
+  removeSignatures?: boolean;
 };
 
 export type DocumentHeader = {
