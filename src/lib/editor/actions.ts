@@ -221,6 +221,9 @@ function getGOBLPayload(ctx: BuilderContext, options: BuildOptions = {}) {
   if (options.removeStamps) {
     delete envelopeValue.head?.stamps;
   }
+  if (options.removeSignatures) {
+    delete envelopeValue.sigs;
+  }
   if (doc.$schema == envelopeGOBLSchema) {
     return editorValue.value || ""; // send as-is
   }

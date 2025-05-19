@@ -2,7 +2,7 @@
   import { iconButtonClasses } from "./ui/iconButtonClasses";
   import type { State } from "./types/editor";
   import { Icon } from "@steeze-ui/svelte-icon";
-  import { Calculator, Erase, Sign, SquareCheck } from "@invopop/ui-icons";
+  import { Calculator, CrumpledPaper, Erase, Sign, SquareCheck } from "@invopop/ui-icons";
   import { createEventDispatcher } from "svelte";
 
   const dispatch = createEventDispatcher();
@@ -40,6 +40,15 @@
     disabled={state !== "built"}
   >
     <Icon src={Sign} class="w-5 h-5" />
+  </button>
+  <button
+    title="Remove Signatures."
+    class={iconButtonClasses(state !== "signed")}
+    on:click={() => {
+      dispatch("action", "removeSigs");
+    }}
+  >
+    <Icon src={CrumpledPaper} class="w-5 h-5" />
   </button>
   <button
     title="Validate a signed GOBL document."

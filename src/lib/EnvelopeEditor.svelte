@@ -180,6 +180,9 @@
   };
 
   export const removeSigs = async (): Promise<State> => {
+    if (!$envelope?.sigs) {
+      return state;
+    }
     return await build({ removeSignatures: true, removeStamps: true });
   };
 
