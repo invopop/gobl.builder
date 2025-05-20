@@ -10,7 +10,7 @@
   export let state: State = "init";
 </script>
 
-<div class="flex space-x-1 items-center">
+<div class="flex space-x-2 items-center">
   <button
     title="Build the GOBL document."
     class="p-1.5 rounded border border-gobl-50 disabled:border-gobl-300 text-gobl-50 disabled:text-white/30 disabled:cursor-not-allowed"

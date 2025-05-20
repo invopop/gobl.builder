@@ -8,7 +8,6 @@
   import SelectSchemas from "./SelectSchemas.svelte";
   import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
   import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
-  import BuilderNavbarEnvelopeMeta from "./BuilderNavbarEnvelopeMeta.svelte";
   import BuilderNavbarSeparator from "./BuilderNavbarSeparator.svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Menu, Close } from "@invopop/ui-icons";
@@ -72,24 +71,19 @@
     </div>
   </div>
 
-  <div class="hidden md:flex items-center space-x-3">
+  <div class="hidden md:flex items-center space-x-3 text-white">
     <BuilderNavbarActions {state} on:action />
 
     <BuilderNavbarSeparator />
     <BuilderNavbarCorrect {state} on:action />
-    {#if state !== "init"}
-      <BuilderNavbarSeparator />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
-    {/if}
-
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload {envelope} on:action disabled={!["build", "signed"].includes(state)} />
+    <BuilderNavbarDownload {state} {envelope} on:action disabled={!["build", "signed"].includes(state)} />
     <BuilderNavbarSeparator />
-    <BuilderNavbarOptions {state} bind:forceReadOnly />
-    <BuilderNavbarSeparator />
-
-    <BuilderNavbarView bind:editorView />
+    <div class="flex items-center space-x-2">
+      <BuilderNavbarOptions {state} bind:forceReadOnly />
+      <BuilderNavbarView bind:editorView />
+    </div>
   </div>
   <button
     class="md:hidden p-1.5 border border-gobl-300"
@@ -128,10 +122,6 @@
     <BuilderNavbarView bind:editorView />
     <hr class="my-5 border-gobl-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
-    {#if state !== "init"}
-      <hr class="my-5 border-gobl-300" />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
-    {/if}
     <hr class="my-5 border-gobl-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
@@ -144,7 +134,7 @@
       <BuilderNavbarSeparator />
       <BuilderNavbarSeparator />
       <BuilderNavbarCorrect {state} on:action />
-      <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
+      <BuilderNavbarDownload {state} {envelope} on:action disabled={state !== "built"} />
     </div>
   </div>
 {/if}
