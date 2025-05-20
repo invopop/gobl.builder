@@ -12,7 +12,7 @@
 
 <button
   title="Show document headers"
-  class={iconButtonClasses(false)}
+  class={iconButtonClasses}
   on:click={() => {
     dispatch("action", "showHeaders");
   }}
@@ -21,7 +21,7 @@
 </button>
 <button
   title="Show document signatures"
-  class={iconButtonClasses(state !== "signed")}
+  class={iconButtonClasses}
   disabled={state !== "signed"}
   on:click={() => {
     dispatch("action", "showSignatures");

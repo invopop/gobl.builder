@@ -73,12 +73,10 @@
   </div>
 
   <div class="hidden md:flex items-center space-x-3">
-    <BuilderNavbarView bind:editorView />
+    <BuilderNavbarActions {state} on:action />
 
     <BuilderNavbarSeparator />
-
-    <BuilderNavbarOptions {state} bind:forceReadOnly />
-
+    <BuilderNavbarCorrect {state} on:action />
     {#if state !== "init"}
       <BuilderNavbarSeparator />
       <BuilderNavbarEnvelopeMeta {state} on:action />
@@ -86,13 +84,12 @@
 
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarActions {state} on:action />
-
-    <BuilderNavbarSeparator />
-    <BuilderNavbarCorrect {state} on:action />
-    <BuilderNavbarSeparator />
-
     <BuilderNavbarDownload {envelope} on:action disabled={!["build", "signed"].includes(state)} />
+    <BuilderNavbarSeparator />
+    <BuilderNavbarOptions {state} bind:forceReadOnly />
+    <BuilderNavbarSeparator />
+
+    <BuilderNavbarView bind:editorView />
   </div>
   <button
     class="md:hidden p-1.5 border border-gobl-300"

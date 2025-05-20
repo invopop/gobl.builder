@@ -52,7 +52,7 @@
   }
 </script>
 
-<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses(disabled)} {disabled}>
+<button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses} {disabled}>
   {#if generatingPDF}
     <LoadingIcon />
   {:else}
@@ -65,7 +65,7 @@
   on:click={() => {
     dispatch("action", "downloadJson");
   }}
-  class={iconButtonClasses(disabled)}
+  class={iconButtonClasses}
   {disabled}
 >
   <Icon src={Download} class="w-5 h-5" />

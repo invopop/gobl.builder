@@ -15,7 +15,7 @@
   on:click={() => {
     dispatch("action", "correct");
   }}
-  class={iconButtonClasses(!["loaded", "built", "signed"].includes(state))}
+  class={iconButtonClasses}
   disabled={!["loaded", "built", "signed"].includes(state)}
 >
   <Icon src={Erase} class="w-5 h-5" />

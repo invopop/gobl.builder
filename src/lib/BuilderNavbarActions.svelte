@@ -13,7 +13,7 @@
 <div class="flex space-x-1 items-center">
   <button
     title="Build the GOBL document."
-    class={iconButtonClasses(state !== "modified" && state !== "loaded" && state !== "errored")}
+    class="p-1.5 rounded border border-gobl-50 disabled:border-gobl-300 text-gobl-50 disabled:text-white/30 disabled:cursor-not-allowed"
     disabled={state !== "modified" && state !== "loaded" && state !== "errored"}
     on:click={() => {
       dispatch("action", "build");
@@ -26,14 +26,15 @@
     on:click={() => {
       dispatch("action", "sign");
     }}
-    class={iconButtonClasses(state !== "built")}
+    class={iconButtonClasses}
     disabled={state !== "built"}
   >
     <Icon src={Sign} class="w-5 h-5" />
   </button>
   <button
     title="Remove Signatures."
-    class={iconButtonClasses(state !== "signed")}
+    class={iconButtonClasses}
+    disabled={state !== "signed"}
     on:click={() => {
       dispatch("action", "removeSigs");
     }}
@@ -45,7 +46,7 @@
     on:click={() => {
       dispatch("action", "validate");
     }}
-    class={iconButtonClasses(state === "errored" || state !== "signed")}
+    class={iconButtonClasses}
     disabled={state === "errored" || state !== "signed"}
   >
     <Icon src={SquareCheck} class="w-5 h-5" />

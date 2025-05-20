@@ -20,9 +20,8 @@
     <Icon src={Edit} class="h-5 w-5" />
   </button>
   <button
-    disabled={state === "signed"}
     title="Read Only"
-    class:enabled:bg-gobl-300={forceReadOnly}
+    class:bg-gobl-300={forceReadOnly || state === "signed"}
     class="rounded p-1 disabled:text-gobl-300 disabled:cursor-not-allowed enabled:hover:text-gobl-50"
     on:click={() => {
       forceReadOnly = true;
