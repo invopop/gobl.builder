@@ -6,6 +6,11 @@ import type { Envelope } from "./envelope";
 
 export type State = "init" | "empty" | "loaded" | "modified" | "invalid" | "errored" | "built" | "signed" | "corrected";
 
+export type BuildOptions = {
+  removeStamps?: boolean;
+  removeSignatures?: boolean;
+};
+
 export type DocumentHeader = {
   label: string;
   slug: string;

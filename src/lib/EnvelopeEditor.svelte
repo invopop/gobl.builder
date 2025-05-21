@@ -9,7 +9,7 @@
   import { isEnvelope } from "@invopop/gobl-worker";
   import { problemSeverityMap, type EditorProblem } from "./editor/EditorProblem.js";
   import * as actions from "./editor/actions";
-  import type { DocumentHeader, State } from "./types/editor";
+  import type { BuildOptions, DocumentHeader, State } from "./types/editor";
   import { displayAllErrors, showErrorToast } from "./helpers";
   import { generateCorrectOptionsModel } from "./editor/form/utils/model";
   import fileSaver from "file-saver";
@@ -65,6 +65,9 @@
 
   // If hideConsoleBar is true will force to hide the error suggestions in Code View
   export let hideConsoleBar = false;
+
+  // If removeStampsOnBuild is true will reset the header stamps on build
+  export let removeStampsOnBuild = false;
 
   let editorForm: EditorForm | null = null;
   let initialEditorData = "";
@@ -157,8 +160,8 @@
   };
 
   // Exposed functions to perform the actions from outside
-  export const build = async (): Promise<State> => {
-    const result = await actions.build(builderContext);
+  export const build = async (options: BuildOptions = {}): Promise<State> => {
+    const result = await actions.build(builderContext, options);
     dispatch("build", result);
 
     if (result?.error) {
@@ -177,6 +180,13 @@
     displayAllErrors(result?.error?.message || "");
 
     return state;
+  };
+
+  export const removeSigs = async (): Promise<State> => {
+    if (!$envelope?.sigs) {
+      return state;
+    }
+    return await build({ removeSignatures: true, removeStamps: true });
   };
 
   export const getCorrectionOptionsModel = async () => {
@@ -225,7 +235,7 @@
       return "errored";
     }
 
-    return "signed"
+    return "signed";
   };
 
   export const validate = async () => {
@@ -276,7 +286,7 @@
     setTimeout(() => {
       if (forceReadOnly || !envelopeValue?.doc || $envelopeIsSigned) return;
 
-      build();
+      build({ removeStamps: removeStampsOnBuild });
     }, 100);
   };
 
@@ -340,6 +350,7 @@
           <EditorForm
             bind:this={editorForm}
             {forceReadOnly}
+            {removeStampsOnBuild}
             on:setState={(event) => {
               state = event.detail;
             }}

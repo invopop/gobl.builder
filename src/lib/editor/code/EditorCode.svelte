@@ -38,7 +38,7 @@
 
   const builderContext = getBuilderContext();
 
-  const { editorProblems: problems, editor } = builderContext;
+  const { editorProblems: problems, editor, envelope } = builderContext;
 
   // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
   $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
@@ -47,13 +47,15 @@
     : 0;
   $: errorCount = monaco ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length : 0;
 
+  $: isReadOnly = forceReadOnly || $envelope.sigs;
+
   $: {
     setSchemaURI(jsonSchemaURL);
   }
 
-  $: forceReadOnly, setEditorReadOnly();
+  $: isReadOnly, setEditorReadOnly();
 
-  $: showErrorConsole = !hideConsoleBar && !forceReadOnly;
+  $: showErrorConsole = !hideConsoleBar && !isReadOnly;
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
@@ -273,7 +275,7 @@
   async function setEditorReadOnly() {
     if (!monacoEditor) return;
 
-    if (!forceReadOnly) {
+    if (!isReadOnly) {
       monacoEditor.updateOptions({ readOnly: false });
       return;
     }

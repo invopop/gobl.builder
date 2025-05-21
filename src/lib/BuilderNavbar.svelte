@@ -8,12 +8,12 @@
   import SelectSchemas from "./SelectSchemas.svelte";
   import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
   import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
-  import BuilderNavbarEnvelopeMeta from "./BuilderNavbarEnvelopeMeta.svelte";
   import BuilderNavbarSeparator from "./BuilderNavbarSeparator.svelte";
   import { Icon } from "@steeze-ui/svelte-icon";
   import { Menu, Close } from "@invopop/ui-icons";
   import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
   import BuilderNavbarView from "./BuilderNavbarView.svelte";
+  import BuilderNavbarCorrect from "./BuilderNavbarCorrect.svelte";
 
   const dispatch = createEventDispatcher();
 
@@ -71,25 +71,19 @@
     </div>
   </div>
 
-  <div class="hidden md:flex items-center space-x-3">
-    <BuilderNavbarView bind:editorView />
-
-    <BuilderNavbarSeparator />
-
-    <BuilderNavbarOptions bind:forceReadOnly />
-
-    {#if state !== "init"}
-      <BuilderNavbarSeparator />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
-    {/if}
-
-    <BuilderNavbarSeparator />
-
+  <div class="hidden md:flex items-center space-x-3 text-white">
     <BuilderNavbarActions {state} on:action />
 
     <BuilderNavbarSeparator />
+    <BuilderNavbarCorrect {state} on:action />
+    <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
+    <BuilderNavbarDownload {state} {envelope} on:action disabled={!["build", "signed"].includes(state)} />
+    <BuilderNavbarSeparator />
+    <div class="flex items-center space-x-2">
+      <BuilderNavbarOptions {state} bind:forceReadOnly />
+      <BuilderNavbarView bind:editorView />
+    </div>
   </div>
   <button
     class="md:hidden p-1.5 border border-gobl-300"
@@ -128,10 +122,6 @@
     <BuilderNavbarView bind:editorView />
     <hr class="my-5 border-gobl-300" />
     <BuilderNavbarOptions bind:forceReadOnly />
-    {#if state !== "init"}
-      <hr class="my-5 border-gobl-300" />
-      <BuilderNavbarEnvelopeMeta {state} on:action />
-    {/if}
     <hr class="my-5 border-gobl-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
@@ -142,7 +132,9 @@
         }}
       />
       <BuilderNavbarSeparator />
-      <BuilderNavbarDownload {envelope} on:action disabled={state !== "built"} />
+      <BuilderNavbarSeparator />
+      <BuilderNavbarCorrect {state} on:action />
+      <BuilderNavbarDownload {state} {envelope} on:action disabled={state !== "built"} />
     </div>
   </div>
 {/if}
