@@ -16,7 +16,7 @@
     : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
 
   $: classes = clsx({
-    "py-1.5": readOnly,
+    "py-2.5": readOnly,
     "py-1": !readOnly,
   });
 
