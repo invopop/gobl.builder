@@ -57,8 +57,12 @@
 
   $: showErrorConsole = !hideConsoleBar && !isReadOnly;
 
-  $: if (!forceReadOnly) {
-    focusEditor();
+  $: forceReadOnly, focusEditor();
+
+  $: {
+    if (monacoEditor) {
+      monaco.editor.setTheme(isReadOnly ? "readOnlyTheme" : "editableTheme");
+    }
   }
 
   function focusEditor() {
@@ -103,6 +107,24 @@
     setSchemaURI(jsonSchemaURL);
 
     const OS = getAgentSystem();
+
+    monaco.editor.defineTheme("editableTheme", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": "#ffffff",
+      },
+    });
+
+    monaco.editor.defineTheme("readOnlyTheme", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": "#F9FAFB",
+      },
+    });
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
