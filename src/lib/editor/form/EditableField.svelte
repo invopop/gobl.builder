@@ -7,8 +7,13 @@
   import FieldError from "./FieldError.svelte";
   import { createEventDispatcher } from "svelte";
   import ReadOnlyField from "./ReadOnlyField.svelte";
+  import { getBuilderContext } from "$lib/store/builder";
 
   const dispatch = createEventDispatcher();
+
+  const builderContext = getBuilderContext();
+
+  const { lastFocusedElement } = builderContext;
 
   export let parseValue: (value: SchemaValue) => SchemaValue;
   export let field: UIModelField<string>;
@@ -46,6 +51,11 @@
       error = valid ? "" : `Invalid format ${field.schema.pattern}`;
     }
   }
+
+  function handleFocus(event: FocusEvent) {
+    const target = event.target as HTMLInputElement;
+    lastFocusedElement.set(target.id);
+  }
 </script>
 
 <div class="w-full space-y-1 flex flex-col">
@@ -54,7 +64,14 @@
   {:else if field.controlType === "date"}
     <EditableDateField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
   {:else if field.controlType === "select"}
-    <EditableSelectField {field} {showError} options={field.controlMeta} on:edit={handleEdit} on:blur={validateField} />
+    <EditableSelectField
+      {field}
+      {showError}
+      options={field.controlMeta}
+      on:edit={handleEdit}
+      on:blur={validateField}
+      on:focus={handleFocus}
+    />
   {:else if field.type === "boolean"}
     <EditableSelectField
       {field}
@@ -66,9 +83,10 @@
       ]}
       on:edit={handleEdit}
       on:blur={validateField}
+      on:focus={handleFocus}
     />
   {:else}
-    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} />
+    <EditableTextField {field} {showError} on:edit={handleEdit} on:blur={validateField} on:focus={handleFocus} />
   {/if}
   {#if showError}
     <FieldError {error} />

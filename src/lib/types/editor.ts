@@ -49,4 +49,5 @@ export type BuilderContext = {
   documentHeaders: Readable<DocumentHeader[]>;
   updateSchema(value: string): void;
   recreateEditor(): void;
+  lastFocusedElement: Writable<string | null>;
 };

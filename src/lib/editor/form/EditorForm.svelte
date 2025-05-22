@@ -2,7 +2,7 @@
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
-  import { createEventDispatcher, setContext } from "svelte";
+  import { createEventDispatcher, setContext, tick } from "svelte";
   import { getBuilderContext } from "$lib/store/builder.js";
   import { writable } from "svelte/store";
 
@@ -20,6 +20,7 @@
     updateSchema,
     recreateEditor,
     envelope,
+    lastFocusedElement,
   } = builderContext;
 
   setContext("editorId", editorId);
@@ -37,6 +38,10 @@
   $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
   $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
   $: showSchemaField = isEmptySchema || !isValidSchema;
+
+  $: if (!forceReadOnly) {
+    focusLastElement();
+  }
 
   $: {
     updateSchemaIfNeeded($jsonSchema || "");
@@ -107,6 +112,14 @@
     dispatch("setState", isSuccess ? "built" : "errored");
 
     return isSuccess;
+  }
+
+  async function focusLastElement() {
+    if (!$lastFocusedElement) return;
+    await tick();
+    const element = document.getElementById($lastFocusedElement);
+    if (!element) return;
+    element.focus();
   }
 </script>
 

@@ -89,6 +89,7 @@
     on:blur={handleBlur}
     on:keydown={handleKeydown}
     on:paste={handlePaste}
+    on:focus
     class="{classes} focus:border-workspace-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-workspace-accent-500 tracking-tight focus:shadow-active"
   >
     {val}
