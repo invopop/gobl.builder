@@ -29,6 +29,7 @@ export function createBuilderContext(): BuilderContext {
   const activeItem = writable<null | string>(null);
   const highlightedItem = writable<null | string>(null);
   const scrollingSection = writable(false);
+  const lastFocusedElement = writable<null | string>(null);
 
   // editor represents the stringified JSON content in the editor
   const editor: Writable<{
@@ -175,6 +176,7 @@ export function createBuilderContext(): BuilderContext {
     scrollingSection,
     documentHeaders,
     recreateEditor,
+    lastFocusedElement,
   });
 }
 

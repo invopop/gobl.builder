@@ -38,7 +38,7 @@
 </script>
 
 <button
-  id={field.id}
+  id={`${field.id}-readOnly`}
   on:click={handleClick}
   class="{classes} text-neutral-800 text-base px-3 outline-none w-full tracking-normal break-words border-l border-transparent"
 >

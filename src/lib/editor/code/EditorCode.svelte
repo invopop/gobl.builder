@@ -16,7 +16,7 @@
   import { getAgentSystem, getGOBLErrorMessage } from "$lib/helpers";
 
   let monaco: typeof Monaco;
-
+  let lastSelection: Monaco.Selection | null = null;
   export let jsonSchemaURL: string;
   export let forceReadOnly = false;
   export let hideConsoleBar = false;
@@ -57,6 +57,20 @@
 
   $: showErrorConsole = !hideConsoleBar && !isReadOnly;
 
+  $: forceReadOnly, focusEditor();
+
+  $: {
+    if (monacoEditor) {
+      monaco.editor.setTheme(isReadOnly ? "readOnlyTheme" : "editableTheme");
+    }
+  }
+
+  function focusEditor() {
+    if (monacoEditor) {
+      monacoEditor.focus();
+    }
+  }
+
   function setSchemaURI(uri: string) {
     if (!monaco) {
       return;
@@ -94,6 +108,24 @@
 
     const OS = getAgentSystem();
 
+    monaco.editor.defineTheme("editableTheme", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": "#ffffff",
+      },
+    });
+
+    monaco.editor.defineTheme("readOnlyTheme", {
+      base: "vs",
+      inherit: true,
+      rules: [],
+      colors: {
+        "editor.background": "#F9FAFB",
+      },
+    });
+
     monacoEditor = monaco.editor.create(editorEl, {
       model,
       minimap: {
@@ -129,6 +161,17 @@
         top: 12,
         bottom: 12,
       },
+    });
+
+    monacoEditor.onDidBlurEditorWidget(() => {
+      lastSelection = monacoEditor.getSelection();
+    });
+
+    monacoEditor.onDidFocusEditorWidget(() => {
+      if (lastSelection) {
+        monacoEditor.setSelection(lastSelection);
+        monacoEditor.revealRangeInCenter(lastSelection); // Optional: scroll to it
+      }
     });
 
     const messageContribution = monacoEditor.getContribution("editor.contrib.messageController");

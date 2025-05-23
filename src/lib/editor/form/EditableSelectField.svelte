@@ -33,6 +33,7 @@
   on:change={handleChange}
   on:keyup={handleChange}
   on:blur={handleBlur}
+  on:focus
   class="{classes} border focus:border-workspace-accent-500 custom-select text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active"
 >
   {#each options as opt (opt.value)}
