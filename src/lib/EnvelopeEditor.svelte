@@ -270,6 +270,11 @@
       return;
     }
 
+    // remove previous signatures if any and remove readOnly
+    // so editor is writable
+    forceReadOnly = false;
+    await removeSigs();
+
     $envelope = envelopeValue as Envelope;
     initialEditorData = hashedData;
 

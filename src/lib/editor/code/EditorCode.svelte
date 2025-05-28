@@ -66,7 +66,8 @@
   }
 
   function focusEditor() {
-    if (monacoEditor) {
+    if (monacoEditor && lastSelection) {
+      monacoEditor.setSelection(lastSelection);
       monacoEditor.focus();
     }
   }
@@ -165,13 +166,6 @@
 
     monacoEditor.onDidBlurEditorWidget(() => {
       lastSelection = monacoEditor.getSelection();
-    });
-
-    monacoEditor.onDidFocusEditorWidget(() => {
-      if (lastSelection) {
-        monacoEditor.setSelection(lastSelection);
-        monacoEditor.revealRangeInCenter(lastSelection); // Optional: scroll to it
-      }
     });
 
     const messageContribution = monacoEditor.getContribution("editor.contrib.messageController");
