@@ -270,7 +270,15 @@
       return;
     }
 
+    // remove previous signatures if any and remove readOnly
+    // so editor is writable
+    let readOnlyValue = forceReadOnly;
+    forceReadOnly = false;
+    await removeSigs();
+
     $envelope = envelopeValue as Envelope;
+    // restore previous readOnly state
+    forceReadOnly = readOnlyValue;
     initialEditorData = hashedData;
 
     // Only applies to form view

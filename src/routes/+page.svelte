@@ -86,7 +86,7 @@
         {jsonSchemaURL}
         {editorView}
         signEnabled
-        {forceReadOnly}
+        bind:forceReadOnly
         on:change={(event) => {
           envelope = event.detail.envelope;
           console.log("Received change event.", event.detail);
