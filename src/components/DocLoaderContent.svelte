@@ -12,9 +12,6 @@
     dispatch("docLoaded", data);
     dispatch("close");
   }
-
-  $: countries = templateGroups.filter((t) => t.folder !== "misc");
-  $: other = templateGroups.filter((t) => t.folder === "misc");
 </script>
 
 <Accordion activeClass="border-b-0">
