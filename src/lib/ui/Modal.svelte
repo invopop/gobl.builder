@@ -23,7 +23,7 @@
       <!-- Modal content -->
       <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside on:close>
         <!-- Modal header -->
-        <div class="flex items-center justify-between p-6 rounded-lg">
+        <div class="flex items-center justify-between p-12 rounded-lg">
           <h3 class="text-3xl font-semibold text-gray-800">{title}</h3>
         </div>
         <!-- Modal body -->

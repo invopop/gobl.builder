@@ -97,7 +97,6 @@
     "country-list": "^2.3.0",
     "date-picker-svelte": "^2.11.0",
     "file-saver": "^2.0.5",
-    "flag-icons": "^6.11.1",
     "flowbite": "^1.8.1",
     "inter-ui": "^3.19.3",
     "monaco-editor": "0.52.0",
