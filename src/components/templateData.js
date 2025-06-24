@@ -5,6 +5,7 @@ export default [
   {
     name: "Colombia",
     folder: "co",
+    flag: "🇨🇴",
     templates: [
       {
         name: "Invoice",
@@ -21,6 +22,7 @@ export default [
   {
     name: "France",
     folder: "fr",
+    flag: "🇫🇷",
     templates: [
       {
         name: "Invoice",
@@ -32,6 +34,7 @@ export default [
   {
     name: "Italy",
     folder: "it",
+    flag: "🇮🇹",
     templates: [
       {
         name: "Invoice (Freelance)",
@@ -58,6 +61,7 @@ export default [
   {
     name: "Mexico",
     folder: "mx",
+    flag: "🇲🇽",
     templates: [
       {
         name: "Invoice",
@@ -74,6 +78,7 @@ export default [
   {
     name: "Netherlands",
     folder: "nl",
+    flag: "🇳🇱",
     templates: [
       {
         name: "Invoice",
@@ -85,6 +90,7 @@ export default [
   {
     name: "Portugal",
     folder: "pt",
+    flag: "🇵🇹",
     templates: [
       {
         name: "Invoice",
@@ -101,6 +107,7 @@ export default [
   {
     name: "Spain",
     folder: "es",
+    flag: "🇪🇸",
     templates: [
       {
         name: "Invoice",
@@ -122,6 +129,7 @@ export default [
   {
     name: "United States",
     folder: "us",
+    flag: "🇺🇸",
     templates: [
       {
         name: "Invoice",

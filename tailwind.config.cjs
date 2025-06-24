@@ -19,11 +19,12 @@ module.exports = {
     },
     extend: {
       fontSize: {
-        sm: ["12px", "16px"],
-        base: ["14px", "20px"],
-        lg: ["16px", "24px"],
-        xl: ["19px", "28px"],
-        "3xl": ["27px", "32px"],
+        xs: ["12px", "16px"],
+        sm: ["14px", "18px"],
+        base: ["16px", "22px"],
+        lg: ["18px", "26px"],
+        xl: ["21px", "30px"],
+        "3xl": ["32px", "38px"],
       },
       colors: {
         workspace: {

@@ -79,7 +79,7 @@ export function getGOBLErrorMessage(message: string) {
     m = getErrorString(parsedError.fields || {});
   }
 
-  return m || parsedError.message;
+  return m || parsedError.message || parsedError.key || "Unknown error";
 }
 
 export async function displayAllErrors(error: string) {

@@ -16,7 +16,7 @@
 
 <button
   title="Load a GOBL document from a template, file upload or your library."
-  class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-base font-medium flex items-center space-x-1"
+  class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1"
   on:click={() => {
     openModal = true;
   }}
@@ -27,15 +27,15 @@
 {#if openModal}
   <Modal
     backdropClass="fixed inset-0 z-40 bg-neutral-800/80"
-    bodyClass="px-6 pt-0"
+    bodyClass="px-6 pt-2"
     outsideclose
     dismissable={false}
     size="xs"
     bind:open={openModal}
     autoclose
   >
-    <div slot="header" class="p-2">
-      <p class="font-semibold text-3xl text-neutral-800">Load Example</p>
+    <div slot="header">
+      <p class="font-semibold text-xl text-neutral-800 px-2">Load Example</p>
     </div>
     <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
   </Modal>

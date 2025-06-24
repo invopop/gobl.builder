@@ -13,13 +13,14 @@
 <div class="flex space-x-2 items-center">
   <button
     title="Build the GOBL document."
-    class="p-1.5 rounded border border-gobl-50 disabled:border-gobl-300 text-gobl-50 disabled:text-white/30 disabled:cursor-not-allowed"
+    class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1 disabled:text-white/30 disabled:cursor-not-allowed"
     disabled={state !== "modified" && state !== "loaded" && state !== "errored"}
     on:click={() => {
       dispatch("action", "build");
     }}
   >
     <Icon src={Calculator} class="w-5 h-5" />
+    <span>Build</span>
   </button>
   <button
     title="Sign document."
