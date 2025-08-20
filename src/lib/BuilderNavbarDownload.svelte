@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Icon } from "@steeze-ui/svelte-icon";
   import { iconButtonClasses } from "./ui/iconButtonClasses";
-  import { DocumentText, Download, Header, Signature } from "@invopop/ui-icons";
+  import { Invoice, Download, Header, Signature } from "@invopop/ui-icons";
   import LoadingIcon from "./ui/LoadingIcon.svelte";
   import { createEventDispatcher } from "svelte";
   import { toasts } from "svelte-toasts";
@@ -79,7 +79,7 @@
     {#if generatingPDF}
       <LoadingIcon />
     {:else}
-      <Icon src={DocumentText} class="w-5 h-5" />
+      <Icon src={Invoice} class="w-5 h-5" />
     {/if}
   </button>
 
