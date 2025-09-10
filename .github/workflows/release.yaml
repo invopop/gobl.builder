@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "*"
 
 jobs:
   release:
@@ -15,29 +17,34 @@ jobs:
           node-version: 20.x
           cache: "npm"
 
+      - name: Get repo details
+        run: |
+          echo "COMMIT_TYPE=$(echo $GITHUB_REF | cut -d / -f 2)" >> $GITHUB_ENV
+          echo "REPO_VERSION=$(echo $GITHUB_REF | cut -d / -f 3-)" >> $GITHUB_ENV
+
       - run: npm install
 
       - name: Bump version and create git tag
         id: bump_version
+        if: ${{ env.COMMIT_TYPE != 'tags' }}
         uses: anothrNick/github-tag-action@1.36.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main
 
-      # Skip if `new_tag` != `tag` (means no bump)
-      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        run: npm run build:package
+      - name: Set Version from Semver Tag
+        if: ${{ env.COMMIT_TYPE != 'tags' }}
+        run: |
+          echo "REPO_VERSION=${{ steps.bump_version.new_tag }}" >> $GITHUB_ENV
 
-      # Skip if `new_tag` != `tag` (means no bump)
-      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        name: Set NPM version to ${{ steps.bump_version.outputs.new_tag }}
+      - run: npm run build:package
+
+      - name: Set NPM version to ${{ env.REPO_VERSION }}
         # working-directory: dist
-        run: npm version --no-git-tag-version ${{ steps.bump_version.outputs.new_tag }}
+        run: npm version --no-git-tag-version ${{ env.REPO_VERSION }}
 
-      # Skip if `new_tag` != `tag` (means no bump)
-      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        name: Publish to NPM registry
+      - name: Publish to NPM registry
         uses: JS-DevTools/npm-publish@v1
         with:
           token: ${{ secrets.NPM_TOKEN }}
