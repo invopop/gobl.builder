@@ -2,7 +2,11 @@
   import { Block, Code } from "@invopop/ui-icons";
   import { Icon } from "@steeze-ui/svelte-icon";
 
-  export let editorView = "code";
+  interface Props {
+    editorView?: string;
+  }
+
+  let { editorView = $bindable("code") }: Props = $props();
 </script>
 
 <div class="inline-flex text-white space-x-1 p-0.5 rounded border border-gobl-300">
@@ -10,7 +14,7 @@
     title="Form view"
     class:bg-gobl-300={editorView === "form"}
     class="rounded p-1"
-    on:click={() => {
+    onclick={() => {
       editorView = "form";
     }}
   >
@@ -20,7 +24,7 @@
     title="Developer Mode"
     class:bg-gobl-300={editorView === "code"}
     class="rounded p-1"
-    on:click={() => {
+    onclick={() => {
       editorView = "code";
     }}
   >

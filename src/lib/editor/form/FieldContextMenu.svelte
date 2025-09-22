@@ -7,9 +7,13 @@
 
   const dispatch = createEventDispatcher();
 
-  let showButtons = false;
+  let showButtons = $state(false);
 
-  export let field: UIModelField;
+  interface Props {
+    field: UIModelField;
+  }
+
+  let { field }: Props = $props();
 
   function handleRemove() {
     field.delete();
@@ -52,11 +56,11 @@
 </script>
 
 <div class="relative">
-  <button on:mouseenter={handleHover} class="p-1 rounded border border-neutral-200">
+  <button onmouseenter={handleHover} class="p-1 rounded border border-neutral-200">
     <Icon src={Options} class="h-4 w-4 text-neutral-800" />
   </button>
   {#if showButtons}
-    <button on:mouseleave={handleBlur} class="absolute top-[-4px] right-[-4px]">
+    <button onmouseleave={handleBlur} class="absolute top-[-4px] right-[-4px]">
       <FieldButtons
         {field}
         on:add={() => dispatch("addField")}

@@ -6,9 +6,13 @@
 
   const dispatch = createEventDispatcher();
 
-  export let header: EnvelopeHeader | null = null;
+  interface Props {
+    header?: EnvelopeHeader | null;
+  }
 
-  let editor: ObjectEditor;
+  let { header = null }: Props = $props();
+
+  let editor: ObjectEditor = $state();
 
   function handleConfirm() {
     const json = editor.getJson();

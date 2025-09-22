@@ -15,12 +15,16 @@
 
   const { lastFocusedElement } = builderContext;
 
-  export let parseValue: (value: SchemaValue) => SchemaValue;
-  export let field: UIModelField<string>;
-  export let readOnly = false;
+  interface Props {
+    parseValue: (value: SchemaValue) => SchemaValue;
+    field: UIModelField<string>;
+    readOnly?: boolean;
+  }
 
-  let error = "";
-  $: showError = Boolean(error);
+  let { parseValue, field, readOnly = false }: Props = $props();
+
+  let error = $state("");
+  let showError = $derived(Boolean(error));
 
   function handleEdit(e: CustomEvent<SchemaValue>) {
     const value = e.detail;

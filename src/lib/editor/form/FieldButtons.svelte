@@ -5,17 +5,21 @@
   import FieldButton from "./FieldButton.svelte";
   import { Options } from "@invopop/ui-icons";
 
-  export let field: UIModelField | undefined = undefined;
+  interface Props {
+    field?: UIModelField | undefined;
+  }
+
+  let { field = undefined }: Props = $props();
 
   const dispatch = createEventDispatcher();
 
-  $: parentIsArray = field?.parent?.type === "array";
-  $: isArrayStringChildren = parentIsArray && field?.type === "string";
-  $: showAdd = ["object", "array"].includes(field?.type || "") || isArrayStringChildren;
-  $: addLabel = field?.type === "array" ? "Add Row" : "Add Property";
-  $: canDuplicate = field?.is.duplicable && !isArrayStringChildren;
-  $: canMoveUp = parentIsArray && Number(field?.key) > 0;
-  $: canMoveDown = parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
+  let parentIsArray = $derived(field?.parent?.type === "array");
+  let isArrayStringChildren = $derived(parentIsArray && field?.type === "string");
+  let showAdd = $derived(["object", "array"].includes(field?.type || "") || isArrayStringChildren);
+  let addLabel = $derived(field?.type === "array" ? "Add Row" : "Add Property");
+  let canDuplicate = $derived(field?.is.duplicable && !isArrayStringChildren);
+  let canMoveUp = $derived(parentIsArray && Number(field?.key) > 0);
+  let canMoveDown = $derived(parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1);
 </script>
 
 <ul

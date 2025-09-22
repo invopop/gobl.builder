@@ -7,7 +7,11 @@
 
   const dispatch = createEventDispatcher();
 
-  export let state: State = "init";
+  interface Props {
+    state?: State;
+  }
+
+  let { state = "init" }: Props = $props();
 </script>
 
 <div class="flex space-x-2 items-center">
@@ -15,7 +19,7 @@
     title="Build the GOBL document."
     class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1 disabled:text-white/30 disabled:border-gobl-300 disabled:cursor-not-allowed"
     disabled={state !== "modified" && state !== "loaded" && state !== "errored"}
-    on:click={() => {
+    onclick={() => {
       dispatch("action", "build");
     }}
   >
@@ -24,7 +28,7 @@
   </button>
   <button
     title="Sign document."
-    on:click={() => {
+    onclick={() => {
       dispatch("action", "sign");
     }}
     class={iconButtonClasses}
@@ -36,7 +40,7 @@
     title="Remove Signatures."
     class={iconButtonClasses}
     disabled={state !== "signed"}
-    on:click={() => {
+    onclick={() => {
       dispatch("action", "removeSigs");
     }}
   >
@@ -44,7 +48,7 @@
   </button>
   <button
     title="Validate a signed GOBL document."
-    on:click={() => {
+    onclick={() => {
       dispatch("action", "validate");
     }}
     class={iconButtonClasses}

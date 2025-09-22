@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: can't migrate `let data = "";` to `$state` because there's a variable named state.
+     Rename the variable and try again or migrate by hand. -->
+<!-- @migration-task Error while migrating Svelte code: can't migrate `let data = "";` to `$state` because there's a variable named state.
+     Rename the variable and try again or migrate by hand. -->
 <script lang="ts">
   import type { EditorProblem } from "$lib/editor/EditorProblem.js";
   import EnvelopeEditor from "$lib/EnvelopeEditor.svelte";

@@ -6,9 +6,13 @@
 
   const dispatch = createEventDispatcher();
 
-  export let isActive = false;
-  export let option: ListOption;
-  export let disabled = false;
+  interface Props {
+    isActive?: boolean;
+    option: ListOption;
+    disabled?: boolean;
+  }
+
+  let { isActive = false, option, disabled = false }: Props = $props();
 </script>
 
 <li class="navbar-item">
@@ -17,7 +21,7 @@
     class:font-bold={isActive}
     class:opacity-30={disabled}
     class="flex items-center space-x-3"
-    on:click={() => {
+    onclick={() => {
       dispatch("click", option);
     }}
   >

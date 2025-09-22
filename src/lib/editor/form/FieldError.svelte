@@ -1,7 +1,11 @@
 <script lang="ts">
   import { ExclamationCircle, Icon } from "svelte-hero-icons";
 
-  export let error = "";
+  interface Props {
+    error?: string;
+  }
+
+  let { error = "" }: Props = $props();
 </script>
 
 <span class="text-danger-500 text-sm whitespace-nowrap flex space-x-1 items-center h-[18px]">

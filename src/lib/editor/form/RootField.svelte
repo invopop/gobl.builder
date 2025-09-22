@@ -4,25 +4,29 @@
   import SectionWrapper from "./SectionWrapper.svelte";
   import type { Schema } from "./utils/schema";
 
-  export let field: UIModelRootField;
-  export let readOnly = false;
+  interface Props {
+    field: UIModelRootField;
+    readOnly?: boolean;
+  }
+
+  let { field, readOnly = false }: Props = $props();
 
   const emptyChildren: UIModelField[] = [];
 
-  $: children = field.children?.filter((f) => f.key !== "$schema") || emptyChildren;
+  let children = $derived(field.children?.filter((f) => f.key !== "$schema") || emptyChildren);
   // @todo: Add title field to schema object on gobl
-  $: complexFields = children.filter((f) => {
+  let complexFields = $derived(children.filter((f) => {
     if ((f.schema.items as Schema)?.type === "string") {
       return false;
     }
     return ["array", "object"].includes(f.type);
-  });
-  $: simpleFields = children.filter((f) => {
+  }));
+  let simpleFields = $derived(children.filter((f) => {
     if ((f.schema.items as Schema)?.type === "string") {
       return true;
     }
     return !["array", "object"].includes(f.type);
-  });
+  }));
 </script>
 
 <SectionWrapper {readOnly} {field}>
@@ -39,6 +43,8 @@
     />
   {/each}
 
+  <!-- @migration-task: migrate this slot by hand, `extra-content` is an invalid identifier -->
+  <!-- @migration-task: migrate this slot by hand, `extra-content` is an invalid identifier -->
   <div slot="extra-content">
     {#each complexFields as field (field.id)}
       <AbstractField

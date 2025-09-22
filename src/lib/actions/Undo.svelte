@@ -16,7 +16,7 @@
 
 <button
   title="Undo the last change in the editor."
-  on:click={handleUndo}
+  onclick={handleUndo}
   class={iconButtonClasses}
   disabled={$undoAvailable === false}
 >

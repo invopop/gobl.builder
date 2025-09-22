@@ -4,18 +4,22 @@
   import { Calculator, Hashtag, Icon } from "svelte-hero-icons";
   import type { Schema } from "./utils/schema";
 
-  export let field: UIModelField<unknown>;
+  interface Props {
+    field: UIModelField<unknown>;
+  }
 
-  $: childrenType = (field.schema.items as Schema)?.type;
-  $: arrayTitle = field.schema.title || "";
-  $: isParent = ["object", "array"].includes(field.type) && childrenType !== "string";
-  $: isSection = field.is.root || (field.parent?.is.root && isParent);
-  $: classes = clsx({
+  let { field }: Props = $props();
+
+  let childrenType = $derived((field.schema.items as Schema)?.type);
+  let arrayTitle = $derived(field.schema.title || "");
+  let isParent = $derived(["object", "array"].includes(field.type) && childrenType !== "string");
+  let isSection = $derived(field.is.root || (field.parent?.is.root && isParent));
+  let classes = $derived(clsx({
     "font-medium text-neutral-800": isParent,
     "tracking-normal text-base": isParent && !isSection,
     "text-lg tracking-tighter": isSection,
     "text-neutral-500 text-base tracking-normal": !isSection && !isParent,
-  });
+  }));
 </script>
 
 <span

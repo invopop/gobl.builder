@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
 
-  export let field: UIModelField;
+  interface Props {
+    field: UIModelField;
+  }
+
+  let { field }: Props = $props();
 </script>
 
 <div class="bg-red-100">

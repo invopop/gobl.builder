@@ -7,7 +7,7 @@
 
   const dispatch = createEventDispatcher();
 
-  let openModal = false;
+  let openModal = $state(false);
 
   function handleDocLoaded(event: CustomEvent<string>): void {
     dispatch("load", event.detail);
@@ -17,7 +17,7 @@
 <button
   title="Load a GOBL document from a template, file upload or your library."
   class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1"
-  on:click={() => {
+  onclick={() => {
     openModal = true;
   }}
 >
@@ -34,9 +34,11 @@
     bind:open={openModal}
     autoclose
   >
-    <div slot="header">
-      <p class="font-semibold text-xl text-neutral-800 px-2">Load Example</p>
-    </div>
+    {#snippet header()}
+        <div >
+        <p class="font-semibold text-xl text-neutral-800 px-2">Load Example</p>
+      </div>
+      {/snippet}
     <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
   </Modal>
 {/if}

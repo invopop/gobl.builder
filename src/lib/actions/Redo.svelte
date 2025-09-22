@@ -16,7 +16,7 @@
 
 <button
   title="Redo the last undone change in the editor."
-  on:click={handleRedo}
+  onclick={handleRedo}
   class={iconButtonClasses}
   disabled={$redoAvailable === false}
 >

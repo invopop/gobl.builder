@@ -3,22 +3,32 @@
   import { createEventDispatcher } from "svelte";
   import { Icon, type IconSource } from "svelte-hero-icons";
 
-  export let icon: IconSource;
-  export let confirmationIcon: IconSource | null = null;
-  export let tooltipText = "";
-  export let isDestructive = false;
-  export let disabled = false;
+  interface Props {
+    icon: IconSource;
+    confirmationIcon?: IconSource | null;
+    tooltipText?: string;
+    isDestructive?: boolean;
+    disabled?: boolean;
+  }
 
-  let needsConfirmation = false;
+  let {
+    icon,
+    confirmationIcon = null,
+    tooltipText = "",
+    isDestructive = false,
+    disabled = false
+  }: Props = $props();
 
-  $: buttonIcon = !isDestructive ? icon : needsConfirmation ? confirmationIcon : icon;
+  let needsConfirmation = $state(false);
 
-  $: classes = clsx({
+  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? confirmationIcon : icon);
+
+  let classes = $derived(clsx({
     "hover:bg-danger-500 hover:text-white text-danger-500": isDestructive,
     "hover:bg-neutral-100 text-neutral-800": !isDestructive && !disabled,
     "bg-neutral-100 text-neutral-500": disabled,
     "bg-white": !disabled,
-  });
+  }));
 
   const dispatch = createEventDispatcher();
 
@@ -40,7 +50,7 @@
 <button
   title={tooltipText}
   {disabled}
-  on:click={handleClick}
+  onclick={handleClick}
   class="{classes} flex items-center justify-start w-full h-6 px-[4px] py-[3px] rounded"
 >
   <Icon src={buttonIcon} class="h-4 w-4" />

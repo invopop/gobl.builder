@@ -4,7 +4,11 @@
 
   const { jsonSchema, updateSchema } = getBuilderContext();
 
-  export let isEmptySchema = true;
+  interface Props {
+    isEmptySchema?: boolean;
+  }
+
+  let { isEmptySchema = true }: Props = $props();
 
   const update = async (e: CustomEvent) => {
     await updateSchema(e.detail);
@@ -35,6 +39,6 @@
   <SelectSchemas placeholder="Select a $schema..." on:change={update} />
 {:else}
   <div class="flex items-center justify-center">
-    <button class="border py-2 px-6 hover:border-blue-400" on:click={() => updateSchema($jsonSchema || "")}>Fix</button>
+    <button class="border py-2 px-6 hover:border-blue-400" onclick={() => updateSchema($jsonSchema || "")}>Fix</button>
   </div>
 {/if}

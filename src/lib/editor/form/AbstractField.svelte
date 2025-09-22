@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { createEventDispatcher, type SvelteComponent } from "svelte";
   import ObjectField from "./ObjectField.svelte";
   import ArrayField from "./ArrayField.svelte";
@@ -18,7 +20,6 @@
 
   const { activeItem, highlightedItem } = getBuilderContext();
 
-  export let field: UIModelField;
 
   const componentsMap: Record<string, typeof SvelteComponent> = {
     object: ObjectField as typeof SvelteComponent,
@@ -29,39 +30,46 @@
     boolean: BooleanField as typeof SvelteComponent,
   };
 
-  let showAddMenu = false;
-  let addMenuRef: HTMLElement;
-  let contextMenuOffset = 0;
+  let showAddMenu = $state(false);
+  let addMenuRef: HTMLElement = $state();
+  let contextMenuOffset = $state(0);
 
-  export let readOnly = false;
-
-  $: childrenType = (field.schema.items as Schema)?.type;
-  $: isHover = $activeItem === field.id;
-  $: highlight = $highlightedItem === field.id;
-  $: showContextMenu = !readOnly && isHover;
-  $: if (showAddMenu && addMenuRef) {
-    const { height, top } = addMenuRef.getBoundingClientRect();
-    const offset = top + height - window.innerHeight;
-    contextMenuOffset = offset > 0 ? offset : 0;
+  interface Props {
+    field: UIModelField;
+    readOnly?: boolean;
   }
-  $: isParent = ["object", "array"].includes(field.type) && childrenType !== "string";
-  $: isSection = isParent && field.parent?.is.root;
-  $: wrapperClasses = clsx({
+
+  let { field, readOnly = false }: Props = $props();
+
+  let childrenType = $derived((field.schema.items as Schema)?.type);
+  let isHover = $derived($activeItem === field.id);
+  let highlight = $derived($highlightedItem === field.id);
+  let showContextMenu = $derived(!readOnly && isHover);
+  run(() => {
+    if (showAddMenu && addMenuRef) {
+      const { height, top } = addMenuRef.getBoundingClientRect();
+      const offset = top + height - window.innerHeight;
+      contextMenuOffset = offset > 0 ? offset : 0;
+    }
+  });
+  let isParent = $derived(["object", "array"].includes(field.type) && childrenType !== "string");
+  let isSection = $derived(isParent && field.parent?.is.root);
+  let wrapperClasses = $derived(clsx({
     "bg-neutral-50 border-neutral-100": isHover && !isParent,
     "border-transparent": !isHover,
     "border-l border-t border-b": !["object", "array"].includes(field.type),
     "border-r rounded-r": readOnly && !isParent,
     "pl-2": isParent && !isSection,
-  });
-  $: classes = clsx({
+  }));
+  let classes = $derived(clsx({
     "bg-neutral-50": isHover,
     "border-workspace-accent-500": highlight,
     "border-neutral-200": !highlight,
     "border-l border-t border-b": childrenType !== "string",
-  });
-  $: contextMenuClasses = clsx({
+  }));
+  let contextMenuClasses = $derived(clsx({
     "mt-1": isParent && !isSection && !field.is.root,
-  });
+  }));
 
   function handleHover(e: CustomEvent<boolean>) {
     $activeItem = e.detail ? field.id : null;
@@ -149,12 +157,14 @@
       return focusPrevField();
     }
   }
+
+  const SvelteComponent_1 = $derived(componentsMap[field.type] || FallbackField);
 </script>
 
 <svelte:window />
 
 {#if isSection}
-  <div class="my-4 mx-2 border-b border-transparent hr-separator" />
+  <div class="my-4 mx-2 border-b border-transparent hr-separator"></div>
 {/if}
 
 <div
@@ -162,17 +172,16 @@
   tabindex="0"
   class="relative rounded expanded-area cursor-default"
   use:hover
-  on:hover={handleHover}
-  on:keydown={handleKeyDown}
-  on:focusin={handleFocusIn}
+  onhover={handleHover}
+  onkeydown={handleKeyDown}
+  onfocusin={handleFocusIn}
 >
   <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
     {#if isParent && !isSection && !field.is.root}
       <div class="{classes} w-2 flex-none rounded-l"></div>
     {/if}
     <div class="flex-1">
-      <svelte:component
-        this={componentsMap[field.type] || FallbackField}
+      <SvelteComponent_1
         {field}
         {readOnly}
         on:fieldAdded

@@ -1,3 +1,5 @@
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot (extra-content to extra_content) making the component unusable -->
+<!-- @migration-task Error while migrating Svelte code: This migration would change the name of a slot (extra-content to extra_content) making the component unusable -->
 <script lang="ts">
   import { intersect } from "svelte-intersection-observer-action";
   import type { UIModelField } from "./utils/model";

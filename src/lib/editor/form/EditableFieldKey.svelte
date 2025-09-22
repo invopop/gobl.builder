@@ -8,11 +8,15 @@
 
   const dispatch = createEventDispatcher();
 
-  export let parseKey: (key: SchemaValue) => string = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, "");
-  export let field: UIModelField<string>;
-  export let readOnly = false;
+  interface Props {
+    parseKey?: (key: SchemaValue) => string;
+    field: UIModelField<string>;
+    readOnly?: boolean;
+  }
 
-  let editing = false;
+  let { parseKey = (key) => (key + "").toLowerCase().replace(/[^a-z0-9_-]/g, ""), field, readOnly = false }: Props = $props();
+
+  let editing = $state(false);
   let inputValue: SchemaValue = field.key;
 
   function handleEdit(e: CustomEvent<SchemaValue>) {
@@ -49,7 +53,7 @@
   {:else}
     <FieldTitle {field} />
     {#if !readOnly}
-      <button on:click={handleEditing}>
+      <button onclick={handleEditing}>
         <Icon src={Pencil} class="h-4 w-4 text-workspace-accent-500" />
       </button>
     {/if}

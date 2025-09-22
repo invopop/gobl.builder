@@ -6,9 +6,13 @@
 
   const dispatch = createEventDispatcher();
 
-  export let model: UIModelField | undefined;
+  interface Props {
+    model: UIModelField | undefined;
+  }
 
-  let editor: ObjectEditor;
+  let { model }: Props = $props();
+
+  let editor: ObjectEditor = $state();
 
   function handleConfirm() {
     dispatch("confirm", editor.getJson());

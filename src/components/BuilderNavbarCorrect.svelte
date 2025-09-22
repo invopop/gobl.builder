@@ -5,14 +5,18 @@
   import { Erase } from "@invopop/ui-icons";
   import { iconButtonClasses } from "./ui/iconButtonClasses";
 
-  export let state: State = "init";
+  interface Props {
+    state?: State;
+  }
+
+  let { state = "init" }: Props = $props();
 
   const dispatch = createEventDispatcher();
 </script>
 
 <button
   title="Correct document."
-  on:click={() => {
+  onclick={() => {
     dispatch("action", "correct");
   }}
   class={iconButtonClasses}

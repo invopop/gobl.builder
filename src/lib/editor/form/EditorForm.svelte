@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
   import { build, getSchemas } from "../actions.js";
   import DynamicForm from "./DynamicForm.svelte";
@@ -30,17 +32,14 @@
 
   recreateFormEditor();
 
-  export let forceReadOnly = false;
-  export let removeStampsOnBuild = false;
-
-  // eslint-disable-next-line
-  $: isEmptySchema = ($uiModel as any).value?.schema.$comment == "empty-schema";
-  $: isValidSchema = !$jsonSchema || $currentEditorSchema === $jsonSchema;
-  $: showSchemaField = isEmptySchema || !isValidSchema;
-
-  $: {
-    updateSchemaIfNeeded($jsonSchema || "");
+  interface Props {
+    forceReadOnly?: boolean;
+    removeStampsOnBuild?: boolean;
   }
+
+  let { forceReadOnly = false, removeStampsOnBuild = false }: Props = $props();
+
+
 
   function handleKeyDown(e: KeyboardEvent) {
     if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") {
@@ -108,9 +107,16 @@
 
     return isSuccess;
   }
+  // eslint-disable-next-line
+  let isEmptySchema = $derived(($uiModel as any).value?.schema.$comment == "empty-schema");
+  let isValidSchema = $derived(!$jsonSchema || $currentEditorSchema === $jsonSchema);
+  let showSchemaField = $derived(isEmptySchema || !isValidSchema);
+  run(() => {
+    updateSchemaIfNeeded($jsonSchema || "");
+  });
 </script>
 
-<svelte:window on:keydown={handleKeyDown} />
+<svelte:window onkeydown={handleKeyDown} />
 
 <div class="h-full relative flex" id={editorId}>
   <div class="flex-1">

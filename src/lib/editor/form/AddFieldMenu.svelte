@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { fade } from "svelte/transition";
   import hover from "./action/hover.js";
   import { createEventDispatcher } from "svelte";
@@ -9,14 +11,18 @@
   import { Search } from "@invopop/ui-icons";
   import BaseButton from "$lib/ui/BaseButton.svelte";
 
-  export let field: UIModelField;
-  export let inputRef: HTMLElement | undefined = undefined;
-  export let menuRef: HTMLElement | undefined = undefined;
-  let checkboxesRef: HTMLInputElement[] = [];
+  interface Props {
+    field: UIModelField;
+    inputRef?: HTMLElement | undefined;
+    menuRef?: HTMLElement | undefined;
+  }
 
-  let focusedOptionIndex = -1;
-  let selection: string[] = [];
-  let filterStr = "";
+  let { field, inputRef = $bindable(undefined), menuRef = $bindable(undefined) }: Props = $props();
+  let checkboxesRef: HTMLInputElement[] = $state([]);
+
+  let focusedOptionIndex = $state(-1);
+  let selection: string[] = $state([]);
+  let filterStr = $state("");
 
   const dispatch = createEventDispatcher();
 
@@ -41,11 +47,11 @@
       });
   }
 
-  $: options = filterOptions(field.options || [], filterStr);
+  let options = $derived(filterOptions(field.options || [], filterStr));
 
-  $: {
+  run(() => {
     inputRef?.focus();
-  }
+  });
 
   function handleOpenMenu() {
     inputRef?.focus();
@@ -124,7 +130,7 @@
   transition:fade={{ duration: 200 }}
   class="cursor-text rounded-lg shadow overflow-hidden bg-white"
   use:clickOutside
-  on:close={handleCloseMenu}
+  onclose={handleCloseMenu}
 >
   <div class="px-2 pt-2 pb-1 relative">
     <input
@@ -132,8 +138,8 @@
       placeholder="Search"
       bind:value={filterStr}
       bind:this={inputRef}
-      on:focus={handleOpenMenu}
-      on:keydown={handleKeyDown}
+      onfocus={handleOpenMenu}
+      onkeydown={handleKeyDown}
     />
     <span class="absolute top-4 left-4 mt-px text-neutral-500">
       <Icon src={Search} class="w-4 h-4" />
@@ -146,7 +152,7 @@
           <li
             class="pl-2 pr-1.5 py-1.5 rounded flex items-center justify-between space-x-2"
             class:bg-neutral-50={i === focusedOptionIndex}
-            on:hover={() => handleHoverListItem(i)}
+            onhover={() => handleHoverListItem(i)}
             use:hover
           >
             <label class="flex justify-between w-full">
@@ -161,7 +167,7 @@
                 bind:this={checkboxesRef[i]}
                 bind:group={selection}
                 value={opt.key}
-                on:keydown={handleKeyDown}
+                onkeydown={handleKeyDown}
                 class="form-checkbox w-5 h-5 text-workspace-accent-500 focus:text-workspace-accent-500 rounded border border-neutral-200 focus:ring-0 focus:ring-offset-0"
               />
             </label>

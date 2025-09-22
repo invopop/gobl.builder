@@ -6,24 +6,33 @@
   import EditableFieldKey from "./EditableFieldKey.svelte";
   import clsx from "clsx";
 
-  export let parseValue: (value: SchemaValue) => SchemaValue;
-  export let parseKey: ((key: SchemaValue) => string) | undefined = undefined;
-  export let field: UIModelField<string>;
-  export let readOnly = false;
+  interface Props {
+    parseValue: (value: SchemaValue) => SchemaValue;
+    parseKey?: ((key: SchemaValue) => string) | undefined;
+    field: UIModelField<string>;
+    readOnly?: boolean;
+  }
 
-  $: label = readOnly
+  let {
+    parseValue,
+    parseKey = undefined,
+    field,
+    readOnly = false
+  }: Props = $props();
+
+  let label = $derived(readOnly
     ? "Document is read-only"
-    : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
+    : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`);
 
-  $: classes = clsx({
+  let classes = $derived(clsx({
     "py-2.5": readOnly,
     "py-1": !readOnly,
-  });
+  }));
 
-  $: innerClasses = clsx({
+  let innerClasses = $derived(clsx({
     "h-5": readOnly,
     "h-8": !readOnly,
-  });
+  }));
 </script>
 
 <div class="{classes} flex w-full space-x-2 pl-3 pr-1" title={label}>

@@ -1,3 +1,7 @@
+<!-- @migration-task Error while migrating Svelte code: can't migrate `let generatingPDF = false;` to `$state` because there's a variable named state.
+     Rename the variable and try again or migrate by hand. -->
+<!-- @migration-task Error while migrating Svelte code: can't migrate `let generatingPDF = false;` to `$state` because there's a variable named state.
+     Rename the variable and try again or migrate by hand. -->
 <script lang="ts">
   import { Icon } from "@steeze-ui/svelte-icon";
   import { iconButtonClasses } from "./ui/iconButtonClasses";

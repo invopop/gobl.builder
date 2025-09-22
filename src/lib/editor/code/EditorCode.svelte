@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { tick } from "svelte";
   import loader from "@monaco-editor/loader";
   import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js";
@@ -15,21 +17,25 @@
   import { getBuilderContext } from "$lib/store/builder.js";
   import { getAgentSystem, getGOBLErrorMessage } from "$lib/helpers";
 
-  let monaco: typeof Monaco;
+  let monaco: typeof Monaco = $state();
   let lastSelection: Monaco.Selection | null = null;
-  export let jsonSchemaURL: string;
-  export let forceReadOnly = false;
-  export let hideConsoleBar = false;
+  interface Props {
+    jsonSchemaURL: string;
+    forceReadOnly?: boolean;
+    hideConsoleBar?: boolean;
+  }
 
-  let editorEl: HTMLElement;
+  let { jsonSchemaURL, forceReadOnly = false, hideConsoleBar = false }: Props = $props();
+
+  let editorEl: HTMLElement = $state();
   let modelUri: Monaco.Uri;
-  let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
+  let monacoEditor: Monaco.editor.IStandaloneCodeEditor = $state();
   let model: Monaco.editor.ITextModel;
   let readOnlyEditHandler: Monaco.IDisposable;
   let markerListener: Monaco.IDisposable;
-  let lineNumber = 1;
-  let column = 1;
-  let drawerClosed = false;
+  let lineNumber = $state(1);
+  let column = $state(1);
+  let drawerClosed = $state(false);
 
   let unsubscribeEditor: Unsubscriber;
 
@@ -40,30 +46,12 @@
 
   const { editorProblems: problems, editor, envelope } = builderContext;
 
-  // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
-  $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
-  $: warningCount = monaco
-    ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length
-    : 0;
-  $: errorCount = monaco ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length : 0;
 
-  $: isReadOnly = forceReadOnly || $envelope.sigs;
 
-  $: {
-    setSchemaURI(jsonSchemaURL);
-  }
 
-  $: isReadOnly, setEditorReadOnly();
 
-  $: showErrorConsole = !hideConsoleBar && !isReadOnly;
 
-  $: forceReadOnly, focusEditor();
 
-  $: {
-    if (monacoEditor) {
-      monaco.editor.setTheme(isReadOnly ? "readOnlyTheme" : "editableTheme");
-    }
-  }
 
   function focusEditor() {
     if (monacoEditor && lastSelection) {
@@ -371,15 +359,37 @@
   function handleDrawerToggle() {
     drawerClosed = !drawerClosed;
   }
+  // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
+  let sortedProblems = $derived($problems.sort((a, b) => b.severity - a.severity));
+  let warningCount = $derived(monaco
+    ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length
+    : 0);
+  let errorCount = $derived(monaco ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length : 0);
+  let isReadOnly = $derived(forceReadOnly || $envelope.sigs);
+  run(() => {
+    setSchemaURI(jsonSchemaURL);
+  });
+  run(() => {
+    isReadOnly, setEditorReadOnly();
+  });
+  let showErrorConsole = $derived(!hideConsoleBar && !isReadOnly);
+  run(() => {
+    forceReadOnly, focusEditor();
+  });
+  run(() => {
+    if (monacoEditor) {
+      monaco.editor.setTheme(isReadOnly ? "readOnlyTheme" : "editableTheme");
+    }
+  });
 </script>
 
 <div class="flex flex-col h-full">
-  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
+  <div class="flex-1 overflow-hidden" bind:this={editorEl}></div>
   {#if showErrorConsole}
     <div class="w-full">
       <div
         class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
-        on:dblclick={handleDrawerToggle}
+        ondblclick={handleDrawerToggle}
         role="log"
       >
         <div>
@@ -409,7 +419,7 @@
           </span>
         </div>
         <div>Ln {lineNumber}, Col {column}</div>
-        <button class="align-middle" on:click={handleDrawerToggle}>
+        <button class="align-middle" onclick={handleDrawerToggle}>
           {#if drawerClosed}
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path
@@ -452,7 +462,7 @@
           <ul>
             {#each sortedProblems as problem}
               <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
-                <button on:click={handleProblemClick(problem)}>
+                <button onclick={handleProblemClick(problem)}>
                   <EditorProblem {problem} />
                 </button>
               </li>

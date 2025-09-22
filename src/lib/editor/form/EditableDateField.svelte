@@ -8,18 +8,22 @@
 
   const uniqueId = `date-input-${Math.random().toString(36).slice(2, 7)}`;
 
-  export let field: UIModelField<string>;
-  export let showError = false;
+  interface Props {
+    field: UIModelField<string>;
+    showError?: boolean;
+  }
+
+  let { field, showError = false }: Props = $props();
 
   let input: HTMLInputElement | undefined;
 
-  $: classes = clsx({
+  let classes = $derived(clsx({
     [uniqueId]: true,
     "is-calculated": field.is.calculated,
     "has-error": showError,
-  });
+  }));
 
-  $: date = new Date(field.value);
+  let date = $derived(new Date(field.value));
 
   const dispatch = createEventDispatcher();
 

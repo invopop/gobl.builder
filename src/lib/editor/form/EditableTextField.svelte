@@ -1,24 +1,39 @@
 <script lang="ts">
+  import { run, createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import SelectSchemas from "$lib/SelectSchemas.svelte";
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import { getBuilderContext } from "$lib/store/builder";
   import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
-  export let field: UIModelField<string>;
-  export let showError = false;
-  export let classes = "";
-  export let value = "";
-  export let id = "";
+  interface Props {
+    field: UIModelField<string>;
+    showError?: boolean;
+    classes?: string;
+    value?: string;
+    id?: string;
+  }
 
-  $: iid = id || field.id;
-  $: val = value || field.value;
-  $: fieldType = Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "";
-  $: classes = clsx({
-    "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
-    "text-neutral-800": !field.is.calculated && !showError,
-    "border-danger-200 focus:border-danger-200 text-danger-500": showError,
-    "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
+  let {
+    field,
+    showError = false,
+    classes = $bindable(""),
+    value = "",
+    id = ""
+  }: Props = $props();
+
+  let iid = $derived(id || field.id);
+  let val = $derived(value || field.value);
+  let fieldType = $derived(Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "");
+  run(() => {
+    classes = clsx({
+      "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
+      "text-neutral-800": !field.is.calculated && !showError,
+      "border-danger-200 focus:border-danger-200 text-danger-500": showError,
+      "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
+    });
   });
 
   const builderContext = getBuilderContext();
@@ -86,10 +101,10 @@
     tabindex="0"
     contenteditable
     id={iid}
-    on:blur={handleBlur}
-    on:keydown={handleKeydown}
-    on:paste={handlePaste}
-    on:focus
+    onblur={handleBlur}
+    onkeydown={handleKeydown}
+    onpaste={handlePaste}
+    onfocus={bubble('focus')}
     class="{classes} focus:border-workspace-accent-500 border cursor-text text-base rounded px-3 py-[5px] outline-none w-full caret-workspace-accent-500 tracking-tight focus:shadow-active"
   >
     {val}

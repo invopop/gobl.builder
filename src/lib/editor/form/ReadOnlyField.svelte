@@ -3,15 +3,13 @@
   import type { UIModelField } from "./utils/model";
   import clsx from "clsx";
 
-  export let field: UIModelField;
+  interface Props {
+    field: UIModelField;
+  }
 
-  $: fieldType = Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "";
-  $: classes = clsx({
-    "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
-    "text-left": !["number", "integer"].includes(fieldType),
-  });
+  let { field }: Props = $props();
 
-  $: value = getValue(field.value as string);
+
 
   function getValue(value: string): string {
     if (field.controlType === "select") {
@@ -35,11 +33,17 @@
       description: "Copied to clipboard",
     });
   }
+  let fieldType = $derived(Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || "");
+  let classes = $derived(clsx({
+    "text-right tabular-nums slashed-zero": ["number", "integer"].includes(fieldType),
+    "text-left": !["number", "integer"].includes(fieldType),
+  }));
+  let value = $derived(getValue(field.value as string));
 </script>
 
 <button
   id={`${field.id}-readOnly`}
-  on:click={handleClick}
+  onclick={handleClick}
   class="{classes} text-neutral-800 text-base px-3 outline-none w-full tracking-normal break-words border-l border-transparent"
 >
   {value}

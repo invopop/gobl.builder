@@ -1,8 +1,15 @@
 <script lang="ts">
-  export let open = true;
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
+  interface Props {
+    open?: boolean;
+  }
+
+  let { open = true }: Props = $props();
 </script>
 
-<button class="align-middle ml-2" tabindex="-1" on:click>
+<button class="align-middle ml-2" tabindex="-1" onclick={bubble('click')}>
   <svg
     width="20"
     height="24"

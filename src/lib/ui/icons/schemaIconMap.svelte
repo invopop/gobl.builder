@@ -1,4 +1,4 @@
-<script context="module" lang="ts">
+<script module lang="ts">
   import type { SvelteComponent } from "svelte";
 
   import InvoiceIcon from "./InvoiceIcon.svelte";

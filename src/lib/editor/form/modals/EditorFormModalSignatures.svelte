@@ -1,7 +1,11 @@
 <script lang="ts">
   import Modal from "$lib/ui/Modal.svelte";
 
-  export let sigs: string[] | null = null;
+  interface Props {
+    sigs?: string[] | null;
+  }
+
+  let { sigs = null }: Props = $props();
 </script>
 
 <Modal title="Signatures" hideConfirmButton on:close>
@@ -9,7 +13,7 @@
     <div
       role="presentation"
       contenteditable
-      on:keydown={(event) => {
+      onkeydown={(event) => {
         // Allow copy
         if (!event.metaKey) {
           event.preventDefault();

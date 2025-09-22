@@ -1,17 +1,24 @@
 <script lang="ts">
+  import { createBubbler } from 'svelte/legacy';
+
+  const bubble = createBubbler();
   import type { UIModelField } from "$lib/editor/form/utils/model.js";
   import clsx from "clsx";
   import { createEventDispatcher } from "svelte";
 
-  export let field: UIModelField<string>;
-  export let options: { label: string; value: string | boolean }[];
-  export let showError = false;
+  interface Props {
+    field: UIModelField<string>;
+    options: { label: string; value: string | boolean }[];
+    showError?: boolean;
+  }
 
-  $: classes = clsx({
+  let { field, options, showError = false }: Props = $props();
+
+  let classes = $derived(clsx({
     "bg-neutral-50 border-slate-100 text-neutral-500": field.is.calculated,
     "text-neutral-800": !field.is.calculated && !showError,
     "border-danger-200 focus:border-danger-200 text-danger-500": showError,
-  });
+  }));
 
   const dispatch = createEventDispatcher();
 
@@ -30,10 +37,10 @@
 <select
   id={field.id}
   value={field.value}
-  on:change={handleChange}
-  on:keyup={handleChange}
-  on:blur={handleBlur}
-  on:focus
+  onchange={handleChange}
+  onkeyup={handleChange}
+  onblur={handleBlur}
+  onfocus={bubble('focus')}
   class="{classes} border focus:border-workspace-accent-500 custom-select text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active"
 >
   {#each options as opt (opt.value)}
