@@ -2,8 +2,12 @@ import type * as monaco from 'monaco-editor'
 import type { GOBLError, Keypair } from '@invopop/gobl-worker'
 import type { Readable, Writable } from 'svelte/store'
 import type { UIModelField, UIModelRootField } from '$lib/editor/form/utils/model'
-import type { Envelope } from './envelope'
+import type { Envelope, EnvelopeHeader } from './envelope'
 import type { EditorProblem } from '../editor/EditorProblem.js'
+import type { IconSource } from '@steeze-ui/svelte-icon'
+import type { Snippet } from 'svelte'
+
+export type ButtonVariant = 'default' | 'primary' | 'danger'
 
 export type State =
   | 'init'
@@ -74,6 +78,36 @@ export interface ValidateActionResponse {
 
 // Props
 
+export interface BaseButtonProps {
+  icon?: IconSource | undefined
+  variant?: ButtonVariant
+  disabled?: boolean
+  children?: Snippet
+  onclick?: () => void
+}
+
+export interface EditorCodeProps {
+  jsonSchemaURL: string
+  forceReadOnly?: boolean
+  hideConsoleBar?: boolean
+}
+
+export interface EditorFormModalCorrectProps {
+  model: UIModelField | undefined
+  onclose?: () => void
+  onConfirm?: (value: string) => void
+}
+
+export interface EditorFormModalHeadersProps {
+  header?: EnvelopeHeader | null
+  onclose?: () => void
+  onConfirm?: (value: EnvelopeHeader) => void
+}
+
+export interface EditorFormModalSignaturesProps {
+  sigs?: string[] | null
+  onclose?: () => void
+}
 export interface EnvelopeEditorProps {
   // Used for JSON Schema validation within Monaco Editor. When set, this should  be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   jsonSchemaURL?: string
@@ -123,6 +157,22 @@ export interface EnvelopeEditorProps {
   onValidate?: (result: ValidateActionResponse) => void
   // callback to perform actions after envelope is replicated
   onReplicate?: (result: BuildActionResponse) => void
+}
+
+export interface ExpandButtonProps {
+  open?: boolean
+  onclick?: () => void
+}
+
+export interface ModalProps {
+  title?: string
+  confirmButtonIcon?: IconSource | undefined
+  confirmButtonText?: string
+  hideConfirmButton?: boolean
+  children?: Snippet
+  footer?: Snippet
+  onclose?: () => void
+  onConfirm?: () => void
 }
 
 export interface ObjectEditorProps {

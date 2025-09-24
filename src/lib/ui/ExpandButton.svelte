@@ -1,15 +1,10 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
+  import type { ExpandButtonProps } from '$lib/types/editor'
 
-  const bubble = createBubbler();
-  interface Props {
-    open?: boolean;
-  }
-
-  let { open = true }: Props = $props();
+  let { open = true, onclick }: ExpandButtonProps = $props()
 </script>
 
-<button class="align-middle ml-2" tabindex="-1" onclick={bubble('click')}>
+<button aria-label="expand" class="align-middle ml-2" tabindex="-1" {onclick}>
   <svg
     width="20"
     height="24"

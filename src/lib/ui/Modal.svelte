@@ -1,31 +1,18 @@
 <script lang="ts">
-  import { createBubbler } from 'svelte/legacy';
-
-  const bubble = createBubbler();
-  import clickOutside from "$lib/clickOutside.js";
-  import { createEventDispatcher } from "svelte";
-  import BaseButton from "./BaseButton.svelte";
-  import type { IconSource } from "@steeze-ui/svelte-icon";
-
-  const dispatch = createEventDispatcher();
-
-  interface Props {
-    title?: string;
-    confirmButtonIcon?: IconSource | undefined;
-    confirmButtonText?: string;
-    hideConfirmButton?: boolean;
-    children?: import('svelte').Snippet;
-    footer?: import('svelte').Snippet;
-  }
+  import clickOutside from '$lib/clickOutside.js'
+  import type { ModalProps } from '$lib/types/editor'
+  import BaseButton from './BaseButton.svelte'
 
   let {
-    title = "",
+    title = '',
     confirmButtonIcon = undefined,
-    confirmButtonText = "Confirm",
+    confirmButtonText = 'Confirm',
     hideConfirmButton = false,
     children,
-    footer
-  }: Props = $props();
+    footer,
+    onclose,
+    onConfirm
+  }: ModalProps = $props()
 </script>
 
 <!-- Main modal -->
@@ -37,7 +24,7 @@
   >
     <div class="relative w-full lg:w-[800px] h-full p-4 md:h-auto">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside onclose={bubble('close')}>
+      <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside {onclose}>
         <!-- Modal header -->
         <div class="flex items-center justify-between p-12 rounded-lg">
           <h3 class="text-3xl font-semibold text-gray-800">{title}</h3>
@@ -49,14 +36,14 @@
         <div class="px-6 pb-6 pt-5 flex items-center justify-end space-x-3">
           {#if footer}{@render footer()}{:else}
             <BaseButton
-              on:click={() => {
-                dispatch("close");
+              onclick={() => {
+                onclose?.()
               }}
             >
               Cancel
             </BaseButton>
             {#if !hideConfirmButton}
-              <BaseButton icon={confirmButtonIcon} variant="primary" on:click={() => dispatch("confirm")}>
+              <BaseButton icon={confirmButtonIcon} variant="primary" onclick={() => onConfirm?.()}>
                 {confirmButtonText}
               </BaseButton>
             {/if}
