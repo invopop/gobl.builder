@@ -47,15 +47,15 @@ module.exports = {
 
 ## Usage
 
-Import and use the `GOBLBuilder` Svelte component. For example, using
+Import and use the `EnvelopeEditor` Svelte component. For example, using
 TypeScript:
 
 ```html
 <script lang="ts">
-  import GOBLBuilder from '@invopop/gobl-builder'
+  import { EnvelopeEditor } from '@invopop/gobl-builder'
 </script>
 
-<GOBLBuilder data="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
+<EnvelopeEditor data="" jsonSchemaURL="https://gobl.org/draft-0/bill/invoice" />
 ```
 
 For further example usage, including directives for event handling, see
