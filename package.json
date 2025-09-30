@@ -116,5 +116,8 @@
     "monaco-editor": {
       "vscode-json-languageservice": "$vscode-json-languageservice"
     }
+  },
+  "engines": {
+    "node": ">=22.12.0"
   }
 }
