@@ -1,50 +1,43 @@
 <script lang="ts">
-  import clsx from "clsx";
-  import { createEventDispatcher } from "svelte";
-  import { Icon, type IconSource } from "svelte-hero-icons";
-
-  interface Props {
-    icon: IconSource;
-    confirmationIcon?: IconSource | null;
-    tooltipText?: string;
-    isDestructive?: boolean;
-    disabled?: boolean;
-  }
+  import type { FieldButtonProps } from '$lib/types/editor'
+  import clsx from 'clsx'
+  import { Icon } from 'svelte-hero-icons'
 
   let {
     icon,
     confirmationIcon = null,
-    tooltipText = "",
+    tooltipText = '',
     isDestructive = false,
-    disabled = false
-  }: Props = $props();
+    disabled = false,
+    onClick
+  }: FieldButtonProps = $props()
 
-  let needsConfirmation = $state(false);
+  let needsConfirmation = $state(false)
 
-  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? confirmationIcon : icon);
+  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? confirmationIcon : icon)
 
-  let classes = $derived(clsx({
-    "hover:bg-danger-500 hover:text-white text-danger-500": isDestructive,
-    "hover:bg-neutral-100 text-neutral-800": !isDestructive && !disabled,
-    "bg-neutral-100 text-neutral-500": disabled,
-    "bg-white": !disabled,
-  }));
-
-  const dispatch = createEventDispatcher();
+  let classes = $derived(
+    clsx({
+      'hover:bg-danger-500 hover:text-white text-danger-500': isDestructive,
+      'hover:bg-neutral-100 text-neutral-800': !isDestructive && !disabled,
+      'bg-neutral-100 text-neutral-500': disabled,
+      'bg-white': !disabled
+    })
+  )
 
   const handleClick = () => {
     if (isDestructive && !needsConfirmation) {
-      needsConfirmation = true;
+      needsConfirmation = true
       setTimeout(() => {
-        needsConfirmation = false;
-      }, 3000);
-      return;
+        needsConfirmation = false
+      }, 3000)
+      return
     }
 
-    needsConfirmation = false;
+    needsConfirmation = false
 
-    dispatch("click");
-  };
+    onClick?.()
+  }
 </script>
 
 <button

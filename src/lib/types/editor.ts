@@ -6,6 +6,7 @@ import type { Envelope, EnvelopeHeader } from './envelope'
 import type { EditorProblem } from '../editor/EditorProblem.js'
 import type { IconSource } from '@steeze-ui/svelte-icon'
 import type { Snippet } from 'svelte'
+import type { SchemaValue } from '$lib/editor/form/utils/schema'
 
 export type ButtonVariant = 'default' | 'primary' | 'danger'
 
@@ -76,8 +77,35 @@ export interface ValidateActionResponse {
   error?: GOBLError
 }
 
-// Props
+export interface EditorEvents {
+  onFieldAdded?: (field: UIModelField) => void
+  onFieldDeleted?: (field: UIModelField) => void
+  onFieldDuplicated?: (field: UIModelField) => void
+  onFieldMoved?: (field: UIModelField) => void
+  onFieldValueUpdated?: (field: UIModelField) => void
+  onFieldKeyUpdated?: (field: UIModelField) => void
+}
 
+// Props
+export interface AbstractFieldProps extends EditorEvents {
+  field: UIModelField
+  readOnly?: boolean
+}
+
+export interface AddFieldMenuProps {
+  field: UIModelField
+  inputRef?: HTMLElement | undefined
+  menuRef?: HTMLElement | undefined
+  onOpenAddFieldMenu?: () => void
+  onCloseAddFieldMenu?: () => void
+  onFieldAdded?: (field: UIModelField) => void
+}
+
+export interface ArrayFieldProps extends AbstractFieldProps {}
+
+export interface BooleanFieldProps extends AbstractFieldProps {
+  children?: Snippet
+}
 export interface BaseButtonProps {
   icon?: IconSource | undefined
   variant?: ButtonVariant
@@ -86,10 +114,59 @@ export interface BaseButtonProps {
   onclick?: () => void
 }
 
+export interface DynamicFormProps extends EditorEvents {
+  showSchemaField?: boolean
+  isEmptySchema?: boolean
+  model?: UIModelRootField | UIModelField | undefined
+  readOnly?: boolean
+  onUiRefreshNeeded?: (model: UIModelRootField | UIModelField | undefined) => void
+}
+
+export interface EditableDateFieldProps {
+  field: UIModelField<string>
+  showError?: boolean
+  onBlur?: (value: string) => void
+  onEdit?: (value: string) => void
+}
+
+export interface EditableFieldKeyProps extends AbstractFieldProps {
+  parseKey?: (key: SchemaValue) => string
+}
+
+export interface EditableFieldProps extends AbstractFieldProps {
+  parseValue: (value: SchemaValue) => SchemaValue
+}
+
+export interface EditableSelectFieldProps {
+  field: UIModelField<string>
+  options: { label: string; value: string | boolean }[]
+  showError?: boolean
+  onEdit?: (value: string) => void
+  onBlur?: (value: string) => void
+  onfocus?: (event: FocusEvent) => void
+}
+
+export interface EditableTextFieldProps {
+  field: UIModelField<string>
+  showError?: boolean
+  classes?: string
+  value?: string
+  id?: string
+  onBlur?: (value: string) => void
+  onEdit?: (value: string) => void
+  onfocus?: (event: FocusEvent) => void
+}
+
 export interface EditorCodeProps {
   jsonSchemaURL: string
   forceReadOnly?: boolean
   hideConsoleBar?: boolean
+}
+
+export interface EditorFormProps {
+  forceReadOnly?: boolean
+  removeStampsOnBuild?: boolean
+  onSetState?: (state: State) => void
 }
 
 export interface EditorFormModalCorrectProps {
@@ -108,6 +185,11 @@ export interface EditorFormModalSignaturesProps {
   sigs?: string[] | null
   onclose?: () => void
 }
+
+export interface EditorProblemProps {
+  problem: monaco.editor.IMarker
+}
+
 export interface EnvelopeEditorProps {
   // Used for JSON Schema validation within Monaco Editor. When set, this should  be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   jsonSchemaURL?: string
@@ -164,6 +246,53 @@ export interface ExpandButtonProps {
   onclick?: () => void
 }
 
+export interface FallbackFieldProps {
+  field: UIModelField
+}
+
+export interface FieldButtonProps {
+  icon: IconSource
+  confirmationIcon?: IconSource | null
+  tooltipText?: string
+  isDestructive?: boolean
+  disabled?: boolean
+  onClick?: () => void
+}
+
+export interface FieldButtonsProps {
+  field?: UIModelField | undefined
+  onAdd?: () => void
+  onDelete?: () => void
+  onDuplicate?: () => void
+  onMoveUp?: () => void
+  onMoveDown?: () => void
+}
+
+export interface FieldContextMenuProps {
+  field: UIModelField
+  onFieldAdded?: (field: UIModelField) => void
+  onFieldDeleted?: (field: UIModelField) => void
+  onFieldDuplicated?: (field: UIModelField) => void
+  onFieldMoved?: (field: UIModelField) => void
+}
+
+export interface FieldErrorProps {
+  error?: string
+}
+
+export interface FieldTitleProps {
+  field: UIModelField
+}
+
+export interface IntegerFieldProps extends AbstractFieldProps {
+  children?: Snippet
+}
+
+export interface LeafFieldProps extends AbstractFieldProps {
+  parseValue: (value: SchemaValue) => SchemaValue
+  parseKey?: ((key: SchemaValue) => string) | undefined
+  field: UIModelField<string>
+}
 export interface ModalProps {
   title?: string
   confirmButtonIcon?: IconSource | undefined
@@ -183,10 +312,31 @@ export interface ObjectEditorProps {
   model?: UIModelField | undefined
 }
 
+export interface ObjectFieldProps extends AbstractFieldProps {}
+
+export interface ReadOnlyFieldProps {
+  field: UIModelField
+}
+
+export interface RootFieldProps extends AbstractFieldProps {}
+
+export interface SchemaFieldProps {
+  isEmptySchema?: boolean
+}
+
+export interface SectionWrapperProps extends AbstractFieldProps {
+  children?: Snippet
+  extraContent?: Snippet
+}
+
 export interface SelectSchemasProps {
   value?: string
   placeholder?: string
   allowAll?: boolean
   navBar?: boolean
   onChange?: (value: string) => void
+}
+
+export interface StringFieldProps extends AbstractFieldProps {
+  children?: Snippet
 }

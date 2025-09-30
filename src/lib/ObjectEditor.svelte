@@ -30,5 +30,5 @@
 </script>
 
 {#if model}
-  <DynamicForm {model} {readOnly} on:uiRefreshNeeded={(event) => (model = event.detail)} />
+  <DynamicForm {model} {readOnly} onUiRefreshNeeded={(m) => (model = m)} />
 {/if}

@@ -1,9 +1,12 @@
-export function getDebouncedFunction<T>(ms: number, callback: (...args: T[]) => void): (...args: T[]) => void {
-  let timerId: NodeJS.Timeout;
+export function getDebouncedFunction<T>(
+  ms: number,
+  callback: (...args: T[]) => void
+): (...args: T[]) => void {
+  let timerId: NodeJS.Timeout
   return (...args: T[]) => {
-    clearTimeout(timerId);
+    clearTimeout(timerId)
     timerId = setTimeout(() => {
-      callback(...args);
-    }, ms);
-  };
+      callback(...args)
+    }, ms)
+  }
 }

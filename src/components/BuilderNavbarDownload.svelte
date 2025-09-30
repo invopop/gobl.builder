@@ -1,59 +1,56 @@
-<!-- @migration-task Error while migrating Svelte code: can't migrate `let generatingPDF = false;` to `$state` because there's a variable named state.
-     Rename the variable and try again or migrate by hand. -->
-<!-- @migration-task Error while migrating Svelte code: can't migrate `let generatingPDF = false;` to `$state` because there's a variable named state.
-     Rename the variable and try again or migrate by hand. -->
 <script lang="ts">
-  import { Icon } from "@steeze-ui/svelte-icon";
-  import { iconButtonClasses } from "./ui/iconButtonClasses";
-  import { Invoice, Download, Header, Signature } from "@invopop/ui-icons";
-  import LoadingIcon from "./ui/LoadingIcon.svelte";
-  import { createEventDispatcher } from "svelte";
-  import { toasts } from "svelte-toasts";
-  import type { State } from "./types/editor";
+  import { Icon } from '@steeze-ui/svelte-icon'
+  import { iconButtonClasses } from './iconButtonClasses'
+  import { Invoice, Download, Header, Signature } from '@invopop/ui-icons'
+  import LoadingIcon from '../lib/ui/LoadingIcon.svelte'
+  import { toasts } from 'svelte-toasts'
+  import type { State } from '../lib/types/editor'
 
-  const pdfApiBaseUrl = "https://pdf.invopop.com";
+  const pdfApiBaseUrl = 'https://pdf.invopop.com'
 
-  const dispatch = createEventDispatcher();
+  let generatingPDF = $state(false)
 
-  export let disabled = false;
-  export let state: State = "init";
+  interface Props {
+    disabled?: boolean
+    initialState?: State
+    envelope?: string
+    onAction?: (action: string) => void
+  }
 
-  let generatingPDF = false;
-
-  export let envelope = "";
+  let { disabled = false, initialState = 'init', envelope = '', onAction }: Props = $props()
 
   async function previewPDF() {
-    const formData = new FormData();
-    formData.append("envelope", new Blob([envelope]));
+    const formData = new FormData()
+    formData.append('envelope', new Blob([envelope]))
 
-    generatingPDF = true;
+    generatingPDF = true
 
     try {
       const res = await fetch(`${pdfApiBaseUrl}/api`, {
-        method: "POST",
-        body: formData,
-      });
+        method: 'POST',
+        body: formData
+      })
 
       if (!res.ok) {
-        const message = "The PDF service returned an error:";
-        const context = `${await res.text()} (HTTP status: ${res.status})`;
+        const message = 'The PDF service returned an error:'
+        const context = `${await res.text()} (HTTP status: ${res.status})`
         toasts.add({
-          type: "error",
-          description: `${message} ${context}`,
-        });
-        return;
+          type: 'error',
+          description: `${message} ${context}`
+        })
+        return
       }
 
-      const data = await res.blob();
-      const url = URL.createObjectURL(data);
-      window.open(url);
+      const data = await res.blob()
+      const url = URL.createObjectURL(data)
+      window.open(url)
     } catch (e) {
       toasts.add({
-        type: "error",
-        description: `Failed to fetch PDF: ${e as string}`,
-      });
+        type: 'error',
+        description: `Failed to fetch PDF: ${e as string}`
+      })
     } finally {
-      generatingPDF = false;
+      generatingPDF = false
     }
   }
 </script>
@@ -62,8 +59,8 @@
   <button
     title="Show document headers"
     class={iconButtonClasses}
-    on:click={() => {
-      dispatch("action", "showHeaders");
+    onclick={() => {
+      onAction?.('showHeaders')
     }}
   >
     <Icon src={Header} class="h-5 w-5" />
@@ -71,15 +68,15 @@
   <button
     title="Show document signatures"
     class={iconButtonClasses}
-    disabled={state !== "signed"}
-    on:click={() => {
-      dispatch("action", "showSignatures");
+    disabled={initialState !== 'signed'}
+    onclick={() => {
+      onAction?.('showSignatures')
     }}
   >
     <Icon src={Signature} class="h-5 w-5" />
   </button>
 
-  <button title="Preview document as PDF" on:click={previewPDF} class={iconButtonClasses} {disabled}>
+  <button title="Preview document as PDF" onclick={previewPDF} class={iconButtonClasses} {disabled}>
     {#if generatingPDF}
       <LoadingIcon />
     {:else}
@@ -89,8 +86,8 @@
 
   <button
     title="Preview and download document"
-    on:click={() => {
-      dispatch("action", "downloadJson");
+    onclick={() => {
+      onAction?.('download')
     }}
     class={iconButtonClasses}
     {disabled}

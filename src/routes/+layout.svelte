@@ -5,8 +5,9 @@
   import { Icon } from 'svelte-hero-icons'
   import { Failure, Info, Success } from '@invopop/ui-icons'
   import '../app.css'
+  import type { Snippet } from 'svelte'
   interface Props {
-    children?: import('svelte').Snippet
+    children?: Snippet
   }
 
   let { children }: Props = $props()
@@ -19,7 +20,7 @@
 {@render children?.()}
 
 <ToastContainer placement="bottom-right" width="336px" duration={3000}>
-  {#snippet children({ data })}
+  {#snippet children(data: { type: string; description: string })}
     <div class="bg-neutral-800/80 rounded-md w-full">
       <div class="py-2 px-3 flex items-center space-x-2">
         <div class="flex-nowrap">

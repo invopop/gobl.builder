@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { Modal } from "flowbite-svelte";
-  import DocLoaderContent from "./DocLoaderContent.svelte";
-  import { createEventDispatcher } from "svelte";
-  import { Icon } from "@steeze-ui/svelte-icon";
-  import { Folder } from "@invopop/ui-icons";
+  import { Modal } from 'flowbite-svelte'
+  import DocLoaderContent from './DocLoaderContent.svelte'
+  import { Icon } from '@steeze-ui/svelte-icon'
+  import { Folder } from '@invopop/ui-icons'
+  import type { GOBLDocument } from '$lib/types/envelope'
 
-  const dispatch = createEventDispatcher();
+  let openModal = $state(false)
 
-  let openModal = $state(false);
-
-  function handleDocLoaded(event: CustomEvent<string>): void {
-    dispatch("load", event.detail);
+  interface Props {
+    onLoad?: (doc: GOBLDocument) => void
   }
+
+  let { onLoad }: Props = $props()
 </script>
 
 <button
   title="Load a GOBL document from a template, file upload or your library."
   class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1"
   onclick={() => {
-    openModal = true;
+    openModal = true
   }}
 >
   <Icon src={Folder} class="h-5 w-5" />
@@ -26,7 +26,7 @@
 </button>
 {#if openModal}
   <Modal
-    backdropClass="fixed inset-0 z-40 bg-neutral-800/80"
+    class="backdrop:bg-neutral-800/80"
     bodyClass="px-6 pt-2"
     outsideclose
     dismissable={false}
@@ -35,10 +35,10 @@
     autoclose
   >
     {#snippet header()}
-        <div >
+      <div>
         <p class="font-semibold text-xl text-neutral-800 px-2">Load Example</p>
       </div>
-      {/snippet}
-    <DocLoaderContent on:close={() => (openModal = false)} on:docLoaded={handleDocLoaded} />
+    {/snippet}
+    <DocLoaderContent onClose={() => (openModal = false)} {onLoad} />
   </Modal>
 {/if}

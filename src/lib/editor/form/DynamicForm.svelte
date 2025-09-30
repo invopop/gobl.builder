@@ -1,43 +1,48 @@
-<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
-<!-- @migration-task Error while migrating Svelte code: Can't migrate code with afterUpdate. Please migrate by hand. -->
 <script lang="ts">
-  import SchemaField from "./SchemaField.svelte";
-  import AbstractField from "./AbstractField.svelte";
-  import type { UIModelRootField, UIModelField } from "./utils/model";
-  import { afterUpdate, createEventDispatcher, getContext, onDestroy, onMount } from "svelte";
-  import type { Writable } from "svelte/store";
-  import { getBuilderContext } from "$lib/store/builder";
+  import SchemaField from './SchemaField.svelte'
+  import AbstractField from './AbstractField.svelte'
+  import { getContext, onDestroy, onMount } from 'svelte'
+  import type { Writable } from 'svelte/store'
+  import { getBuilderContext } from '$lib/store/builder'
+  import type { DynamicFormProps } from '$lib/types/editor'
 
-  const dispatch = createEventDispatcher();
+  const { scrollingSection } = getBuilderContext()
 
-  const { scrollingSection } = getBuilderContext();
+  const scrollPosition = getContext('scrollPosition') as Writable<number>
 
-  const scrollPosition = getContext("scrollPosition") as Writable<number>;
+  let formElement: HTMLElement
 
-  let formElement: HTMLElement;
-
-  export let showSchemaField = false;
-  export let isEmptySchema = false;
-  export let model: UIModelRootField | UIModelField | undefined = undefined;
-  export let readOnly = false;
+  let {
+    showSchemaField = false,
+    isEmptySchema = false,
+    model = undefined,
+    readOnly = false,
+    onFieldAdded,
+    onFieldDeleted,
+    onFieldDuplicated,
+    onFieldMoved,
+    onFieldKeyUpdated,
+    onFieldValueUpdated,
+    onUiRefreshNeeded
+  }: DynamicFormProps = $props()
 
   const handleScroll = () => {
-    $scrollPosition = formElement.scrollTop;
-  };
+    $scrollPosition = formElement.scrollTop
+  }
 
   onMount(() => {
-    formElement.addEventListener("scroll", handleScroll);
-  });
+    formElement.addEventListener('scroll', handleScroll)
+  })
 
-  afterUpdate(() => {
-    if ($scrollingSection) return;
+  $effect(() => {
+    if ($scrollingSection) return
 
-    formElement.scrollTo(0, $scrollPosition);
-  });
+    formElement.scrollTo(0, $scrollPosition)
+  })
 
   onDestroy(() => {
-    formElement.removeEventListener("scroll", handleScroll);
-  });
+    formElement.removeEventListener('scroll', handleScroll)
+  })
 </script>
 
 <div bind:this={formElement} class="h-full overflow-y-auto overflow-x-hidden">
@@ -49,24 +54,24 @@
         <AbstractField
           field={model}
           {readOnly}
-          on:fieldAdded={(event) => {
-            dispatch("uiRefreshNeeded", model);
-            dispatch("fieldAdded", event);
+          onFieldAdded={(field) => {
+            onUiRefreshNeeded?.(model)
+            onFieldAdded?.(field)
           }}
-          on:fieldDeleted={(event) => {
-            dispatch("uiRefreshNeeded", model);
-            dispatch("fieldDeleted", event);
+          onFieldDeleted={(field) => {
+            onUiRefreshNeeded?.(model)
+            onFieldDeleted?.(field)
           }}
-          on:fieldDuplicated={(event) => {
-            dispatch("uiRefreshNeeded", model);
-            dispatch("fieldDuplicated", event);
+          onFieldDuplicated={(field) => {
+            onUiRefreshNeeded?.(model)
+            onFieldDuplicated?.(field)
           }}
-          on:fieldMoved={(event) => {
-            dispatch("uiRefreshNeeded", model);
-            dispatch("fieldMoved", event);
+          onFieldMoved={(field, oldIndex, newIndex) => {
+            onUiRefreshNeeded?.(model)
+            onFieldMoved?.(field, oldIndex, newIndex)
           }}
-          on:fieldValueUpdated
-          on:fieldKeyUpdated
+          {onFieldKeyUpdated}
+          {onFieldValueUpdated}
         />
       {/if}
     </div>

@@ -1,128 +1,128 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import { fade } from 'svelte/transition'
+  import hover from './action/hover.js'
+  import { sleep } from './utils/sleep.js'
+  import type { SchemaOption, UIModelField } from './utils/model.js'
+  import clickOutside from '$lib/clickOutside.js'
+  import { Icon } from 'svelte-hero-icons'
+  import { Search } from '@invopop/ui-icons'
+  import BaseButton from '$lib/ui/BaseButton.svelte'
+  import type { AddFieldMenuProps } from '$lib/types/editor.js'
+  import { onMount } from 'svelte'
 
-  import { fade } from "svelte/transition";
-  import hover from "./action/hover.js";
-  import { createEventDispatcher } from "svelte";
-  import { sleep } from "./utils/sleep.js";
-  import type { SchemaOption, UIModelField } from "./utils/model.js";
-  import clickOutside from "$lib/clickOutside.js";
-  import { Icon } from "svelte-hero-icons";
-  import { Search } from "@invopop/ui-icons";
-  import BaseButton from "$lib/ui/BaseButton.svelte";
+  let {
+    field,
+    inputRef = $bindable(undefined),
+    menuRef = $bindable(undefined),
+    onOpenAddFieldMenu,
+    onCloseAddFieldMenu,
+    onFieldAdded
+  }: AddFieldMenuProps = $props()
+  let checkboxesRef: HTMLInputElement[] = $state([])
 
-  interface Props {
-    field: UIModelField;
-    inputRef?: HTMLElement | undefined;
-    menuRef?: HTMLElement | undefined;
-  }
-
-  let { field, inputRef = $bindable(undefined), menuRef = $bindable(undefined) }: Props = $props();
-  let checkboxesRef: HTMLInputElement[] = $state([]);
-
-  let focusedOptionIndex = $state(-1);
-  let selection: string[] = $state([]);
-  let filterStr = $state("");
-
-  const dispatch = createEventDispatcher();
+  let focusedOptionIndex = $state(-1)
+  let selection: string[] = $state([])
+  let filterStr = $state('')
 
   function filterOptions(options: SchemaOption[], filterStr: string) {
     return options
       .filter((opt) => {
-        const foundInKey = opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase());
-        const title = opt.schema.title || "";
-        const foundInTitle = title.toLowerCase().includes(filterStr.toLocaleLowerCase());
+        const foundInKey = opt.key.toLowerCase().includes(filterStr.toLocaleLowerCase())
+        const title = opt.schema.title || ''
+        const foundInTitle = title.toLowerCase().includes(filterStr.toLocaleLowerCase())
 
-        return foundInKey || foundInTitle;
+        return foundInKey || foundInTitle
       })
       .sort((a, b) => {
-        const aRequired = a.required && !a.schema.calculated;
-        const bRequired = b.required && !b.schema.calculated;
+        const aRequired = a.required && !a.schema.calculated
+        const bRequired = b.required && !b.schema.calculated
 
         if ((aRequired && bRequired) || (!aRequired && !bRequired)) {
-          return 0;
+          return 0
         }
 
-        return aRequired ? -1 : 1;
-      });
+        return aRequired ? -1 : 1
+      })
   }
 
-  let options = $derived(filterOptions(field.options || [], filterStr));
+  let options = $derived(filterOptions(field.options || [], filterStr))
 
-  run(() => {
-    inputRef?.focus();
-  });
+  onMount(() => {
+    inputRef?.focus()
+  })
 
   function handleOpenMenu() {
-    inputRef?.focus();
-    dispatch("openAddFieldMenu");
+    inputRef?.focus()
+    onOpenAddFieldMenu?.()
   }
 
   async function handleCloseMenu() {
-    await sleep(100);
-    filterStr = "";
-    inputRef?.blur();
-    dispatch("closeAddFieldMenu");
+    await sleep(100)
+    filterStr = ''
+    inputRef?.blur()
+    onCloseAddFieldMenu?.()
   }
 
   function handleAddFields() {
-    handleCloseMenu();
+    handleCloseMenu()
 
-    const addedFields: (UIModelField | undefined)[] = [];
+    const addedFields: (UIModelField | undefined)[] = []
 
     selection.forEach((fieldKey) => {
-      const option = options.find((o) => o.key === fieldKey);
+      const option = options.find((o) => o.key === fieldKey)
 
-      if (!option) return;
+      if (!option) return
 
-      const newField = field.addChildField(option);
+      const newField = field.addChildField(option)
 
-      addedFields.push(newField);
+      if (!newField) return
 
-      dispatch("fieldAdded", newField);
-    });
+      addedFields.push(newField)
+
+      onFieldAdded?.(newField)
+    })
 
     // Focus first field added
-    addedFields[0]?.tryFocus();
+    addedFields[0]?.tryFocus()
   }
 
   function handleKeyDown(e: KeyboardEvent) {
-    e.stopImmediatePropagation();
+    e.stopImmediatePropagation()
 
-    if (e.key === "Escape") {
-      e.preventDefault();
-      handleCloseMenu();
-      return;
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      handleCloseMenu()
+      return
     }
 
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      focusedOptionIndex = Math.min(focusedOptionIndex + 1, options.length - 1);
-      menuRef?.children[focusedOptionIndex].scrollIntoView({ block: "center" });
-      menuRef?.scrollIntoView({ block: "center" });
-      checkboxesRef[focusedOptionIndex]?.focus();
-      return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      focusedOptionIndex = Math.min(focusedOptionIndex + 1, options.length - 1)
+      menuRef?.children[focusedOptionIndex].scrollIntoView({ block: 'center' })
+      menuRef?.scrollIntoView({ block: 'center' })
+      checkboxesRef[focusedOptionIndex]?.focus()
+      return
     }
 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      focusedOptionIndex = Math.max(focusedOptionIndex - 1, 0);
-      menuRef?.children[focusedOptionIndex].scrollIntoView({ block: "center" });
-      menuRef?.scrollIntoView({ block: "center" });
-      checkboxesRef[focusedOptionIndex]?.focus();
-      return;
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      focusedOptionIndex = Math.max(focusedOptionIndex - 1, 0)
+      menuRef?.children[focusedOptionIndex].scrollIntoView({ block: 'center' })
+      menuRef?.scrollIntoView({ block: 'center' })
+      checkboxesRef[focusedOptionIndex]?.focus()
+      return
     }
 
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (options.length === 0) return;
-      handleAddFields();
-      return;
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (options.length === 0) return
+      handleAddFields()
+      return
     }
   }
 
   function handleHoverListItem(i: number) {
-    focusedOptionIndex = i;
+    focusedOptionIndex = i
   }
 </script>
 
@@ -182,7 +182,7 @@
       {/if}
     </ul>
     <div class="pb-2 pt-1 px-2 flex items-center justify-center">
-      <BaseButton variant="primary" on:click={handleAddFields}>Add items</BaseButton>
+      <BaseButton variant="primary" onclick={handleAddFields}>Add items</BaseButton>
     </div>
   </div>
 </div>

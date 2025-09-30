@@ -1,7 +1,9 @@
 @import 'tailwindcss';
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/typography";
-@config "../tailwind.config.js";
+@plugin "@tailwindcss/forms" {
+  strategy: 'class';
+}
+@plugin "@tailwindcss/container-queries";
+@config "../tailwind.config.cjs";
 
 @layer utilities {
   textarea {

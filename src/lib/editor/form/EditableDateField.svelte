@@ -1,61 +1,57 @@
 <script lang="ts">
-  import { DateInput } from "date-picker-svelte";
-  import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import clsx from "clsx";
-  import { createEventDispatcher, onDestroy, onMount, tick } from "svelte";
-  import { Icon } from "svelte-hero-icons";
-  import { Calendar } from "@invopop/ui-icons";
+  import { DateInput } from 'date-picker-svelte'
+  import clsx from 'clsx'
+  import { onDestroy, onMount, tick } from 'svelte'
+  import { Icon } from 'svelte-hero-icons'
+  import { Calendar } from '@invopop/ui-icons'
+  import type { EditableDateFieldProps } from '$lib/types/editor'
 
-  const uniqueId = `date-input-${Math.random().toString(36).slice(2, 7)}`;
+  const uniqueId = `date-input-${Math.random().toString(36).slice(2, 7)}`
 
-  interface Props {
-    field: UIModelField<string>;
-    showError?: boolean;
-  }
+  let { field, showError = false, onBlur, onEdit }: EditableDateFieldProps = $props()
 
-  let { field, showError = false }: Props = $props();
+  let input: HTMLInputElement | undefined
 
-  let input: HTMLInputElement | undefined;
+  let classes = $derived(
+    clsx({
+      [uniqueId]: true,
+      'is-calculated': field.is.calculated,
+      'has-error': showError
+    })
+  )
 
-  let classes = $derived(clsx({
-    [uniqueId]: true,
-    "is-calculated": field.is.calculated,
-    "has-error": showError,
-  }));
-
-  let date = $derived(new Date(field.value));
-
-  const dispatch = createEventDispatcher();
+  let date = $derived(new Date(field.value))
 
   async function hanldeSelect() {
-    await tick();
+    await tick()
 
-    if (!input) return;
+    if (!input) return
 
-    const value = input.value;
+    const value = input.value
 
-    if (value == field.value) return;
+    if (value == field.value) return
 
-    dispatch("blur", value);
-    dispatch("edit", value);
+    onBlur?.(value)
+    onEdit?.(value)
   }
 
   onMount(() => {
-    input = document.querySelector(`.${uniqueId} > input`) as HTMLInputElement;
+    input = document.querySelector(`.${uniqueId} > input`) as HTMLInputElement
 
-    if (!input) return;
+    if (!input) return
 
-    input.addEventListener("blur", hanldeSelect);
-  });
+    input.addEventListener('blur', hanldeSelect)
+  })
 
   onDestroy(() => {
-    if (!input) return;
+    if (!input) return
 
-    input.removeEventListener("blur", hanldeSelect);
-  });
+    input.removeEventListener('blur', hanldeSelect)
+  })
 </script>
 
 <div class="relative">
+  <!-- TODO: update event to a callback when component is ready for svelte 5 -->
   <DateInput
     id={field.id}
     class={classes}

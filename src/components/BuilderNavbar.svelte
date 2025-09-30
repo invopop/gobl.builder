@@ -1,45 +1,60 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
-  import { getSchemas } from "./editor/actions";
-  import DocLoader from "../components/DocLoader.svelte";
-  import logo from "../static/logo-name.svg";
-  import type { ListOption } from "./types/ui";
-  import type { State } from "./types/editor";
-  import SelectSchemas from "./SelectSchemas.svelte";
-  import BuilderNavbarOptions from "./BuilderNavbarOptions.svelte";
-  import BuilderNavbarActions from "./BuilderNavbarActions.svelte";
-  import BuilderNavbarSeparator from "./BuilderNavbarSeparator.svelte";
-  import { Icon } from "@steeze-ui/svelte-icon";
-  import { Menu, Close } from "@invopop/ui-icons";
-  import BuilderNavbarDownload from "./BuilderNavbarDownload.svelte";
-  import BuilderNavbarView from "./BuilderNavbarView.svelte";
-  import BuilderNavbarCorrect from "./BuilderNavbarCorrect.svelte";
+  import { onMount } from 'svelte'
+  import { getSchemas } from '../lib/editor/actions'
+  import DocLoader from '../components/DocLoader.svelte'
+  import logo from '../static/logo-name.svg'
+  import type { ListOption } from '../lib/types/ui'
+  import type { State } from '../lib/types/editor'
+  import SelectSchemas from '../lib/SelectSchemas.svelte'
+  import BuilderNavbarOptions from './BuilderNavbarOptions.svelte'
+  import BuilderNavbarActions from './BuilderNavbarActions.svelte'
+  import BuilderNavbarSeparator from './BuilderNavbarSeparator.svelte'
+  import { Icon } from '@steeze-ui/svelte-icon'
+  import { Menu, Close } from '@invopop/ui-icons'
+  import BuilderNavbarDownload from './BuilderNavbarDownload.svelte'
+  import BuilderNavbarView from './BuilderNavbarView.svelte'
+  import BuilderNavbarCorrect from './BuilderNavbarCorrect.svelte'
+  import type { GOBLDocument } from '$lib/types/envelope'
 
-  const dispatch = createEventDispatcher();
+  const GOBL_URL = 'https://gobl.org/draft-0/'
 
-  const GOBL_URL = "https://gobl.org/draft-0/";
+  interface Props {
+    defaultSchema?: string
+    forceReadOnly?: boolean
+    initialState?: State
+    envelope?: string
+    editorView?: string
+    onSchemaChanged?: (schema: string) => void
+    onLoad?: (doc: GOBLDocument) => void
+    onAction?: (action: string) => void
+  }
 
-  export let defaultSchema = "";
-  export let forceReadOnly = false;
-  export let state: State = "init";
-  export let envelope = "";
-  export let editorView = "code";
+  let {
+    defaultSchema = $bindable(''),
+    forceReadOnly = $bindable(false),
+    initialState = 'init',
+    envelope = '',
+    editorView = $bindable('code'),
+    onSchemaChanged,
+    onLoad,
+    onAction
+  }: Props = $props()
 
-  let mobileMenuOpen = false;
-  let schemasList: ListOption[] = [];
+  let mobileMenuOpen = $state(false)
+  let schemasList: ListOption[] = []
 
   onMount(async () => {
-    const schemas = await getSchemas();
+    const schemas = await getSchemas()
     schemasList = schemas.map((s: string) => ({
       value: s,
-      label: s.replace(GOBL_URL, ""),
-    }));
+      label: s.replace(GOBL_URL, '')
+    }))
 
     schemasList.unshift({
-      value: "",
-      label: "All",
-    });
-  });
+      value: '',
+      label: 'All'
+    })
+  })
 </script>
 
 <nav
@@ -56,7 +71,7 @@
     </div>
 
     <div class="hidden md:block">
-      <DocLoader on:load />
+      <DocLoader {onLoad} />
     </div>
 
     <div class="hidden md:block lg:w-[256px] ml-3">
@@ -64,31 +79,36 @@
         navBar
         bind:value={defaultSchema}
         placeholder="Schema"
-        on:change={(event) => {
-          dispatch("schemaChanged", event.detail);
+        onChange={(value) => {
+          onSchemaChanged?.(value)
         }}
       />
     </div>
   </div>
 
   <div class="hidden md:flex items-center space-x-3 text-white">
-    <BuilderNavbarActions {state} on:action />
+    <BuilderNavbarActions {initialState} {onAction} />
 
     <BuilderNavbarSeparator />
-    <BuilderNavbarCorrect {state} on:action />
+    <BuilderNavbarCorrect {initialState} {onAction} />
     <BuilderNavbarSeparator />
 
-    <BuilderNavbarDownload {state} {envelope} on:action disabled={!["build", "signed"].includes(state)} />
+    <BuilderNavbarDownload
+      {initialState}
+      {envelope}
+      {onAction}
+      disabled={!['build', 'signed'].includes(initialState)}
+    />
     <BuilderNavbarSeparator />
     <div class="flex items-center space-x-2">
-      <BuilderNavbarOptions {state} bind:forceReadOnly />
+      <BuilderNavbarOptions {initialState} bind:forceReadOnly />
       <BuilderNavbarView bind:editorView />
     </div>
   </div>
   <button
     class="md:hidden p-1.5 border border-gobl-300"
-    on:click={() => {
-      mobileMenuOpen = !mobileMenuOpen;
+    onclick={() => {
+      mobileMenuOpen = !mobileMenuOpen
     }}
   >
     {#if mobileMenuOpen}
@@ -102,9 +122,9 @@
   <div class="absolute md:hidden mt-14 bg-gobl-900 inset-0 z-10 px-3 py-2">
     <div class="flex">
       <DocLoader
-        on:load={(event) => {
-          mobileMenuOpen = false;
-          dispatch("load", event.detail);
+        onLoad={(doc) => {
+          mobileMenuOpen = false
+          onLoad?.(doc)
         }}
       />
       <div class="w-full ml-3">
@@ -112,8 +132,8 @@
           navBar
           bind:value={defaultSchema}
           placeholder="Schema"
-          on:change={(event) => {
-            dispatch("schemaChanged", event.detail);
+          onChange={(value) => {
+            onSchemaChanged?.(value)
           }}
         />
       </div>
@@ -125,16 +145,21 @@
     <hr class="my-5 border-gobl-300" />
     <div class="flex items-center space-x-3">
       <BuilderNavbarActions
-        {state}
-        on:action={(event) => {
-          mobileMenuOpen = false;
-          dispatch("action", event.detail);
+        {initialState}
+        onAction={(action) => {
+          mobileMenuOpen = false
+          onAction?.(action)
         }}
       />
       <BuilderNavbarSeparator />
       <BuilderNavbarSeparator />
-      <BuilderNavbarCorrect {state} on:action />
-      <BuilderNavbarDownload {state} {envelope} on:action disabled={state !== "built"} />
+      <BuilderNavbarCorrect {initialState} {onAction} />
+      <BuilderNavbarDownload
+        {initialState}
+        {envelope}
+        {onAction}
+        disabled={initialState !== 'built'}
+      />
     </div>
   </div>
 {/if}

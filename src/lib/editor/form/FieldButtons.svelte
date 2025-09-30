@@ -1,25 +1,27 @@
 <script lang="ts">
-  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from "svelte-hero-icons";
-  import { createEventDispatcher } from "svelte";
-  import type { UIModelField } from "./utils/model.js";
-  import FieldButton from "./FieldButton.svelte";
-  import { Options } from "@invopop/ui-icons";
+  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from 'svelte-hero-icons'
+  import FieldButton from './FieldButton.svelte'
+  import { Options } from '@invopop/ui-icons'
+  import type { FieldButtonsProps } from '$lib/types/editor'
 
-  interface Props {
-    field?: UIModelField | undefined;
-  }
+  let {
+    field = undefined,
+    onAdd,
+    onDelete,
+    onDuplicate,
+    onMoveDown,
+    onMoveUp
+  }: FieldButtonsProps = $props()
 
-  let { field = undefined }: Props = $props();
-
-  const dispatch = createEventDispatcher();
-
-  let parentIsArray = $derived(field?.parent?.type === "array");
-  let isArrayStringChildren = $derived(parentIsArray && field?.type === "string");
-  let showAdd = $derived(["object", "array"].includes(field?.type || "") || isArrayStringChildren);
-  let addLabel = $derived(field?.type === "array" ? "Add Row" : "Add Property");
-  let canDuplicate = $derived(field?.is.duplicable && !isArrayStringChildren);
-  let canMoveUp = $derived(parentIsArray && Number(field?.key) > 0);
-  let canMoveDown = $derived(parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1);
+  let parentIsArray = $derived(field?.parent?.type === 'array')
+  let isArrayStringChildren = $derived(parentIsArray && field?.type === 'string')
+  let showAdd = $derived(['object', 'array'].includes(field?.type || '') || isArrayStringChildren)
+  let addLabel = $derived(field?.type === 'array' ? 'Add Row' : 'Add Property')
+  let canDuplicate = $derived(field?.is.duplicable && !isArrayStringChildren)
+  let canMoveUp = $derived(parentIsArray && Number(field?.key) > 0)
+  let canMoveDown = $derived(
+    parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1
+  )
 </script>
 
 <ul
@@ -28,22 +30,26 @@
 >
   {#if showAdd}
     <li>
-      <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
+      <FieldButton icon={Plus} tooltipText={addLabel} onClick={() => onAdd?.()} />
     </li>
   {/if}
   {#if canDuplicate}
     <li>
-      <FieldButton icon={DocumentDuplicate} tooltipText="Duplicate" on:click={() => dispatch("duplicate")} />
+      <FieldButton
+        icon={DocumentDuplicate}
+        tooltipText="Duplicate"
+        onClick={() => onDuplicate?.()}
+      />
     </li>
   {/if}
   {#if canMoveUp}
     <li>
-      <FieldButton icon={ArrowUp} tooltipText="Move Up" on:click={() => dispatch("moveUp")} />
+      <FieldButton icon={ArrowUp} tooltipText="Move Up" onClick={() => onMoveUp?.()} />
     </li>
   {/if}
   {#if canMoveDown}
     <li>
-      <FieldButton icon={ArrowDown} tooltipText="Move Down" on:click={() => dispatch("moveDown")} />
+      <FieldButton icon={ArrowDown} tooltipText="Move Down" onClick={() => onMoveDown?.()} />
     </li>
   {/if}
   {#if field?.is.disposable}
@@ -53,7 +59,7 @@
         confirmationIcon={Trash}
         tooltipText="Remove"
         isDestructive={true}
-        on:click={() => dispatch("remove")}
+        onClick={() => onDelete?.()}
       />
     </li>
   {/if}

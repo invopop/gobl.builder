@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { ExclamationCircle, Icon } from "svelte-hero-icons";
+  import type { FieldErrorProps } from '$lib/types/editor'
+  import { ExclamationCircle, Icon } from 'svelte-hero-icons'
 
-  interface Props {
-    error?: string;
-  }
-
-  let { error = "" }: Props = $props();
+  let { error = '' }: FieldErrorProps = $props()
 </script>
 
 <span class="text-danger-500 text-sm whitespace-nowrap flex space-x-1 items-center h-[18px]">

@@ -1,17 +1,16 @@
 <script lang="ts">
-  import { run } from 'svelte/legacy';
+  import LoadingIcon from '$lib/ui/LoadingIcon.svelte'
+  import { build, getSchemas } from '../actions.js'
+  import DynamicForm from './DynamicForm.svelte'
+  import { setContext } from 'svelte'
+  import { getBuilderContext } from '$lib/store/builder.js'
+  import { writable } from 'svelte/store'
+  import type { EditorFormProps } from '$lib/types/editor.js'
+  import type { UIModelField, UIModelRootField } from './utils/model.js'
 
-  import LoadingIcon from "$lib/ui/LoadingIcon.svelte";
-  import { build, getSchemas } from "../actions.js";
-  import DynamicForm from "./DynamicForm.svelte";
-  import { createEventDispatcher, setContext } from "svelte";
-  import { getBuilderContext } from "$lib/store/builder.js";
-  import { writable } from "svelte/store";
+  const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`
 
-  const dispatch = createEventDispatcher();
-  const editorId = `editor-${Math.random().toString(36).slice(2, 7)}`;
-
-  const builderContext = getBuilderContext();
+  const builderContext = getBuilderContext()
 
   const {
     jsonSchema,
@@ -21,99 +20,93 @@
     recreatingUiModel,
     updateSchema,
     recreateEditor,
-    envelope,
-  } = builderContext;
+    envelope
+  } = builderContext
 
-  setContext("editorId", editorId);
+  setContext('editorId', editorId)
 
-  const scrollPosition = writable(0);
+  const scrollPosition = writable(0)
 
-  setContext("scrollPosition", scrollPosition);
+  setContext('scrollPosition', scrollPosition)
 
-  recreateFormEditor();
+  recreateFormEditor()
 
-  interface Props {
-    forceReadOnly?: boolean;
-    removeStampsOnBuild?: boolean;
-  }
-
-  let { forceReadOnly = false, removeStampsOnBuild = false }: Props = $props();
-
-
+  let { forceReadOnly = false, removeStampsOnBuild = false, onSetState }: EditorFormProps = $props()
 
   function handleKeyDown(e: KeyboardEvent) {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "z") {
-      document.dispatchEvent(new Event("redoButtonClick"));
-      return;
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
+      document.dispatchEvent(new Event('redoButtonClick'))
+      return
     }
 
-    if ((e.ctrlKey || e.metaKey) && e.key === "z") {
-      document.dispatchEvent(new Event("undoButtonClick"));
-      return;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      document.dispatchEvent(new Event('undoButtonClick'))
+      return
     }
   }
 
   async function updateSchemaIfNeeded(formSchema: string) {
     // If editor schema is not the same as the form
     if ($currentEditorSchema !== formSchema) {
-      const schemas = await getSchemas();
+      const schemas = await getSchemas()
 
-      const schema = $currentEditorSchema || $jsonSchema || "";
+      const schema = $currentEditorSchema || $jsonSchema || ''
       // If is not a valid schema we dont do anything
-      if (!schemas.includes(schema)) return;
+      if (!schemas.includes(schema)) return
 
       // Recreate visual form with editor schema
-      updateSchema(schema);
+      updateSchema(schema)
     }
   }
 
   export function recreateFormEditor() {
     // Forces editor watcher to fire and rebuild the model
-    recreateEditor();
+    recreateEditor()
   }
 
-  async function handleFormUpdated(event: CustomEvent) {
-    handleUpdateEditor(event);
-    await handleBuild();
-    recreateFormEditor();
+  async function handleFormUpdated(model: UIModelRootField | UIModelField | undefined) {
+    if (!model) return
+    handleUpdateEditor(model)
+    await handleBuild()
+    recreateFormEditor()
   }
 
-  async function handleFieldUpdated(event: CustomEvent) {
-    handleUpdateEditor(event);
+  async function handleFieldUpdated(model: UIModelField) {
+    handleUpdateEditor(model)
 
-    const result = await handleBuild();
+    const result = await handleBuild()
 
     if (result) {
-      recreateFormEditor();
+      recreateFormEditor()
     }
   }
 
-  async function handleUpdateEditor(event: CustomEvent) {
-    const model = event.detail;
-    const value = model.root.toJSON();
-    builderContext.editor.set({ value, updatedAt: Date.now() });
+  async function handleUpdateEditor(model: UIModelRootField | UIModelField) {
+    const value = model.root.toJSON()
+    builderContext.editor.set({ value, updatedAt: Date.now() })
   }
 
   async function handleBuild() {
     // Skips autobuild if any field is empty. Allowing user to add new
     // fields without having them deleted
-    if ($someEditorValueIsEmpty) return false;
+    if ($someEditorValueIsEmpty) return false
 
-    const result = await build(builderContext, { removeStamps: removeStampsOnBuild });
+    const result = await build(builderContext, { removeStamps: removeStampsOnBuild })
 
-    const isSuccess = !result?.error;
+    const isSuccess = !result?.error
 
-    dispatch("setState", isSuccess ? "built" : "errored");
+    onSetState?.(isSuccess ? 'built' : 'errored')
 
-    return isSuccess;
+    return isSuccess
   }
   // eslint-disable-next-line
-  let isEmptySchema = $derived(($uiModel as any).value?.schema.$comment == "empty-schema");
-  let isValidSchema = $derived(!$jsonSchema || $currentEditorSchema === $jsonSchema);
-  let showSchemaField = $derived(isEmptySchema || !isValidSchema);
-  run(() => {
-    updateSchemaIfNeeded($jsonSchema || "");
-  });
+  let isEmptySchema = $derived(($uiModel as any).value?.schema.$comment == 'empty-schema')
+  let isValidSchema = $derived(!$jsonSchema || $currentEditorSchema === $jsonSchema)
+  let showSchemaField = $derived(isEmptySchema || !isValidSchema)
+
+  $effect(() => {
+    updateSchemaIfNeeded($jsonSchema || '')
+  })
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />
@@ -125,9 +118,9 @@
       readOnly={forceReadOnly || !!$envelope.sigs}
       {showSchemaField}
       {isEmptySchema}
-      on:uiRefreshNeeded={handleFormUpdated}
-      on:fieldKeyUpdated={handleFieldUpdated}
-      on:fieldValueUpdated={handleFieldUpdated}
+      onUiRefreshNeeded={handleFormUpdated}
+      onFieldKeyUpdated={handleFieldUpdated}
+      onFieldValueUpdated={handleFieldUpdated}
     />
   </div>
 

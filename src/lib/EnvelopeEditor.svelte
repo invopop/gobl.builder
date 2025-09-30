@@ -19,7 +19,7 @@
 
   let {
     jsonSchemaURL = '',
-    data = '',
+    data = $bindable(''),
     state: initialState = $bindable('init'),
     problems = $bindable([]),
     signEnabled = true,
@@ -329,8 +329,8 @@
             bind:this={editorForm}
             {forceReadOnly}
             {removeStampsOnBuild}
-            on:setState={(event) => {
-              initialState = event.detail
+            onSetState={(state) => {
+              initialState = state
             }}
           />
         {/if}
