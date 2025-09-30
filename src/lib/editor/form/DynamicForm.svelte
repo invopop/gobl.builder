@@ -66,9 +66,9 @@
             onUiRefreshNeeded?.(model)
             onFieldDuplicated?.(field)
           }}
-          onFieldMoved={(field, oldIndex, newIndex) => {
+          onFieldMoved={(field) => {
             onUiRefreshNeeded?.(model)
-            onFieldMoved?.(field, oldIndex, newIndex)
+            onFieldMoved?.(field)
           }}
           {onFieldKeyUpdated}
           {onFieldValueUpdated}
