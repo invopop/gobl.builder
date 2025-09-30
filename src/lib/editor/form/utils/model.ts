@@ -296,9 +296,9 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     return newKey
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addChildField(
     option: SchemaOption,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     defaultValue?: any,
     position?: number
   ): UIModelField | undefined {

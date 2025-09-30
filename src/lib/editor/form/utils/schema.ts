@@ -186,12 +186,12 @@ export async function getRootSchema(id: string, value: SchemaValue) {
   return schema
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type SchemaValue =
   | JSON
   | string
   | number
   | boolean
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | any[]
   | Record<string, unknown>
   | null
