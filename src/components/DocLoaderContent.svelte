@@ -23,6 +23,7 @@
   {#each templateGroups as group, i (i)}
     <AccordionItem
       headerClass="flex items-center justify-between w-full font-medium text-left border-neutral-200 rounded border-t mt-2 p-0"
+      contentClass="pt-4 px-0 pb-0"
     >
       {#snippet header()}
         <div class="flex items-center space-x-2 w-full pl-[14px] py-[10px]">
