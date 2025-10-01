@@ -1,6 +1,5 @@
 <script lang="ts">
   import * as GOBL from '@invopop/gobl-worker'
-  import { toasts } from 'svelte-toasts'
   import hash from 'object-hash'
   import { envelopeDocumentJSON } from '$lib/helpers/envelope'
   import EditorCode from './editor/code/EditorCode.svelte'
@@ -9,7 +8,7 @@
   import { problemSeverityMap } from './editor/EditorProblem.js'
   import * as actions from './editor/actions'
   import type { BuildOptions, DocumentHeader, State } from './types/editor'
-  import { displayAllErrors, showErrorToast } from './helpers'
+  import { displayAllErrors } from './helpers'
   import { generateCorrectOptionsModel } from './editor/form/utils/model'
   import fileSaver from 'file-saver'
   import type { Envelope, EnvelopeHeader } from './types/envelope'
@@ -35,13 +34,14 @@
     onCorrect,
     onSign,
     onValidate,
-    onReplicate
+    onReplicate,
+    onNotification
   }: EnvelopeEditorProps = $props()
 
   let editorForm: EditorForm | null = $state(null)
   let initialEditorData = ''
 
-  const builderContext = createBuilderContext()
+  const builderContext = createBuilderContext(onNotification)
 
   const { editor, jsonSchema, envelope, envelopeIsSigned, activeSection, documentHeaders } =
     builderContext
@@ -119,7 +119,7 @@
       return initialState
     }
 
-    displayAllErrors(result?.error?.message || '')
+    displayAllErrors(result?.error?.message || '', onNotification)
 
     return initialState
   }
@@ -136,7 +136,7 @@
 
     if (!result?.schema) {
       initialState = 'errored'
-      showErrorToast('This document can not be corrected.')
+      onNotification?.({ message: 'This document can not be corrected.', type: 'error' })
       return
     }
 
@@ -148,11 +148,12 @@
 
     if (result?.error) {
       initialState = 'errored'
-      displayAllErrors(result?.error?.message || '')
+      displayAllErrors(result?.error?.message || '', onNotification)
       return false
     }
 
     onCorrect?.(result)
+    onNotification?.({ message: 'Document successfully corrected.', type: 'success' })
 
     initialState = 'corrected'
 
@@ -173,9 +174,11 @@
     // handled by setState watcher. We return the value
     // to inform external caller
     if (result?.error) {
-      displayAllErrors(result?.error?.message || '')
+      displayAllErrors(result?.error?.message || '', onNotification)
       return 'errored'
     }
+
+    onNotification?.({ message: 'Document successfully signed.', type: 'success' })
 
     return 'signed'
   }
@@ -183,6 +186,9 @@
   export const validate = async () => {
     const result = await actions.validate(builderContext)
     onValidate?.(result)
+    if (result.isValid) {
+      onNotification?.({ message: 'Document successfully validated.', type: 'success' })
+    }
   }
 
   export const replicate = async () => {
@@ -272,10 +278,7 @@
     const filename = ($envelope.head?.uuid || 'gob') + '.json'
     fileSaver.saveAs(new Blob([JSON.stringify($envelope, null, 4)]), filename)
 
-    toasts.add({
-      type: 'success',
-      description: 'Downloaded JSON file of GOBL document.'
-    })
+    onNotification?.({ message: 'Downloaded JSON file of GOBL document.', type: 'success' })
   }
 
   export const setActive = (header: DocumentHeader) => {

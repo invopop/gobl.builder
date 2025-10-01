@@ -3,7 +3,7 @@
   import { iconButtonClasses } from './iconButtonClasses'
   import { Invoice, Download, Header, Signature } from '@invopop/ui-icons'
   import LoadingIcon from '../lib/ui/LoadingIcon.svelte'
-  import { toasts } from 'svelte-toasts'
+  import { toast } from 'svelte-sonner'
   import type { State } from '../lib/types/editor'
 
   const pdfApiBaseUrl = 'https://pdf.invopop.com'
@@ -34,10 +34,7 @@
       if (!res.ok) {
         const message = 'The PDF service returned an error:'
         const context = `${await res.text()} (HTTP status: ${res.status})`
-        toasts.add({
-          type: 'error',
-          description: `${message} ${context}`
-        })
+        toast.error(`${message} ${context}`)
         return
       }
 
@@ -45,10 +42,7 @@
       const url = URL.createObjectURL(data)
       window.open(url)
     } catch (e) {
-      toasts.add({
-        type: 'error',
-        description: `Failed to fetch PDF: ${e as string}`
-      })
+      toast.error(`Failed to fetch PDF: ${e as string}`)
     } finally {
       generatingPDF = false
     }

@@ -8,6 +8,7 @@
   import EditorFormModalHeaders from '$lib/editor/form/modals/EditorFormModalHeaders.svelte'
   import EditorFormModalCorrect from '$lib/editor/form/modals/EditorFormModalCorrect.svelte'
   import type { UIModelField } from '$lib/editor/form/utils/model'
+  import { toast } from 'svelte-sonner'
 
   type ActionMethod =
     | 'build'
@@ -111,6 +112,19 @@
         }}
         onCorrect={(result) => {
           console.log('Received correct result.', result)
+        }}
+        onNotification={(notification) => {
+          switch (notification.type) {
+            case 'info':
+              toast.info(notification.message)
+              break
+            case 'success':
+              toast.success(notification.message)
+              break
+            case 'error':
+              toast.error(notification.message)
+              break
+          }
         }}
       />
     </div>

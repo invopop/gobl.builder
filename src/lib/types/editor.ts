@@ -65,6 +65,7 @@ export type BuilderContext = {
   updateSchema(value: string): void
   recreateEditor(): void
   lastFocusedElement: Writable<string | null>
+  notify(notification: NotificationProps): void
 }
 
 export interface BuildActionResponse {
@@ -190,6 +191,11 @@ export interface EditorProblemProps {
   problem: monaco.editor.IMarker
 }
 
+export interface NotificationProps {
+  message: string
+  type: 'info' | 'error' | 'success'
+}
+
 export interface EnvelopeEditorProps {
   // Used for JSON Schema validation within Monaco Editor. When set, this should  be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   jsonSchemaURL?: string
@@ -239,6 +245,8 @@ export interface EnvelopeEditorProps {
   onValidate?: (result: ValidateActionResponse) => void
   // callback to perform actions after envelope is replicated
   onReplicate?: (result: BuildActionResponse) => void
+  // callback to perform actions after notification is emitted
+  onNotification?: (notification: NotificationProps) => void
 }
 
 export interface ExpandButtonProps {

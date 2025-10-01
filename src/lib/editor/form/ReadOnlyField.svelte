@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { toasts } from 'svelte-toasts'
   import clsx from 'clsx'
   import type { ReadOnlyFieldProps } from '$lib/types/editor'
+  import { getBuilderContext } from '$lib/store/builder'
+
+  const { notify } = getBuilderContext()
 
   let { field }: ReadOnlyFieldProps = $props()
 
@@ -24,10 +26,7 @@
 
   async function handleClick() {
     await navigator.clipboard.writeText(value)
-    toasts.add({
-      type: 'success',
-      description: 'Copied to clipboard'
-    })
+    notify({ message: 'Copied to clipboard', type: 'success' })
   }
   let fieldType = $derived(
     Array.isArray(field.schema.type) ? field.schema.type[0] : field.schema.type || ''

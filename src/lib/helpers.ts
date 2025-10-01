@@ -1,4 +1,4 @@
-import { toasts } from 'svelte-toasts'
+import type { NotificationProps } from './types/editor'
 
 export function formatErrors(error: string): string[] {
   // If error does not start with doc: we assume it is a calculation error
@@ -59,13 +59,6 @@ export function parseErrorString(errorObj: Record<string, object | string>, curr
   return errorString
 }
 
-export function showErrorToast(description: string) {
-  toasts.add({
-    type: 'error',
-    description
-  })
-}
-
 export function getGOBLErrorMessage(message: string) {
   const parsedError = JSON.parse(message)
 
@@ -82,15 +75,16 @@ export function getGOBLErrorMessage(message: string) {
   return m || parsedError.message || parsedError.key || 'Unknown error'
 }
 
-export async function displayAllErrors(error: string) {
+export async function displayAllErrors(
+  error: string,
+  toastFunction?: (notification: NotificationProps) => void
+) {
   const errorMessage = getGOBLErrorMessage(error)
   const errorsArr = errorMessage.split(' / ')
 
   for (let i = 0; i < errorsArr.length; i++) {
-    showErrorToast(errorsArr[i])
-    // Force to await 10 ms so toast component does not break
-    // https://github.com/mzohaibqc/svelte-toasts/issues/6
-    await new Promise((resolve) => setTimeout(resolve, 10))
+    if (!toastFunction) return
+    toastFunction({ message: errorsArr[i], type: 'error' })
   }
 }
 

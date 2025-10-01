@@ -1,7 +1,6 @@
 import { get } from 'svelte/store'
 import * as GOBL from '@invopop/gobl-worker'
 import { encodeUTF8ToBase64 } from '$lib/encodeUTF8ToBase64.js'
-import { toasts } from 'svelte-toasts'
 import { envelopeGOBLSchema } from '$lib/helpers/envelope'
 import type {
   BuildActionResponse,
@@ -33,13 +32,6 @@ export async function build(
 
     ctx.envelope.set(result)
     ctx.goblError.set(null)
-
-    // TODO: With autobuild in place this notification is disabled, find a way to show it manually
-
-    // toasts.add({
-    //   type: "success",
-    //   description: "Document successfully built.",
-    // });
 
     return { result }
   } catch (e) {
@@ -75,11 +67,6 @@ export async function sign(ctx: BuilderContext): Promise<BuildActionResponse> {
     ctx.envelope.set(result)
     ctx.goblError.set(null)
 
-    toasts.add({
-      type: 'success',
-      description: 'Document successfully signed.'
-    })
-
     return { result }
   } catch (e) {
     const goblErr = GOBL.parseGOBLError(e)
@@ -107,11 +94,6 @@ export async function validate(ctx: BuilderContext): Promise<ValidateActionRespo
     await GOBL.validate({ payload })
 
     ctx.goblError.set(null)
-
-    toasts.add({
-      type: 'success',
-      description: 'Document successfully validated.'
-    })
 
     return { isValid: true }
   } catch (e) {
@@ -204,11 +186,6 @@ export async function correct(
     }
 
     ctx.goblError.set(null)
-
-    toasts.add({
-      type: 'success',
-      description: 'Document successfully corrected.'
-    })
 
     return { result }
   } catch (e) {

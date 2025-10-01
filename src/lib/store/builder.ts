@@ -1,4 +1,4 @@
-import type { BuilderContext } from '$lib/types/editor'
+import type { BuilderContext, NotificationProps } from '$lib/types/editor'
 import type { GOBLError } from '@invopop/gobl-worker'
 import { getContext, setContext } from 'svelte'
 import { derived, get, writable, type Writable } from 'svelte/store'
@@ -13,7 +13,9 @@ import type { Schema } from '$lib/editor/form/utils/schema'
 
 const BUILDER_CONTEXT_ID = 'builder-context'
 
-export function createBuilderContext(): BuilderContext {
+export function createBuilderContext(
+  notificationCb?: (notification: NotificationProps) => void
+): BuilderContext {
   const formUniqueId = `form-${Math.random().toString(36).slice(2, 7)}`
 
   /** -- MAIN STORES -- */
@@ -160,6 +162,11 @@ export function createBuilderContext(): BuilderContext {
     jsonSchema.set(temp)
   }
 
+  function notify(notification: NotificationProps) {
+    if (!notificationCb) return
+    notificationCb(notification)
+  }
+
   return setContext<BuilderContext>(BUILDER_CONTEXT_ID, {
     envelope,
     keypair,
@@ -183,7 +190,8 @@ export function createBuilderContext(): BuilderContext {
     scrollingSection,
     documentHeaders,
     recreateEditor,
-    lastFocusedElement
+    lastFocusedElement,
+    notify
   })
 }
 
