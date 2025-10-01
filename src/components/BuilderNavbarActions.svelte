@@ -46,7 +46,9 @@
   </button>
   <button
     title="Validate a signed GOBL document."
-    onclick={() => {}}
+    onclick={() => {
+      onAction?.('validate')
+    }}
     class={iconButtonClasses}
     disabled={state === 'errored' || state !== 'signed'}
   >
