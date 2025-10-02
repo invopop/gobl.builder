@@ -58,7 +58,7 @@
 </script>
 
 <nav
-  class="fixed w-full z-50 h-14 flex items-center justify-between bg-gobl-900 py-2 px-5 space-x-1"
+  class="fixed w-full z-40 h-14 flex items-center justify-between bg-gobl-900 py-2 px-5 space-x-1"
   aria-label="main navigation"
 >
   <div class="flex items-center">
@@ -97,7 +97,7 @@
       {initialState}
       {envelope}
       {onAction}
-      disabled={!['build', 'signed'].includes(initialState)}
+      disabled={!['built', 'signed'].includes(initialState)}
     />
     <BuilderNavbarSeparator />
     <div class="flex items-center space-x-2">
@@ -158,7 +158,7 @@
         {initialState}
         {envelope}
         {onAction}
-        disabled={initialState !== 'built'}
+        disabled={!['built', 'signed'].includes(initialState)}
       />
     </div>
   </div>

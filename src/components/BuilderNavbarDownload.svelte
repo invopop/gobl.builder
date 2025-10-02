@@ -81,7 +81,7 @@
   <button
     title="Preview and download document"
     onclick={() => {
-      onAction?.('download')
+      onAction?.('downloadJson')
     }}
     class={iconButtonClasses}
     {disabled}

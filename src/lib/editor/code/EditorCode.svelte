@@ -431,7 +431,7 @@
           </span>
         </div>
         <div>Ln {lineNumber}, Col {column}</div>
-        <button class="align-middle" onclick={handleDrawerToggle}>
+        <button class="align-middle cursor-pointer" onclick={handleDrawerToggle}>
           {#if drawerClosed}
             <svg
               xmlns="http://www.w3.org/2000/svg"
