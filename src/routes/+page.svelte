@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { EditorProblem } from '$lib/editor/EditorProblem.js'
   import EnvelopeEditor from '$lib/EnvelopeEditor.svelte'
-  import type { State } from '$lib/types/editor'
+  import type { ActionMethod, State } from '$lib/types/editor'
   import BuilderNavbar from '../components/BuilderNavbar.svelte'
   import type { EnvelopeHeader, GOBLDocument } from '$lib/types/envelope'
   import EditorFormModalSignatures from '$lib/editor/form/modals/EditorFormModalSignatures.svelte'
@@ -9,16 +9,6 @@
   import EditorFormModalCorrect from '$lib/editor/form/modals/EditorFormModalCorrect.svelte'
   import type { UIModelField } from '$lib/editor/form/utils/model'
   import { toast } from 'svelte-sonner'
-
-  type ActionMethod =
-    | 'build'
-    | 'sign'
-    | 'validate'
-    | 'replicate'
-    | 'correct'
-    | 'removeSigs'
-    | 'showSignatures'
-    | 'showHeaders'
 
   let data = $state('')
   let problems: EditorProblem[] = $state([])

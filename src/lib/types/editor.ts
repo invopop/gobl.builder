@@ -8,6 +8,16 @@ import type { IconSource } from '@steeze-ui/svelte-icon'
 import type { Snippet } from 'svelte'
 import type { SchemaValue } from '$lib/editor/form/utils/schema'
 
+export type ActionMethod =
+  | 'build'
+  | 'sign'
+  | 'validate'
+  | 'replicate'
+  | 'correct'
+  | 'removeSigs'
+  | 'showSignatures'
+  | 'showHeaders'
+
 export type ButtonVariant = 'default' | 'primary' | 'danger'
 
 export type State =
