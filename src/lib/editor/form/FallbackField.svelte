@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { UIModelField } from "$lib/editor/form/utils/model.js";
+  import type { FallbackFieldProps } from '$lib/types/editor'
 
-  export let field: UIModelField;
+  let { field }: FallbackFieldProps = $props()
 </script>
 
 <div class="bg-red-100">

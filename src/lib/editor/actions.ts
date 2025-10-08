@@ -1,146 +1,136 @@
-import { get } from "svelte/store";
-import * as GOBL from "@invopop/gobl-worker";
-import { encodeUTF8ToBase64 } from "$lib/encodeUTF8ToBase64.js";
-import { toasts } from "svelte-toasts";
-import { envelopeGOBLSchema } from "$lib/helpers/envelope";
-import type { BuilderContext, BuildOptions } from "$lib/types/editor";
+import { get } from 'svelte/store'
+import * as GOBL from '@invopop/gobl-worker'
+import { encodeUTF8ToBase64 } from '$lib/encodeUTF8ToBase64.js'
+import { envelopeGOBLSchema } from '$lib/helpers/envelope'
+import type {
+  BuildActionResponse,
+  BuilderContext,
+  BuildOptions,
+  ValidateActionResponse
+} from '$lib/types/editor'
 
 // Send a request to the GOBL worker to run the "build" operation using the current
 // editor window contents and update with the results.
-export async function build(ctx: BuilderContext, options: BuildOptions = {}) {
+export async function build(
+  ctx: BuilderContext,
+  options: BuildOptions = {}
+): Promise<BuildActionResponse> {
   if (!get(ctx.validEditor)) {
-    return;
+    return {}
   }
 
   try {
-    const sendData = getGOBLPayload(ctx, options);
+    const sendData = getGOBLPayload(ctx, options)
 
     const payload: GOBL.BuildPayload = {
       data: encodeUTF8ToBase64(sendData),
       draft: true,
-      envelop: true,
-    };
-    const rawResult = await GOBL.build({ payload });
-    const result = JSON.parse(rawResult);
+      envelop: true
+    }
+    const rawResult = await GOBL.build({ payload })
+    const result = JSON.parse(rawResult)
 
-    ctx.envelope.set(result);
-    ctx.goblError.set(null);
+    ctx.envelope.set(result)
+    ctx.goblError.set(null)
 
-    // TODO: With autobuild in place this notification is disabled, find a way to show it manually
-
-    // toasts.add({
-    //   type: "success",
-    //   description: "Document successfully built.",
-    // });
-
-    return { result };
+    return { result }
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    ctx.goblError.set(goblErr);
+    const goblErr = GOBL.parseGOBLError(e)
+    ctx.goblError.set(goblErr)
 
     return {
-      error: goblErr,
-    };
+      error: goblErr
+    }
   }
 }
 
 // Send a request to the GOBL worker to run the "sign" operation using the current
 // editor window contents and update with the results.
-export async function sign(ctx: BuilderContext) {
-  const { keypair } = ctx;
-  const keypairValue = get(keypair);
+export async function sign(ctx: BuilderContext): Promise<BuildActionResponse> {
+  const { keypair } = ctx
+  const keypairValue = get(keypair)
 
   if (!get(ctx.validEditor) || !keypairValue) {
-    return;
+    return {}
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx)
 
     const payload: GOBL.SignPayload = {
       data: encodeUTF8ToBase64(sendData),
-      privatekey: keypairValue.private,
-    };
-    const rawResult = await GOBL.sign({ payload });
-    const result = JSON.parse(rawResult);
+      privatekey: keypairValue.private
+    }
+    const rawResult = await GOBL.sign({ payload })
+    const result = JSON.parse(rawResult)
 
-    ctx.envelope.set(result);
-    ctx.goblError.set(null);
+    ctx.envelope.set(result)
+    ctx.goblError.set(null)
 
-    toasts.add({
-      type: "success",
-      description: "Document successfully signed.",
-    });
-
-    return { result };
+    return { result }
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    ctx.goblError.set(goblErr);
+    const goblErr = GOBL.parseGOBLError(e)
+    ctx.goblError.set(goblErr)
 
     return {
-      error: goblErr,
-    };
+      error: goblErr
+    }
   }
 }
 
 // Send a request to the GOBL worker to run the "validate" operation using the current
 // editor window contents and update with the results.
-export async function validate(ctx: BuilderContext) {
+export async function validate(ctx: BuilderContext): Promise<ValidateActionResponse> {
   if (!get(ctx.validEditor) || !get(ctx.envelopeIsSigned)) {
-    return;
+    return { isValid: false }
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx)
 
     const payload: GOBL.ValidatePayload = {
-      data: encodeUTF8ToBase64(sendData),
-    };
-    await GOBL.validate({ payload });
+      data: encodeUTF8ToBase64(sendData)
+    }
+    await GOBL.validate({ payload })
 
-    ctx.goblError.set(null);
+    ctx.goblError.set(null)
 
-    toasts.add({
-      type: "success",
-      description: "Document successfully validated.",
-    });
-
-    return { isValid: true };
+    return { isValid: true }
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    ctx.goblError.set(goblErr);
+    const goblErr = GOBL.parseGOBLError(e)
+    ctx.goblError.set(goblErr)
 
     return {
       isValid: false,
-      error: goblErr,
-    };
+      error: goblErr
+    }
   }
 }
 
 // Send a request to the GOBL worker to run the "replicate" operation using the current editor window contents.
-export async function replicate(ctx: BuilderContext) {
+export async function replicate(ctx: BuilderContext): Promise<BuildActionResponse> {
   if (!get(ctx.validEditor)) {
-    return;
+    return {}
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx)
 
     const payload: GOBL.ValidatePayload = {
-      data: encodeUTF8ToBase64(sendData),
-    };
+      data: encodeUTF8ToBase64(sendData)
+    }
 
-    const rawResult = await GOBL.replicate({ payload });
-    const result = JSON.parse(rawResult);
+    const rawResult = await GOBL.replicate({ payload })
+    const result = JSON.parse(rawResult)
 
-    return { result };
+    return { result }
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    ctx.goblError.set(goblErr);
+    const goblErr = GOBL.parseGOBLError(e)
+    ctx.goblError.set(goblErr)
 
     return {
-      error: goblErr,
-    };
+      error: goblErr
+    }
   }
 }
 
@@ -148,86 +138,85 @@ export async function replicate(ctx: BuilderContext) {
 // editor window contents to read the tax regime.
 export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
   if (!get(ctx.validEditor)) {
-    return;
+    return
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx)
 
     const payload: GOBL.CorrectPayload = {
       data: encodeUTF8ToBase64(sendData),
-      schema: true,
-    };
+      schema: true
+    }
 
-    const schema = await GOBL.correct({ payload });
+    const schema = await GOBL.correct({ payload })
 
-    ctx.goblError.set(null);
+    ctx.goblError.set(null)
 
-    return { schema };
+    return { schema }
   } catch (e) {
-    return { schema: null };
+    return { schema: null }
   }
 }
 
 // Send a request to the GOBL worker to run the "correct" operation using the current
 // editor window contents and update with the results.
-export async function correct(options: string, ctx: BuilderContext, autocorrect = true) {
+export async function correct(
+  options: string,
+  ctx: BuilderContext,
+  autocorrect = true
+): Promise<BuildActionResponse> {
   if (!get(ctx.validEditor)) {
-    return;
+    return {}
   }
 
   try {
-    const sendData = getGOBLPayload(ctx);
+    const sendData = getGOBLPayload(ctx)
 
     const payload: GOBL.CorrectPayload = {
       data: encodeUTF8ToBase64(sendData),
-      options: encodeUTF8ToBase64(options),
-    };
-
-    const rawResult = await GOBL.correct({ payload });
-    const result = JSON.parse(rawResult);
-
-    if (autocorrect) {
-      ctx.envelope.set(result);
+      options: encodeUTF8ToBase64(options)
     }
 
-    ctx.goblError.set(null);
+    const rawResult = await GOBL.correct({ payload })
+    const result = JSON.parse(rawResult)
 
-    toasts.add({
-      type: "success",
-      description: "Document successfully corrected.",
-    });
+    if (autocorrect) {
+      ctx.envelope.set(result)
+    }
 
-    return { result };
+    ctx.goblError.set(null)
+
+    return { result }
   } catch (e) {
-    const goblErr = GOBL.parseGOBLError(e);
-    ctx.goblError.set(goblErr);
+    const goblErr = GOBL.parseGOBLError(e)
+    ctx.goblError.set(goblErr)
 
     return {
-      error: goblErr,
-    };
+      error: goblErr
+    }
   }
 }
 
 export async function getSchemas() {
-  const schemas = await GOBL.schemas();
-  return JSON.parse(schemas).list;
+  const schemas = await GOBL.schemas()
+  return JSON.parse(schemas).list
 }
 
 function getGOBLPayload(ctx: BuilderContext, options: BuildOptions = {}) {
-  const editorValue = get(ctx.editor);
-  const envelopeValue = get(ctx.envelope);
-  const doc = JSON.parse(editorValue.value || "");
+  const editorValue = get(ctx.editor)
+  const envelopeValue = get(ctx.envelope)
+  const doc = JSON.parse(editorValue.value || '')
   if (options.removeStamps) {
-    delete envelopeValue.head?.stamps;
+    delete envelopeValue.head?.stamps
   }
   if (options.removeSignatures) {
-    delete envelopeValue.sigs;
+    delete envelopeValue.sigs
   }
   if (doc.$schema == envelopeGOBLSchema) {
-    return editorValue.value || ""; // send as-is
+    return editorValue.value || '' // send as-is
   }
-  envelopeValue.doc = doc;
+  envelopeValue.doc = doc
 
-  return JSON.stringify(envelopeValue);
+  return JSON.stringify(envelopeValue)
 }

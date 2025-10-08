@@ -1,20 +1,26 @@
 <script lang="ts">
-  import ObjectField from "./ObjectField.svelte";
-  import type { UIModelField } from "./utils/model";
+  import type { ArrayFieldProps } from '$lib/types/editor'
+  import ObjectField from './ObjectField.svelte'
 
-  interface PropsInterface {
-    field: UIModelField;
-  }
-
-  $: props = $$props as PropsInterface;
+  let {
+    field,
+    readOnly,
+    onFieldAdded,
+    onFieldDeleted,
+    onFieldDuplicated,
+    onFieldMoved,
+    onFieldValueUpdated,
+    onFieldKeyUpdated
+  }: ArrayFieldProps = $props()
 </script>
 
 <ObjectField
-  {...props}
-  on:fieldAdded
-  on:fieldDeleted
-  on:fieldDuplicated
-  on:fieldMoved
-  on:fieldValueUpdated
-  on:fieldKeyUpdated
+  {field}
+  {readOnly}
+  {onFieldAdded}
+  {onFieldDeleted}
+  {onFieldDuplicated}
+  {onFieldMoved}
+  {onFieldValueUpdated}
+  {onFieldKeyUpdated}
 />
