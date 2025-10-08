@@ -74,16 +74,15 @@
   })
 
   $effect(() => {
-    const editorValue = $editor ? hash(JSON.parse($editor.value)) : ''
-
-    untrack(() => {
-      try {
+    try {
+      const editorValue = $editor ? hash(JSON.parse($editor.value)) : ''
+      untrack(() => {
         setState(editorValue)
-      } catch (error) {
-        // Allow invalid json entered
-        initialState = 'invalid'
-      }
-    })
+      })
+    } catch (error) {
+      // Allow invalid json entered
+      initialState = 'invalid'
+    }
   })
 
   if (signEnabled) {
