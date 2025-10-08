@@ -15,6 +15,7 @@
   import { newEnvelope } from './helpers/envelope'
   import { createBuilderContext } from './store/builder'
   import type { EnvelopeEditorProps } from './types/editor.js'
+  import { untrack } from 'svelte'
 
   let {
     jsonSchemaURL = '',
@@ -45,6 +46,45 @@
 
   const { editor, jsonSchema, envelope, envelopeIsSigned, activeSection, documentHeaders } =
     builderContext
+
+  // jsonSchema is stored for validations in code editor
+  $effect(() => {
+    jsonSchema.set(jsonSchemaURL)
+  })
+
+  // When `data` is updated, update the internal envelope store.
+  // If required instantiate a new envelope object to use.
+  $effect(() => {
+    const newData = data
+
+    untrack(() => {
+      builderContext.goblError.set(null)
+      try {
+        reloadData(newData)
+      } catch (e) {
+        console.error('invalid document data: ', e)
+        $envelope = newEnvelope(null)
+        initialState = 'empty'
+      }
+    })
+  })
+
+  $effect(() => {
+    editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() })
+  })
+
+  $effect(() => {
+    const editorValue = $editor ? hash(JSON.parse($editor.value)) : ''
+
+    untrack(() => {
+      try {
+        setState(editorValue)
+      } catch (error) {
+        // Allow invalid json entered
+        initialState = 'invalid'
+      }
+    })
+  })
 
   if (signEnabled) {
     GOBL.keygen().then((k) => {
@@ -291,34 +331,6 @@
   export const getEditorValue = () => {
     return JSON.parse($editor.value)
   }
-  // jsonSchema is stored for validations in code editor
-  $effect(() => {
-    jsonSchema.set(jsonSchemaURL)
-  })
-  // When `data` is updated, update the internal envelope store.
-  // If required instantiate a new envelope object to use.
-  $effect(() => {
-    builderContext.goblError.set(null)
-    try {
-      reloadData(data)
-    } catch (e) {
-      console.error('invalid document data: ', e)
-      $envelope = newEnvelope(null)
-      initialState = 'empty'
-    }
-  })
-  $effect(() => {
-    editor.set({ value: envelopeDocumentJSON($envelope), updatedAt: Date.now() })
-  })
-  $effect(() => {
-    try {
-      const editorValue = $editor ? hash(JSON.parse($editor.value)) : ''
-      setState(editorValue)
-    } catch (error) {
-      // Allow invalid json entered
-      initialState = 'invalid'
-    }
-  })
 </script>
 
 <div class="@container flex flex-col h-full">
