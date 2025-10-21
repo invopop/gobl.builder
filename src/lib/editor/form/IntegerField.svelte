@@ -1,22 +1,28 @@
 <script lang="ts">
-  import LeafField from "./LeafField.svelte";
-  import type { UIModelField } from "./utils/model";
-  import type { SchemaValue } from "./utils/schema.js";
+  import type { IntegerFieldProps } from '$lib/types/editor'
+  import LeafField from './LeafField.svelte'
+  import { UIModelField } from './utils/model'
+  import type { SchemaValue } from './utils/schema.js'
 
-  interface PropsInterface {
-    field: UIModelField<string>;
-    parseKey: undefined;
-  }
-
-  export let readOnly = false;
-
-  $: props = $$props as PropsInterface;
+  let {
+    field,
+    readOnly = false,
+    children,
+    onFieldValueUpdated,
+    onFieldKeyUpdated
+  }: IntegerFieldProps = $props()
 
   function handleParseValue(value: SchemaValue): number {
-    const n = Number.parseInt(`${value || "0"}`, 10);
-    return n;
+    const n = Number.parseInt(`${value || '0'}`, 10)
+    return n
   }
 </script>
 
-<LeafField {...props} parseValue={handleParseValue} {readOnly} on:fieldValueUpdated on:fieldKeyUpdated />
-<slot />
+<LeafField
+  field={field as UIModelField<string>}
+  {readOnly}
+  parseValue={handleParseValue}
+  {onFieldValueUpdated}
+  {onFieldKeyUpdated}
+/>
+{@render children?.()}

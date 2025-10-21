@@ -1,18 +1,19 @@
 <script lang="ts">
-  import Modal from "$lib/ui/Modal.svelte";
+  import type { EditorFormModalSignaturesProps } from '$lib/types/editor'
+  import Modal from '$lib/ui/Modal.svelte'
 
-  export let sigs: string[] | null = null;
+  let { sigs = null, onclose }: EditorFormModalSignaturesProps = $props()
 </script>
 
-<Modal title="Signatures" hideConfirmButton on:close>
+<Modal title="Signatures" hideConfirmButton {onclose}>
   {#if sigs}
     <div
       role="presentation"
       contenteditable
-      on:keydown={(event) => {
+      onkeydown={(event) => {
         // Allow copy
         if (!event.metaKey) {
-          event.preventDefault();
+          event.preventDefault()
         }
       }}
       class="text-sm text-neutral-800 bg-neutral-50 border border-neutral-100 outline-none mx-4"

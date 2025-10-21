@@ -1,8 +1,10 @@
 <script lang="ts">
-  export let open = true;
+  import type { ExpandButtonProps } from '$lib/types/editor'
+
+  let { open = true, onclick }: ExpandButtonProps = $props()
 </script>
 
-<button class="align-middle ml-2" tabindex="-1" on:click>
+<button aria-label="expand" class="align-middle ml-2" tabindex="-1" {onclick}>
   <svg
     width="20"
     height="24"
