@@ -94,6 +94,8 @@
 
   // Dispatch all `change` events when the envelope is built.
   envelope.subscribe((envelope) => {
+    if (initialState === 'init' || !envelope.doc) return
+
     onChange?.(JSON.stringify(envelope))
   })
 
