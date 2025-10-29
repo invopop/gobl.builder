@@ -86,7 +86,7 @@
     "vscode-uri": "^3.0.7"
   },
   "dependencies": {
-    "@invopop/gobl-worker": "^0.301.0",
+    "@invopop/gobl-worker": "^0.302.0",
     "@invopop/ui-icons": "^0.0.67",
     "@monaco-editor/loader": "^1.4.0",
     "@steeze-ui/svelte-icon": "^1.5.0",
