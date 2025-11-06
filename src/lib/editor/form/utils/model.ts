@@ -540,7 +540,15 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         }))
       }
 
-      return [{ label: '', value: '' }, ...options.sort((a, b) => a.label.localeCompare(b.label))]
+      return [
+        { label: '', value: '' },
+        ...options.sort((a, b) => {
+          const aLabel = a.label || ''
+          const bLabel = b.label || ''
+
+          return aLabel.localeCompare(bLabel)
+        })
+      ]
     }
 
     if (controlType === 'dictionary' && !!schema.patternProperties?.['.*']) {

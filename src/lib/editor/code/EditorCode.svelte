@@ -109,6 +109,9 @@
       },
       scrollBeyondLastLine: false,
       automaticLayout: true,
+      stickyScroll: {
+        enabled: false
+      },
       fontFamily: `CommitMono,
         ui-monospace,
         Menlo,
@@ -385,13 +388,11 @@
   })
 
   $effect(() => {
-    if (!untrack(() => monacoEditor)) return
-
-    const m = untrack(() => monaco)
-
-    if (!m) return
-
-    m.editor.setTheme(isReadOnly ? 'readOnlyTheme' : 'editableTheme')
+    const readOnly = isReadOnly
+    untrack(() => {
+      if (!monaco) return
+      monaco.editor.setTheme(readOnly ? 'readOnlyTheme' : 'editableTheme')
+    })
   })
 </script>
 
