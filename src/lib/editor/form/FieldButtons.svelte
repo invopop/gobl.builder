@@ -26,7 +26,7 @@
 
 <ul
   style="box-shadow: 0px 8px 30px 0px rgba(10, 10, 10, 0.12)"
-  class="flex space-x-2 rounded-md border border-neutral-200 py-1 px-[5px] bg-white"
+  class="flex space-x-2 rounded-md border border-border py-1 px-[5px] bg-background"
 >
   {#if showAdd}
     <li>

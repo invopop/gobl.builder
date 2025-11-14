@@ -16,7 +16,7 @@
 
 <button
   title="Load a GOBL document from a template, file upload or your library."
-  class="border border-gobl-50 py-[5px] pl-2 pr-3 text-gobl-50 rounded text-sm font-medium flex items-center space-x-1"
+  class="border border-white-70 py-[5px] pl-2 pr-3 text-white rounded text-sm font-medium flex items-center space-x-1"
   onclick={() => {
     openModal = true
   }}
@@ -26,7 +26,7 @@
 </button>
 {#if openModal}
   <Modal
-    class="backdrop:bg-neutral-800/80"
+    class="backdrop:bg-neutral-80/80"
     bodyClass="px-6 pt-2"
     outsideclose
     dismissable={false}
@@ -36,7 +36,7 @@
   >
     {#snippet header()}
       <div>
-        <p class="font-semibold text-xl text-neutral-800 px-2">Load Example</p>
+        <p class="font-semibold text-xl text-neutral-80 px-2">Load Example</p>
       </div>
     {/snippet}
     <DocLoaderContent onClose={() => (openModal = false)} {onLoad} />

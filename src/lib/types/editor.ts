@@ -117,13 +117,6 @@ export interface ArrayFieldProps extends AbstractFieldProps {}
 export interface BooleanFieldProps extends AbstractFieldProps {
   children?: Snippet
 }
-export interface BaseButtonProps {
-  icon?: IconSource | undefined
-  variant?: ButtonVariant
-  disabled?: boolean
-  children?: Snippet
-  onclick?: () => void
-}
 
 export interface DynamicFormProps extends EditorEvents {
   showSchemaField?: boolean

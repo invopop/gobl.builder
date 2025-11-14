@@ -12,10 +12,10 @@
   let isSection = $derived(field.is.root || (field.parent?.is.root && isParent))
   let classes = $derived(
     clsx({
-      'font-medium text-neutral-800': isParent,
+      'font-medium text-foreground': isParent,
       'tracking-normal text-base': isParent && !isSection,
       'text-lg tracking-tighter': isSection,
-      'text-neutral-500 text-base tracking-normal': !isSection && !isParent
+      'text-foreground-default-secondary text-base tracking-normal': !isSection && !isParent
     })
   )
 </script>

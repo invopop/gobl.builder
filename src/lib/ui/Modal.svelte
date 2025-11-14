@@ -1,7 +1,7 @@
 <script lang="ts">
   import clickOutside from '$lib/clickOutside.js'
   import type { ModalProps } from '$lib/types/editor'
-  import BaseButton from './BaseButton.svelte'
+  import { BaseButton } from '@invopop/popui'
 
   let {
     title = '',
@@ -36,6 +36,7 @@
         <div class="px-6 pb-6 pt-5 flex items-center justify-end space-x-3">
           {#if footer}{@render footer()}{:else}
             <BaseButton
+              variant="secondary"
               onclick={() => {
                 onclose?.()
               }}

@@ -57,7 +57,7 @@
     <FieldTitle {field} />
     {#if !readOnly}
       <button onclick={handleEditing}>
-        <Icon src={Pencil} class="h-4 w-4 text-workspace-accent-500" />
+        <Icon src={Pencil} class="h-4 w-4 text-foreground-accent" />
       </button>
     {/if}
   {/if}

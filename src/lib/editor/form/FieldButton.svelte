@@ -18,10 +18,11 @@
 
   let classes = $derived(
     clsx({
-      'hover:bg-danger-500 hover:text-white text-danger-500': isDestructive,
-      'hover:bg-neutral-100 text-neutral-800': !isDestructive && !disabled,
-      'bg-neutral-100 text-neutral-500': disabled,
-      'bg-white': !disabled
+      'hover:bg-background-critical-bold hover:text-foreground-inverse text-foreground-critical':
+        isDestructive,
+      'hover:bg-background-default-tertiary-hover text-foreground bg-background':
+        !isDestructive && !disabled,
+      'opacity-30': disabled
     })
   )
 

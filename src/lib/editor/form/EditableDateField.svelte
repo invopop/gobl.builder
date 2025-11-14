@@ -61,36 +61,36 @@
     placeholder="YYYY-MM-DD"
     on:select={hanldeSelect}
   />
-  <Icon src={Calendar} class="w-4 h-4 text-neutral-500 absolute left-2 top-2" />
+  <Icon src={Calendar} class="w-4 h-4 text-icon absolute left-2 top-2" />
 </div>
 
 <style>
   :global(.date-time-field > input) {
     height: 32px;
     width: 100% !important;
-    border: 1px solid #e9ebeb !important;
-    border-radius: 4px !important;
+    border: 1px solid var(--color-border-default-secondary) !important;
+    border-radius: 8px !important;
     padding: 5px 28px !important;
-    color: #0a0a0a !important;
+    color: var(--color-foreground) !important;
     font-family: Inter;
-    font-size: 15px;
+    font-size: var(--text-base);
     font-style: normal;
     font-weight: 400;
     line-height: 21.75px;
     letter-spacing: -0.135px;
-    background-color: white !important;
+    background-color: var(--color-background) !important;
   }
 
   :global(.date-time-field.is-calculated > input) {
-    background-color: #fafbfb !important;
-    color: #7e7f7f !important;
+    background-color: var(--color-background-default-secondary) !important;
+    color: var(--color-foreground-default-secondary) !important;
   }
   :global(.date-time-field > input:focus) {
-    border: 1px solid #169958 !important;
-    box-shadow: 0px 0px 0px 2px rgba(22, 153, 88, 0.12) !important;
+    border: 1px solid var(--color-border-selected-bold) !important;
+    box-shadow: var(--shadow-active) !important;
   }
   :global(.date-time-field > input.invalid:focus, .date-time-field.has-error > input) {
-    color: #ec4e46 !important;
-    border: 1px solid #ec4e4666 !important;
+    color: var(--color-foreground-critical) !important;
+    border: 1px solid var(--color-border-critical-bold) !important;
   }
 </style>

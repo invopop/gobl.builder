@@ -57,18 +57,16 @@
   let isSection = $derived(isParent && field.parent?.is.root)
   let wrapperClasses = $derived(
     clsx({
-      'bg-neutral-50 border-neutral-100': isHover && !isParent,
-      'border-transparent': !isHover,
-      'border-l border-t border-b': !['object', 'array'].includes(field.type),
-      'border-r rounded-r': readOnly && !isParent,
+      'bg-background-default-secondary': isHover && !isParent,
+      'rounded-r': readOnly && !isParent,
       'pl-2': isParent && !isSection
     })
   )
   let classes = $derived(
     clsx({
-      'bg-neutral-50': isHover,
-      'border-workspace-accent-500': highlight,
-      'border-neutral-200': !highlight,
+      'bg-background-default-secondary': isHover,
+      'border-border-selected-bold': highlight,
+      'border-border-default-secondary': !highlight,
       'border-l border-t border-b': childrenType !== 'string'
     })
   )
@@ -204,7 +202,7 @@
   {#if childrenType !== 'string'}
     <div class="absolute top-0 right-0 w-9 h-10 -mr-9 bg-transparent">
       <span
-        class="{contextMenuClasses} absolute top-0 left-0 -ml-px pt-[7px] pr-2 pb-[5.5px] bg-neutral-50 border-t border-b border-r border-neutral-100 rounded-r border-l-neutral-50 border-l"
+        class="{contextMenuClasses} absolute top-0 left-0 pt-[7px] pr-2 pb-[5.5px] bg-background-default-secondary rounded-r"
         class:invisible={!showContextMenu}
       >
         <FieldContextMenu

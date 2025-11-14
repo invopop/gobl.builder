@@ -43,7 +43,7 @@
 <button
   id={`${field.id}-readOnly`}
   onclick={handleClick}
-  class="{classes} text-neutral-800 text-base px-3 outline-none w-full tracking-normal break-words border-l border-transparent"
+  class="{classes} text-foreground text-base px-3 outline-none w-full tracking-normal break-words border-l border-transparent"
 >
   {value}
 </button>

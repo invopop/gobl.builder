@@ -58,7 +58,7 @@
 </script>
 
 <nav
-  class="fixed w-full z-40 h-14 flex items-center justify-between bg-gobl-900 py-2 px-5 space-x-1"
+  class="fixed w-full z-40 h-14 flex items-center justify-between bg-indigo-100 py-2 px-5 space-x-1"
   aria-label="main navigation"
 >
   <div class="flex items-center">

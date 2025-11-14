@@ -1,9 +1,10 @@
 @import 'tailwindcss';
+@import '@invopop/popui/tailwind.theme.css';
+@source "../node_modules/@invopop/popui*.{js,svelte}";
+@source "../node_modules/flowbyte*.{js,svelte}";
 @plugin "@tailwindcss/forms" {
   strategy: 'class';
 }
-@plugin "@tailwindcss/container-queries";
-@config "../tailwind.config.cjs";
 
 @layer utilities {
   textarea {

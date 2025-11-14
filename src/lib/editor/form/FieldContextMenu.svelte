@@ -56,8 +56,8 @@
 </script>
 
 <div class="relative">
-  <button onmouseenter={handleHover} class="p-1 rounded border border-neutral-200">
-    <Icon src={Options} class="h-4 w-4 text-neutral-800" />
+  <button onmouseenter={handleHover} class="p-1 rounded border border-border">
+    <Icon src={Options} class="h-4 w-4 text-foreground" />
   </button>
   {#if showButtons}
     <button onmouseleave={handleBlur} class="absolute top-[-4px] right-[-4px]">

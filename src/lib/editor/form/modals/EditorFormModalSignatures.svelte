@@ -16,7 +16,7 @@
           event.preventDefault()
         }
       }}
-      class="text-sm text-neutral-800 bg-neutral-50 border border-neutral-100 outline-none mx-4"
+      class="text-sm text-foreground-inverse bg-background-default-secondary border border-border outline-none mx-4"
     >
       {JSON.stringify(sigs, null, 4)}
     </div>

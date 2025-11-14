@@ -13,10 +13,11 @@
 
   let classes = $derived(
     clsx({
-      'bg-neutral-50 border-slate-100 text-neutral-500': field.is.calculated,
-      'text-neutral-800': !field.is.calculated && !showError,
-      'border-danger-200 focus:border-danger-200 text-danger-500': showError,
-      'border-neutral-200': !showError
+      'bg-background-default-secondary border-border-border-default-secondary text-foreground-default-secondary':
+        field.is.calculated,
+      'text-foreground bg-background': !field.is.calculated && !showError,
+      'border-border-critical-bold text-foreground-critical': showError,
+      'border-border-default-secondary': !showError
     })
   )
 
@@ -39,7 +40,7 @@
   onkeyup={handleChange}
   onblur={handleBlur}
   {onfocus}
-  class="{classes} border focus:border-workspace-accent-500 custom-select text-base text-ellipsis outline-none w-full rounded h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active"
+  class="{classes} border focus:border-border-selected-bold custom-select text-base text-ellipsis outline-none w-full rounded-lg h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active"
 >
   {#each options as opt (opt.value)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.label || opt.value}</option>

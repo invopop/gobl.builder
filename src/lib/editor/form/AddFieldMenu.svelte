@@ -6,9 +6,9 @@
   import clickOutside from '$lib/clickOutside.js'
   import { Icon } from 'svelte-hero-icons'
   import { Search } from '@invopop/ui-icons'
-  import BaseButton from '$lib/ui/BaseButton.svelte'
   import type { AddFieldMenuProps } from '$lib/types/editor.js'
   import { onMount } from 'svelte'
+  import { BaseButton } from '@invopop/popui'
 
   let {
     field,
@@ -128,21 +128,21 @@
 
 <div
   transition:fade={{ duration: 200 }}
-  class="cursor-text rounded-lg shadow overflow-hidden bg-white"
+  class="cursor-text rounded-2xl shadow-sm overflow-hidden bg-background border border-border"
   use:clickOutside
   onclose={handleCloseMenu}
 >
   <div class="px-2 pt-2 pb-1 relative">
     <input
-      class="rounded-md py-1.5 pr-3 pl-7 outline-none w-full placeholder-neutral-500 focus:placeholder-neutral-500 border text-base tracking-normal"
+      class="rounded-lg py-1.5 pr-3 pl-7 outline-none w-full placeholder-foreground-default-secondary border border-border-default-secondary text-base tracking-normal"
       placeholder="Search"
       bind:value={filterStr}
       bind:this={inputRef}
       onfocus={handleOpenMenu}
       onkeydown={handleKeyDown}
     />
-    <span class="absolute top-4 left-4 mt-px text-neutral-500">
-      <Icon src={Search} class="w-4 h-4" />
+    <span class="absolute top-4 left-4 mt-px text-icon">
+      <Icon src={Search} class="size-4" />
     </span>
   </div>
   <div transition:fade={{ duration: 200 }}>
@@ -151,15 +151,17 @@
         {#each options as opt, i (opt.key)}
           <li
             class="pl-2 pr-1.5 py-1.5 rounded flex items-center justify-between space-x-2"
-            class:bg-neutral-50={i === focusedOptionIndex}
+            class:bg-background-default-secondary={i === focusedOptionIndex}
             onhover={() => handleHoverListItem(i)}
             use:hover
           >
             <label class="flex justify-between w-full">
-              <span class="text-neutral-800 text-base font-medium">
+              <span class="text-foreground text-sm font-medium">
                 <span>{opt.schema.title || opt.key}</span>
                 {#if opt.schema.calculated}
-                  <span class="text-xs text-gray-700">(Calculated)</span>
+                  <span class="text-xs font-normal text-foreground-default-secondary"
+                    >(Calculated)</span
+                  >
                 {/if}
               </span>
               <input
@@ -168,14 +170,14 @@
                 bind:group={selection}
                 value={opt.key}
                 onkeydown={handleKeyDown}
-                class="form-checkbox w-5 h-5 text-workspace-accent-500 focus:text-workspace-accent-500 rounded border border-neutral-200 focus:ring-0 focus:ring-offset-0"
+                class="form-checkbox w-5 h-5 text-background-accent rounded border border-border-default-secondary focus:ring-0 focus:ring-offset-0"
               />
             </label>
           </li>
         {/each}
       {:else}
         <li>
-          <span class="w-full py-3 px-6 text-neutral-500 text-left">
+          <span class="w-full py-3 px-6 text-foreground-default-secondary text-left">
             <span>No items found</span>
           </span>
         </li>
