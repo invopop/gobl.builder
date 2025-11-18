@@ -28,7 +28,7 @@
       {#snippet header()}
         <div class="flex items-center space-x-2 w-full pl-[14px] py-[10px]">
           {#if group.flag}<span>{group.flag}</span>{/if}
-          <span class="text-neutral-80 font-medium flex-1">{group.name}</span>
+          <span class="text-neutral-80 dark:text-white font-medium flex-1">{group.name}</span>
         </div>
       {/snippet}
       {#snippet arrowup()}
@@ -39,9 +39,9 @@
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            class="stroke-foreground dark:stroke-foreground-inverse"
           >
-            <circle cx="10" cy="10" r="8" fill="rgba(0,0,0,0.05)" />
-            <path d="M13.5 11.75L10 8.25L6.5 11.75" stroke="#0A0A0A" stroke-width="1.1" />
+            <path d="M13.5 11.75L10 8.25L6.5 11.75" stroke-width="1.1" />
           </svg>
         </div>
       {/snippet}
@@ -53,9 +53,9 @@
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            class="stroke-foreground dark:stroke-foreground-inverse"
           >
-            <circle cx="10" cy="10" r="8" fill="rgba(0,0,0,0.05)" />
-            <path d="M6.5 8.25004L10 11.75L13.5 8.25" stroke="#0A0A0A" stroke-width="1.2" />
+            <path d="M6.5 8.25004L10 11.75L13.5 8.25" stroke-width="1.2" />
           </svg>
         </div>
       {/snippet}
@@ -63,7 +63,7 @@
         {#each group.templates as template}
           <li class="">
             <button
-              class="text-left w-full text-sm font-normal text-indigo-100 py-2 px-3 border rounded border-transparent hover:border-neutral-200 hover:bg-background-default-secondary"
+              class="text-left w-full text-sm font-normal text-indigo-100 dark:text-white py-2 px-3 border rounded border-transparent hover:border-neutral-200 hover:bg-background-default-secondary"
               onclick={() => handleTemplateClick(`/templates/${group.folder}/${template.file}`)}
             >
               {template.name}

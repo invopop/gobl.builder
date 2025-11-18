@@ -36,7 +36,7 @@
   >
     {#snippet header()}
       <div>
-        <p class="font-semibold text-xl text-neutral-80 px-2">Load Example</p>
+        <p class="font-semibold text-xl text-neutral-80 dark:text-white px-2">Load Example</p>
       </div>
     {/snippet}
     <DocLoaderContent onClose={() => (openModal = false)} {onLoad} />

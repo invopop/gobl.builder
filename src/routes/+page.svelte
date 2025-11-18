@@ -78,7 +78,7 @@
     onSchemaChanged={handleSchemaChange}
   />
   <div class="flex-1 h-full p-1 pt-14">
-    <div class="h-full bg-white rounded-t-lg">
+    <div class="h-full bg-background rounded-t-lg">
       <EnvelopeEditor
         bind:this={builder}
         bind:state={initialState}

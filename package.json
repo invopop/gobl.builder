@@ -1,6 +1,6 @@
 {
   "name": "@invopop/gobl-builder",
-  "version": "0.200.0-rc.10",
+  "version": "0.200.0-rc.11",
   "license": "Apache-2.0",
   "type": "module",
   "repository": {
@@ -88,7 +88,7 @@
     "vscode-uri": "^3.0.7"
   },
   "dependencies": {
-    "@invopop/gobl-worker": "^0.302.0",
+    "@invopop/gobl-worker": "^0.303.0",
     "@invopop/popui": "0.1.19",
     "@invopop/ui-icons": "^0.0.67",
     "@monaco-editor/loader": "^1.4.0",

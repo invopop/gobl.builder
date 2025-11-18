@@ -12,6 +12,7 @@
   import LightbulbIcon from '$lib/ui/icons/LightbulbIcon.svelte'
   import { getBuilderContext } from '$lib/store/builder.js'
   import { getAgentSystem, getGOBLErrorMessage } from '$lib/helpers'
+  import { defineMonacoThemes, getMonacoThemeName } from '$lib/helpers/monacoTheme'
   import type { EditorCodeProps } from '$lib/types/editor'
 
   let monaco: typeof Monaco | undefined = $state()
@@ -82,28 +83,13 @@
 
     const OS = getAgentSystem()
 
-    monaco.editor.defineTheme('editableTheme', {
-      base: 'vs',
-      inherit: true,
-      rules: [],
-      colors: {
-        'editor.background': '#ffffff'
-      }
-    })
-
-    monaco.editor.defineTheme('readOnlyTheme', {
-      base: 'vs',
-      inherit: true,
-      rules: [],
-      colors: {
-        'editor.background': '#F9FAFB'
-      }
-    })
+    defineMonacoThemes(monaco)
 
     if (!editorEl) return
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
+      theme: 'editableTheme',
       minimap: {
         enabled: false
       },
@@ -372,6 +358,22 @@
   )
   let isReadOnly = $derived(forceReadOnly || !!$envelope.sigs || false)
   let showErrorConsole = $derived(!hideConsoleBar && !isReadOnly)
+  let isDarkMode = $state(false)
+
+  onMount(() => {
+    isDarkMode = document.documentElement.classList.contains('dark')
+
+    const observer = new MutationObserver(() => {
+      isDarkMode = document.documentElement.classList.contains('dark')
+    })
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    })
+
+    return () => observer.disconnect()
+  })
 
   $effect(() => {
     setSchemaURI(jsonSchemaURL)
@@ -389,9 +391,10 @@
 
   $effect(() => {
     const readOnly = isReadOnly
+    const dark = isDarkMode
     untrack(() => {
       if (!monaco) return
-      monaco.editor.setTheme(readOnly ? 'readOnlyTheme' : 'editableTheme')
+      monaco.editor.setTheme(getMonacoThemeName(readOnly, dark))
     })
   })
 </script>

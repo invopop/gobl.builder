@@ -20,8 +20,7 @@
     clsx({
       'hover:bg-background-critical-bold hover:text-foreground-inverse text-foreground-critical':
         isDestructive,
-      'hover:bg-background-default-tertiary-hover text-foreground bg-background':
-        !isDestructive && !disabled,
+      'hover:bg-background-default-tertiary-hover text-foreground bg-background': !isDestructive,
       'opacity-30': disabled
     })
   )
