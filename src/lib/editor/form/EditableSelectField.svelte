@@ -40,7 +40,7 @@
   onkeyup={handleChange}
   onblur={handleBlur}
   {onfocus}
-  class="{classes} border focus:border-border-selected-bold custom-select text-base text-ellipsis outline-none w-full rounded-lg h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active"
+  class="{classes} border focus:border-border-selected-bold custom-select text-base text-ellipsis outline-none w-full rounded-lg h-[32px] pl-3 pr-8 appearance-none cursor-pointer disabled:cursor-default tracking-tight focus:shadow-active py-1.5 ring-0"
 >
   {#each options as opt (opt.value)}
     <option value={opt.value} selected={field.value === opt.value}>{opt.label || opt.value}</option>
