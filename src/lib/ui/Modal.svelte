@@ -24,7 +24,11 @@
   >
     <div class="relative w-full lg:w-[800px] h-full p-4 md:h-auto">
       <!-- Modal content -->
-      <div class="relative bg-white rounded-lg shadow overflow-auto" use:clickOutside {onclose}>
+      <div
+        class="relative bg-background rounded-lg shadow overflow-auto"
+        use:clickOutside
+        {onclose}
+      >
         <!-- Modal header -->
         <div class="flex items-center justify-between p-12 rounded-lg">
           <h3 class="text-3xl font-semibold text-gray-800">{title}</h3>

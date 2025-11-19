@@ -66,7 +66,7 @@
   }
 </script>
 
-<div class="flex flex-col h-screen bg-gobl-900">
+<div class="flex flex-col h-screen bg-background">
   <BuilderNavbar
     {initialState}
     {defaultSchema}
