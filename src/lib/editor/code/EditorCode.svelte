@@ -394,6 +394,7 @@
     const dark = isDarkMode
     untrack(() => {
       if (!monaco) return
+      defineMonacoThemes(monaco)
       monaco.editor.setTheme(getMonacoThemeName(readOnly, dark))
     })
   })

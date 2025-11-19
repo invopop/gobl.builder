@@ -64,10 +64,7 @@ function buildThemeColors(darkMode: boolean = false): Record<string, string> {
     focusBorder: getComputedVar('--color-border-selected-default', darkMode),
     'textLink.foreground': getComputedVar('--color-foreground-accent-default', darkMode),
     'textLink.activeForeground': getComputedVar('--color-foreground-accent-default', darkMode),
-    'editor.background': getComputedVar(
-      darkMode ? '--color-background-default-default' : '--color-background-default-tertiary',
-      darkMode
-    ),
+    'editor.background': getComputedVar('--color-background-default-default', darkMode),
     'editor.foreground': getComputedVar('--color-foreground-default-default', darkMode),
     'editor.selectionBackground': getComputedVar(
       '--color-background-default-tertiary-hover',
@@ -176,7 +173,7 @@ export function defineMonacoThemes(monaco: typeof Monaco) {
     rules: [],
     colors: {
       ...themeColors,
-      'editor.background': '#F9FAFB'
+      'editor.background': '#F8F8FA'
     }
   })
 
@@ -186,7 +183,7 @@ export function defineMonacoThemes(monaco: typeof Monaco) {
     rules: [],
     colors: {
       ...darkThemeColors,
-      'editor.background': '#1a1a1a'
+      'editor.background': getComputedVar('var(--color-background-default-bold)', true)
     }
   })
 
