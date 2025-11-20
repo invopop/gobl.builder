@@ -1,4 +1,4 @@
 export type ListOption = {
-  value: string;
-  label: string;
-};
+  value: string
+  label: string
+}

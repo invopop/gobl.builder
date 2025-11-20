@@ -1,45 +1,55 @@
 <script lang="ts">
-  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from "svelte-hero-icons";
-  import { createEventDispatcher } from "svelte";
-  import type { UIModelField } from "./utils/model.js";
-  import FieldButton from "./FieldButton.svelte";
-  import { Options } from "@invopop/ui-icons";
+  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from 'svelte-hero-icons'
+  import FieldButton from './FieldButton.svelte'
+  import { Options } from '@invopop/ui-icons'
+  import type { FieldButtonsProps } from '$lib/types/editor'
 
-  export let field: UIModelField | undefined = undefined;
+  let {
+    field = undefined,
+    onAdd,
+    onDelete,
+    onDuplicate,
+    onMoveDown,
+    onMoveUp
+  }: FieldButtonsProps = $props()
 
-  const dispatch = createEventDispatcher();
-
-  $: parentIsArray = field?.parent?.type === "array";
-  $: isArrayStringChildren = parentIsArray && field?.type === "string";
-  $: showAdd = ["object", "array"].includes(field?.type || "") || isArrayStringChildren;
-  $: addLabel = field?.type === "array" ? "Add Row" : "Add Property";
-  $: canDuplicate = field?.is.duplicable && !isArrayStringChildren;
-  $: canMoveUp = parentIsArray && Number(field?.key) > 0;
-  $: canMoveDown = parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1;
+  let parentIsArray = $derived(field?.parent?.type === 'array')
+  let isArrayStringChildren = $derived(parentIsArray && field?.type === 'string')
+  let showAdd = $derived(['object', 'array'].includes(field?.type || '') || isArrayStringChildren)
+  let addLabel = $derived(field?.type === 'array' ? 'Add Row' : 'Add Property')
+  let canDuplicate = $derived(field?.is.duplicable && !isArrayStringChildren)
+  let canMoveUp = $derived(parentIsArray && Number(field?.key) > 0)
+  let canMoveDown = $derived(
+    parentIsArray && Number(field?.key) < Number(field?.parent?.children?.length) - 1
+  )
 </script>
 
 <ul
   style="box-shadow: 0px 8px 30px 0px rgba(10, 10, 10, 0.12)"
-  class="flex space-x-2 rounded-md border border-neutral-200 py-1 px-[5px] bg-white"
+  class="flex space-x-2 rounded-md border border-border py-1 px-[5px] bg-background"
 >
   {#if showAdd}
     <li>
-      <FieldButton icon={Plus} tooltipText={addLabel} on:click={() => dispatch("add")} />
+      <FieldButton icon={Plus} tooltipText={addLabel} onClick={() => onAdd?.()} />
     </li>
   {/if}
   {#if canDuplicate}
     <li>
-      <FieldButton icon={DocumentDuplicate} tooltipText="Duplicate" on:click={() => dispatch("duplicate")} />
+      <FieldButton
+        icon={DocumentDuplicate}
+        tooltipText="Duplicate"
+        onClick={() => onDuplicate?.()}
+      />
     </li>
   {/if}
   {#if canMoveUp}
     <li>
-      <FieldButton icon={ArrowUp} tooltipText="Move Up" on:click={() => dispatch("moveUp")} />
+      <FieldButton icon={ArrowUp} tooltipText="Move Up" onClick={() => onMoveUp?.()} />
     </li>
   {/if}
   {#if canMoveDown}
     <li>
-      <FieldButton icon={ArrowDown} tooltipText="Move Down" on:click={() => dispatch("moveDown")} />
+      <FieldButton icon={ArrowDown} tooltipText="Move Down" onClick={() => onMoveDown?.()} />
     </li>
   {/if}
   {#if field?.is.disposable}
@@ -49,7 +59,7 @@
         confirmationIcon={Trash}
         tooltipText="Remove"
         isDestructive={true}
-        on:click={() => dispatch("remove")}
+        onClick={() => onDelete?.()}
       />
     </li>
   {/if}

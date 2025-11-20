@@ -1,139 +1,118 @@
 <script lang="ts">
-  import { tick } from "svelte";
-  import loader from "@monaco-editor/loader";
-  import type * as Monaco from "monaco-editor/esm/vs/editor/editor.api.js";
+  import { tick, untrack } from 'svelte'
+  import loader from '@monaco-editor/loader'
+  import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api.js'
+  import type { Unsubscriber } from 'svelte/store'
+  import { onDestroy, onMount } from 'svelte'
+  import { slide } from 'svelte/transition'
+  import EditorProblem from '../EditorProblem.svelte'
+  import WarningIcon from '$lib/ui/icons/WarningIcon.svelte'
+  import ErrorIcon from '$lib/ui/icons/ErrorIcon.svelte'
+  import SuccessIcon from '$lib/ui/icons/SuccessIcon.svelte'
+  import LightbulbIcon from '$lib/ui/icons/LightbulbIcon.svelte'
+  import { getBuilderContext } from '$lib/store/builder.js'
+  import { getAgentSystem, getGOBLErrorMessage } from '$lib/helpers'
+  import type { EditorCodeProps } from '$lib/types/editor'
 
-  import type { Unsubscriber } from "svelte/store";
+  let monaco: typeof Monaco | undefined = $state()
+  let lastSelection: Monaco.Selection | null = null
 
-  import { onDestroy, onMount } from "svelte";
-  import { slide } from "svelte/transition";
-  import EditorProblem from "../EditorProblem.svelte";
-  import WarningIcon from "$lib/ui/icons/WarningIcon.svelte";
-  import ErrorIcon from "$lib/ui/icons/ErrorIcon.svelte";
-  import SuccessIcon from "$lib/ui/icons/SuccessIcon.svelte";
-  import LightbulbIcon from "$lib/ui/icons/LightbulbIcon.svelte";
-  import { getBuilderContext } from "$lib/store/builder.js";
-  import { getAgentSystem, getGOBLErrorMessage } from "$lib/helpers";
+  let { jsonSchemaURL, forceReadOnly = false, hideConsoleBar = false }: EditorCodeProps = $props()
 
-  let monaco: typeof Monaco;
-  let lastSelection: Monaco.Selection | null = null;
-  export let jsonSchemaURL: string;
-  export let forceReadOnly = false;
-  export let hideConsoleBar = false;
+  let editorEl: HTMLElement | undefined = $state()
+  let modelUri: Monaco.Uri
+  let monacoEditor: Monaco.editor.IStandaloneCodeEditor | undefined = $state()
+  let model: Monaco.editor.ITextModel
+  let readOnlyEditHandler: Monaco.IDisposable
+  let markerListener: Monaco.IDisposable
+  let lineNumber = $state(1)
+  let column = $state(1)
+  let drawerClosed = $state(false)
 
-  let editorEl: HTMLElement;
-  let modelUri: Monaco.Uri;
-  let monacoEditor: Monaco.editor.IStandaloneCodeEditor;
-  let model: Monaco.editor.ITextModel;
-  let readOnlyEditHandler: Monaco.IDisposable;
-  let markerListener: Monaco.IDisposable;
-  let lineNumber = 1;
-  let column = 1;
-  let drawerClosed = false;
+  let unsubscribeEditor: Unsubscriber
 
-  let unsubscribeEditor: Unsubscriber;
+  const EditorUniqueId = Math.random().toString(36).slice(2, 7)
+  const goblDocURL = `gobl://doc.json?${EditorUniqueId}`
 
-  const EditorUniqueId = Math.random().toString(36).slice(2, 7);
-  const goblDocURL = `gobl://doc.json?${EditorUniqueId}`;
+  const builderContext = getBuilderContext()
 
-  const builderContext = getBuilderContext();
-
-  const { editorProblems: problems, editor, envelope } = builderContext;
-
-  // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
-  $: sortedProblems = $problems.sort((a, b) => b.severity - a.severity);
-  $: warningCount = monaco
-    ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Warning).length
-    : 0;
-  $: errorCount = monaco ? $problems.filter((problem) => problem.severity === monaco.MarkerSeverity.Error).length : 0;
-
-  $: isReadOnly = forceReadOnly || $envelope.sigs;
-
-  $: {
-    setSchemaURI(jsonSchemaURL);
-  }
-
-  $: isReadOnly, setEditorReadOnly();
-
-  $: showErrorConsole = !hideConsoleBar && !isReadOnly;
-
-  $: forceReadOnly, focusEditor();
-
-  $: {
-    if (monacoEditor) {
-      monaco.editor.setTheme(isReadOnly ? "readOnlyTheme" : "editableTheme");
-    }
-  }
+  const { editorProblems: problems, editor, envelope } = builderContext
 
   function focusEditor() {
     if (monacoEditor && lastSelection) {
-      monacoEditor.setSelection(lastSelection);
-      monacoEditor.focus();
+      monacoEditor.setSelection(lastSelection)
+      monacoEditor.focus()
     }
   }
 
   function setSchemaURI(uri: string) {
     if (!monaco) {
-      return;
+      return
     }
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
       enableSchemaRequest: true,
-      schemaValidation: "warning",
+      schemaValidation: 'warning',
       schemas: uri
         ? [
             {
               fileMatch: [goblDocURL],
-              uri,
-            },
+              uri
+            }
           ]
-        : [],
-    });
+        : []
+    })
     if (monacoEditor) {
-      const value = monacoEditor.getValue();
-      validateSchema(value);
+      const value = monacoEditor.getValue()
+      validateSchema(value)
     }
   }
 
   onMount(async () => {
-    builderContext.undoAvailable.set(false);
-    builderContext.redoAvailable.set(false);
-    const monacoEditorImport = await import("monaco-editor");
-    loader.config({ monaco: monacoEditorImport.default });
+    builderContext.undoAvailable.set(false)
+    builderContext.redoAvailable.set(false)
+    const monacoEditorImport = await import('monaco-editor')
+    loader.config({ monaco: monacoEditorImport.default })
 
-    monaco = await loader.init();
-    modelUri = monaco.Uri.parse(goblDocURL);
-    model = monaco.editor.createModel("", "json", modelUri);
+    monaco = await loader.init()
+    modelUri = monaco.Uri.parse(goblDocURL)
+    model = monaco.editor.createModel('', 'json', modelUri)
 
-    setSchemaURI(jsonSchemaURL);
+    setSchemaURI(jsonSchemaURL)
 
-    const OS = getAgentSystem();
+    const OS = getAgentSystem()
 
-    monaco.editor.defineTheme("editableTheme", {
-      base: "vs",
+    monaco.editor.defineTheme('editableTheme', {
+      base: 'vs',
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": "#ffffff",
-      },
-    });
+        'editor.background': '#ffffff'
+      }
+    })
 
-    monaco.editor.defineTheme("readOnlyTheme", {
-      base: "vs",
+    monaco.editor.defineTheme('readOnlyTheme', {
+      base: 'vs',
       inherit: true,
       rules: [],
       colors: {
-        "editor.background": "#F9FAFB",
-      },
-    });
+        'editor.background': '#F9FAFB'
+      }
+    })
+
+    if (!editorEl) return
 
     monacoEditor = monaco.editor.create(editorEl, {
       model,
+      theme: 'editableTheme',
       minimap: {
-        enabled: false,
+        enabled: false
       },
       scrollBeyondLastLine: false,
       automaticLayout: true,
+      stickyScroll: {
+        enabled: false
+      },
       fontFamily: `CommitMono,
         ui-monospace,
         Menlo,
@@ -144,242 +123,287 @@
         "DejaVu Sans Mono",
         monospace`,
       scrollbar: {
-        vertical: OS === "windows" ? "visible" : "auto",
+        vertical: OS === 'windows' ? 'visible' : 'auto',
         verticalHasArrows: true,
         useShadows: false,
-        horizontalScrollbarSize: OS === "windows" ? 18 : 11,
-        verticalScrollbarSize: OS === "windows" ? 18 : 11,
-        horizontalSliderSize: OS === "windows" ? 14 : 7,
-        verticalSliderSize: OS === "windows" ? 14 : 7,
-        arrowSize: OS === "windows" ? 18 : 2,
+        horizontalScrollbarSize: OS === 'windows' ? 18 : 11,
+        verticalScrollbarSize: OS === 'windows' ? 18 : 11,
+        horizontalSliderSize: OS === 'windows' ? 14 : 7,
+        verticalSliderSize: OS === 'windows' ? 14 : 7,
+        arrowSize: OS === 'windows' ? 18 : 2
       },
       overviewRulerLanes: 0,
       hideCursorInOverviewRuler: true,
       overviewRulerBorder: false,
-      renderLineHighlight: "line",
+      renderLineHighlight: 'line',
       renderLineHighlightOnlyWhenFocus: true,
       padding: {
         top: 12,
-        bottom: 12,
-      },
-    });
+        bottom: 12
+      }
+    })
 
     monacoEditor.onDidBlurEditorWidget(() => {
-      lastSelection = monacoEditor.getSelection();
-    });
+      lastSelection = monacoEditor?.getSelection() || null
+    })
 
-    const messageContribution = monacoEditor.getContribution("editor.contrib.messageController");
+    const messageContribution = monacoEditor.getContribution('editor.contrib.messageController')
     readOnlyEditHandler = monacoEditor.onDidAttemptReadOnlyEdit(() => {
       // eslint-disable-next-line -- MessageController class TS typing is not exported.
-      (messageContribution as any).showMessage("Cannot edit already signed document", monacoEditor.getPosition());
-    });
+      ;(messageContribution as any).showMessage(
+        'Cannot edit already signed document',
+        monacoEditor?.getPosition()
+      )
+    })
 
-    const initialVersion = model.getAlternativeVersionId();
-    let currentVersion = initialVersion;
-    let lastVersion = initialVersion;
+    const initialVersion = model.getAlternativeVersionId()
+    let currentVersion = initialVersion
+    let lastVersion = initialVersion
 
     builderContext.goblError.subscribe((goblErr) => {
+      if (!monaco) return
+
       if (!goblErr) {
-        monaco.editor.setModelMarkers(model, "gobl", []);
-        return;
+        monaco.editor.setModelMarkers(model, 'gobl', [])
+        return
       }
 
-      const errorString = getGOBLErrorMessage(goblErr.message);
+      const errorString = getGOBLErrorMessage(goblErr.message)
 
-      const errorsArr = errorString.split(" / ");
+      const errorsArr = errorString.split(' / ')
 
       monaco.editor.setModelMarkers(
         model,
-        "gobl",
+        'gobl',
         errorsArr.map((message: string) => ({
           message,
-          severity: monaco.MarkerSeverity.Error,
+          severity: monaco?.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
-          endColumn: 1,
-        })),
-      );
-    });
+          endColumn: 1
+        }))
+      )
+    })
 
     unsubscribeEditor = editor.subscribe(({ value }) => {
+      if (!monacoEditor) return
       // To keep undo/redo in the editor working, only overwrite the model
       // contents when the current editor model value isn't the same as the new
       // store value.
       if (monacoEditor.getValue() === value) {
-        return;
+        return
       }
 
-      monacoEditor.executeEdits("gobl", [
+      monacoEditor.executeEdits('gobl', [
         {
           range: model.getFullModelRange(),
           text: value,
-          forceMoveMarkers: true,
-        },
-      ]);
-      monacoEditor.pushUndoStop();
-    });
+          forceMoveMarkers: true
+        }
+      ])
+      monacoEditor.pushUndoStop()
+    })
 
     monacoEditor.onDidChangeModelContent(() => {
-      const value = monacoEditor.getValue();
-      editor.set({ value, updatedAt: Date.now() });
+      const value = monacoEditor?.getValue() || ''
+      editor.set({ value, updatedAt: Date.now() })
 
-      const versionId = model.getAlternativeVersionId();
+      const versionId = model.getAlternativeVersionId()
       if (versionId < currentVersion) {
         // Undo occured.
-        builderContext.redoAvailable.set(true);
+        builderContext.redoAvailable.set(true)
         if (versionId === initialVersion) {
           // No more undo items.
-          builderContext.undoAvailable.set(false);
+          builderContext.undoAvailable.set(false)
         }
       } else {
         if (versionId <= lastVersion) {
           // Redo occured.
           if (versionId == lastVersion) {
             // Redo of last change occured.
-            builderContext.redoAvailable.set(false);
+            builderContext.redoAvailable.set(false)
           }
         } else {
           // New operation pushed. Disable redo.
-          builderContext.redoAvailable.set(false);
+          builderContext.redoAvailable.set(false)
           if (currentVersion > lastVersion) {
-            lastVersion = currentVersion;
+            lastVersion = currentVersion
           }
         }
-        builderContext.undoAvailable.set(true);
+        builderContext.undoAvailable.set(true)
       }
-      currentVersion = versionId;
+      currentVersion = versionId
 
-      validateSchema(value);
-    });
+      validateSchema(value)
+    })
 
     markerListener = monaco.editor.onDidChangeMarkers(() => {
-      const markers = monaco.editor.getModelMarkers({ resource: modelUri });
-      problems.set(markers);
-    });
+      const markers = monaco?.editor.getModelMarkers({ resource: modelUri }) || []
+      problems.set(markers)
+    })
 
     monacoEditor.onDidChangeCursorPosition((event) => {
-      lineNumber = event.position.lineNumber;
-      column = event.position.column;
-    });
+      lineNumber = event.position.lineNumber
+      column = event.position.column
+    })
 
     document.fonts.ready.then(() => {
-      monaco.editor.remeasureFonts();
-    });
+      monaco?.editor.remeasureFonts()
+    })
 
-    document.addEventListener("undoButtonClick", handleUndoButtonClick, true);
-    document.addEventListener("redoButtonClick", handleRedoButtonClick, true);
+    document.addEventListener('undoButtonClick', handleUndoButtonClick, true)
+    document.addEventListener('redoButtonClick', handleRedoButtonClick, true)
 
-    setEditorReadOnly();
+    setEditorReadOnly(isReadOnly)
 
-    const scrollableElement = document.querySelector(".monaco-scrollable-element");
+    const scrollableElement = document.querySelector('.monaco-scrollable-element')
 
-    if (scrollableElement && OS === "windows") {
-      scrollableElement.classList.add("win");
+    if (scrollableElement && OS === 'windows') {
+      scrollableElement.classList.add('win')
     }
-  });
+  })
 
   onDestroy(() => {
-    $problems = []; // reset problems
+    $problems = [] // reset problems
     if (markerListener) {
-      markerListener.dispose();
+      markerListener.dispose()
     }
 
     if (unsubscribeEditor != null) {
-      unsubscribeEditor();
+      unsubscribeEditor()
     }
 
-    const models = monaco?.editor.getModels();
+    const models = monaco?.editor.getModels()
 
     monaco?.editor.getModels().forEach((m) => {
       // Only dispose the model that matches with the unique URI
       if (m.uri.query === EditorUniqueId) {
-        m.dispose();
+        m.dispose()
       }
-    });
+    })
 
     // Only dispose the editor if there is only one active model
     if (models?.length === 1) {
-      monacoEditor?.dispose();
-      readOnlyEditHandler?.dispose();
+      monacoEditor?.dispose()
+      readOnlyEditHandler?.dispose()
     }
 
-    document.removeEventListener("undoButtonClick", handleUndoButtonClick, true);
-    document.removeEventListener("redoButtonClick", handleRedoButtonClick, true);
-    console.log("destroying editor");
-  });
+    document.removeEventListener('undoButtonClick', handleUndoButtonClick, true)
+    document.removeEventListener('redoButtonClick', handleRedoButtonClick, true)
+    console.log('destroying editor')
+  })
 
-  async function setEditorReadOnly() {
-    if (!monacoEditor) return;
+  async function setEditorReadOnly(readOnly: boolean) {
+    if (!monacoEditor) return
 
-    if (!isReadOnly) {
-      monacoEditor.updateOptions({ readOnly: false });
-      return;
+    if (!readOnly) {
+      monacoEditor.updateOptions({ readOnly: false })
+      return
     }
 
     // Svelte updates the DOM in batches and not immediately. We need to wait until svelte
     // has finished updating the DOM to set the readOnly status. Otherwise the editor content
     // update would be blocked
-    await tick();
-    monacoEditor.updateOptions({ readOnly: true });
+    await tick()
+    monacoEditor.updateOptions({ readOnly: true })
   }
 
   // validateSchema is used to ensure the $schema property is set to something
   // that is expected by the component using the editor.
   function validateSchema(value: string) {
     if (!jsonSchemaURL) {
-      return;
+      return
     }
 
     try {
-      const parsed: Record<string, unknown> = JSON.parse(value);
+      const parsed: Record<string, unknown> = JSON.parse(value)
       if (parsed.$schema !== jsonSchemaURL) {
-        monaco.editor.setModelMarkers(model, "gobl-builder", [
+        monaco?.editor.setModelMarkers(model, 'gobl-builder', [
           {
             message: `Property "$schema" must be \`${jsonSchemaURL}\`.`,
             severity: monaco.MarkerSeverity.Error,
             startLineNumber: 1,
             startColumn: 1,
             endLineNumber: 1,
-            endColumn: 1,
-          },
-        ]);
+            endColumn: 1
+          }
+        ])
       } else {
-        monaco.editor.setModelMarkers(model, "gobl-builder", []);
+        monaco?.editor.setModelMarkers(model, 'gobl-builder', [])
       }
     } catch (e) {
-      monaco.editor.setModelMarkers(model, "gobl-builder", []);
+      monaco?.editor.setModelMarkers(model, 'gobl-builder', [])
     }
   }
 
   function handleUndoButtonClick() {
-    monacoEditor.updateOptions({ readOnly: false });
-    monacoEditor.trigger("undoButton", "undo", null);
+    monacoEditor?.updateOptions({ readOnly: false })
+    monacoEditor?.trigger('undoButton', 'undo', null)
   }
 
   function handleRedoButtonClick() {
-    monacoEditor.trigger("redoButton", "redo", null);
+    monacoEditor?.trigger('redoButton', 'redo', null)
   }
 
   function handleProblemClick(problem: Monaco.editor.IMarker) {
     return function () {
-      monacoEditor.setPosition({ lineNumber: problem.startLineNumber, column: problem.startColumn });
-      monacoEditor.revealLineInCenter(problem.startLineNumber);
-    };
+      monacoEditor?.setPosition({
+        lineNumber: problem.startLineNumber,
+        column: problem.startColumn
+      })
+      monacoEditor?.revealLineInCenter(problem.startLineNumber)
+    }
   }
 
   function handleDrawerToggle() {
-    drawerClosed = !drawerClosed;
+    drawerClosed = !drawerClosed
   }
+  // Sort by `monaco.MarkerSeverity` enum value descending, most severe shown first.
+  let sortedProblems = $derived($problems.sort((a, b) => b.severity - a.severity))
+  let warningCount = $derived(
+    monaco
+      ? $problems.filter((problem) => problem.severity === monaco?.MarkerSeverity.Warning).length
+      : 0
+  )
+  let errorCount = $derived(
+    monaco
+      ? $problems.filter((problem) => problem.severity === monaco?.MarkerSeverity.Error).length
+      : 0
+  )
+  let isReadOnly = $derived(forceReadOnly || !!$envelope.sigs || false)
+  let showErrorConsole = $derived(!hideConsoleBar && !isReadOnly)
+
+  $effect(() => {
+    setSchemaURI(jsonSchemaURL)
+  })
+
+  $effect(() => {
+    setEditorReadOnly(isReadOnly)
+  })
+
+  $effect(() => {
+    // track dependency
+    void forceReadOnly
+    focusEditor()
+  })
+
+  $effect(() => {
+    const readOnly = isReadOnly
+    untrack(() => {
+      if (!monaco) return
+      monaco.editor.setTheme(readOnly ? 'readOnlyTheme' : 'editableTheme')
+    })
+  })
 </script>
 
 <div class="flex flex-col h-full">
-  <div class="flex-1 overflow-hidden" bind:this={editorEl} />
+  <div class="flex-1 overflow-hidden" bind:this={editorEl}></div>
   {#if showErrorConsole}
     <div class="w-full">
       <div
         class="flex-none px-4 py-2 bg-zinc-700 text-white text-xs border-b-gray-600 flex items-center gap-6"
-        on:dblclick={handleDrawerToggle}
+        ondblclick={handleDrawerToggle}
         role="log"
       >
         <div>
@@ -392,7 +416,7 @@
           </span>
           <span class="align-middle">
             {errorCount}
-            {errorCount === 1 ? "error" : "errors"}
+            {errorCount === 1 ? 'error' : 'errors'}
           </span>
         </div>
         <div class="flex-1">
@@ -405,13 +429,18 @@
           </span>
           <span class="align-middle">
             {warningCount}
-            {warningCount === 1 ? "warning" : "warnings"}
+            {warningCount === 1 ? 'warning' : 'warnings'}
           </span>
         </div>
         <div>Ln {lineNumber}, Col {column}</div>
-        <button class="align-middle" on:click={handleDrawerToggle}>
+        <button class="align-middle cursor-pointer" onclick={handleDrawerToggle}>
           {#if drawerClosed}
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path
                 fill-rule="evenodd"
                 d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
@@ -419,7 +448,12 @@
               />
             </svg>
           {:else}
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
               <path
                 fill-rule="evenodd"
                 d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
@@ -435,14 +469,14 @@
           class="flex-none h-36 py-2 overflow-auto font-mono text-xs text-white bg-zinc-800"
           transition:slide={{ duration: 300 }}
         >
-          {#if $editor.value === ""}
+          {#if $editor.value === ''}
             <p class="m-4">
               <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
                 >Warnings, errors and tips are shown in this area.</span
               >
             </p>
           {/if}
-          {#if $editor.value !== "" && $problems.length === 0}
+          {#if $editor.value !== '' && $problems.length === 0}
             <p class="m-4">
               <span class="mr-2"><LightbulbIcon /></span><span class="align-middle"
                 >Use the action buttons in the menu bar.</span
@@ -452,7 +486,7 @@
           <ul>
             {#each sortedProblems as problem}
               <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
-                <button on:click={handleProblemClick(problem)}>
+                <button onclick={handleProblemClick(problem)}>
                   <EditorProblem {problem} />
                 </button>
               </li>

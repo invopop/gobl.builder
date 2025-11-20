@@ -1,31 +1,34 @@
 <script lang="ts">
-  import type { UIModelField, UIModelRootField } from "$lib/editor/form/utils/model.js";
-  import AbstractField from "./AbstractField.svelte";
-  import RootField from "./RootField.svelte";
-  import SectionWrapper from "./SectionWrapper.svelte";
+  import type { UIModelField, UIModelRootField } from '$lib/editor/form/utils/model.js'
+  import type { ObjectFieldProps } from '$lib/types/editor'
+  import AbstractField from './AbstractField.svelte'
+  import RootField from './RootField.svelte'
+  import SectionWrapper from './SectionWrapper.svelte'
 
-  export let field: UIModelField;
-  export let readOnly = false;
+  let {
+    field,
+    readOnly,
+    onFieldAdded,
+    onFieldDeleted,
+    onFieldDuplicated,
+    onFieldMoved,
+    onFieldValueUpdated,
+    onFieldKeyUpdated
+  }: ObjectFieldProps = $props()
 
-  $: children = field.children || ([] as UIModelField[]);
-
-  interface PropsInterface {
-    field: UIModelRootField;
-  }
-
-  $: props = $$props as PropsInterface;
+  let children = $derived(field.children || ([] as UIModelField[]))
 </script>
 
 {#if field.is.root}
   <RootField
-    {...props}
+    field={field as UIModelRootField}
     {readOnly}
-    on:fieldAdded
-    on:fieldDeleted
-    on:fieldDuplicated
-    on:fieldMoved
-    on:fieldValueUpdated
-    on:fieldKeyUpdated
+    {onFieldAdded}
+    {onFieldDeleted}
+    {onFieldDuplicated}
+    {onFieldMoved}
+    {onFieldValueUpdated}
+    {onFieldKeyUpdated}
   />
 {:else}
   <SectionWrapper {readOnly} {field}>
@@ -33,12 +36,12 @@
       <AbstractField
         field={childField}
         {readOnly}
-        on:fieldAdded
-        on:fieldDeleted
-        on:fieldDuplicated
-        on:fieldMoved
-        on:fieldValueUpdated
-        on:fieldKeyUpdated
+        {onFieldAdded}
+        {onFieldDeleted}
+        {onFieldDuplicated}
+        {onFieldMoved}
+        {onFieldValueUpdated}
+        {onFieldKeyUpdated}
       />
     {/each}
   </SectionWrapper>

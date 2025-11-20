@@ -1,42 +1,44 @@
 <script lang="ts">
-  import Select from "svelte-select";
-  import { createEventDispatcher, onMount } from "svelte";
-  import { getSchemas } from "./editor/actions";
-  import type { ListOption } from "./types/ui";
+  import Select from 'svelte-select'
+  import { onMount } from 'svelte'
+  import { getSchemas } from './editor/actions'
+  import type { ListOption } from './types/ui'
+  import type { SelectSchemasProps } from './types/editor'
 
-  const dispatch = createEventDispatcher();
+  const GOBL_URL = 'https://gobl.org/draft-0/'
 
-  const GOBL_URL = "https://gobl.org/draft-0/";
+  let {
+    value = $bindable(''),
+    placeholder = '',
+    allowAll = false,
+    navBar = false,
+    onChange
+  }: SelectSchemasProps = $props()
 
-  export let value: string = "";
-  export let placeholder = "";
-  export let allowAll = false;
-  export let navBar = false;
-
-  let schemasList: ListOption[] = [];
+  let schemasList: ListOption[] = $state([])
 
   function handleChange(e: CustomEvent) {
-    value = e.detail.label;
-    dispatch("change", e.detail.value);
+    value = e.detail.label
+    onChange?.(e.detail.value)
   }
 
   onMount(async () => {
-    const schemas = await getSchemas();
+    const schemas = await getSchemas()
     schemasList = schemas.map((s: string) => ({
       value: s,
-      label: s.replace(GOBL_URL, ""),
-    }));
+      label: s.replace(GOBL_URL, '')
+    }))
 
     if (allowAll) {
       schemasList.unshift({
-        value: "",
-        label: "All",
-      });
+        value: '',
+        label: 'All'
+      })
     }
-  });
+  })
 
-  $: border = navBar ? "1px #4C515A solid" : "1px #E9EBEF solid";
-  $: placeholderColor = navBar ? "#FBFBFC" : "#030712";
+  let border = $derived(navBar ? '1px #4C515A solid' : '1px #E9EBEF solid')
+  let placeholderColor = $derived(navBar ? '#FBFBFC' : '#030712')
 </script>
 
 <Select
@@ -65,10 +67,15 @@
   on:change={handleChange}
   {value}
 >
+  <!-- @TODO: migrate this slot by hand, `chevron-icon` is an invalid identifier for a snnipet -->
   <div slot="chevron-icon">
     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="10.5" cy="10" r="8" fill={navBar ? "white" : "grey"} fill-opacity="0.1" />
-      <path d="M7 8.25004L10.5 11.75L14 8.25" stroke={navBar ? "white" : "black"} stroke-width="1.2" />
+      <circle cx="10.5" cy="10" r="8" fill={navBar ? 'white' : 'grey'} fill-opacity="0.1" />
+      <path
+        d="M7 8.25004L10.5 11.75L14 8.25"
+        stroke={navBar ? 'white' : 'black'}
+        stroke-width="1.2"
+      />
     </svg>
   </div>
 </Select>

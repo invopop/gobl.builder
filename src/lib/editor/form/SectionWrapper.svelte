@@ -1,76 +1,78 @@
 <script lang="ts">
-  import { intersect } from "svelte-intersection-observer-action";
-  import type { UIModelField } from "./utils/model";
-  import FieldTitle from "./FieldTitle.svelte";
-  import ExpandButton from "$lib/ui/ExpandButton.svelte";
-  import { slide } from "svelte/transition";
-  import clsx from "clsx";
-  import { getContext } from "svelte";
-  import { getBuilderContext } from "$lib/store/builder";
-  import type { Schema } from "./utils/schema";
+  import { intersect } from 'svelte-intersection-observer-action'
+  import FieldTitle from './FieldTitle.svelte'
+  import ExpandButton from '$lib/ui/ExpandButton.svelte'
+  import { slide } from 'svelte/transition'
+  import clsx from 'clsx'
+  import { getContext } from 'svelte'
+  import { getBuilderContext } from '$lib/store/builder'
+  import type { Schema } from './utils/schema'
+  import type { SectionWrapperProps } from '$lib/types/editor'
 
-  const { envelopeIsSigned } = getBuilderContext();
+  const { envelopeIsSigned } = getBuilderContext()
 
-  const editorId = getContext("editorId");
+  const editorId = getContext('editorId')
 
-  const { activeSection, activeItem, scrollingSection } = getBuilderContext();
+  const { activeSection, activeItem, scrollingSection } = getBuilderContext()
 
   function callback(entry: IntersectionObserverEntry) {
     // If we are navigating from outside
-    if ($scrollingSection) return;
+    if ($scrollingSection) return
 
     // We only care about intersecting in and off ocurring on the top side
-    if (entry.boundingClientRect.top > 300) return;
+    if (entry.boundingClientRect.top > 300) return
 
     $activeSection = {
       section: field.id,
-      scroll: false,
-    };
+      scroll: false
+    }
   }
-  const intersectOptions = { callback, root: document.querySelector(`#${editorId}`) };
+  const intersectOptions = { callback, root: document.querySelector(`#${editorId}`) }
 
-  export let field: UIModelField;
-  export let readOnly = false;
+  let { field, readOnly, children, extraContent }: SectionWrapperProps = $props()
 
-  let element: HTMLElement;
-  let open = true;
+  let element: HTMLElement
+  let open = $state(true)
 
-  $: childrenType = (field.schema.items as Schema)?.type;
-  $: label = $envelopeIsSigned
-    ? "Document is signed and can not be edited"
-    : `${field.schema.description || ""}${field.is.calculated ? " (calculated)" : ""}`;
-  $: isParent = ["object", "array"].includes(field.type) && childrenType !== "string";
-  $: isSection = field.is.root || (isParent && field.parent?.is.root);
-  $: wrapperClasses = clsx({
-    "rounded-r": readOnly,
-    "border-neutral-100 bg-neutral-50": isActive,
-    "border-l rounded-l": isSection,
-    "border-transparent": !isActive,
-    "border-t border-b border-r": childrenType !== "string",
-  });
-  $: isActive = field.id === $activeItem;
+  let childrenType = $derived((field.schema.items as Schema)?.type)
+  let label = $derived(
+    $envelopeIsSigned
+      ? 'Document is signed and can not be edited'
+      : `${field.schema.description || ''}${field.is.calculated ? ' (calculated)' : ''}`
+  )
+  let isParent = $derived(['object', 'array'].includes(field.type) && childrenType !== 'string')
+  let isSection = $derived(field.is.root || (isParent && field.parent?.is.root))
+  let isActive = $derived(field.id === $activeItem)
+  let wrapperClasses = $derived(
+    clsx({
+      'rounded-r': readOnly,
+      'bg-background-default-secondary': isActive,
+      'rounded-l': isSection
+    })
+  )
 
-  $: if ($activeSection.scroll) {
-    scrollElementIntoView();
-  }
+  $effect(() => {
+    if (!$activeSection.scroll) return
+    scrollElementIntoView()
+  })
 
   function scrollElementIntoView() {
-    $scrollingSection = true;
+    $scrollingSection = true
 
     setTimeout(() => {
-      $scrollingSection = false;
-    }, 1000);
+      $scrollingSection = false
+    }, 1000)
 
-    if (!element || $activeSection.section !== field.id) return;
+    if (!element || $activeSection.section !== field.id) return
 
     element.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
+      behavior: 'smooth',
+      block: 'start'
+    })
   }
 
   function handleFocusInner() {
-    open = true;
+    open = true
   }
 </script>
 
@@ -82,8 +84,8 @@
     <div class="py-2 pl-3 pr-2">
       <button
         class="flex items-center justify-start cursor-pointer"
-        on:click={() => {
-          open = !open;
+        onclick={() => {
+          open = !open
         }}
       >
         <FieldTitle {field} />
@@ -93,9 +95,9 @@
   {/if}
 
   {#if open}
-    <div transition:slide class:overflow-hidden={!open} on:focusin|capture={handleFocusInner}>
+    <div transition:slide class:overflow-hidden={!open} onfocusincapture={handleFocusInner}>
       <div class:pb-1={isParent} class="grid grid-cols-1 w-full">
-        <slot />
+        {@render children?.()}
       </div>
     </div>
   {/if}
@@ -103,4 +105,4 @@
     <div use:intersect={intersectOptions}></div>
   {/if}
 </div>
-<slot name="extra-content" />
+{@render extraContent?.()}

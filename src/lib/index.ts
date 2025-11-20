@@ -1,4 +1,4 @@
-import EnvelopeEditor from "./EnvelopeEditor.svelte";
-import ObjectEditor from "./ObjectEditor.svelte";
+import EnvelopeEditor from './EnvelopeEditor.svelte'
+import ObjectEditor from './ObjectEditor.svelte'
 
-export { EnvelopeEditor, ObjectEditor };
+export { EnvelopeEditor, ObjectEditor }

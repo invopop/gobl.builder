@@ -1,21 +1,23 @@
 <script lang="ts">
-  import { clsx } from "clsx";
-  import type { UIModelField } from "$lib/editor/form/utils/model.js";
-  import { Calculator, Hashtag, Icon } from "svelte-hero-icons";
-  import type { Schema } from "./utils/schema";
+  import { clsx } from 'clsx'
+  import { Calculator, Hashtag, Icon } from 'svelte-hero-icons'
+  import type { Schema } from './utils/schema'
+  import type { FieldTitleProps } from '$lib/types/editor'
 
-  export let field: UIModelField<unknown>;
+  let { field }: FieldTitleProps = $props()
 
-  $: childrenType = (field.schema.items as Schema)?.type;
-  $: arrayTitle = field.schema.title || "";
-  $: isParent = ["object", "array"].includes(field.type) && childrenType !== "string";
-  $: isSection = field.is.root || (field.parent?.is.root && isParent);
-  $: classes = clsx({
-    "font-medium text-neutral-800": isParent,
-    "tracking-normal text-base": isParent && !isSection,
-    "text-lg tracking-tighter": isSection,
-    "text-neutral-500 text-base tracking-normal": !isSection && !isParent,
-  });
+  let childrenType = $derived((field.schema.items as Schema)?.type)
+  let arrayTitle = $derived(field.schema.title || '')
+  let isParent = $derived(['object', 'array'].includes(field.type) && childrenType !== 'string')
+  let isSection = $derived(field.is.root || (field.parent?.is.root && isParent))
+  let classes = $derived(
+    clsx({
+      'font-medium text-foreground': isParent,
+      'tracking-normal text-base': isParent && !isSection,
+      'text-lg tracking-tighter': isSection,
+      'text-foreground-default-secondary text-base tracking-normal': !isSection && !isParent
+    })
+  )
 </script>
 
 <span
@@ -24,12 +26,12 @@
 >
   {#if field.parent?.isArray()}
     <span
-      class:justify-start={field.type !== "string"}
-      class:justify-between={field.type === "string"}
+      class:justify-start={field.type !== 'string'}
+      class:justify-between={field.type === 'string'}
       class="flex items-center w-full"
     >
       <span>
-        {#if field.key === "0" && field.type === "string"}
+        {#if field.key === '0' && field.type === 'string'}
           {field.parent.schema.title || field.parent.key}
         {/if}
       </span>

@@ -1,20 +1,17 @@
 <script lang="ts">
-  import Modal from "$lib/ui/Modal.svelte";
-  import type { UIModelField } from "../utils/model";
-  import { createEventDispatcher } from "svelte";
-  import ObjectEditor from "$lib/ObjectEditor.svelte";
+  import Modal from '$lib/ui/Modal.svelte'
+  import ObjectEditor from '$lib/ObjectEditor.svelte'
+  import type { EditorFormModalCorrectProps } from '$lib/types/editor'
 
-  const dispatch = createEventDispatcher();
+  let { model, onConfirm, onclose }: EditorFormModalCorrectProps = $props()
 
-  export let model: UIModelField | undefined;
-
-  let editor: ObjectEditor;
+  let editor: ObjectEditor | undefined = $state()
 
   function handleConfirm() {
-    dispatch("confirm", editor.getJson());
+    onConfirm?.(editor?.getJson() || '')
   }
 </script>
 
-<Modal title="Correct" on:close on:confirm={handleConfirm}>
+<Modal title="Correct" {onclose} onConfirm={handleConfirm}>
   <ObjectEditor bind:this={editor} {model} id="correct" />
 </Modal>

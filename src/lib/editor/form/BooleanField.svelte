@@ -1,22 +1,23 @@
 <script lang="ts">
-  import LeafField from "./LeafField.svelte";
-  import type { UIModelField } from "./utils/model";
-  import type { SchemaValue } from "./utils/schema.js";
+  import type { BooleanFieldProps } from '$lib/types/editor'
+  import LeafField from './LeafField.svelte'
+  import { UIModelField } from './utils/model'
+  import type { SchemaValue } from './utils/schema.js'
 
-  interface PropsInterface {
-    field: UIModelField<string>;
-    parseKey: undefined;
-  }
-
-  export let readOnly = false;
-
-  $: props = $$props as PropsInterface;
+  let { field, readOnly, children, onFieldValueUpdated, onFieldKeyUpdated }: BooleanFieldProps =
+    $props()
 
   function handleParseValue(value: SchemaValue): boolean {
     // Cast string emitted by select as boolean
-    return value == "true";
+    return value == 'true'
   }
 </script>
 
-<LeafField {...props} parseValue={handleParseValue} {readOnly} on:fieldValueUpdated on:fieldKeyUpdated />
-<slot />
+<LeafField
+  field={field as UIModelField<string>}
+  {readOnly}
+  parseValue={handleParseValue}
+  {onFieldValueUpdated}
+  {onFieldKeyUpdated}
+/>
+{@render children?.()}
