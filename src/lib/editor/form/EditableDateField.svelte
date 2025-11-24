@@ -22,16 +22,12 @@
 
   let date = $derived(new Date(field.value))
 
-  $inspect(field.value)
-  $inspect(date)
   async function handleSelect() {
     await tick()
 
     if (!input) return
 
     const value = input.value
-
-    console.log(value)
 
     if (value == field.value) return
 
