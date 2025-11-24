@@ -88,7 +88,6 @@
   if (signEnabled) {
     GOBL.keygen().then((k) => {
       builderContext.keypair.set(k)
-      console.log('Created keypair.', k)
     })
   }
 

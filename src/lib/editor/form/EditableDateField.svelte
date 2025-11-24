@@ -22,7 +22,7 @@
 
   let date = $derived(new Date(field.value))
 
-  async function hanldeSelect() {
+  async function handleSelect() {
     await tick()
 
     if (!input) return
@@ -40,13 +40,13 @@
 
     if (!input) return
 
-    input.addEventListener('blur', hanldeSelect)
+    input.addEventListener('blur', handleSelect)
   })
 
   onDestroy(() => {
     if (!input) return
 
-    input.removeEventListener('blur', hanldeSelect)
+    input.removeEventListener('blur', handleSelect)
   })
 </script>
 
@@ -59,7 +59,8 @@
     closeOnSelection
     format="yyyy-MM-dd"
     placeholder="YYYY-MM-DD"
-    on:select={hanldeSelect}
+    max={new Date(2050, 11, 31)}
+    on:select={handleSelect}
   />
   <Icon src={Calendar} class="w-4 h-4 text-icon absolute left-2 top-2" />
 </div>
