@@ -17,7 +17,7 @@
   let builder: EnvelopeEditor | undefined = $state()
   let initialState: State = $state('init')
   let forceReadOnly = $state(false)
-  let envelope = ''
+  let envelope = $state('')
   let editorView = $state('code')
   let openSignaturesModal = $state(false)
   let sigs: string[] | null = $state(null)
@@ -88,8 +88,9 @@
         {editorView}
         signEnabled
         bind:forceReadOnly
-        onChange={(envelope) => {
-          console.log('Received change event.', envelope)
+        onChange={(envelopeData) => {
+          console.log('Received change event.', envelopeData)
+          envelope = envelopeData
         }}
         onBuild={(result) => {
           console.log('Received build result.', result)
