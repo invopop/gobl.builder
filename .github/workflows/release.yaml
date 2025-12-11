@@ -5,41 +5,45 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 20.x
-          cache: 'npm'
-
-      - run: npm install
+          node-version: 22.x
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Bump version and create git tag
         id: bump_version
-        uses: anothrNick/github-tag-action@1.36.0
+        uses: anothrNick/github-tag-action@1.75.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           RELEASE_BRANCHES: main
 
       # Skip if `new_tag` != `tag` (means no bump)
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
+        run: npm install -g npm@latest
+
+      - run: npm ci
+        if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
+
+      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
+        name: Set NPM version to ${{ steps.bump_version.outputs.new_tag }}
+        run: npm version --no-git-tag-version ${{ steps.bump_version.outputs.new_tag }}
+
       - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
         run: npm run build:package
 
-      # Skip if `new_tag` != `tag` (means no bump)
-      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        name: Set NPM version to ${{ steps.bump_version.outputs.new_tag }}
-        # working-directory: dist
-        run: npm version --no-git-tag-version ${{ steps.bump_version.outputs.new_tag }}
-
-      # Skip if `new_tag` != `tag` (means no bump)
-      - if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        name: Publish to NPM registry
-        uses: JS-DevTools/npm-publish@v1
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          package: ./package.json
-          access: public
+      - name: Publish to NPM registry
+        if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
+        run: npm publish
