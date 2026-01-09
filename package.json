@@ -89,7 +89,7 @@
     "vscode-uri": "^3.0.7"
   },
   "dependencies": {
-    "@invopop/gobl-worker": "0.305.0",
+    "@invopop/gobl-worker": "0.305.1",
     "@invopop/popui": "0.1.19",
     "@invopop/ui-icons": "^0.0.67",
     "@monaco-editor/loader": "^1.4.0",
