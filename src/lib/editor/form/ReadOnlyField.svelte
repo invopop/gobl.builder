@@ -18,6 +18,10 @@
     if (field.controlType === 'date') {
       const dateObject = new Date(value)
 
+      if (isNaN(dateObject.getTime())) {
+        return ''
+      }
+
       return dateObject.toISOString().split('T')[0]
     }
 

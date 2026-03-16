@@ -20,7 +20,12 @@
     })
   )
 
-  let date = $derived(new Date(field.value))
+  function getValidDate(value: string): Date | null {
+    const dateObject = new Date(value)
+    return isNaN(dateObject.getTime()) ? null : dateObject
+  }
+
+  let date = $derived(getValidDate(field.value))
 
   async function handleSelect() {
     await tick()
