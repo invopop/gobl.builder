@@ -1,26 +1,26 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
-  "$regime": "ES",
-  "uuid": "019d2fca-da37-721b-847a-e8ab54f31e9f",
+  "$regime": "AR",
+  "uuid": "019d2fca-cd56-7f23-9ade-7dc19dd9e714",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
-  "currency": "EUR",
+  "currency": "ARS",
   "supplier": {
-    "name": "Ingeniería Solar Madrid S.L.",
+    "name": "Tecnología Austral S.A.S.",
     "tax_id": {
-      "country": "ES",
-      "code": "J9227840G"
+      "country": "AR",
+      "code": "30922784007"
     },
     "addresses": [
       {
-        "num": "129",
-        "street": "Calle Gran Vía",
-        "locality": "Barcelona",
-        "region": "Barcelona",
-        "code": "08001",
-        "country": "ES"
+        "num": "185",
+        "street": "Calle Belgrano",
+        "locality": "Mendoza",
+        "region": "Mendoza",
+        "code": "M5500",
+        "country": "AR"
       }
     ],
     "emails": [
@@ -30,19 +30,19 @@
     ]
   },
   "customer": {
-    "name": "Empresa Nacional de Turismo S.A.",
+    "name": "Agropecuaria Los Álamos S.A.",
     "tax_id": {
-      "country": "ES",
-      "code": "G9694230E"
+      "country": "AR",
+      "code": "30694230233"
     },
     "addresses": [
       {
-        "num": "71",
-        "street": "Paseo de la Castellana",
-        "locality": "Bilbao",
-        "region": "Vizcaya",
-        "code": "48001",
-        "country": "ES"
+        "num": "171",
+        "street": "Calle San Martín",
+        "locality": "Mendoza",
+        "region": "Mendoza",
+        "code": "M5500",
+        "country": "AR"
       }
     ],
     "emails": [
@@ -54,12 +54,12 @@
   "lines": [
     {
       "i": 1,
-      "quantity": "18",
+      "quantity": "8",
       "item": {
-        "name": "Impresora láser",
-        "price": "299.00"
+        "name": "Equipo industrial",
+        "price": "45000.00"
       },
-      "sum": "5382.00",
+      "sum": "360000.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -68,16 +68,17 @@
           "percent": "21.0%"
         }
       ],
-      "total": "5382.00"
+      "total": "360000.00"
     },
     {
       "i": 2,
-      "quantity": "8",
+      "quantity": "10",
       "item": {
-        "name": "Ordenador portátil",
-        "price": "899.00"
+        "name": "Consultoría empresarial",
+        "price": "8000.00",
+        "unit": "h"
       },
-      "sum": "7192.00",
+      "sum": "80000.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -86,17 +87,17 @@
           "percent": "21.0%"
         }
       ],
-      "total": "7192.00"
+      "total": "80000.00"
     },
     {
       "i": 3,
-      "quantity": "10",
+      "quantity": "18",
       "item": {
-        "name": "Desarrollo de software",
-        "price": "90.00",
+        "name": "Consultoría empresarial",
+        "price": "8000.00",
         "unit": "h"
       },
-      "sum": "900.00",
+      "sum": "144000.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -105,7 +106,7 @@
           "percent": "21.0%"
         }
       ],
-      "total": "900.00"
+      "total": "144000.00"
     }
   ],
   "payment": {
@@ -114,18 +115,12 @@
       "notes": "Payment due upon receipt."
     },
     "instructions": {
-      "key": "credit-transfer",
-      "credit_transfer": [
-        {
-          "iban": "ES2468874969403853166717",
-          "name": "Bank Account"
-        }
-      ]
+      "key": "credit-transfer"
     }
   },
   "totals": {
-    "sum": "13474.00",
-    "total": "13474.00",
+    "sum": "584000.00",
+    "total": "584000.00",
     "taxes": {
       "categories": [
         {
@@ -133,18 +128,18 @@
           "rates": [
             {
               "key": "standard",
-              "base": "13474.00",
+              "base": "584000.00",
               "percent": "21.0%",
-              "amount": "2829.54"
+              "amount": "122640.00"
             }
           ],
-          "amount": "2829.54"
+          "amount": "122640.00"
         }
       ],
-      "sum": "2829.54"
+      "sum": "122640.00"
     },
-    "tax": "2829.54",
-    "total_with_tax": "16303.54",
-    "payable": "16303.54"
+    "tax": "122640.00",
+    "total_with_tax": "706640.00",
+    "payable": "706640.00"
   }
 }

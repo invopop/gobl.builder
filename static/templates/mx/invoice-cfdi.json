@@ -4,34 +4,18 @@
   "$addons": [
     "mx-cfdi-v4"
   ],
-  "uuid": "019d2fca-f111-79f2-a200-d584d66945b7",
-  "type": "credit-note",
+  "uuid": "019d2fd4-ef36-729f-951d-4567c25f4896",
+  "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
-  "issue_time": "08:55:22",
+  "issue_time": "09:06:17",
   "currency": "MXN",
-  "preceding": [
-    {
-      "uuid": "019d2fca-f111-79d7-8586-da64176c855c",
-      "type": "standard",
-      "issue_date": "2026-03-26",
-      "series": "MOCK",
-      "code": "37258",
-      "stamps": [
-        {
-          "prv": "sat-uuid",
-          "val": "a1b2c3d4-e5f6-7890-abcd-000000000001"
-        }
-      ]
-    }
-  ],
   "tax": {
     "ext": {
-      "mx-cfdi-doc-type": "E",
+      "mx-cfdi-doc-type": "I",
       "mx-cfdi-issue-place": "44100",
-      "mx-cfdi-payment-method": "PPD",
-      "mx-cfdi-rel-type": "01"
+      "mx-cfdi-payment-method": "PPD"
     }
   },
   "supplier": {

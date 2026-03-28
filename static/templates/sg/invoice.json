@@ -1,0 +1,142 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "SG",
+  "uuid": "019d2fca-ec4a-72ee-a8e7-817ae7d52ff7",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "SGD",
+  "supplier": {
+    "name": "Marina Bay Technologies Pte. Ltd.",
+    "tax_id": {
+      "country": "SG",
+      "code": "200895716G"
+    },
+    "addresses": [
+      {
+        "num": "152",
+        "street": "Raffles Place",
+        "locality": "Singapore",
+        "code": "179101",
+        "country": "SG"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Jurong Heavy Equipment Pte. Ltd.",
+    "tax_id": {
+      "country": "SG",
+      "code": "199205164Q"
+    },
+    "addresses": [
+      {
+        "num": "40",
+        "street": "Ang Mo Kio Street",
+        "locality": "Singapore",
+        "code": "609916",
+        "country": "SG"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "19",
+      "item": {
+        "name": "Office equipment",
+        "price": "1600.00"
+      },
+      "sum": "30400.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "key": "standard",
+          "rate": "general",
+          "percent": "9%"
+        }
+      ],
+      "total": "30400.00"
+    },
+    {
+      "i": 2,
+      "quantity": "19",
+      "item": {
+        "name": "Financial consulting",
+        "price": "250.00",
+        "unit": "h"
+      },
+      "sum": "4750.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "key": "standard",
+          "rate": "general",
+          "percent": "9%"
+        }
+      ],
+      "total": "4750.00"
+    },
+    {
+      "i": 3,
+      "quantity": "6",
+      "item": {
+        "name": "Office equipment",
+        "price": "1600.00"
+      },
+      "sum": "9600.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "key": "standard",
+          "rate": "general",
+          "percent": "9%"
+        }
+      ],
+      "total": "9600.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "44750.00",
+    "total": "44750.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "GST",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "44750.00",
+              "percent": "9%",
+              "amount": "4027.50"
+            }
+          ],
+          "amount": "4027.50"
+        }
+      ],
+      "sum": "4027.50"
+    },
+    "tax": "4027.50",
+    "total_with_tax": "48777.50",
+    "payable": "48777.50"
+  }
+}

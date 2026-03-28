@@ -1,12 +1,21 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "FR",
-  "uuid": "019d2fca-dba0-7036-8269-36c161eb3b82",
+  "$addons": [
+    "eu-en16931-v2017",
+    "fr-facturx-v1"
+  ],
+  "uuid": "019d2fd4-ec7e-7b5a-94aa-3117a4a01890",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
+  "tax": {
+    "ext": {
+      "untdid-document-type": "380"
+    }
+  },
   "supplier": {
     "name": "Bretagne Agroalimentaire SAS",
     "tax_id": {
@@ -57,7 +66,8 @@
       "quantity": "8",
       "item": {
         "name": "Équipement industriel",
-        "price": "2400.00"
+        "price": "2400.00",
+        "unit": "one"
       },
       "sum": "19200.00",
       "taxes": [
@@ -65,7 +75,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "19200.00"
@@ -84,7 +97,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "1500.00"
@@ -103,7 +119,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "2700.00"
@@ -121,7 +140,10 @@
           "iban": "FR3287496940385316671755267",
           "name": "Bank Account"
         }
-      ]
+      ],
+      "ext": {
+        "untdid-payment-means": "58"
+      }
     }
   },
   "totals": {
@@ -134,6 +156,9 @@
           "rates": [
             {
               "key": "standard",
+              "ext": {
+                "untdid-tax-category": "S"
+              },
               "base": "23400.00",
               "percent": "20%",
               "amount": "4680.00"

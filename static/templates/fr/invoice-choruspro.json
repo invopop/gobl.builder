@@ -1,12 +1,22 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "FR",
-  "uuid": "019d2fca-dba0-7036-8269-36c161eb3b82",
+  "$addons": [
+    "eu-en16931-v2017",
+    "fr-choruspro-v1"
+  ],
+  "uuid": "019d2fd4-eb29-7353-a1a2-4ced78601e8c",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
+  "tax": {
+    "ext": {
+      "fr-choruspro-framework": "A1",
+      "untdid-document-type": "380"
+    }
+  },
   "supplier": {
     "name": "Bretagne Agroalimentaire SAS",
     "tax_id": {
@@ -27,7 +37,10 @@
       {
         "addr": "billing@example.com"
       }
-    ]
+    ],
+    "ext": {
+      "fr-choruspro-scheme": "1"
+    }
   },
   "customer": {
     "name": "Alsacienne de Construction SAS",
@@ -35,6 +48,15 @@
       "country": "FR",
       "code": "95469423024"
     },
+    "identities": [
+      {
+        "type": "SIRET",
+        "code": "73282932000074",
+        "ext": {
+          "iso-scheme-id": "0009"
+        }
+      }
+    ],
     "addresses": [
       {
         "num": "171",
@@ -49,7 +71,10 @@
       {
         "addr": "billing@example.com"
       }
-    ]
+    ],
+    "ext": {
+      "fr-choruspro-scheme": "1"
+    }
   },
   "lines": [
     {
@@ -57,7 +82,8 @@
       "quantity": "8",
       "item": {
         "name": "Équipement industriel",
-        "price": "2400.00"
+        "price": "2400.00",
+        "unit": "one"
       },
       "sum": "19200.00",
       "taxes": [
@@ -65,7 +91,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "19200.00"
@@ -84,7 +113,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "1500.00"
@@ -103,12 +135,18 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "20%"
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
         }
       ],
       "total": "2700.00"
     }
   ],
+  "ordering": {
+    "code": "PO-95258"
+  },
   "payment": {
     "terms": {
       "key": "instant",
@@ -121,7 +159,10 @@
           "iban": "FR3287496940385316671755267",
           "name": "Bank Account"
         }
-      ]
+      ],
+      "ext": {
+        "untdid-payment-means": "58"
+      }
     }
   },
   "totals": {
@@ -134,6 +175,9 @@
           "rates": [
             {
               "key": "standard",
+              "ext": {
+                "untdid-tax-category": "S"
+              },
               "base": "23400.00",
               "percent": "20%",
               "amount": "4680.00"

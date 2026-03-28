@@ -1,26 +1,26 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
-  "$regime": "ES",
-  "uuid": "019d2fca-da37-721b-847a-e8ab54f31e9f",
+  "$regime": "AT",
+  "uuid": "019d2fca-cefa-75cc-8f57-aeefc4b2b2af",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
   "supplier": {
-    "name": "Ingeniería Solar Madrid S.L.",
+    "name": "Tiroler Holzverarbeitung OG",
     "tax_id": {
-      "country": "ES",
-      "code": "J9227840G"
+      "country": "AT",
+      "code": "U59227848"
     },
     "addresses": [
       {
-        "num": "129",
-        "street": "Calle Gran Vía",
-        "locality": "Barcelona",
-        "region": "Barcelona",
-        "code": "08001",
-        "country": "ES"
+        "num": "11",
+        "street": "Kärntner Straße",
+        "locality": "Graz",
+        "region": "Steiermark",
+        "code": "8010",
+        "country": "AT"
       }
     ],
     "emails": [
@@ -30,19 +30,19 @@
     ]
   },
   "customer": {
-    "name": "Empresa Nacional de Turismo S.A.",
+    "name": "Vorarlberger Textil AG",
     "tax_id": {
-      "country": "ES",
-      "code": "G9694230E"
+      "country": "AT",
+      "code": "U13969428"
     },
     "addresses": [
       {
-        "num": "71",
-        "street": "Paseo de la Castellana",
-        "locality": "Bilbao",
-        "region": "Vizcaya",
-        "code": "48001",
-        "country": "ES"
+        "num": "6",
+        "street": "Mariahilfer Straße",
+        "locality": "Salzburg",
+        "region": "Salzburg",
+        "code": "5020",
+        "country": "AT"
       }
     ],
     "emails": [
@@ -54,58 +54,57 @@
   "lines": [
     {
       "i": 1,
-      "quantity": "18",
+      "quantity": "8",
       "item": {
-        "name": "Impresora láser",
-        "price": "299.00"
+        "name": "Büroausstattung",
+        "price": "650.00"
       },
-      "sum": "5382.00",
+      "sum": "5200.00",
       "taxes": [
         {
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "20.0%"
         }
       ],
-      "total": "5382.00"
+      "total": "5200.00"
     },
     {
       "i": 2,
-      "quantity": "8",
+      "quantity": "18",
       "item": {
-        "name": "Ordenador portátil",
-        "price": "899.00"
+        "name": "Industriemotor",
+        "price": "2400.00"
       },
-      "sum": "7192.00",
+      "sum": "43200.00",
       "taxes": [
         {
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "20.0%"
         }
       ],
-      "total": "7192.00"
+      "total": "43200.00"
     },
     {
       "i": 3,
-      "quantity": "10",
+      "quantity": "8",
       "item": {
-        "name": "Desarrollo de software",
-        "price": "90.00",
-        "unit": "h"
+        "name": "Präzisionswerkzeug",
+        "price": "890.00"
       },
-      "sum": "900.00",
+      "sum": "7120.00",
       "taxes": [
         {
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "20.0%"
         }
       ],
-      "total": "900.00"
+      "total": "7120.00"
     }
   ],
   "payment": {
@@ -114,18 +113,18 @@
       "notes": "Payment due upon receipt."
     },
     "instructions": {
-      "key": "credit-transfer",
+      "key": "credit-transfer+sepa",
       "credit_transfer": [
         {
-          "iban": "ES2468874969403853166717",
+          "iban": "AT505468874969403853",
           "name": "Bank Account"
         }
       ]
     }
   },
   "totals": {
-    "sum": "13474.00",
-    "total": "13474.00",
+    "sum": "55520.00",
+    "total": "55520.00",
     "taxes": {
       "categories": [
         {
@@ -133,18 +132,18 @@
           "rates": [
             {
               "key": "standard",
-              "base": "13474.00",
-              "percent": "21.0%",
-              "amount": "2829.54"
+              "base": "55520.00",
+              "percent": "20.0%",
+              "amount": "11104.00"
             }
           ],
-          "amount": "2829.54"
+          "amount": "11104.00"
         }
       ],
-      "sum": "2829.54"
+      "sum": "11104.00"
     },
-    "tax": "2829.54",
-    "total_with_tax": "16303.54",
-    "payable": "16303.54"
+    "tax": "11104.00",
+    "total_with_tax": "66624.00",
+    "payable": "66624.00"
   }
 }

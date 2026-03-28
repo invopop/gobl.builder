@@ -1,12 +1,20 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "ES",
-  "uuid": "019d2fca-da37-721b-847a-e8ab54f31e9f",
+  "$addons": [
+    "es-tbai-v1"
+  ],
+  "uuid": "019d2fd4-e82b-7dfe-8bd4-e6d717129639",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
+  "tax": {
+    "ext": {
+      "es-tbai-region": "BI"
+    }
+  },
   "supplier": {
     "name": "Ingeniería Solar Madrid S.L.",
     "tax_id": {
@@ -65,7 +73,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-tbai-product": "services"
+          }
         }
       ],
       "total": "5382.00"
@@ -83,7 +94,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-tbai-product": "services"
+          }
         }
       ],
       "total": "7192.00"
@@ -102,7 +116,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-tbai-product": "services"
+          }
         }
       ],
       "total": "900.00"
@@ -133,6 +150,9 @@
           "rates": [
             {
               "key": "standard",
+              "ext": {
+                "es-tbai-product": "services"
+              },
               "base": "13474.00",
               "percent": "21.0%",
               "amount": "2829.54"
@@ -146,5 +166,11 @@
     "tax": "2829.54",
     "total_with_tax": "16303.54",
     "payable": "16303.54"
-  }
+  },
+  "notes": [
+    {
+      "key": "general",
+      "text": "Test invoice"
+    }
+  ]
 }

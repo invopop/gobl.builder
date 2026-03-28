@@ -1,35 +1,34 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
-  "$regime": "PT",
-  "uuid": "019d2fca-f29f-77f3-a902-9e617bb021cf",
-  "type": "credit-note",
+  "$regime": "PL",
+  "$addons": [
+    "pl-favat-v3"
+  ],
+  "uuid": "019d2fd4-f084-7d52-bc29-000ebce00fbf",
+  "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
-  "currency": "EUR",
-  "preceding": [
-    {
-      "uuid": "019d2fca-f29f-77db-a89b-2ca59e381193",
-      "type": "standard",
-      "issue_date": "2026-03-26",
-      "series": "MOCK",
-      "code": "54790"
+  "currency": "PLN",
+  "tax": {
+    "ext": {
+      "pl-favat-invoice-type": "VAT"
     }
-  ],
+  },
   "supplier": {
-    "name": "Alimentos do Algarve Lda.",
+    "name": "Poznańska Logistyka Sp. z o.o.",
     "tax_id": {
-      "country": "PT",
-      "code": "592278409"
+      "country": "PL",
+      "code": "6922784007"
     },
     "addresses": [
       {
-        "num": "129",
-        "street": "Rua Augusta",
-        "locality": "Porto",
-        "region": "Porto",
-        "code": "4000-007",
-        "country": "PT"
+        "num": "40",
+        "street": "ul. Piotrkowska",
+        "locality": "Kraków",
+        "region": "Małopolskie",
+        "code": "30-001",
+        "country": "PL"
       }
     ],
     "emails": [
@@ -39,19 +38,19 @@
     ]
   },
   "customer": {
-    "name": "Engenharia do Minho Lda.",
+    "name": "Bydgoska Elektronika Sp. z o.o.",
     "tax_id": {
-      "country": "PT",
-      "code": "396942300"
+      "country": "PL",
+      "code": "8942302337"
     },
     "addresses": [
       {
-        "num": "71",
-        "street": "Avenida dos Aliados",
-        "locality": "Faro",
-        "region": "Faro",
-        "code": "8000-001",
-        "country": "PT"
+        "num": "78",
+        "street": "ul. Marszałkowska",
+        "locality": "Kraków",
+        "region": "Małopolskie",
+        "code": "30-001",
+        "country": "PL"
       }
     ],
     "emails": [
@@ -63,12 +62,13 @@
   "lines": [
     {
       "i": 1,
-      "quantity": "18",
+      "quantity": "10",
       "item": {
-        "name": "Material eletrónico",
-        "price": "2200.00"
+        "name": "Doradztwo biznesowe",
+        "price": "350.00",
+        "unit": "h"
       },
-      "sum": "39600.00",
+      "sum": "3500.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -76,20 +76,21 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pl-favat-tax-category": "1"
           }
         }
       ],
-      "total": "39600.00"
+      "total": "3500.00"
     },
     {
       "i": 2,
-      "quantity": "8",
+      "quantity": "18",
       "item": {
-        "name": "Equipamento industrial",
-        "price": "3800.00"
+        "name": "Doradztwo biznesowe",
+        "price": "350.00",
+        "unit": "h"
       },
-      "sum": "30400.00",
+      "sum": "6300.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -97,21 +98,21 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pl-favat-tax-category": "1"
           }
         }
       ],
-      "total": "30400.00"
+      "total": "6300.00"
     },
     {
       "i": 3,
-      "quantity": "10",
+      "quantity": "16",
       "item": {
-        "name": "Consultoria de gestão",
-        "price": "85.00",
+        "name": "Rozwój oprogramowania",
+        "price": "280.00",
         "unit": "h"
       },
-      "sum": "850.00",
+      "sum": "4480.00",
       "taxes": [
         {
           "cat": "VAT",
@@ -119,11 +120,11 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pl-favat-tax-category": "1"
           }
         }
       ],
-      "total": "850.00"
+      "total": "4480.00"
     }
   ],
   "payment": {
@@ -135,15 +136,15 @@
       "key": "credit-transfer+sepa",
       "credit_transfer": [
         {
-          "iban": "PT41688749694038531667175",
+          "iban": "PL79596940385316671755267953",
           "name": "Bank Account"
         }
       ]
     }
   },
   "totals": {
-    "sum": "70850.00",
-    "total": "70850.00",
+    "sum": "14280.00",
+    "total": "14280.00",
     "taxes": {
       "categories": [
         {
@@ -152,20 +153,20 @@
             {
               "key": "standard",
               "ext": {
-                "pt-region": "PT"
+                "pl-favat-tax-category": "1"
               },
-              "base": "70850.00",
+              "base": "14280.00",
               "percent": "23.0%",
-              "amount": "16295.50"
+              "amount": "3284.40"
             }
           ],
-          "amount": "16295.50"
+          "amount": "3284.40"
         }
       ],
-      "sum": "16295.50"
+      "sum": "3284.40"
     },
-    "tax": "16295.50",
-    "total_with_tax": "87145.50",
-    "payable": "87145.50"
+    "tax": "3284.40",
+    "total_with_tax": "17564.40",
+    "payable": "17564.40"
   }
 }

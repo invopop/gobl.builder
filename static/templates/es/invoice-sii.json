@@ -1,12 +1,20 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "ES",
-  "uuid": "019d2fca-da37-721b-847a-e8ab54f31e9f",
+  "$addons": [
+    "es-sii-v1"
+  ],
+  "uuid": "019d2fd4-e697-77c0-bd4a-e9fa402af06e",
   "type": "standard",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
+  "tax": {
+    "ext": {
+      "es-sii-doc-type": "F1"
+    }
+  },
   "supplier": {
     "name": "Ingeniería Solar Madrid S.L.",
     "tax_id": {
@@ -65,7 +73,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-sii-regime": "01"
+          }
         }
       ],
       "total": "5382.00"
@@ -83,7 +94,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-sii-regime": "01"
+          }
         }
       ],
       "total": "7192.00"
@@ -102,7 +116,10 @@
           "cat": "VAT",
           "key": "standard",
           "rate": "general",
-          "percent": "21.0%"
+          "percent": "21.0%",
+          "ext": {
+            "es-sii-regime": "01"
+          }
         }
       ],
       "total": "900.00"
@@ -133,6 +150,9 @@
           "rates": [
             {
               "key": "standard",
+              "ext": {
+                "es-sii-regime": "01"
+              },
               "base": "13474.00",
               "percent": "21.0%",
               "amount": "2829.54"

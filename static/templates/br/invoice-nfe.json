@@ -1,0 +1,250 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "BR",
+  "$addons": [
+    "br-nfe-v4"
+  ],
+  "uuid": "019d2fd4-e0b7-77d3-9cea-a53c5d4f6c5a",
+  "type": "standard",
+  "series": "1",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "BRL",
+  "tax": {
+    "ext": {
+      "br-nfe-model": "55",
+      "br-nfe-presence": "1"
+    }
+  },
+  "supplier": {
+    "name": "Construtora Atlântica S.A.",
+    "tax_id": {
+      "country": "BR",
+      "code": "22784006913968"
+    },
+    "identities": [
+      {
+        "key": "br-nfe-state-reg",
+        "code": "110042490114"
+      }
+    ],
+    "addresses": [
+      {
+        "num": "183",
+        "street": "Avenida Brasil",
+        "locality": "Curitiba",
+        "region": "PR",
+        "state": "SP",
+        "code": "63810-512",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "br-ibge-municipality": "3550308"
+    }
+  },
+  "customer": {
+    "name": "Alimentos do Cerrado Ltda.",
+    "tax_id": {
+      "country": "BR",
+      "code": "23380354688718"
+    },
+    "addresses": [
+      {
+        "num": "198",
+        "street": "Rua Tiradentes",
+        "locality": "Curitiba",
+        "region": "PR",
+        "state": "SP",
+        "code": "28038-344",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "br-ibge-municipality": "3550308"
+    }
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "20",
+      "item": {
+        "name": "Consultoria de TI",
+        "price": "350.00",
+        "unit": "h",
+        "ext": {
+          "br-nfe-cfop": "5102"
+        }
+      },
+      "sum": "7000.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ICMS",
+          "percent": "18%"
+        },
+        {
+          "cat": "PIS",
+          "percent": "1.65%"
+        },
+        {
+          "cat": "COFINS",
+          "percent": "7.60%"
+        }
+      ],
+      "total": "7000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00",
+        "ext": {
+          "br-nfe-cfop": "5102"
+        }
+      },
+      "sum": "3200.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ICMS",
+          "percent": "18%"
+        },
+        {
+          "cat": "PIS",
+          "percent": "1.65%"
+        },
+        {
+          "cat": "COFINS",
+          "percent": "7.60%"
+        }
+      ],
+      "total": "3200.00"
+    },
+    {
+      "i": 3,
+      "quantity": "17",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00",
+        "ext": {
+          "br-nfe-cfop": "5102"
+        }
+      },
+      "sum": "54400.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ICMS",
+          "percent": "18%"
+        },
+        {
+          "cat": "PIS",
+          "percent": "1.65%"
+        },
+        {
+          "cat": "COFINS",
+          "percent": "7.60%"
+        }
+      ],
+      "total": "54400.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer",
+      "ext": {
+        "br-nfe-payment-means": "18"
+      }
+    }
+  },
+  "totals": {
+    "sum": "64600.00",
+    "total": "64600.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "IPI",
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "10%",
+              "amount": "6460.00"
+            }
+          ],
+          "amount": "6460.00"
+        },
+        {
+          "code": "ICMS",
+          "informative": true,
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "18%",
+              "amount": "11628.00"
+            }
+          ],
+          "amount": "11628.00"
+        },
+        {
+          "code": "PIS",
+          "informative": true,
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "1.65%",
+              "amount": "1065.90"
+            }
+          ],
+          "amount": "1065.90"
+        },
+        {
+          "code": "COFINS",
+          "informative": true,
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "7.60%",
+              "amount": "4909.60"
+            }
+          ],
+          "amount": "4909.60"
+        }
+      ],
+      "sum": "6460.00"
+    },
+    "tax": "6460.00",
+    "total_with_tax": "71060.00",
+    "payable": "71060.00"
+  },
+  "notes": [
+    {
+      "key": "reason",
+      "text": "Venda de mercadoria"
+    }
+  ]
+}

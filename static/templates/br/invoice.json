@@ -1,0 +1,137 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "BR",
+  "uuid": "019d2fca-d207-7305-96ca-763576082c6b",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "BRL",
+  "supplier": {
+    "name": "Construtora Atlântica S.A.",
+    "tax_id": {
+      "country": "BR",
+      "code": "22784006913968"
+    },
+    "addresses": [
+      {
+        "num": "183",
+        "street": "Avenida Brasil",
+        "locality": "Curitiba",
+        "region": "PR",
+        "code": "63810-512",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Alimentos do Cerrado Ltda.",
+    "tax_id": {
+      "country": "BR",
+      "code": "23380354688718"
+    },
+    "addresses": [
+      {
+        "num": "198",
+        "street": "Rua Tiradentes",
+        "locality": "Curitiba",
+        "region": "PR",
+        "code": "28038-344",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "20",
+      "item": {
+        "name": "Consultoria de TI",
+        "price": "350.00",
+        "unit": "h"
+      },
+      "sum": "7000.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        }
+      ],
+      "total": "7000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00"
+      },
+      "sum": "3200.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        }
+      ],
+      "total": "3200.00"
+    },
+    {
+      "i": 3,
+      "quantity": "17",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00"
+      },
+      "sum": "54400.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        }
+      ],
+      "total": "54400.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "64600.00",
+    "total": "64600.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "IPI",
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "10%",
+              "amount": "6460.00"
+            }
+          ],
+          "amount": "6460.00"
+        }
+      ],
+      "sum": "6460.00"
+    },
+    "tax": "6460.00",
+    "total_with_tax": "71060.00",
+    "payable": "71060.00"
+  }
+}

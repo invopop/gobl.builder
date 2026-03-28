@@ -1,21 +1,22 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "PT",
-  "uuid": "019d2fca-f29f-77f3-a902-9e617bb021cf",
-  "type": "credit-note",
-  "series": "MOCK",
+  "$addons": [
+    "pt-saft-v1"
+  ],
+  "uuid": "019d2fd4-f231-7e7e-adfb-57a0621a2c99",
+  "type": "standard",
+  "series": "FT MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
+  "value_date": "2026-03-27",
   "currency": "EUR",
-  "preceding": [
-    {
-      "uuid": "019d2fca-f29f-77db-a89b-2ca59e381193",
-      "type": "standard",
-      "issue_date": "2026-03-26",
-      "series": "MOCK",
-      "code": "54790"
+  "tax": {
+    "ext": {
+      "pt-saft-invoice-type": "FT",
+      "pt-saft-source": "P"
     }
-  ],
+  },
   "supplier": {
     "name": "Alimentos do Algarve Lda.",
     "tax_id": {
@@ -66,7 +67,11 @@
       "quantity": "18",
       "item": {
         "name": "Material eletrónico",
-        "price": "2200.00"
+        "price": "2200.00",
+        "unit": "one",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
       },
       "sum": "39600.00",
       "taxes": [
@@ -76,7 +81,8 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
           }
         }
       ],
@@ -87,7 +93,11 @@
       "quantity": "8",
       "item": {
         "name": "Equipamento industrial",
-        "price": "3800.00"
+        "price": "3800.00",
+        "unit": "one",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
       },
       "sum": "30400.00",
       "taxes": [
@@ -97,7 +107,8 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
           }
         }
       ],
@@ -109,7 +120,10 @@
       "item": {
         "name": "Consultoria de gestão",
         "price": "85.00",
-        "unit": "h"
+        "unit": "h",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
       },
       "sum": "850.00",
       "taxes": [
@@ -119,7 +133,8 @@
           "rate": "general",
           "percent": "23.0%",
           "ext": {
-            "pt-region": "PT"
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
           }
         }
       ],
@@ -152,7 +167,8 @@
             {
               "key": "standard",
               "ext": {
-                "pt-region": "PT"
+                "pt-region": "PT",
+                "pt-saft-tax-rate": "NOR"
               },
               "base": "70850.00",
               "percent": "23.0%",

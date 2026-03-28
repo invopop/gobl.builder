@@ -1,12 +1,21 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "ES",
-  "uuid": "019d2fca-da37-721b-847a-e8ab54f31e9f",
-  "type": "standard",
+  "uuid": "019d2fca-ef08-74de-a55e-463ec30e1c79",
+  "type": "credit-note",
   "series": "MOCK",
   "code": "61929",
   "issue_date": "2026-03-27",
   "currency": "EUR",
+  "preceding": [
+    {
+      "uuid": "019d2fca-ef08-74c6-9570-483448e19c6b",
+      "type": "standard",
+      "issue_date": "2026-03-26",
+      "series": "MOCK",
+      "code": "50291"
+    }
+  ],
   "supplier": {
     "name": "Ingeniería Solar Madrid S.L.",
     "tax_id": {

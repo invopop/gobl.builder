@@ -1,0 +1,197 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "BR",
+  "$addons": [
+    "br-nfse-v1"
+  ],
+  "uuid": "019d2fd4-e271-79f2-85aa-d61ac23befc8",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "BRL",
+  "supplier": {
+    "name": "Construtora Atlântica S.A.",
+    "tax_id": {
+      "country": "BR",
+      "code": "22784006913968"
+    },
+    "identities": [
+      {
+        "key": "br-nfse-municipal-reg",
+        "code": "12345678"
+      }
+    ],
+    "addresses": [
+      {
+        "num": "183",
+        "street": "Avenida Brasil",
+        "locality": "Curitiba",
+        "region": "PR",
+        "state": "SP",
+        "code": "63810-512",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "br-ibge-municipality": "3550308",
+      "br-nfse-fiscal-incentive": "2",
+      "br-nfse-simples": "2"
+    }
+  },
+  "customer": {
+    "name": "Alimentos do Cerrado Ltda.",
+    "tax_id": {
+      "country": "BR",
+      "code": "23380354688718"
+    },
+    "addresses": [
+      {
+        "num": "198",
+        "street": "Rua Tiradentes",
+        "locality": "Curitiba",
+        "region": "PR",
+        "code": "28038-344",
+        "country": "BR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "20",
+      "item": {
+        "name": "Consultoria de TI",
+        "price": "350.00",
+        "unit": "h",
+        "ext": {
+          "br-nfse-service": "01.07"
+        }
+      },
+      "sum": "7000.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ISS",
+          "percent": "5%",
+          "ext": {
+            "br-nfse-iss-liability": "1"
+          }
+        }
+      ],
+      "total": "7000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00",
+        "ext": {
+          "br-nfse-service": "01.07"
+        }
+      },
+      "sum": "3200.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ISS",
+          "percent": "5%",
+          "ext": {
+            "br-nfse-iss-liability": "1"
+          }
+        }
+      ],
+      "total": "3200.00"
+    },
+    {
+      "i": 3,
+      "quantity": "17",
+      "item": {
+        "name": "Equipamento de rede",
+        "price": "3200.00",
+        "ext": {
+          "br-nfse-service": "01.07"
+        }
+      },
+      "sum": "54400.00",
+      "taxes": [
+        {
+          "cat": "IPI",
+          "percent": "10%"
+        },
+        {
+          "cat": "ISS",
+          "percent": "5%",
+          "ext": {
+            "br-nfse-iss-liability": "1"
+          }
+        }
+      ],
+      "total": "54400.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "64600.00",
+    "total": "64600.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "IPI",
+          "rates": [
+            {
+              "base": "64600.00",
+              "percent": "10%",
+              "amount": "6460.00"
+            }
+          ],
+          "amount": "6460.00"
+        },
+        {
+          "code": "ISS",
+          "informative": true,
+          "rates": [
+            {
+              "ext": {
+                "br-nfse-iss-liability": "1"
+              },
+              "base": "64600.00",
+              "percent": "5%",
+              "amount": "3230.00"
+            }
+          ],
+          "amount": "3230.00"
+        }
+      ],
+      "sum": "6460.00"
+    },
+    "tax": "6460.00",
+    "total_with_tax": "71060.00",
+    "payable": "71060.00"
+  }
+}
