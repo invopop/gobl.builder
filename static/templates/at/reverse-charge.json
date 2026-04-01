@@ -1,160 +1,150 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-5be3-7781-a87c-59a8213e1519",
-    "dig": {
-      "alg": "sha256",
-      "val": "d5947880bb7420fd8d9dbc932cad395ede91f8f735c744800f6e2ce182db05af"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "AT",
-    "$tags": ["reverse-charge"],
-    "uuid": "019d4541-5be3-7799-8709-660290dda82f",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Tiroler Holzverarbeitung OG",
-      "tax_id": {
-        "country": "AT",
-        "code": "U59227848"
-      },
-      "addresses": [
-        {
-          "num": "11",
-          "street": "Kärntner Straße",
-          "locality": "Graz",
-          "region": "Steiermark",
-          "code": "8010",
-          "country": "AT"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "AT",
+  "$tags": ["reverse-charge"],
+  "uuid": "019d4541-5be3-7799-8709-660290dda82f",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Tiroler Holzverarbeitung OG",
+    "tax_id": {
+      "country": "AT",
+      "code": "U59227848"
     },
-    "customer": {
-      "name": "Hamburg Port Services AG",
-      "tax_id": {
-        "country": "DE",
-        "code": "671755261"
-      },
-      "addresses": [
-        {
-          "num": "191",
-          "street": "Bahnhofstraße",
-          "locality": "Berlin",
-          "region": "Berlin",
-          "code": "10115",
-          "country": "DE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "8",
-        "item": {
-          "name": "Büroausstattung",
-          "price": "650.00"
-        },
-        "sum": "5200.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "5200.00"
-      },
-      {
-        "i": 2,
-        "quantity": "18",
-        "item": {
-          "name": "Industriemotor",
-          "price": "2400.00"
-        },
-        "sum": "43200.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "43200.00"
-      },
-      {
-        "i": 3,
-        "quantity": "8",
-        "item": {
-          "name": "Präzisionswerkzeug",
-          "price": "890.00"
-        },
-        "sum": "7120.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "7120.00"
+        "num": "11",
+        "street": "Kärntner Straße",
+        "locality": "Graz",
+        "region": "Steiermark",
+        "code": "8010",
+        "country": "AT"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "AT505468874969403853",
-            "name": "Bank Account"
-          }
-        ]
-      }
-    },
-    "totals": {
-      "sum": "55520.00",
-      "total": "55520.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "reverse-charge",
-                "base": "55520.00",
-                "amount": "0.00"
-              }
-            ],
-            "amount": "0.00"
-          }
-        ],
-        "sum": "0.00"
-      },
-      "tax": "0.00",
-      "total_with_tax": "55520.00",
-      "payable": "55520.00"
-    },
-    "notes": [
+    "emails": [
       {
-        "key": "legal",
-        "src": "reverse-charge",
-        "text": "Reverse charge: Customer to account for VAT to the relevant tax authority."
+        "addr": "billing@example.com"
       }
     ]
-  }
+  },
+  "customer": {
+    "name": "Hamburg Port Services AG",
+    "tax_id": {
+      "country": "DE",
+      "code": "671755261"
+    },
+    "addresses": [
+      {
+        "num": "191",
+        "street": "Bahnhofstraße",
+        "locality": "Berlin",
+        "region": "Berlin",
+        "code": "10115",
+        "country": "DE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "8",
+      "item": {
+        "name": "Büroausstattung",
+        "price": "650.00"
+      },
+      "sum": "5200.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "5200.00"
+    },
+    {
+      "i": 2,
+      "quantity": "18",
+      "item": {
+        "name": "Industriemotor",
+        "price": "2400.00"
+      },
+      "sum": "43200.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "43200.00"
+    },
+    {
+      "i": 3,
+      "quantity": "8",
+      "item": {
+        "name": "Präzisionswerkzeug",
+        "price": "890.00"
+      },
+      "sum": "7120.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "7120.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "AT505468874969403853",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "55520.00",
+    "total": "55520.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "reverse-charge",
+              "base": "55520.00",
+              "amount": "0.00"
+            }
+          ],
+          "amount": "0.00"
+        }
+      ],
+      "sum": "0.00"
+    },
+    "tax": "0.00",
+    "total_with_tax": "55520.00",
+    "payable": "55520.00"
+  },
+  "notes": [
+    {
+      "key": "legal",
+      "src": "reverse-charge",
+      "text": "Reverse charge: Customer to account for VAT to the relevant tax authority."
+    }
+  ]
 }

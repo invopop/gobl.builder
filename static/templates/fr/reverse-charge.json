@@ -1,162 +1,152 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-5ac7-77df-83ac-213cea0bdd0a",
-    "dig": {
-      "alg": "sha256",
-      "val": "5352056d1dca992e3b696f1ce4f83a4d992c5e7eafffa2fcd8134907f7e8f0c9"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "FR",
-    "$tags": ["reverse-charge"],
-    "uuid": "019d4541-5ac7-77fa-af24-97784e13c502",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Bretagne Agroalimentaire SAS",
-      "tax_id": {
-        "country": "FR",
-        "code": "92192278406"
-      },
-      "addresses": [
-        {
-          "num": "185",
-          "street": "Rue de Rivoli",
-          "locality": "Lyon",
-          "region": "Auvergne-Rhône-Alpes",
-          "code": "69002",
-          "country": "FR"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "FR",
+  "$tags": ["reverse-charge"],
+  "uuid": "019d4541-5ac7-77fa-af24-97784e13c502",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Bretagne Agroalimentaire SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "92192278406"
     },
-    "customer": {
-      "name": "Ardennen Houtindustrie SA",
-      "tax_id": {
-        "country": "BE",
-        "code": "0549126205"
-      },
-      "addresses": [
-        {
-          "num": "39",
-          "street": "Grote Markt",
-          "locality": "Liège",
-          "region": "Wallonie",
-          "code": "4000",
-          "country": "BE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "8",
-        "item": {
-          "name": "Équipement industriel",
-          "price": "2400.00"
-        },
-        "sum": "19200.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "19200.00"
-      },
-      {
-        "i": 2,
-        "quantity": "10",
-        "item": {
-          "name": "Conseil en stratégie",
-          "price": "150.00",
-          "unit": "h"
-        },
-        "sum": "1500.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "1500.00"
-      },
-      {
-        "i": 3,
-        "quantity": "18",
-        "item": {
-          "name": "Conseil en stratégie",
-          "price": "150.00",
-          "unit": "h"
-        },
-        "sum": "2700.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "2700.00"
+        "num": "185",
+        "street": "Rue de Rivoli",
+        "locality": "Lyon",
+        "region": "Auvergne-Rhône-Alpes",
+        "code": "69002",
+        "country": "FR"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "FR3287496940385316671755267",
-            "name": "Bank Account"
-          }
-        ]
-      }
-    },
-    "totals": {
-      "sum": "23400.00",
-      "total": "23400.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "reverse-charge",
-                "base": "23400.00",
-                "amount": "0.00"
-              }
-            ],
-            "amount": "0.00"
-          }
-        ],
-        "sum": "0.00"
-      },
-      "tax": "0.00",
-      "total_with_tax": "23400.00",
-      "payable": "23400.00"
-    },
-    "notes": [
+    "emails": [
       {
-        "key": "legal",
-        "src": "reverse-charge",
-        "text": "Reverse Charge / Autoliquidation de la TVA - Article 283-1 du CGI. Le client est redevable de la TVA."
+        "addr": "billing@example.com"
       }
     ]
-  }
+  },
+  "customer": {
+    "name": "Ardennen Houtindustrie SA",
+    "tax_id": {
+      "country": "BE",
+      "code": "0549126205"
+    },
+    "addresses": [
+      {
+        "num": "39",
+        "street": "Grote Markt",
+        "locality": "Liège",
+        "region": "Wallonie",
+        "code": "4000",
+        "country": "BE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "8",
+      "item": {
+        "name": "Équipement industriel",
+        "price": "2400.00"
+      },
+      "sum": "19200.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "19200.00"
+    },
+    {
+      "i": 2,
+      "quantity": "10",
+      "item": {
+        "name": "Conseil en stratégie",
+        "price": "150.00",
+        "unit": "h"
+      },
+      "sum": "1500.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "1500.00"
+    },
+    {
+      "i": 3,
+      "quantity": "18",
+      "item": {
+        "name": "Conseil en stratégie",
+        "price": "150.00",
+        "unit": "h"
+      },
+      "sum": "2700.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "2700.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "FR3287496940385316671755267",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "23400.00",
+    "total": "23400.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "reverse-charge",
+              "base": "23400.00",
+              "amount": "0.00"
+            }
+          ],
+          "amount": "0.00"
+        }
+      ],
+      "sum": "0.00"
+    },
+    "tax": "0.00",
+    "total_with_tax": "23400.00",
+    "payable": "23400.00"
+  },
+  "notes": [
+    {
+      "key": "legal",
+      "src": "reverse-charge",
+      "text": "Reverse Charge / Autoliquidation de la TVA - Article 283-1 du CGI. Le client est redevable de la TVA."
+    }
+  ]
 }

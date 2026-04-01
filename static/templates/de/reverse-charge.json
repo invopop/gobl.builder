@@ -1,161 +1,151 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-59b2-7651-be82-3abe40b29042",
-    "dig": {
-      "alg": "sha256",
-      "val": "000562b1f94551a6dbdccb1fbf11341bc7853324ef01afae934bddc3fc4147f1"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "DE",
-    "$tags": ["reverse-charge"],
-    "uuid": "019d4541-59b2-7664-a099-4376f4daab3d",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Weber Maschinenbau GmbH",
-      "tax_id": {
-        "country": "DE",
-        "code": "592278402"
-      },
-      "addresses": [
-        {
-          "num": "129",
-          "street": "Friedrichstraße",
-          "locality": "München",
-          "region": "Bayern",
-          "code": "80331",
-          "country": "DE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "DE",
+  "$tags": ["reverse-charge"],
+  "uuid": "019d4541-59b2-7664-a099-4376f4daab3d",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Weber Maschinenbau GmbH",
+    "tax_id": {
+      "country": "DE",
+      "code": "592278402"
     },
-    "customer": {
-      "name": "Limburgse Chemie N.V.",
-      "tax_id": {
-        "country": "NL",
-        "code": "552679537B53"
-      },
-      "addresses": [
-        {
-          "num": "197",
-          "street": "Lange Voorhout",
-          "locality": "Amsterdam",
-          "region": "Noord-Holland",
-          "code": "1012",
-          "country": "NL"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "18",
-        "item": {
-          "name": "Netzwerk Switch",
-          "price": "279.00"
-        },
-        "sum": "5022.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "5022.00"
-      },
-      {
-        "i": 2,
-        "quantity": "8",
-        "item": {
-          "name": "Laptop Business Pro",
-          "price": "1299.00"
-        },
-        "sum": "10392.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "10392.00"
-      },
-      {
-        "i": 3,
-        "quantity": "10",
-        "item": {
-          "name": "IT-Beratung",
-          "price": "120.00",
-          "unit": "h"
-        },
-        "sum": "1200.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "reverse-charge"
-          }
-        ],
-        "total": "1200.00"
+        "num": "129",
+        "street": "Friedrichstraße",
+        "locality": "München",
+        "region": "Bayern",
+        "code": "80331",
+        "country": "DE"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "DE08688749694038531667",
-            "name": "Bank Account"
-          }
-        ]
-      }
-    },
-    "totals": {
-      "sum": "16614.00",
-      "total": "16614.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "reverse-charge",
-                "base": "16614.00",
-                "amount": "0.00"
-              }
-            ],
-            "amount": "0.00"
-          }
-        ],
-        "sum": "0.00"
-      },
-      "tax": "0.00",
-      "total_with_tax": "16614.00",
-      "payable": "16614.00"
-    },
-    "notes": [
+    "emails": [
       {
-        "key": "legal",
-        "src": "reverse-charge",
-        "text": "Reverse Charge / Umkehr der Steuerschuld."
+        "addr": "billing@example.com"
       }
     ]
-  }
+  },
+  "customer": {
+    "name": "Limburgse Chemie N.V.",
+    "tax_id": {
+      "country": "NL",
+      "code": "552679537B53"
+    },
+    "addresses": [
+      {
+        "num": "197",
+        "street": "Lange Voorhout",
+        "locality": "Amsterdam",
+        "region": "Noord-Holland",
+        "code": "1012",
+        "country": "NL"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "18",
+      "item": {
+        "name": "Netzwerk Switch",
+        "price": "279.00"
+      },
+      "sum": "5022.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "5022.00"
+    },
+    {
+      "i": 2,
+      "quantity": "8",
+      "item": {
+        "name": "Laptop Business Pro",
+        "price": "1299.00"
+      },
+      "sum": "10392.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "10392.00"
+    },
+    {
+      "i": 3,
+      "quantity": "10",
+      "item": {
+        "name": "IT-Beratung",
+        "price": "120.00",
+        "unit": "h"
+      },
+      "sum": "1200.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "reverse-charge"
+        }
+      ],
+      "total": "1200.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "DE08688749694038531667",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "16614.00",
+    "total": "16614.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "reverse-charge",
+              "base": "16614.00",
+              "amount": "0.00"
+            }
+          ],
+          "amount": "0.00"
+        }
+      ],
+      "sum": "0.00"
+    },
+    "tax": "0.00",
+    "total_with_tax": "16614.00",
+    "payable": "16614.00"
+  },
+  "notes": [
+    {
+      "key": "legal",
+      "src": "reverse-charge",
+      "text": "Reverse Charge / Umkehr der Steuerschuld."
+    }
+  ]
 }

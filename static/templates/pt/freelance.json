@@ -1,222 +1,212 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-4611-7a39-9113-c2fe2cc3b23d",
-    "dig": {
-      "alg": "sha256",
-      "val": "a9236306a733801d4e9861aab361640d6ccb56adb346558c80cf04a5ec555e7c"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "PT",
-    "uuid": "019d4541-4611-7a4c-9a7d-723e4393118f",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Alimentos do Algarve Lda.",
-      "tax_id": {
-        "country": "PT",
-        "code": "592278409"
-      },
-      "people": [
-        {
-          "name": {
-            "given": "Ana",
-            "surname": "Silva"
-          },
-          "emails": [
-            {
-              "addr": "contact@example.com"
-            }
-          ]
-        }
-      ],
-      "addresses": [
-        {
-          "num": "129",
-          "street": "Rua Augusta",
-          "locality": "Porto",
-          "region": "Porto",
-          "code": "4000-007",
-          "country": "PT"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "PT",
+  "uuid": "019d4541-4611-7a4c-9a7d-723e4393118f",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Alimentos do Algarve Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "592278409"
     },
-    "customer": {
-      "name": "Engenharia do Minho Lda.",
-      "tax_id": {
-        "country": "PT",
-        "code": "396942300"
-      },
-      "addresses": [
-        {
-          "num": "71",
-          "street": "Avenida dos Aliados",
-          "locality": "Faro",
-          "region": "Faro",
-          "code": "8000-001",
-          "country": "PT"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "people": [
       {
-        "i": 1,
-        "quantity": "60",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
+        "name": {
+          "given": "Ana",
+          "surname": "Silva"
         },
-        "item": {
-          "name": "Consultoria empresarial",
-          "price": "50.00",
-          "unit": "h"
-        },
-        "sum": "3000.00",
-        "taxes": [
+        "emails": [
           {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "23.0%",
-            "ext": {
-              "pt-region": "PT"
-            }
+            "addr": "contact@example.com"
           }
-        ],
-        "total": "3000.00"
-      },
-      {
-        "i": 2,
-        "quantity": "40",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Desenvolvimento de software",
-          "price": "60.00",
-          "unit": "h"
-        },
-        "sum": "2400.00",
-        "discounts": [
-          {
-            "reason": "Discount",
-            "percent": "10%",
-            "amount": "240.00"
-          }
-        ],
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "23.0%",
-            "ext": {
-              "pt-region": "PT"
-            }
-          }
-        ],
-        "total": "2160.00"
-      },
-      {
-        "i": 3,
-        "quantity": "40",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Desenvolvimento de software",
-          "price": "60.00",
-          "unit": "h"
-        },
-        "sum": "2400.00",
-        "discounts": [
-          {
-            "reason": "Discount",
-            "percent": "10%",
-            "amount": "240.00"
-          }
-        ],
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "23.0%",
-            "ext": {
-              "pt-region": "PT"
-            }
-          }
-        ],
-        "total": "2160.00"
+        ]
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "due-date",
-        "due_dates": [
-          {
-            "date": "2026-05-01",
-            "amount": "9003.60",
-            "percent": "100%"
-          }
-        ]
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "PT41688749694038531667175",
-            "name": "Bank Account"
-          }
-        ]
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Rua Augusta",
+        "locality": "Porto",
+        "region": "Porto",
+        "code": "4000-007",
+        "country": "PT"
       }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Engenharia do Minho Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "396942300"
     },
-    "totals": {
-      "sum": "7320.00",
-      "total": "7320.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "ext": {
-                  "pt-region": "PT"
-                },
-                "base": "7320.00",
-                "percent": "23.0%",
-                "amount": "1683.60"
-              }
-            ],
-            "amount": "1683.60"
-          }
-        ],
-        "sum": "1683.60"
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Avenida dos Aliados",
+        "locality": "Faro",
+        "region": "Faro",
+        "code": "8000-001",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "60",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
       },
-      "tax": "1683.60",
-      "total_with_tax": "9003.60",
-      "payable": "9003.60"
+      "item": {
+        "name": "Consultoria empresarial",
+        "price": "50.00",
+        "unit": "h"
+      },
+      "sum": "3000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "3000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "40",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Desenvolvimento de software",
+        "price": "60.00",
+        "unit": "h"
+      },
+      "sum": "2400.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "240.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "2160.00"
+    },
+    {
+      "i": 3,
+      "quantity": "40",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Desenvolvimento de software",
+        "price": "60.00",
+        "unit": "h"
+      },
+      "sum": "2400.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "240.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "2160.00"
     }
+  ],
+  "payment": {
+    "terms": {
+      "key": "due-date",
+      "due_dates": [
+        {
+          "date": "2026-05-01",
+          "amount": "9003.60",
+          "percent": "100%"
+        }
+      ]
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "PT41688749694038531667175",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "7320.00",
+    "total": "7320.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "pt-region": "PT"
+              },
+              "base": "7320.00",
+              "percent": "23.0%",
+              "amount": "1683.60"
+            }
+          ],
+          "amount": "1683.60"
+        }
+      ],
+      "sum": "1683.60"
+    },
+    "tax": "1683.60",
+    "total_with_tax": "9003.60",
+    "payable": "9003.60"
   }
 }

@@ -1,203 +1,193 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-4c92-7868-840c-c95f386e8479",
-    "dig": {
-      "alg": "sha256",
-      "val": "c847fd49a160635f4175a8a1106ad93310830fec6cd535b0a98c8fb2f8b85e01"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "CH",
-    "uuid": "019d4541-4c92-787b-879a-3a2d6648faf9",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "CHF",
-    "supplier": {
-      "name": "Basler Pharmaindustrie AG",
-      "tax_id": {
-        "country": "CH",
-        "code": "E069139694"
-      },
-      "people": [
-        {
-          "name": {
-            "given": "Lea",
-            "surname": "Mueller"
-          },
-          "emails": [
-            {
-              "addr": "contact@example.com"
-            }
-          ]
-        }
-      ],
-      "addresses": [
-        {
-          "num": "57",
-          "street": "Freie Strasse",
-          "locality": "Genève",
-          "region": "GE",
-          "code": "1201",
-          "country": "CH"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "CH",
+  "uuid": "019d4541-4c92-787b-879a-3a2d6648faf9",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "CHF",
+  "supplier": {
+    "name": "Basler Pharmaindustrie AG",
+    "tax_id": {
+      "country": "CH",
+      "code": "E069139694"
     },
-    "customer": {
-      "name": "Luzerner Lebensmittel GmbH",
-      "tax_id": {
-        "country": "CH",
-        "code": "E233803544"
-      },
-      "addresses": [
-        {
-          "num": "176",
-          "street": "Marktgasse",
-          "locality": "Genève",
-          "region": "GE",
-          "code": "1201",
-          "country": "CH"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "people": [
       {
-        "i": 1,
-        "quantity": "32",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
+        "name": {
+          "given": "Lea",
+          "surname": "Mueller"
         },
-        "item": {
-          "name": "Unternehmensberatung",
-          "price": "110.00",
-          "unit": "h"
-        },
-        "sum": "3520.00",
-        "taxes": [
+        "emails": [
           {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "8.1%"
+            "addr": "contact@example.com"
           }
-        ],
-        "total": "3520.00"
-      },
-      {
-        "i": 2,
-        "quantity": "160",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Softwareentwicklung",
-          "price": "120.00",
-          "unit": "h"
-        },
-        "sum": "19200.00",
-        "discounts": [
-          {
-            "reason": "Discount",
-            "percent": "10%",
-            "amount": "1920.00"
-          }
-        ],
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "8.1%"
-          }
-        ],
-        "total": "17280.00"
-      },
-      {
-        "i": 3,
-        "quantity": "60",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Unternehmensberatung",
-          "price": "110.00",
-          "unit": "h"
-        },
-        "sum": "6600.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "8.1%"
-          }
-        ],
-        "total": "6600.00"
+        ]
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "due-date",
-        "due_dates": [
-          {
-            "date": "2026-05-01",
-            "amount": "29619.40",
-            "percent": "100%"
-          }
-        ]
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "CH3950385316671755267",
-            "name": "Bank Account"
-          }
-        ]
+    "addresses": [
+      {
+        "num": "57",
+        "street": "Freie Strasse",
+        "locality": "Genève",
+        "region": "GE",
+        "code": "1201",
+        "country": "CH"
       }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Luzerner Lebensmittel GmbH",
+    "tax_id": {
+      "country": "CH",
+      "code": "E233803544"
     },
-    "totals": {
-      "sum": "27400.00",
-      "total": "27400.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "27400.00",
-                "percent": "8.1%",
-                "amount": "2219.40"
-              }
-            ],
-            "amount": "2219.40"
-          }
-        ],
-        "sum": "2219.40"
+    "addresses": [
+      {
+        "num": "176",
+        "street": "Marktgasse",
+        "locality": "Genève",
+        "region": "GE",
+        "code": "1201",
+        "country": "CH"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "32",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
       },
-      "tax": "2219.40",
-      "total_with_tax": "29619.40",
-      "payable": "29619.40"
+      "item": {
+        "name": "Unternehmensberatung",
+        "price": "110.00",
+        "unit": "h"
+      },
+      "sum": "3520.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "8.1%"
+        }
+      ],
+      "total": "3520.00"
+    },
+    {
+      "i": 2,
+      "quantity": "160",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Softwareentwicklung",
+        "price": "120.00",
+        "unit": "h"
+      },
+      "sum": "19200.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "1920.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "8.1%"
+        }
+      ],
+      "total": "17280.00"
+    },
+    {
+      "i": 3,
+      "quantity": "60",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Unternehmensberatung",
+        "price": "110.00",
+        "unit": "h"
+      },
+      "sum": "6600.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "8.1%"
+        }
+      ],
+      "total": "6600.00"
     }
+  ],
+  "payment": {
+    "terms": {
+      "key": "due-date",
+      "due_dates": [
+        {
+          "date": "2026-05-01",
+          "amount": "29619.40",
+          "percent": "100%"
+        }
+      ]
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "CH3950385316671755267",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "27400.00",
+    "total": "27400.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "27400.00",
+              "percent": "8.1%",
+              "amount": "2219.40"
+            }
+          ],
+          "amount": "2219.40"
+        }
+      ],
+      "sum": "2219.40"
+    },
+    "tax": "2219.40",
+    "total_with_tax": "29619.40",
+    "payable": "29619.40"
   }
 }

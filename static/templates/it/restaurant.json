@@ -1,188 +1,178 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-4fd0-7664-b792-03d4b42a4f7a",
-    "dig": {
-      "alg": "sha256",
-      "val": "4181bc4b9e99ef786100a0d725e108af75dee17f28d5e89547f557b319177361"
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IT",
+  "$addons": ["it-sdi-v1"],
+  "uuid": "019d4541-4fd0-7674-b3da-dd33338e3365",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "tax": {
+    "ext": {
+      "it-sdi-document-type": "TD01",
+      "it-sdi-format": "FPR12"
     }
   },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "IT",
-    "$addons": ["it-sdi-v1"],
-    "uuid": "019d4541-4fd0-7674-b3da-dd33338e3365",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "tax": {
-      "ext": {
-        "it-sdi-document-type": "TD01",
-        "it-sdi-format": "FPR12"
-      }
+  "supplier": {
+    "name": "Logistica Adriatica S.r.l.",
+    "tax_id": {
+      "country": "IT",
+      "code": "99227840065"
     },
-    "supplier": {
-      "name": "Logistica Adriatica S.r.l.",
-      "tax_id": {
-        "country": "IT",
-        "code": "99227840065"
-      },
-      "addresses": [
-        {
-          "num": "79",
-          "street": "Via Roma",
-          "locality": "Milano",
-          "region": "Lombardia",
-          "code": "20121",
-          "country": "IT"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ],
-      "ext": {
-        "it-sdi-fiscal-regime": "RF01"
-      }
-    },
-    "customer": {
-      "name": "Tessile Milanese S.r.l.",
-      "tax_id": {
-        "country": "IT",
-        "code": "44230233809"
-      },
-      "addresses": [
-        {
-          "num": "96",
-          "street": "Via Giuseppe Garibaldi",
-          "locality": "Firenze",
-          "region": "Toscana",
-          "code": "50123",
-          "country": "IT"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "1",
-        "item": {
-          "name": "Vino della casa",
-          "price": "20.00"
-        },
-        "sum": "20.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "22.0%"
-          }
-        ],
-        "total": "20.00"
-      },
-      {
-        "i": 2,
-        "quantity": "3",
-        "item": {
-          "name": "Antipasto",
-          "price": "12.00"
-        },
-        "sum": "36.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "intermediate",
-            "percent": "10.0%"
-          }
-        ],
-        "total": "36.00"
-      },
-      {
-        "i": 3,
-        "quantity": "3",
-        "item": {
-          "name": "Dolce",
-          "price": "8.00"
-        },
-        "sum": "24.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "intermediate",
-            "percent": "10.0%"
-          }
-        ],
-        "total": "24.00"
+        "num": "79",
+        "street": "Via Roma",
+        "locality": "Milano",
+        "region": "Lombardia",
+        "code": "20121",
+        "country": "IT"
       }
     ],
-    "charges": [
+    "emails": [
       {
-        "i": 1,
-        "key": "handling",
-        "reason": "Service charge",
-        "percent": "10.0%",
-        "amount": "8.00"
+        "addr": "billing@example.com"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "IT4469403853166717552679535",
-            "name": "Bank Account"
-          }
-        ],
-        "ext": {
-          "it-sdi-payment-means": "MP05"
-        }
-      }
-    },
-    "totals": {
-      "sum": "80.00",
-      "charge": "8.00",
-      "total": "88.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "20.00",
-                "percent": "22.0%",
-                "amount": "4.40"
-              },
-              {
-                "key": "standard",
-                "base": "60.00",
-                "percent": "10.0%",
-                "amount": "6.00"
-              }
-            ],
-            "amount": "10.40"
-          }
-        ],
-        "sum": "10.40"
-      },
-      "tax": "10.40",
-      "total_with_tax": "98.40",
-      "payable": "98.40"
+    "ext": {
+      "it-sdi-fiscal-regime": "RF01"
     }
+  },
+  "customer": {
+    "name": "Tessile Milanese S.r.l.",
+    "tax_id": {
+      "country": "IT",
+      "code": "44230233809"
+    },
+    "addresses": [
+      {
+        "num": "96",
+        "street": "Via Giuseppe Garibaldi",
+        "locality": "Firenze",
+        "region": "Toscana",
+        "code": "50123",
+        "country": "IT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Vino della casa",
+        "price": "20.00"
+      },
+      "sum": "20.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "22.0%"
+        }
+      ],
+      "total": "20.00"
+    },
+    {
+      "i": 2,
+      "quantity": "3",
+      "item": {
+        "name": "Antipasto",
+        "price": "12.00"
+      },
+      "sum": "36.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "intermediate",
+          "percent": "10.0%"
+        }
+      ],
+      "total": "36.00"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "item": {
+        "name": "Dolce",
+        "price": "8.00"
+      },
+      "sum": "24.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "intermediate",
+          "percent": "10.0%"
+        }
+      ],
+      "total": "24.00"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "handling",
+      "reason": "Service charge",
+      "percent": "10.0%",
+      "amount": "8.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "IT4469403853166717552679535",
+          "name": "Bank Account"
+        }
+      ],
+      "ext": {
+        "it-sdi-payment-means": "MP05"
+      }
+    }
+  },
+  "totals": {
+    "sum": "80.00",
+    "charge": "8.00",
+    "total": "88.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "20.00",
+              "percent": "22.0%",
+              "amount": "4.40"
+            },
+            {
+              "key": "standard",
+              "base": "60.00",
+              "percent": "10.0%",
+              "amount": "6.00"
+            }
+          ],
+          "amount": "10.40"
+        }
+      ],
+      "sum": "10.40"
+    },
+    "tax": "10.40",
+    "total_with_tax": "98.40",
+    "payable": "98.40"
   }
 }

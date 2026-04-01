@@ -1,168 +1,158 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-5439-759d-9961-7097a7d7bffa",
-    "dig": {
-      "alg": "sha256",
-      "val": "585750357ad86e8d3e7962417f1ef5f7e0b33e96619b75262253e15306f399ee"
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "ES",
+  "uuid": "019d4541-5439-75b1-b178-4119a47a596c",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Ingeniería Solar Madrid S.L.",
+    "tax_id": {
+      "country": "ES",
+      "code": "J9227840G"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Calle Gran Vía",
+        "locality": "Barcelona",
+        "region": "Barcelona",
+        "code": "08001",
+        "country": "ES"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Empresa Nacional de Turismo S.A.",
+    "tax_id": {
+      "country": "ES",
+      "code": "G9694230E"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Paseo de la Castellana",
+        "locality": "Bilbao",
+        "region": "Vizcaya",
+        "code": "48001",
+        "country": "ES"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "2",
+      "item": {
+        "name": "Protector de pantalla",
+        "price": "9.99"
+      },
+      "sum": "19.98",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "19.98"
+    },
+    {
+      "i": 2,
+      "quantity": "5",
+      "item": {
+        "name": "Protector de pantalla",
+        "price": "9.99"
+      },
+      "sum": "49.95",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "49.95"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "item": {
+        "name": "Auriculares inalambricos",
+        "price": "79.99"
+      },
+      "sum": "239.97",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "239.97"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "delivery",
+      "reason": "Shipping",
+      "amount": "9.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer",
+      "credit_transfer": [
+        {
+          "iban": "ES2468874969403853166717",
+          "name": "Bank Account"
+        }
+      ]
     }
   },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "ES",
-    "uuid": "019d4541-5439-75b1-b178-4119a47a596c",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Ingeniería Solar Madrid S.L.",
-      "tax_id": {
-        "country": "ES",
-        "code": "J9227840G"
-      },
-      "addresses": [
+  "totals": {
+    "sum": "309.90",
+    "charge": "9.00",
+    "total": "318.90",
+    "taxes": {
+      "categories": [
         {
-          "num": "129",
-          "street": "Calle Gran Vía",
-          "locality": "Barcelona",
-          "region": "Barcelona",
-          "code": "08001",
-          "country": "ES"
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "309.90",
+              "percent": "21.0%",
+              "amount": "65.08"
+            }
+          ],
+          "amount": "65.08"
         }
       ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+      "sum": "65.08"
     },
-    "customer": {
-      "name": "Empresa Nacional de Turismo S.A.",
-      "tax_id": {
-        "country": "ES",
-        "code": "G9694230E"
-      },
-      "addresses": [
-        {
-          "num": "71",
-          "street": "Paseo de la Castellana",
-          "locality": "Bilbao",
-          "region": "Vizcaya",
-          "code": "48001",
-          "country": "ES"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
-      {
-        "i": 1,
-        "quantity": "2",
-        "item": {
-          "name": "Protector de pantalla",
-          "price": "9.99"
-        },
-        "sum": "19.98",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
-          }
-        ],
-        "total": "19.98"
-      },
-      {
-        "i": 2,
-        "quantity": "5",
-        "item": {
-          "name": "Protector de pantalla",
-          "price": "9.99"
-        },
-        "sum": "49.95",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
-          }
-        ],
-        "total": "49.95"
-      },
-      {
-        "i": 3,
-        "quantity": "3",
-        "item": {
-          "name": "Auriculares inalambricos",
-          "price": "79.99"
-        },
-        "sum": "239.97",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
-          }
-        ],
-        "total": "239.97"
-      }
-    ],
-    "charges": [
-      {
-        "i": 1,
-        "key": "delivery",
-        "reason": "Shipping",
-        "amount": "9.00"
-      }
-    ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer",
-        "credit_transfer": [
-          {
-            "iban": "ES2468874969403853166717",
-            "name": "Bank Account"
-          }
-        ]
-      }
-    },
-    "totals": {
-      "sum": "309.90",
-      "charge": "9.00",
-      "total": "318.90",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "309.90",
-                "percent": "21.0%",
-                "amount": "65.08"
-              }
-            ],
-            "amount": "65.08"
-          }
-        ],
-        "sum": "65.08"
-      },
-      "tax": "65.08",
-      "total_with_tax": "383.98",
-      "payable": "383.98"
-    }
+    "tax": "65.08",
+    "total_with_tax": "383.98",
+    "payable": "383.98"
   }
 }

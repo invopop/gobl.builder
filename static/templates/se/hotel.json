@@ -1,171 +1,161 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-3b34-77a1-ae91-aa2b7d43a6cf",
-    "dig": {
-      "alg": "sha256",
-      "val": "c8c8f4e78124342240b1af4d0afdfc1d0be0e15ed15d3a56764bf2a4868d74df"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "SE",
-    "uuid": "019d4541-3b34-77b0-af91-ce6c788373ef",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "SEK",
-    "supplier": {
-      "name": "Malmö Digitala Lösningar AB",
-      "tax_id": {
-        "country": "SE",
-        "code": "692278400101"
-      },
-      "addresses": [
-        {
-          "num": "40",
-          "street": "Sveavägen",
-          "locality": "Uppsala",
-          "region": "Uppsala län",
-          "code": "753 10",
-          "country": "SE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "SE",
+  "uuid": "019d4541-3b34-77b0-af91-ce6c788373ef",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "SEK",
+  "supplier": {
+    "name": "Malmö Digitala Lösningar AB",
+    "tax_id": {
+      "country": "SE",
+      "code": "692278400101"
     },
-    "customer": {
-      "name": "Hallands Handel AB",
-      "tax_id": {
-        "country": "SE",
-        "code": "894230233501"
-      },
-      "addresses": [
-        {
-          "num": "78",
-          "street": "Drottninggatan",
-          "locality": "Uppsala",
-          "region": "Uppsala län",
-          "code": "753 10",
-          "country": "SE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "3",
-        "period": {
-          "start": "2026-03-28",
-          "end": "2026-03-30"
-        },
-        "item": {
-          "name": "Dubbelrum",
-          "price": "150.00"
-        },
-        "sum": "450.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "reduced",
-            "percent": "12.0%"
-          }
-        ],
-        "total": "450.00"
-      },
-      {
-        "i": 2,
-        "quantity": "5",
-        "period": {
-          "start": "2026-03-29",
-          "end": "2026-03-30"
-        },
-        "item": {
-          "name": "Dubbelrum",
-          "price": "150.00"
-        },
-        "sum": "750.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "reduced",
-            "percent": "12.0%"
-          }
-        ],
-        "total": "750.00"
-      },
-      {
-        "i": 3,
-        "quantity": "2",
-        "period": {
-          "start": "2026-03-27",
-          "end": "2026-03-30"
-        },
-        "item": {
-          "name": "Dubbelrum",
-          "price": "150.00"
-        },
-        "sum": "300.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "reduced",
-            "percent": "12.0%"
-          }
-        ],
-        "total": "300.00"
+        "num": "40",
+        "street": "Sveavägen",
+        "locality": "Uppsala",
+        "region": "Uppsala län",
+        "code": "753 10",
+        "country": "SE"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "SE6859694038531667175526",
-            "name": "Bank Account"
-          }
-        ]
+    "emails": [
+      {
+        "addr": "billing@example.com"
       }
+    ]
+  },
+  "customer": {
+    "name": "Hallands Handel AB",
+    "tax_id": {
+      "country": "SE",
+      "code": "894230233501"
     },
-    "totals": {
-      "sum": "1500.00",
-      "total": "1500.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "1500.00",
-                "percent": "12.0%",
-                "amount": "180.00"
-              }
-            ],
-            "amount": "180.00"
-          }
-        ],
-        "sum": "180.00"
+    "addresses": [
+      {
+        "num": "78",
+        "street": "Drottninggatan",
+        "locality": "Uppsala",
+        "region": "Uppsala län",
+        "code": "753 10",
+        "country": "SE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-28",
+        "end": "2026-03-30"
       },
-      "tax": "180.00",
-      "total_with_tax": "1680.00",
-      "payable": "1680.00"
+      "item": {
+        "name": "Dubbelrum",
+        "price": "150.00"
+      },
+      "sum": "450.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "12.0%"
+        }
+      ],
+      "total": "450.00"
+    },
+    {
+      "i": 2,
+      "quantity": "5",
+      "period": {
+        "start": "2026-03-29",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Dubbelrum",
+        "price": "150.00"
+      },
+      "sum": "750.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "12.0%"
+        }
+      ],
+      "total": "750.00"
+    },
+    {
+      "i": 3,
+      "quantity": "2",
+      "period": {
+        "start": "2026-03-27",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Dubbelrum",
+        "price": "150.00"
+      },
+      "sum": "300.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "12.0%"
+        }
+      ],
+      "total": "300.00"
     }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "SE6859694038531667175526",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "1500.00",
+    "total": "1500.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "1500.00",
+              "percent": "12.0%",
+              "amount": "180.00"
+            }
+          ],
+          "amount": "180.00"
+        }
+      ],
+      "sum": "180.00"
+    },
+    "tax": "180.00",
+    "total_with_tax": "1680.00",
+    "payable": "1680.00"
   }
 }

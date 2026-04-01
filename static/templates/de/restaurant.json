@@ -1,169 +1,159 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-5214-701f-a4c5-1a0ebb11d054",
-    "dig": {
-      "alg": "sha256",
-      "val": "547eedbdc3e0bd400a04da2d62752eb0130ba71080d722ff144cd1794423b4ab"
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "DE",
+  "uuid": "019d4541-5214-7036-b1aa-c0edc131a67d",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Weber Maschinenbau GmbH",
+    "tax_id": {
+      "country": "DE",
+      "code": "592278402"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Friedrichstraße",
+        "locality": "München",
+        "region": "Bayern",
+        "code": "80331",
+        "country": "DE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Deutsche Handelskompanie GmbH",
+    "tax_id": {
+      "country": "DE",
+      "code": "496942305"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Kurfürstendamm",
+        "locality": "Köln",
+        "region": "Nordrhein-Westfalen",
+        "code": "50667",
+        "country": "DE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "4",
+      "item": {
+        "name": "Hauptgericht",
+        "price": "20.00"
+      },
+      "sum": "80.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19%"
+        }
+      ],
+      "total": "80.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Flasche Wein",
+        "price": "28.00"
+      },
+      "sum": "28.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19%"
+        }
+      ],
+      "total": "28.00"
+    },
+    {
+      "i": 3,
+      "quantity": "1",
+      "item": {
+        "name": "Flasche Wein",
+        "price": "28.00"
+      },
+      "sum": "28.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19%"
+        }
+      ],
+      "total": "28.00"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "handling",
+      "reason": "Service charge",
+      "percent": "10.0%",
+      "amount": "13.60"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "DE08688749694038531667",
+          "name": "Bank Account"
+        }
+      ]
     }
   },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "DE",
-    "uuid": "019d4541-5214-7036-b1aa-c0edc131a67d",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Weber Maschinenbau GmbH",
-      "tax_id": {
-        "country": "DE",
-        "code": "592278402"
-      },
-      "addresses": [
+  "totals": {
+    "sum": "136.00",
+    "charge": "13.60",
+    "total": "149.60",
+    "taxes": {
+      "categories": [
         {
-          "num": "129",
-          "street": "Friedrichstraße",
-          "locality": "München",
-          "region": "Bayern",
-          "code": "80331",
-          "country": "DE"
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "136.00",
+              "percent": "19%",
+              "amount": "25.84"
+            }
+          ],
+          "amount": "25.84"
         }
       ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+      "sum": "25.84"
     },
-    "customer": {
-      "name": "Deutsche Handelskompanie GmbH",
-      "tax_id": {
-        "country": "DE",
-        "code": "496942305"
-      },
-      "addresses": [
-        {
-          "num": "71",
-          "street": "Kurfürstendamm",
-          "locality": "Köln",
-          "region": "Nordrhein-Westfalen",
-          "code": "50667",
-          "country": "DE"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
-      {
-        "i": 1,
-        "quantity": "4",
-        "item": {
-          "name": "Hauptgericht",
-          "price": "20.00"
-        },
-        "sum": "80.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "19%"
-          }
-        ],
-        "total": "80.00"
-      },
-      {
-        "i": 2,
-        "quantity": "1",
-        "item": {
-          "name": "Flasche Wein",
-          "price": "28.00"
-        },
-        "sum": "28.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "19%"
-          }
-        ],
-        "total": "28.00"
-      },
-      {
-        "i": 3,
-        "quantity": "1",
-        "item": {
-          "name": "Flasche Wein",
-          "price": "28.00"
-        },
-        "sum": "28.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "19%"
-          }
-        ],
-        "total": "28.00"
-      }
-    ],
-    "charges": [
-      {
-        "i": 1,
-        "key": "handling",
-        "reason": "Service charge",
-        "percent": "10.0%",
-        "amount": "13.60"
-      }
-    ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "DE08688749694038531667",
-            "name": "Bank Account"
-          }
-        ]
-      }
-    },
-    "totals": {
-      "sum": "136.00",
-      "charge": "13.60",
-      "total": "149.60",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "136.00",
-                "percent": "19%",
-                "amount": "25.84"
-              }
-            ],
-            "amount": "25.84"
-          }
-        ],
-        "sum": "25.84"
-      },
-      "tax": "25.84",
-      "total_with_tax": "175.44",
-      "payable": "175.44"
-    }
+    "tax": "25.84",
+    "total_with_tax": "175.44",
+    "payable": "175.44"
   }
 }

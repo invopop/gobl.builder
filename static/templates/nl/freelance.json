@@ -1,203 +1,193 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-4835-7bf6-b996-afaabb34bac4",
-    "dig": {
-      "alg": "sha256",
-      "val": "81ca7ad7c0e9c39aab8f2f86d14ecdf2c493060747504247086aaaf5066d860a"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "NL",
-    "uuid": "019d4541-4835-7c06-bcb3-d4d6871e31e4",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Utrechtse Software B.V.",
-      "tax_id": {
-        "country": "NL",
-        "code": "592278402B05"
-      },
-      "people": [
-        {
-          "name": {
-            "given": "Emma",
-            "surname": "de Vries"
-          },
-          "emails": [
-            {
-              "addr": "contact@example.com"
-            }
-          ]
-        }
-      ],
-      "addresses": [
-        {
-          "num": "185",
-          "street": "Oudegracht",
-          "locality": "Rotterdam",
-          "region": "Zuid-Holland",
-          "code": "3011",
-          "country": "NL"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "NL",
+  "uuid": "019d4541-4835-7c06-bcb3-d4d6871e31e4",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Utrechtse Software B.V.",
+    "tax_id": {
+      "country": "NL",
+      "code": "592278402B05"
     },
-    "customer": {
-      "name": "Groningse Machinefabriek B.V.",
-      "tax_id": {
-        "country": "NL",
-        "code": "969423020B35"
-      },
-      "addresses": [
-        {
-          "num": "171",
-          "street": "Coolsingel",
-          "locality": "Amsterdam",
-          "region": "Noord-Holland",
-          "code": "1012",
-          "country": "NL"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "people": [
       {
-        "i": 1,
-        "quantity": "16",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
+        "name": {
+          "given": "Emma",
+          "surname": "de Vries"
         },
-        "item": {
-          "name": "Bedrijfsadvies",
-          "price": "85.00",
-          "unit": "h"
-        },
-        "sum": "1360.00",
-        "taxes": [
+        "emails": [
           {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
+            "addr": "contact@example.com"
           }
-        ],
-        "total": "1360.00"
-      },
-      {
-        "i": 2,
-        "quantity": "40",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Bedrijfsadvies",
-          "price": "85.00",
-          "unit": "h"
-        },
-        "sum": "3400.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
-          }
-        ],
-        "total": "3400.00"
-      },
-      {
-        "i": 3,
-        "quantity": "80",
-        "period": {
-          "label": "Billing period",
-          "start": "2026-02-01",
-          "end": "2026-02-28"
-        },
-        "item": {
-          "name": "Softwareontwikkeling",
-          "price": "95.00",
-          "unit": "h"
-        },
-        "sum": "7600.00",
-        "discounts": [
-          {
-            "reason": "Discount",
-            "percent": "10%",
-            "amount": "760.00"
-          }
-        ],
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "general",
-            "percent": "21.0%"
-          }
-        ],
-        "total": "6840.00"
+        ]
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "due-date",
-        "due_dates": [
-          {
-            "date": "2026-05-01",
-            "amount": "14036.00",
-            "percent": "100%"
-          }
-        ]
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "NL8387496940385316",
-            "name": "Bank Account"
-          }
-        ]
+    "addresses": [
+      {
+        "num": "185",
+        "street": "Oudegracht",
+        "locality": "Rotterdam",
+        "region": "Zuid-Holland",
+        "code": "3011",
+        "country": "NL"
       }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Groningse Machinefabriek B.V.",
+    "tax_id": {
+      "country": "NL",
+      "code": "969423020B35"
     },
-    "totals": {
-      "sum": "11600.00",
-      "total": "11600.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "standard",
-                "base": "11600.00",
-                "percent": "21.0%",
-                "amount": "2436.00"
-              }
-            ],
-            "amount": "2436.00"
-          }
-        ],
-        "sum": "2436.00"
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Coolsingel",
+        "locality": "Amsterdam",
+        "region": "Noord-Holland",
+        "code": "1012",
+        "country": "NL"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "16",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
       },
-      "tax": "2436.00",
-      "total_with_tax": "14036.00",
-      "payable": "14036.00"
+      "item": {
+        "name": "Bedrijfsadvies",
+        "price": "85.00",
+        "unit": "h"
+      },
+      "sum": "1360.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "1360.00"
+    },
+    {
+      "i": 2,
+      "quantity": "40",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Bedrijfsadvies",
+        "price": "85.00",
+        "unit": "h"
+      },
+      "sum": "3400.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "3400.00"
+    },
+    {
+      "i": 3,
+      "quantity": "80",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Softwareontwikkeling",
+        "price": "95.00",
+        "unit": "h"
+      },
+      "sum": "7600.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "760.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%"
+        }
+      ],
+      "total": "6840.00"
     }
+  ],
+  "payment": {
+    "terms": {
+      "key": "due-date",
+      "due_dates": [
+        {
+          "date": "2026-05-01",
+          "amount": "14036.00",
+          "percent": "100%"
+        }
+      ]
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "NL8387496940385316",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "11600.00",
+    "total": "11600.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "11600.00",
+              "percent": "21.0%",
+              "amount": "2436.00"
+            }
+          ],
+          "amount": "2436.00"
+        }
+      ],
+      "sum": "2436.00"
+    },
+    "tax": "2436.00",
+    "total_with_tax": "14036.00",
+    "payable": "14036.00"
   }
 }

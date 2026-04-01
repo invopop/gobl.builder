@@ -1,164 +1,154 @@
 {
-  "$schema": "https://gobl.org/draft-0/envelope",
-  "head": {
-    "uuid": "019d4541-33a4-7c96-8764-50d456f0b7a8",
-    "dig": {
-      "alg": "sha256",
-      "val": "ca25e2101ee8c8e4fba2b99fd07cdf21ac9430ebb5128143d8870fcd367d67a5"
-    }
-  },
-  "doc": {
-    "$schema": "https://gobl.org/draft-0/bill/invoice",
-    "$regime": "FR",
-    "uuid": "019d4541-33a4-7cec-b0a6-bd9f41991577",
-    "type": "standard",
-    "series": "MOCK",
-    "code": "61929",
-    "issue_date": "2026-03-31",
-    "currency": "EUR",
-    "supplier": {
-      "name": "Bretagne Agroalimentaire SAS",
-      "tax_id": {
-        "country": "FR",
-        "code": "92192278406"
-      },
-      "addresses": [
-        {
-          "num": "185",
-          "street": "Rue de Rivoli",
-          "locality": "Lyon",
-          "region": "Auvergne-Rhône-Alpes",
-          "code": "69002",
-          "country": "FR"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "FR",
+  "uuid": "019d4541-33a4-7cec-b0a6-bd9f41991577",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Bretagne Agroalimentaire SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "92192278406"
     },
-    "customer": {
-      "name": "Alsacienne de Construction SAS",
-      "tax_id": {
-        "country": "FR",
-        "code": "95469423024"
-      },
-      "addresses": [
-        {
-          "num": "171",
-          "street": "Avenue des Champs-Élysées",
-          "locality": "Paris",
-          "region": "Île-de-France",
-          "code": "75008",
-          "country": "FR"
-        }
-      ],
-      "emails": [
-        {
-          "addr": "billing@example.com"
-        }
-      ]
-    },
-    "lines": [
+    "addresses": [
       {
-        "i": 1,
-        "quantity": "1",
-        "item": {
-          "name": "Taxe de sejour",
-          "price": "2.00"
-        },
-        "sum": "2.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "exempt"
-          }
-        ],
-        "total": "2.00"
-      },
-      {
-        "i": 2,
-        "quantity": "3",
-        "period": {
-          "start": "2026-03-25",
-          "end": "2026-03-30"
-        },
-        "item": {
-          "name": "Chambre double",
-          "price": "140.00"
-        },
-        "sum": "420.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "standard",
-            "rate": "intermediate",
-            "percent": "10%"
-          }
-        ],
-        "total": "420.00"
-      },
-      {
-        "i": 3,
-        "quantity": "1",
-        "item": {
-          "name": "Taxe de sejour",
-          "price": "2.00"
-        },
-        "sum": "2.00",
-        "taxes": [
-          {
-            "cat": "VAT",
-            "key": "exempt"
-          }
-        ],
-        "total": "2.00"
+        "num": "185",
+        "street": "Rue de Rivoli",
+        "locality": "Lyon",
+        "region": "Auvergne-Rhône-Alpes",
+        "code": "69002",
+        "country": "FR"
       }
     ],
-    "payment": {
-      "terms": {
-        "key": "instant",
-        "notes": "Payment due upon receipt."
-      },
-      "instructions": {
-        "key": "credit-transfer+sepa",
-        "credit_transfer": [
-          {
-            "iban": "FR3287496940385316671755267",
-            "name": "Bank Account"
-          }
-        ]
+    "emails": [
+      {
+        "addr": "billing@example.com"
       }
+    ]
+  },
+  "customer": {
+    "name": "Alsacienne de Construction SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "95469423024"
     },
-    "totals": {
-      "sum": "424.00",
-      "total": "424.00",
-      "taxes": {
-        "categories": [
-          {
-            "code": "VAT",
-            "rates": [
-              {
-                "key": "exempt",
-                "base": "4.00",
-                "amount": "0.00"
-              },
-              {
-                "key": "standard",
-                "base": "420.00",
-                "percent": "10%",
-                "amount": "42.00"
-              }
-            ],
-            "amount": "42.00"
-          }
-        ],
-        "sum": "42.00"
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Avenue des Champs-Élysées",
+        "locality": "Paris",
+        "region": "Île-de-France",
+        "code": "75008",
+        "country": "FR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Taxe de sejour",
+        "price": "2.00"
       },
-      "tax": "42.00",
-      "total_with_tax": "466.00",
-      "payable": "466.00"
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt"
+        }
+      ],
+      "total": "2.00"
+    },
+    {
+      "i": 2,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-25",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Chambre double",
+        "price": "140.00"
+      },
+      "sum": "420.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "intermediate",
+          "percent": "10%"
+        }
+      ],
+      "total": "420.00"
+    },
+    {
+      "i": 3,
+      "quantity": "1",
+      "item": {
+        "name": "Taxe de sejour",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt"
+        }
+      ],
+      "total": "2.00"
     }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "FR3287496940385316671755267",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "424.00",
+    "total": "424.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "exempt",
+              "base": "4.00",
+              "amount": "0.00"
+            },
+            {
+              "key": "standard",
+              "base": "420.00",
+              "percent": "10%",
+              "amount": "42.00"
+            }
+          ],
+          "amount": "42.00"
+        }
+      ],
+      "sum": "42.00"
+    },
+    "tax": "42.00",
+    "total_with_tax": "466.00",
+    "payable": "466.00"
   }
 }
