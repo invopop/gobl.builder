@@ -1,0 +1,168 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-5667-7cf4-865d-9cbda1537bc8",
+    "dig": {
+      "alg": "sha256",
+      "val": "5470a6e9fc71dd1abe12a2d170be8649411b5fe313c028430cfad9b90a1cad0d"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "DE",
+    "uuid": "019d4541-5667-7d0b-a207-8f2142c5a0bf",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Weber Maschinenbau GmbH",
+      "tax_id": {
+        "country": "DE",
+        "code": "592278402"
+      },
+      "addresses": [
+        {
+          "num": "129",
+          "street": "Friedrichstraße",
+          "locality": "München",
+          "region": "Bayern",
+          "code": "80331",
+          "country": "DE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Deutsche Handelskompanie GmbH",
+      "tax_id": {
+        "country": "DE",
+        "code": "496942305"
+      },
+      "addresses": [
+        {
+          "num": "71",
+          "street": "Kurfürstendamm",
+          "locality": "Köln",
+          "region": "Nordrhein-Westfalen",
+          "code": "50667",
+          "country": "DE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "3",
+        "item": {
+          "name": "Kabellose Kopfhoerer",
+          "price": "79.99"
+        },
+        "sum": "239.97",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "19%"
+          }
+        ],
+        "total": "239.97"
+      },
+      {
+        "i": 2,
+        "quantity": "4",
+        "item": {
+          "name": "Displayschutzfolie",
+          "price": "9.99"
+        },
+        "sum": "39.96",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "19%"
+          }
+        ],
+        "total": "39.96"
+      },
+      {
+        "i": 3,
+        "quantity": "3",
+        "item": {
+          "name": "Kabellose Kopfhoerer",
+          "price": "79.99"
+        },
+        "sum": "239.97",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "19%"
+          }
+        ],
+        "total": "239.97"
+      }
+    ],
+    "charges": [
+      {
+        "i": 1,
+        "key": "delivery",
+        "reason": "Shipping",
+        "amount": "8.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "instant",
+        "notes": "Payment due upon receipt."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "DE08688749694038531667",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "519.90",
+      "charge": "8.00",
+      "total": "527.90",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "519.90",
+                "percent": "19%",
+                "amount": "98.78"
+              }
+            ],
+            "amount": "98.78"
+          }
+        ],
+        "sum": "98.78"
+      },
+      "tax": "98.78",
+      "total_with_tax": "626.68",
+      "payable": "626.68"
+    }
+  }
+}

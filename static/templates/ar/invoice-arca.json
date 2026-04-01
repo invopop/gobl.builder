@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "AR",
-  "$addons": [
-    "ar-arca-v4"
-  ],
+  "$addons": ["ar-arca-v4"],
   "uuid": "019d2fd4-df32-714c-8aea-7c289d7968b9",
   "type": "standard",
   "series": "6192",

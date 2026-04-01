@@ -16,7 +16,10 @@ export default [
     folder: 'at',
     flag: '🇦🇹',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon },
+      { name: 'Reverse Charge', file: 'reverse-charge.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -24,7 +27,9 @@ export default [
     folder: 'be',
     flag: '🇧🇪',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -41,9 +46,7 @@ export default [
     name: 'Canada',
     folder: 'ca',
     flag: '🇨🇦',
-    templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
-    ]
+    templates: [{ name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }]
   },
   {
     name: 'Colombia',
@@ -52,7 +55,8 @@ export default [
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
       { name: 'Invoice (DIAN)', file: 'invoice-dian.json', icon: InvoiceIcon },
-      { name: 'Invoice (Simplified)', file: 'simplified.json', icon: InvoiceIcon }
+      { name: 'Invoice (Simplified)', file: 'simplified.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -60,7 +64,8 @@ export default [
     folder: 'dk',
     flag: '🇩🇰',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -70,7 +75,12 @@ export default [
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
       { name: 'Invoice (Chorus Pro)', file: 'invoice-choruspro.json', icon: InvoiceIcon },
-      { name: 'Invoice (Factur-X)', file: 'invoice-facturx.json', icon: InvoiceIcon }
+      { name: 'Invoice (Factur-X)', file: 'invoice-facturx.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon },
+      { name: 'Restaurant', file: 'restaurant.json', icon: InvoiceIcon },
+      { name: 'E-commerce', file: 'ecommerce.json', icon: InvoiceIcon },
+      { name: 'Reverse Charge', file: 'reverse-charge.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -79,7 +89,12 @@ export default [
     flag: '🇩🇪',
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
-      { name: 'Invoice (XRechnung)', file: 'invoice-xrechnung.json', icon: InvoiceIcon }
+      { name: 'Invoice (XRechnung)', file: 'invoice-xrechnung.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon },
+      { name: 'Restaurant', file: 'restaurant.json', icon: InvoiceIcon },
+      { name: 'E-commerce', file: 'ecommerce.json', icon: InvoiceIcon },
+      { name: 'Reverse Charge', file: 'reverse-charge.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -88,23 +103,23 @@ export default [
     flag: '🇬🇷',
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
-      { name: 'Invoice (myDATA)', file: 'invoice-mydata.json', icon: InvoiceIcon }
+      { name: 'Invoice (myDATA)', file: 'invoice-mydata.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon }
     ]
   },
   {
     name: 'India',
     folder: 'in',
     flag: '🇮🇳',
-    templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
-    ]
+    templates: [{ name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }]
   },
   {
     name: 'Ireland',
     folder: 'ie',
     flag: '🇮🇪',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -117,7 +132,9 @@ export default [
       { name: 'Invoice (Freelance)', file: 'freelance.json', icon: InvoiceIcon },
       { name: 'Invoice (Hotel)', file: 'hotel.json', icon: InvoiceIcon },
       { name: 'Invoice (Reverse Charge)', file: 'reverse-charge.json', icon: InvoiceIcon },
-      { name: 'Invoice (Stamp Duty)', file: 'stamp-duty.json', icon: InvoiceIcon }
+      { name: 'Invoice (Stamp Duty)', file: 'stamp-duty.json', icon: InvoiceIcon },
+      { name: 'Restaurant', file: 'restaurant.json', icon: InvoiceIcon },
+      { name: 'E-commerce', file: 'ecommerce.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -127,6 +144,7 @@ export default [
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
       { name: 'Invoice (CFDI)', file: 'invoice-cfdi.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon },
       { name: 'Credit Note', file: 'credit-note.json', icon: InvoiceIcon }
     ]
   },
@@ -135,7 +153,9 @@ export default [
     folder: 'nl',
     flag: '🇳🇱',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -144,7 +164,9 @@ export default [
     flag: '🇵🇱',
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
-      { name: 'Invoice (FA_VAT)', file: 'invoice-favat.json', icon: InvoiceIcon }
+      { name: 'Invoice (FA_VAT)', file: 'invoice-favat.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -154,6 +176,10 @@ export default [
     templates: [
       { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
       { name: 'Invoice (SAF-T)', file: 'invoice-saft.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon },
+      { name: 'Restaurant', file: 'restaurant.json', icon: InvoiceIcon },
+      { name: 'E-commerce', file: 'ecommerce.json', icon: InvoiceIcon },
       { name: 'Credit Note', file: 'credit-note.json', icon: InvoiceIcon }
     ]
   },
@@ -161,9 +187,7 @@ export default [
     name: 'Singapore',
     folder: 'sg',
     flag: '🇸🇬',
-    templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
-    ]
+    templates: [{ name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }]
   },
   {
     name: 'Spain',
@@ -177,6 +201,9 @@ export default [
       { name: 'Invoice (VeriFactu)', file: 'invoice-verifactu.json', icon: InvoiceIcon },
       { name: 'Invoice (Freelance)', file: 'invoice-freelance.json', icon: InvoiceIcon },
       { name: 'Invoice (Reverse Charge)', file: 'invoice-rev-charge.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Restaurant', file: 'restaurant.json', icon: InvoiceIcon },
+      { name: 'E-commerce', file: 'ecommerce.json', icon: InvoiceIcon },
       { name: 'Credit Note', file: 'credit-note.json', icon: InvoiceIcon }
     ]
   },
@@ -185,7 +212,9 @@ export default [
     folder: 'se',
     flag: '🇸🇪',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
@@ -193,38 +222,36 @@ export default [
     folder: 'ch',
     flag: '🇨🇭',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
     name: 'United Arab Emirates',
     folder: 'ae',
     flag: '🇦🇪',
-    templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
-    ]
+    templates: [{ name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }]
   },
   {
     name: 'United Kingdom',
     folder: 'gb',
     flag: '🇬🇧',
     templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
+      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon },
+      { name: 'Hotel', file: 'hotel.json', icon: InvoiceIcon },
+      { name: 'Freelance', file: 'freelance.json', icon: InvoiceIcon }
     ]
   },
   {
     name: 'United States',
     folder: 'us',
     flag: '🇺🇸',
-    templates: [
-      { name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }
-    ]
+    templates: [{ name: 'Invoice', file: 'invoice.json', icon: InvoiceIcon }]
   },
   {
     name: 'Other',
     folder: 'misc',
-    templates: [
-      { name: 'Message', file: 'message.json', icon: MessageIcon }
-    ]
+    templates: [{ name: 'Message', file: 'message.json', icon: MessageIcon }]
   }
 ]

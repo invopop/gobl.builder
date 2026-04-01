@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "MX",
-  "$addons": [
-    "mx-cfdi-v4"
-  ],
+  "$addons": ["mx-cfdi-v4"],
   "uuid": "019d2fca-f111-79f2-a200-d584d66945b7",
   "type": "credit-note",
   "series": "MOCK",

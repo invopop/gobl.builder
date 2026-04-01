@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "CO",
-  "$addons": [
-    "co-dian-v2"
-  ],
+  "$addons": ["co-dian-v2"],
   "uuid": "019d2fd4-e3b4-7d8c-a0bb-02bafe9c58ff",
   "type": "standard",
   "series": "MOCK",

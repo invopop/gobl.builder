@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "BR",
-  "$addons": [
-    "br-nfse-v1"
-  ],
+  "$addons": ["br-nfse-v1"],
   "uuid": "019d2fd4-e271-79f2-85aa-d61ac23befc8",
   "type": "standard",
   "series": "MOCK",

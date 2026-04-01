@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "PT",
-  "$addons": [
-    "pt-saft-v1"
-  ],
+  "$addons": ["pt-saft-v1"],
   "uuid": "019d2fd4-f231-7e7e-adfb-57a0621a2c99",
   "type": "standard",
   "series": "FT MOCK",

@@ -1,0 +1,167 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-3f83-7762-8ded-abc88de901ac",
+    "dig": {
+      "alg": "sha256",
+      "val": "a21d1f9377989f1bfe42dad8903910652948fbfd4ffca33266c1754f3ab11c46"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "NL",
+    "uuid": "019d4541-3f83-7772-a447-28642657cae6",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Utrechtse Software B.V.",
+      "tax_id": {
+        "country": "NL",
+        "code": "592278402B05"
+      },
+      "addresses": [
+        {
+          "num": "185",
+          "street": "Oudegracht",
+          "locality": "Rotterdam",
+          "region": "Zuid-Holland",
+          "code": "3011",
+          "country": "NL"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Groningse Machinefabriek B.V.",
+      "tax_id": {
+        "country": "NL",
+        "code": "969423020B35"
+      },
+      "addresses": [
+        {
+          "num": "171",
+          "street": "Coolsingel",
+          "locality": "Amsterdam",
+          "region": "Noord-Holland",
+          "code": "1012",
+          "country": "NL"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Room service",
+          "price": "25.00"
+        },
+        "sum": "25.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "25.00"
+      },
+      {
+        "i": 2,
+        "quantity": "3",
+        "period": {
+          "start": "2026-03-27",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Double room",
+          "price": "150.00"
+        },
+        "sum": "450.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "450.00"
+      },
+      {
+        "i": 3,
+        "quantity": "4",
+        "period": {
+          "start": "2026-03-25",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Double room",
+          "price": "150.00"
+        },
+        "sum": "600.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "600.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "instant",
+        "notes": "Payment due upon receipt."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "NL8387496940385316",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "1075.00",
+      "total": "1075.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "1075.00",
+                "percent": "21.0%",
+                "amount": "225.75"
+              }
+            ],
+            "amount": "225.75"
+          }
+        ],
+        "sum": "225.75"
+      },
+      "tax": "225.75",
+      "total_with_tax": "1300.75",
+      "payable": "1300.75"
+    }
+  }
+}

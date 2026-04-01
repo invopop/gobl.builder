@@ -1,0 +1,217 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-4945-7b71-9077-d0992f21eed4",
+    "dig": {
+      "alg": "sha256",
+      "val": "da36b564ac7961e9e021ad5034689cd0f75826536424d1b179ef67d83a2762de"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "BE",
+    "uuid": "019d4541-4945-7b8d-ae67-60501e557bc1",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Gentse Softwareoplossingen BV",
+      "tax_id": {
+        "country": "BE",
+        "code": "0922784061"
+      },
+      "people": [
+        {
+          "name": {
+            "given": "Louise",
+            "surname": "Peeters"
+          },
+          "emails": [
+            {
+              "addr": "contact@example.com"
+            }
+          ]
+        }
+      ],
+      "addresses": [
+        {
+          "num": "129",
+          "street": "Rue de la Loi",
+          "locality": "Liège",
+          "region": "Wallonie",
+          "code": "4000",
+          "country": "BE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Bruxelles Logistique SA",
+      "tax_id": {
+        "country": "BE",
+        "code": "1969423068"
+      },
+      "addresses": [
+        {
+          "num": "71",
+          "street": "Koningstraat",
+          "locality": "Gent",
+          "region": "Vlaanderen",
+          "code": "9000",
+          "country": "BE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "8",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Developpement logiciel",
+          "price": "90.00",
+          "unit": "h"
+        },
+        "sum": "720.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "72.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "648.00"
+      },
+      {
+        "i": 2,
+        "quantity": "80",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Developpement logiciel",
+          "price": "90.00",
+          "unit": "h"
+        },
+        "sum": "7200.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "720.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "6480.00"
+      },
+      {
+        "i": 3,
+        "quantity": "40",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Developpement logiciel",
+          "price": "90.00",
+          "unit": "h"
+        },
+        "sum": "3600.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "360.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "21.0%"
+          }
+        ],
+        "total": "3240.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "due-date",
+        "due_dates": [
+          {
+            "date": "2026-05-01",
+            "amount": "12545.28",
+            "percent": "100%"
+          }
+        ]
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "BE45688749694038",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "10368.00",
+      "total": "10368.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "10368.00",
+                "percent": "21.0%",
+                "amount": "2177.28"
+              }
+            ],
+            "amount": "2177.28"
+          }
+        ],
+        "sum": "2177.28"
+      },
+      "tax": "2177.28",
+      "total_with_tax": "12545.28",
+      "payable": "12545.28"
+    }
+  }
+}

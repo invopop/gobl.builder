@@ -1,0 +1,210 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-4b76-7518-857a-b5a831a769f2",
+    "dig": {
+      "alg": "sha256",
+      "val": "e906a561f284e0118d721060a574d66e231cb47a8820b13c6404c156285e4301"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "SE",
+    "uuid": "019d4541-4b76-7530-9694-fd8093437d32",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "SEK",
+    "supplier": {
+      "name": "Malmö Digitala Lösningar AB",
+      "tax_id": {
+        "country": "SE",
+        "code": "692278400101"
+      },
+      "people": [
+        {
+          "name": {
+            "given": "Emma",
+            "surname": "Andersson"
+          },
+          "emails": [
+            {
+              "addr": "contact@example.com"
+            }
+          ]
+        }
+      ],
+      "addresses": [
+        {
+          "num": "40",
+          "street": "Sveavägen",
+          "locality": "Uppsala",
+          "region": "Uppsala län",
+          "code": "753 10",
+          "country": "SE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Hallands Handel AB",
+      "tax_id": {
+        "country": "SE",
+        "code": "894230233501"
+      },
+      "addresses": [
+        {
+          "num": "78",
+          "street": "Drottninggatan",
+          "locality": "Uppsala",
+          "region": "Uppsala län",
+          "code": "753 10",
+          "country": "SE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "40",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Programvaruutveckling",
+          "price": "95.00",
+          "unit": "h"
+        },
+        "sum": "3800.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "380.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "25.0%"
+          }
+        ],
+        "total": "3420.00"
+      },
+      {
+        "i": 2,
+        "quantity": "40",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Programvaruutveckling",
+          "price": "95.00",
+          "unit": "h"
+        },
+        "sum": "3800.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "380.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "25.0%"
+          }
+        ],
+        "total": "3420.00"
+      },
+      {
+        "i": 3,
+        "quantity": "24",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Foretagsradgivning",
+          "price": "85.00",
+          "unit": "h"
+        },
+        "sum": "2040.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "25.0%"
+          }
+        ],
+        "total": "2040.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "due-date",
+        "due_dates": [
+          {
+            "date": "2026-05-01",
+            "amount": "11100.00",
+            "percent": "100%"
+          }
+        ]
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "SE6859694038531667175526",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "8880.00",
+      "total": "8880.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "8880.00",
+                "percent": "25.0%",
+                "amount": "2220.00"
+              }
+            ],
+            "amount": "2220.00"
+          }
+        ],
+        "sum": "2220.00"
+      },
+      "tax": "2220.00",
+      "total_with_tax": "11100.00",
+      "payable": "11100.00"
+    }
+  }
+}

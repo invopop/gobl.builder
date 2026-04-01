@@ -1,0 +1,210 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-4a5b-73b5-8307-1d4444b5b36b",
+    "dig": {
+      "alg": "sha256",
+      "val": "09ffb74d03e36d488fb2136f704b9d008b302829368548e96390d197bedfb2d3"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "PL",
+    "uuid": "019d4541-4a5b-73c4-aac9-b62632845ddb",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "PLN",
+    "supplier": {
+      "name": "Poznańska Logistyka Sp. z o.o.",
+      "tax_id": {
+        "country": "PL",
+        "code": "6922784007"
+      },
+      "people": [
+        {
+          "name": {
+            "given": "Anna",
+            "surname": "Kowalska"
+          },
+          "emails": [
+            {
+              "addr": "contact@example.com"
+            }
+          ]
+        }
+      ],
+      "addresses": [
+        {
+          "num": "40",
+          "street": "ul. Piotrkowska",
+          "locality": "Kraków",
+          "region": "Małopolskie",
+          "code": "30-001",
+          "country": "PL"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Bydgoska Elektronika Sp. z o.o.",
+      "tax_id": {
+        "country": "PL",
+        "code": "8942302337"
+      },
+      "addresses": [
+        {
+          "num": "78",
+          "street": "ul. Marszałkowska",
+          "locality": "Kraków",
+          "region": "Małopolskie",
+          "code": "30-001",
+          "country": "PL"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "160",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Tworzenie oprogramowania",
+          "price": "60.00",
+          "unit": "h"
+        },
+        "sum": "9600.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "960.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%"
+          }
+        ],
+        "total": "8640.00"
+      },
+      {
+        "i": 2,
+        "quantity": "60",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Doradztwo biznesowe",
+          "price": "50.00",
+          "unit": "h"
+        },
+        "sum": "3000.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%"
+          }
+        ],
+        "total": "3000.00"
+      },
+      {
+        "i": 3,
+        "quantity": "16",
+        "period": {
+          "label": "Billing period",
+          "start": "2026-02-01",
+          "end": "2026-02-28"
+        },
+        "item": {
+          "name": "Tworzenie oprogramowania",
+          "price": "60.00",
+          "unit": "h"
+        },
+        "sum": "960.00",
+        "discounts": [
+          {
+            "reason": "Discount",
+            "percent": "10%",
+            "amount": "96.00"
+          }
+        ],
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%"
+          }
+        ],
+        "total": "864.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "due-date",
+        "due_dates": [
+          {
+            "date": "2026-05-01",
+            "amount": "15379.92",
+            "percent": "100%"
+          }
+        ]
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "PL79596940385316671755267953",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "12504.00",
+      "total": "12504.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "12504.00",
+                "percent": "23.0%",
+                "amount": "2875.92"
+              }
+            ],
+            "amount": "2875.92"
+          }
+        ],
+        "sum": "2875.92"
+      },
+      "tax": "2875.92",
+      "total_with_tax": "15379.92",
+      "payable": "15379.92"
+    }
+  }
+}

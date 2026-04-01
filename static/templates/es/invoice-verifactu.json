@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "ES",
-  "$addons": [
-    "es-verifactu-v1"
-  ],
+  "$addons": ["es-verifactu-v1"],
   "uuid": "019d2fd4-e99b-7b04-ade6-400afeda22dc",
   "type": "standard",
   "series": "MOCK",

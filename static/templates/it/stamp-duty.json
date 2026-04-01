@@ -1,1 +1,68 @@
-{"$schema":"https://gobl.org/draft-0/bill/invoice","$regime":"IT","type":"standard","series":"SAMPLE","code":"003","issue_date":"2023-08-01","currency":"EUR","supplier":{"name":"Hotel California","tax_id":{"country":"IT","code":"12345678903"},"addresses":[{"num":"102","street":"Via California","locality":"Palermo","region":"PA","code":"33213","country":"IT"}],"registration":{"capital":"50000.00","currency":"EUR","office":"RM","entry":"123456"}},"customer":{"name":"Mela S.r.l.","tax_id":{"country":"IT","code":"13029381004"},"inboxes":[{"key":"codice-destinatario","code":"M5UXCR5"}],"addresses":[{"num":"23","street":"Via dei Mille","locality":"Firenze","region":"FI","code":"00100","country":"IT"}]},"lines":[{"i":1,"quantity":"1","item":{"name":"Camera Matrimoniale","price":"125.00"},"sum":"125.00","taxes":[{"cat":"VAT","key":"standard","rate":"intermediate","percent":"10.0%"}],"total":"125.00"}],"charges":[{"i":1,"key":"stamp-duty","reason":"Imposta di bollo","amount":"2.00"}],"totals":{"sum":"125.00","charge":"2.00","total":"127.00","taxes":{"categories":[{"code":"VAT","rates":[{"key":"standard","base":"125.00","percent":"10.0%","amount":"12.50"}],"amount":"12.50"}],"sum":"12.50"},"tax":"12.50","total_with_tax":"139.50","payable":"139.50"}}
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IT",
+  "type": "standard",
+  "series": "SAMPLE",
+  "code": "003",
+  "issue_date": "2023-08-01",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Hotel California",
+    "tax_id": { "country": "IT", "code": "12345678903" },
+    "addresses": [
+      {
+        "num": "102",
+        "street": "Via California",
+        "locality": "Palermo",
+        "region": "PA",
+        "code": "33213",
+        "country": "IT"
+      }
+    ],
+    "registration": { "capital": "50000.00", "currency": "EUR", "office": "RM", "entry": "123456" }
+  },
+  "customer": {
+    "name": "Mela S.r.l.",
+    "tax_id": { "country": "IT", "code": "13029381004" },
+    "inboxes": [{ "key": "codice-destinatario", "code": "M5UXCR5" }],
+    "addresses": [
+      {
+        "num": "23",
+        "street": "Via dei Mille",
+        "locality": "Firenze",
+        "region": "FI",
+        "code": "00100",
+        "country": "IT"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": { "name": "Camera Matrimoniale", "price": "125.00" },
+      "sum": "125.00",
+      "taxes": [{ "cat": "VAT", "key": "standard", "rate": "intermediate", "percent": "10.0%" }],
+      "total": "125.00"
+    }
+  ],
+  "charges": [{ "i": 1, "key": "stamp-duty", "reason": "Imposta di bollo", "amount": "2.00" }],
+  "totals": {
+    "sum": "125.00",
+    "charge": "2.00",
+    "total": "127.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [{ "key": "standard", "base": "125.00", "percent": "10.0%", "amount": "12.50" }],
+          "amount": "12.50"
+        }
+      ],
+      "sum": "12.50"
+    },
+    "tax": "12.50",
+    "total_with_tax": "139.50",
+    "payable": "139.50"
+  }
+}

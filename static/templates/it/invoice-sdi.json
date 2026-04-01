@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "IT",
-  "$addons": [
-    "it-sdi-v1"
-  ],
+  "$addons": ["it-sdi-v1"],
   "uuid": "019d2fca-f682-7f03-9595-097f4ef034de",
   "type": "standard",
   "series": "MOCK",

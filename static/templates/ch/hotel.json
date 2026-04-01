@@ -1,0 +1,164 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-35de-7182-8fa6-1bda932649a4",
+    "dig": {
+      "alg": "sha256",
+      "val": "75eaebc7443cc5c0dd6a41d3f8194b396f90102952f1b7ba4098512e77257703"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "CH",
+    "uuid": "019d4541-35de-719a-a516-743b0932235e",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "CHF",
+    "supplier": {
+      "name": "Basler Pharmaindustrie AG",
+      "tax_id": {
+        "country": "CH",
+        "code": "E069139694"
+      },
+      "addresses": [
+        {
+          "num": "57",
+          "street": "Freie Strasse",
+          "locality": "Genève",
+          "region": "GE",
+          "code": "1201",
+          "country": "CH"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Luzerner Lebensmittel GmbH",
+      "tax_id": {
+        "country": "CH",
+        "code": "E233803544"
+      },
+      "addresses": [
+        {
+          "num": "176",
+          "street": "Marktgasse",
+          "locality": "Genève",
+          "region": "GE",
+          "code": "1201",
+          "country": "CH"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Kurtaxe",
+          "price": "3.00"
+        },
+        "sum": "3.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "exempt"
+          }
+        ],
+        "total": "3.00"
+      },
+      {
+        "i": 2,
+        "quantity": "3",
+        "period": {
+          "start": "2026-03-25",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Doppelzimmer",
+          "price": "180.00"
+        },
+        "sum": "540.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "intermediate",
+            "percent": "3.8%"
+          }
+        ],
+        "total": "540.00"
+      },
+      {
+        "i": 3,
+        "quantity": "1",
+        "item": {
+          "name": "Kurtaxe",
+          "price": "3.00"
+        },
+        "sum": "3.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "exempt"
+          }
+        ],
+        "total": "3.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "instant",
+        "notes": "Payment due upon receipt."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "CH3950385316671755267",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "546.00",
+      "total": "546.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "exempt",
+                "base": "6.00",
+                "amount": "0.00"
+              },
+              {
+                "key": "standard",
+                "base": "540.00",
+                "percent": "3.8%",
+                "amount": "20.52"
+              }
+            ],
+            "amount": "20.52"
+          }
+        ],
+        "sum": "20.52"
+      },
+      "tax": "20.52",
+      "total_with_tax": "566.52",
+      "payable": "566.52"
+    }
+  }
+}

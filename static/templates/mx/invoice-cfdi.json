@@ -1,9 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "MX",
-  "$addons": [
-    "mx-cfdi-v4"
-  ],
+  "$addons": ["mx-cfdi-v4"],
   "uuid": "019d2fd4-ef36-729f-951d-4567c25f4896",
   "type": "standard",
   "series": "MOCK",

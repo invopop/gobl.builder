@@ -1,10 +1,7 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
   "$regime": "DE",
-  "$addons": [
-    "eu-en16931-v2017",
-    "de-xrechnung-v3"
-  ],
+  "$addons": ["eu-en16931-v2017", "de-xrechnung-v3"],
   "uuid": "019d2fca-f533-71b9-a7ad-8ed6dc1f414c",
   "type": "standard",
   "series": "MOCK",

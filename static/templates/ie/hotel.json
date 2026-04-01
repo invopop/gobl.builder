@@ -1,0 +1,171 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-3d61-7cc5-8166-085555bf072d",
+    "dig": {
+      "alg": "sha256",
+      "val": "463cfe5f4950139b0d127b33ec4de963a5fb10ed5d8ff72875fe295b14bc03e2"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "IE",
+    "uuid": "019d4541-3d61-7cd5-bb1d-88f983f0dd44",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Shannon Logistics Ltd",
+      "tax_id": {
+        "country": "IE",
+        "code": "1922784O"
+      },
+      "addresses": [
+        {
+          "num": "129",
+          "street": "Grafton Street",
+          "locality": "Limerick",
+          "region": "Munster",
+          "code": "V94 T9PX",
+          "country": "IE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Wicklow Precision Manufacturing Ltd",
+      "tax_id": {
+        "country": "IE",
+        "code": "1969423S"
+      },
+      "addresses": [
+        {
+          "num": "71",
+          "street": "Patrick Street",
+          "locality": "Galway",
+          "region": "Connacht",
+          "code": "H91 E2K5",
+          "country": "IE"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "3",
+        "period": {
+          "start": "2026-03-27",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Double room",
+          "price": "140.00"
+        },
+        "sum": "420.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "reduced",
+            "percent": "13.5%"
+          }
+        ],
+        "total": "420.00"
+      },
+      {
+        "i": 2,
+        "quantity": "4",
+        "period": {
+          "start": "2026-03-25",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Double room",
+          "price": "140.00"
+        },
+        "sum": "560.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "reduced",
+            "percent": "13.5%"
+          }
+        ],
+        "total": "560.00"
+      },
+      {
+        "i": 3,
+        "quantity": "3",
+        "period": {
+          "start": "2026-03-27",
+          "end": "2026-03-30"
+        },
+        "item": {
+          "name": "Double room",
+          "price": "140.00"
+        },
+        "sum": "420.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "reduced",
+            "percent": "13.5%"
+          }
+        ],
+        "total": "420.00"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "instant",
+        "notes": "Payment due upon receipt."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "IE60688749694038531667",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "1400.00",
+      "total": "1400.00",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "base": "1400.00",
+                "percent": "13.5%",
+                "amount": "189.00"
+              }
+            ],
+            "amount": "189.00"
+          }
+        ],
+        "sum": "189.00"
+      },
+      "tax": "189.00",
+      "total_with_tax": "1589.00",
+      "payable": "1589.00"
+    }
+  }
+}

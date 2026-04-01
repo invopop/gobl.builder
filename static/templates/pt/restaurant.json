@@ -1,0 +1,181 @@
+{
+  "$schema": "https://gobl.org/draft-0/envelope",
+  "head": {
+    "uuid": "019d4541-5324-759d-876d-0bbdbaabc0a9",
+    "dig": {
+      "alg": "sha256",
+      "val": "c1acfcf0eb68c2d3eb04821d14d9c751e1db3ab68f89f467cdf9317ac3486399"
+    }
+  },
+  "doc": {
+    "$schema": "https://gobl.org/draft-0/bill/invoice",
+    "$regime": "PT",
+    "uuid": "019d4541-5324-75ad-8c72-34ad53bf073a",
+    "type": "standard",
+    "series": "MOCK",
+    "code": "61929",
+    "issue_date": "2026-03-31",
+    "currency": "EUR",
+    "supplier": {
+      "name": "Alimentos do Algarve Lda.",
+      "tax_id": {
+        "country": "PT",
+        "code": "592278409"
+      },
+      "addresses": [
+        {
+          "num": "129",
+          "street": "Rua Augusta",
+          "locality": "Porto",
+          "region": "Porto",
+          "code": "4000-007",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "customer": {
+      "name": "Engenharia do Minho Lda.",
+      "tax_id": {
+        "country": "PT",
+        "code": "396942300"
+      },
+      "addresses": [
+        {
+          "num": "71",
+          "street": "Avenida dos Aliados",
+          "locality": "Faro",
+          "region": "Faro",
+          "code": "8000-001",
+          "country": "PT"
+        }
+      ],
+      "emails": [
+        {
+          "addr": "billing@example.com"
+        }
+      ]
+    },
+    "lines": [
+      {
+        "i": 1,
+        "quantity": "1",
+        "item": {
+          "name": "Garrafa de vinho",
+          "price": "18.00"
+        },
+        "sum": "18.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT"
+            }
+          }
+        ],
+        "total": "18.00"
+      },
+      {
+        "i": 2,
+        "quantity": "1",
+        "item": {
+          "name": "Garrafa de vinho",
+          "price": "18.00"
+        },
+        "sum": "18.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT"
+            }
+          }
+        ],
+        "total": "18.00"
+      },
+      {
+        "i": 3,
+        "quantity": "1",
+        "item": {
+          "name": "Garrafa de vinho",
+          "price": "18.00"
+        },
+        "sum": "18.00",
+        "taxes": [
+          {
+            "cat": "VAT",
+            "key": "standard",
+            "rate": "general",
+            "percent": "23.0%",
+            "ext": {
+              "pt-region": "PT"
+            }
+          }
+        ],
+        "total": "18.00"
+      }
+    ],
+    "charges": [
+      {
+        "i": 1,
+        "key": "handling",
+        "reason": "Service charge",
+        "percent": "10.0%",
+        "amount": "5.40"
+      }
+    ],
+    "payment": {
+      "terms": {
+        "key": "instant",
+        "notes": "Payment due upon receipt."
+      },
+      "instructions": {
+        "key": "credit-transfer+sepa",
+        "credit_transfer": [
+          {
+            "iban": "PT41688749694038531667175",
+            "name": "Bank Account"
+          }
+        ]
+      }
+    },
+    "totals": {
+      "sum": "54.00",
+      "charge": "5.40",
+      "total": "59.40",
+      "taxes": {
+        "categories": [
+          {
+            "code": "VAT",
+            "rates": [
+              {
+                "key": "standard",
+                "ext": {
+                  "pt-region": "PT"
+                },
+                "base": "54.00",
+                "percent": "23.0%",
+                "amount": "12.42"
+              }
+            ],
+            "amount": "12.42"
+          }
+        ],
+        "sum": "12.42"
+      },
+      "tax": "12.42",
+      "total_with_tax": "71.82",
+      "payable": "71.82"
+    }
+  }
+}
