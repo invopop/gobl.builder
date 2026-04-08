@@ -102,7 +102,7 @@
   // eslint-disable-next-line
   let isEmptySchema = $derived(($uiModel as any).value?.schema.$comment == 'empty-schema')
   let isValidSchema = $derived(!$jsonSchema || $currentEditorSchema === $jsonSchema)
-  let showSchemaField = $derived(isEmptySchema || !isValidSchema)
+  let showSchemaField = $derived(!!$uiModel.value && (isEmptySchema || !isValidSchema))
 
   $effect(() => {
     updateSchemaIfNeeded($jsonSchema || '')
