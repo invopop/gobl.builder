@@ -34,6 +34,14 @@
 
   const { recreateEditor } = builderContext
 
+  let inputEl: HTMLDivElement | undefined = $state()
+
+  $effect(() => {
+    if (inputEl && document.activeElement !== inputEl) {
+      inputEl.textContent = val
+    }
+  })
+
   function handleBlur(e: FocusEvent) {
     const input = e.target as HTMLDivElement
     const value = input.innerText.trim()
@@ -89,6 +97,7 @@
   <SelectSchemas placeholder="Select a $schema..." onChange={handleSchemaChange} value={val} />
 {:else}
   <div
+    bind:this={inputEl}
     role="textbox"
     tabindex="0"
     contenteditable
@@ -98,7 +107,5 @@
     onpaste={handlePaste}
     {onfocus}
     class="{classes} focus:border-border-selected-bold border cursor-text text-base rounded-lg px-3 py-[5px] outline-none w-full caret-border-selected-bold tracking-tight focus:shadow-active"
-  >
-    {val}
-  </div>
+  ></div>
 {/if}
