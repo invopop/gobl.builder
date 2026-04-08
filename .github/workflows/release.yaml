@@ -29,10 +29,12 @@ jobs:
 
       # Skip if `new_tag` != `tag` (means no bump)
 
-      # Ensure npm 11.5.1 or later is installed
-      - name: Update npm
+      # Ensure npm 11+ is installed for OIDC provenance publishing
+      - name: Update npm via corepack
         if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
-        run: npm install -g npm@latest
+        run: |
+          corepack enable npm
+          corepack install -g npm@latest
 
       - run: npm ci
         if: ${{ steps.bump_version.new_tag == steps.bump_version.tag }}
