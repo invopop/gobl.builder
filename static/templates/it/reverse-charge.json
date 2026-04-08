@@ -1,27 +1,18 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IT",
+  "$tags": ["reverse-charge"],
   "type": "standard",
   "series": "SAMPLE",
   "code": "004",
   "issue_date": "2023-08-01",
   "currency": "EUR",
-  "tax": {
-    "tags": ["reverse-charge"]
-  },
+  "tax": {},
   "supplier": {
     "name": "MªF. Services",
-    "tax_id": {
-      "country": "IT",
-      "code": "12345678903"
-    },
+    "tax_id": { "country": "IT", "code": "12345678903" },
     "people": [
-      {
-        "name": {
-          "given": "MARIA FRANCISCA",
-          "surname": "MONTERO",
-          "surname2": "ESTEBAN"
-        }
-      }
+      { "name": { "given": "MARIA FRANCISCA", "surname": "MONTERO", "surname2": "ESTEBAN" } }
     ],
     "addresses": [
       {
@@ -33,18 +24,11 @@
         "country": "IT"
       }
     ],
-    "emails": [
-      {
-        "addr": "billing@example.com"
-      }
-    ]
+    "emails": [{ "addr": "billing@example.com" }]
   },
   "customer": {
     "name": "David Bowie",
-    "tax_id": {
-      "country": "IT",
-      "code": "13029381004"
-    },
+    "tax_id": { "country": "IT", "code": "13029381004" },
     "addresses": [
       {
         "num": "1",
@@ -60,20 +44,9 @@
     {
       "i": 1,
       "quantity": "20",
-      "item": {
-        "name": "Development services",
-        "price": "90.00"
-      },
+      "item": { "name": "Development services", "price": "90.00" },
       "sum": "1800.00",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "rate": "exempt",
-          "ext": {
-            "it-sdi-nature": "N6.9"
-          }
-        }
-      ],
+      "taxes": [{ "cat": "VAT", "key": "exempt", "ext": { "it-sdi-exempt": "N6.9" } }],
       "total": "1800.00"
     }
   ],
@@ -87,9 +60,7 @@
           "rates": [
             {
               "key": "exempt",
-              "ext": {
-                "it-sdi-nature": "N6.9"
-              },
+              "ext": { "it-sdi-exempt": "N6.9" },
               "base": "1800.00",
               "amount": "0.00"
             }

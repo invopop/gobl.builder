@@ -1,19 +1,15 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IT",
   "type": "standard",
   "series": "SAMPLE",
   "code": "002",
   "issue_date": "2023-05-21",
   "currency": "EUR",
-  "tax": {
-    "prices_include": "VAT"
-  },
+  "tax": { "prices_include": "VAT" },
   "supplier": {
     "name": "Hotel California",
-    "tax_id": {
-      "country": "IT",
-      "code": "12345678903"
-    },
+    "tax_id": { "country": "IT", "code": "12345678903" },
     "addresses": [
       {
         "num": "102",
@@ -24,25 +20,12 @@
         "country": "IT"
       }
     ],
-    "registration": {
-      "capital": "50000.00",
-      "currency": "EUR",
-      "office": "RM",
-      "entry": "123456"
-    }
+    "registration": { "capital": "50000.00", "currency": "EUR", "office": "RM", "entry": "123456" }
   },
   "customer": {
     "name": "Mela S.r.l.",
-    "tax_id": {
-      "country": "IT",
-      "code": "13029381004"
-    },
-    "inboxes": [
-      {
-        "key": "codice-destinatario",
-        "code": "M5UXCR5"
-      }
-    ],
+    "tax_id": { "country": "IT", "code": "13029381004" },
+    "inboxes": [{ "key": "codice-destinatario", "code": "M5UXCR5" }],
     "addresses": [
       {
         "num": "23",
@@ -58,37 +41,17 @@
     {
       "i": 1,
       "quantity": "1",
-      "item": {
-        "name": "Tassa di Soggiorno",
-        "price": "1.00"
-      },
+      "item": { "name": "Tassa di Soggiorno", "price": "1.00" },
       "sum": "1.00",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "rate": "exempt",
-          "ext": {
-            "it-sdi-nature": "N4"
-          }
-        }
-      ],
+      "taxes": [{ "cat": "VAT", "key": "exempt", "ext": { "it-sdi-exempt": "N4" } }],
       "total": "1.00"
     },
     {
       "i": 2,
       "quantity": "1",
-      "item": {
-        "name": "Camera Matrimoniale",
-        "price": "125.00"
-      },
+      "item": { "name": "Camera Matrimoniale", "price": "125.00" },
       "sum": "125.00",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "rate": "intermediate",
-          "percent": "10.0%"
-        }
-      ],
+      "taxes": [{ "cat": "VAT", "key": "standard", "rate": "intermediate", "percent": "10.0%" }],
       "total": "125.00"
     }
   ],
@@ -101,20 +64,8 @@
         {
           "code": "VAT",
           "rates": [
-            {
-              "key": "exempt",
-              "ext": {
-                "it-sdi-nature": "N4"
-              },
-              "base": "1.00",
-              "amount": "0.00"
-            },
-            {
-              "key": "intermediate",
-              "base": "113.64",
-              "percent": "10.0%",
-              "amount": "11.36"
-            }
+            { "key": "exempt", "ext": { "it-sdi-exempt": "N4" }, "base": "1.00", "amount": "0.00" },
+            { "key": "standard", "base": "113.64", "percent": "10.0%", "amount": "11.36" }
           ],
           "amount": "11.36"
         }

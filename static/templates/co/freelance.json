@@ -1,0 +1,230 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "CO",
+  "$addons": ["co-dian-v2"],
+  "uuid": "019d4541-42d7-7631-bdc7-666bb28b85bb",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "COP",
+  "supplier": {
+    "name": "Logística Colombiana S.A.",
+    "tax_id": {
+      "country": "CO",
+      "code": "622784002"
+    },
+    "people": [
+      {
+        "name": {
+          "given": "Camila Andrea",
+          "surname": "Restrepo",
+          "surname2": "Mejia"
+        },
+        "emails": [
+          {
+            "addr": "contact@example.com"
+          }
+        ]
+      }
+    ],
+    "addresses": [
+      {
+        "num": "40",
+        "street": "Calle 100",
+        "locality": "Barranquilla",
+        "region": "Atlántico",
+        "code": "080001",
+        "country": "CO"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "co-dian-fiscal-responsibility": "R-99-PN",
+      "co-dian-municipality": "11001"
+    }
+  },
+  "customer": {
+    "name": "Servicios Cali S.A.",
+    "tax_id": {
+      "country": "CO",
+      "code": "842302331"
+    },
+    "addresses": [
+      {
+        "num": "78",
+        "street": "Carrera 7",
+        "locality": "Barranquilla",
+        "region": "Atlántico",
+        "code": "080001",
+        "country": "CO"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "co-dian-fiscal-responsibility": "R-99-PN",
+      "co-dian-municipality": "11001"
+    }
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "60",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Desarrollo de software",
+        "price": "500000.00",
+        "unit": "h"
+      },
+      "sum": "30000000.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "3000000.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19.0%"
+        },
+        {
+          "cat": "RR",
+          "percent": "11.0%"
+        }
+      ],
+      "total": "27000000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "8",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Consultoria empresarial",
+        "price": "400000.00",
+        "unit": "h"
+      },
+      "sum": "3200000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19.0%"
+        },
+        {
+          "cat": "RR",
+          "percent": "11.0%"
+        }
+      ],
+      "total": "3200000.00"
+    },
+    {
+      "i": 3,
+      "quantity": "60",
+      "period": {
+        "label": "Billing period",
+        "start": "2026-02-01",
+        "end": "2026-02-28"
+      },
+      "item": {
+        "name": "Desarrollo de software",
+        "price": "500000.00",
+        "unit": "h"
+      },
+      "sum": "30000000.00",
+      "discounts": [
+        {
+          "reason": "Discount",
+          "percent": "10%",
+          "amount": "3000000.00"
+        }
+      ],
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "19.0%"
+        },
+        {
+          "cat": "RR",
+          "percent": "11.0%"
+        }
+      ],
+      "total": "27000000.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "due-date",
+      "due_dates": [
+        {
+          "date": "2026-05-01",
+          "amount": "61776000.00",
+          "percent": "100%"
+        }
+      ]
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "57200000.00",
+    "total": "57200000.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "57200000.00",
+              "percent": "19.0%",
+              "amount": "10868000.00"
+            }
+          ],
+          "amount": "10868000.00"
+        },
+        {
+          "code": "RR",
+          "retained": true,
+          "rates": [
+            {
+              "base": "57200000.00",
+              "percent": "11.0%",
+              "amount": "6292000.00"
+            }
+          ],
+          "amount": "6292000.00"
+        }
+      ],
+      "sum": "10868000.00",
+      "retained": "6292000.00"
+    },
+    "tax": "10868000.00",
+    "total_with_tax": "68068000.00",
+    "retained_tax": "6292000.00",
+    "payable": "61776000.00"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "PT",
+  "uuid": "019d4541-3a27-733c-9d2d-de64d2bc1f0a",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Alimentos do Algarve Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "592278409"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Rua Augusta",
+        "locality": "Porto",
+        "region": "Porto",
+        "code": "4000-007",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Engenharia do Minho Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "396942300"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Avenida dos Aliados",
+        "locality": "Faro",
+        "region": "Faro",
+        "code": "8000-001",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Taxa turistica",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "2.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Taxa turistica",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "2.00"
+    },
+    {
+      "i": 3,
+      "quantity": "1",
+      "item": {
+        "name": "Taxa turistica",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "2.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "PT41688749694038531667175",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "6.00",
+    "total": "6.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "exempt",
+              "ext": {
+                "pt-region": "PT"
+              },
+              "base": "6.00",
+              "amount": "0.00"
+            }
+          ],
+          "amount": "0.00"
+        }
+      ],
+      "sum": "0.00"
+    },
+    "tax": "0.00",
+    "total_with_tax": "6.00",
+    "payable": "6.00"
+  }
+}

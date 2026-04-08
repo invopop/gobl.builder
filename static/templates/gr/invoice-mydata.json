@@ -1,0 +1,180 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "EL",
+  "$addons": ["gr-mydata-v1"],
+  "uuid": "019d2fd4-ede3-7af4-8cf8-258391e02dd3",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "EUR",
+  "tax": {
+    "ext": {
+      "gr-mydata-invoice-type": "2.1"
+    }
+  },
+  "supplier": {
+    "name": "Thessaloniki Logistics I.K.E.",
+    "tax_id": {
+      "country": "EL",
+      "code": "192278400"
+    },
+    "addresses": [
+      {
+        "num": "185",
+        "street": "Panepistimiou Street",
+        "locality": "Heraklion",
+        "region": "Crete",
+        "code": "71201",
+        "country": "GR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Peloponnisiaki Kataskevastiki E.P.E.",
+    "tax_id": {
+      "country": "EL",
+      "code": "469423024"
+    },
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Vasilissis Sofias Avenue",
+        "locality": "Heraklion",
+        "region": "Crete",
+        "code": "71201",
+        "country": "GR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "8",
+      "item": {
+        "name": "Marine equipment",
+        "price": "3200.00"
+      },
+      "sum": "25600.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "24%",
+          "ext": {
+            "gr-mydata-income-cat": "category1_1",
+            "gr-mydata-income-type": "E3_561_001",
+            "gr-mydata-vat-rate": "1"
+          }
+        }
+      ],
+      "total": "25600.00"
+    },
+    {
+      "i": 2,
+      "quantity": "10",
+      "item": {
+        "name": "Shipping consultation",
+        "price": "100.00",
+        "unit": "h"
+      },
+      "sum": "1000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "24%",
+          "ext": {
+            "gr-mydata-income-cat": "category1_1",
+            "gr-mydata-income-type": "E3_561_001",
+            "gr-mydata-vat-rate": "1"
+          }
+        }
+      ],
+      "total": "1000.00"
+    },
+    {
+      "i": 3,
+      "quantity": "18",
+      "item": {
+        "name": "Shipping consultation",
+        "price": "100.00",
+        "unit": "h"
+      },
+      "sum": "1800.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "24%",
+          "ext": {
+            "gr-mydata-income-cat": "category1_1",
+            "gr-mydata-income-type": "E3_561_001",
+            "gr-mydata-vat-rate": "1"
+          }
+        }
+      ],
+      "total": "1800.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "GR2387496940385316671755267",
+          "name": "Bank Account"
+        }
+      ],
+      "ext": {
+        "gr-mydata-payment-means": "3"
+      }
+    }
+  },
+  "totals": {
+    "sum": "28400.00",
+    "total": "28400.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "gr-mydata-income-cat": "category1_1",
+                "gr-mydata-income-type": "E3_561_001",
+                "gr-mydata-vat-rate": "1"
+              },
+              "base": "28400.00",
+              "percent": "24%",
+              "amount": "6816.00"
+            }
+          ],
+          "amount": "6816.00"
+        }
+      ],
+      "sum": "6816.00"
+    },
+    "tax": "6816.00",
+    "total_with_tax": "35216.00",
+    "payable": "35216.00"
+  }
+}

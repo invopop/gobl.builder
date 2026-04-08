@@ -1,0 +1,179 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "AR",
+  "$addons": ["ar-arca-v4"],
+  "uuid": "019d2fd4-df32-714c-8aea-7c289d7968b9",
+  "type": "standard",
+  "series": "6192",
+  "code": "37617",
+  "issue_date": "2026-03-27",
+  "currency": "ARS",
+  "tax": {
+    "ext": {
+      "ar-arca-concept": "2",
+      "ar-arca-doc-type": "1"
+    }
+  },
+  "supplier": {
+    "name": "Industrias Rioplatenses S.A.",
+    "tax_id": {
+      "country": "AR",
+      "code": "33227840069"
+    },
+    "addresses": [
+      {
+        "num": "40",
+        "street": "Avenida Santa Fe",
+        "locality": "Rosario",
+        "region": "Santa Fe",
+        "code": "S2000",
+        "country": "AR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Electrónica Nacional S.R.L.",
+    "tax_id": {
+      "country": "AR",
+      "code": "30942302335"
+    },
+    "addresses": [
+      {
+        "num": "4",
+        "street": "Avenida Santa Fe",
+        "locality": "Mendoza",
+        "region": "Mendoza",
+        "code": "M5500",
+        "country": "AR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "ar-arca-vat-status": "1"
+    }
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "11",
+      "item": {
+        "name": "Computadora portátil",
+        "price": "85000.00"
+      },
+      "sum": "935000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%",
+          "ext": {
+            "ar-arca-vat-rate": "5"
+          }
+        }
+      ],
+      "total": "935000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "14",
+      "item": {
+        "name": "Computadora portátil",
+        "price": "85000.00"
+      },
+      "sum": "1190000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%",
+          "ext": {
+            "ar-arca-vat-rate": "5"
+          }
+        }
+      ],
+      "total": "1190000.00"
+    },
+    {
+      "i": 3,
+      "quantity": "17",
+      "item": {
+        "name": "Auditoría contable",
+        "price": "9000.00",
+        "unit": "h"
+      },
+      "sum": "153000.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "21.0%",
+          "ext": {
+            "ar-arca-vat-rate": "5"
+          }
+        }
+      ],
+      "total": "153000.00"
+    }
+  ],
+  "ordering": {
+    "code": "PO-79629",
+    "period": {
+      "start": "2026-02-27",
+      "end": "2026-03-27"
+    }
+  },
+  "payment": {
+    "terms": {
+      "key": "due-date",
+      "due_dates": [
+        {
+          "date": "2026-04-27",
+          "amount": "2756380.00",
+          "percent": "100%"
+        }
+      ]
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "2278000.00",
+    "total": "2278000.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "ar-arca-vat-rate": "5"
+              },
+              "base": "2278000.00",
+              "percent": "21.0%",
+              "amount": "478380.00"
+            }
+          ],
+          "amount": "478380.00"
+        }
+      ],
+      "sum": "478380.00"
+    },
+    "tax": "478380.00",
+    "total_with_tax": "2756380.00",
+    "payable": "2756380.00"
+  }
+}

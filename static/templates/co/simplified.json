@@ -1,48 +1,30 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "CO",
+  "$tags": ["simplified"],
   "type": "standard",
   "series": "SETT",
   "code": "1234",
   "issue_date": "2021-01-01",
   "currency": "COP",
-  "tax": {
-    "tags": ["simplified"]
-  },
+  "tax": {},
   "supplier": {
     "name": "EXAMPLE SUPPLIER S.A.S.",
-    "tax_id": {
-      "country": "CO",
-      "zone": "11001",
-      "type": "tin",
-      "code": "9014514812"
-    }
+    "tax_id": { "country": "CO", "code": "9014514812", "type": "tin" },
+    "ext": { "co-dian-municipality": "11001" }
   },
   "lines": [
     {
       "i": 1,
       "quantity": "1",
-      "item": {
-        "name": "Useful service",
-        "price": "200000.00"
-      },
+      "item": { "name": "Useful service", "price": "200000.00" },
       "sum": "200000.00",
-      "taxes": [
-        {
-          "cat": "VAT",
-          "percent": "19%"
-        }
-      ],
+      "taxes": [{ "cat": "VAT", "key": "standard", "percent": "19%" }],
       "total": "200000.00"
     }
   ],
   "payment": {
-    "advances": [
-      {
-        "description": "Prepaid",
-        "percent": "100%",
-        "amount": "238000.00"
-      }
-    ]
+    "advances": [{ "description": "Prepaid", "percent": "100%", "amount": "238000.00" }]
   },
   "totals": {
     "sum": "200000.00",
@@ -52,11 +34,7 @@
         {
           "code": "VAT",
           "rates": [
-            {
-              "base": "200000.00",
-              "percent": "19%",
-              "amount": "38000.00"
-            }
+            { "key": "standard", "base": "200000.00", "percent": "19%", "amount": "38000.00" }
           ],
           "amount": "38000.00"
         }

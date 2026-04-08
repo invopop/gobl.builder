@@ -1,0 +1,160 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "ES",
+  "uuid": "019d4541-3162-71b1-8627-a86b66eb5ed3",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Ingeniería Solar Madrid S.L.",
+    "tax_id": {
+      "country": "ES",
+      "code": "J9227840G"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Calle Gran Vía",
+        "locality": "Barcelona",
+        "region": "Barcelona",
+        "code": "08001",
+        "country": "ES"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Empresa Nacional de Turismo S.A.",
+    "tax_id": {
+      "country": "ES",
+      "code": "G9694230E"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Paseo de la Castellana",
+        "locality": "Bilbao",
+        "region": "Vizcaya",
+        "code": "48001",
+        "country": "ES"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Tasa turistica",
+        "price": "2.50"
+      },
+      "sum": "2.50",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt"
+        }
+      ],
+      "total": "2.50"
+    },
+    {
+      "i": 2,
+      "quantity": "4",
+      "period": {
+        "start": "2026-03-25",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Habitacion doble",
+        "price": "120.00"
+      },
+      "sum": "480.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "10.0%"
+        }
+      ],
+      "total": "480.00"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-27",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Habitacion doble",
+        "price": "120.00"
+      },
+      "sum": "360.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "10.0%"
+        }
+      ],
+      "total": "360.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer",
+      "credit_transfer": [
+        {
+          "iban": "ES2468874969403853166717",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "842.50",
+    "total": "842.50",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "exempt",
+              "base": "2.50",
+              "amount": "0.00"
+            },
+            {
+              "key": "standard",
+              "base": "840.00",
+              "percent": "10.0%",
+              "amount": "84.00"
+            }
+          ],
+          "amount": "84.00"
+        }
+      ],
+      "sum": "84.00"
+    },
+    "tax": "84.00",
+    "total_with_tax": "926.50",
+    "payable": "926.50"
+  }
+}

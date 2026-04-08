@@ -1,0 +1,170 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "PT",
+  "uuid": "019d4541-588f-7315-8f3f-1f0da7e940b4",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Alimentos do Algarve Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "592278409"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Rua Augusta",
+        "locality": "Porto",
+        "region": "Porto",
+        "code": "4000-007",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Engenharia do Minho Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "396942300"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Avenida dos Aliados",
+        "locality": "Faro",
+        "region": "Faro",
+        "code": "8000-001",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "4",
+      "item": {
+        "name": "Pelicula protetora",
+        "price": "9.99"
+      },
+      "sum": "39.96",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "39.96"
+    },
+    {
+      "i": 2,
+      "quantity": "3",
+      "item": {
+        "name": "Auscultadores sem fios",
+        "price": "79.99"
+      },
+      "sum": "239.97",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "239.97"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "item": {
+        "name": "Auscultadores sem fios",
+        "price": "79.99"
+      },
+      "sum": "239.97",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT"
+          }
+        }
+      ],
+      "total": "239.97"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "delivery",
+      "reason": "Shipping",
+      "amount": "14.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "PT41688749694038531667175",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "519.90",
+    "charge": "14.00",
+    "total": "533.90",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "pt-region": "PT"
+              },
+              "base": "519.90",
+              "percent": "23.0%",
+              "amount": "119.58"
+            }
+          ],
+          "amount": "119.58"
+        }
+      ],
+      "sum": "119.58"
+    },
+    "tax": "119.58",
+    "total_with_tax": "653.48",
+    "payable": "653.48"
+  }
+}

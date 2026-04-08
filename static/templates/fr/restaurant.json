@@ -1,0 +1,165 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "FR",
+  "uuid": "019d4541-4ebe-7c6b-8bba-652c47083bec",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Bretagne Agroalimentaire SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "92192278406"
+    },
+    "addresses": [
+      {
+        "num": "185",
+        "street": "Rue de Rivoli",
+        "locality": "Lyon",
+        "region": "Auvergne-Rhône-Alpes",
+        "code": "69002",
+        "country": "FR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Alsacienne de Construction SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "95469423024"
+    },
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Avenue des Champs-Élysées",
+        "locality": "Paris",
+        "region": "Île-de-France",
+        "code": "75008",
+        "country": "FR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Bouteille de vin",
+        "price": "30.00"
+      },
+      "sum": "30.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "20%"
+        }
+      ],
+      "total": "30.00"
+    },
+    {
+      "i": 2,
+      "quantity": "4",
+      "item": {
+        "name": "Plat principal",
+        "price": "22.00"
+      },
+      "sum": "88.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "intermediate",
+          "percent": "10%"
+        }
+      ],
+      "total": "88.00"
+    },
+    {
+      "i": 3,
+      "quantity": "2",
+      "item": {
+        "name": "Entree",
+        "price": "14.00"
+      },
+      "sum": "28.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "intermediate",
+          "percent": "10%"
+        }
+      ],
+      "total": "28.00"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "handling",
+      "reason": "Service charge",
+      "percent": "10.0%",
+      "amount": "14.60"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "FR3287496940385316671755267",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "146.00",
+    "charge": "14.60",
+    "total": "160.60",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "30.00",
+              "percent": "20%",
+              "amount": "6.00"
+            },
+            {
+              "key": "standard",
+              "base": "116.00",
+              "percent": "10%",
+              "amount": "11.60"
+            }
+          ],
+          "amount": "17.60"
+        }
+      ],
+      "sum": "17.60"
+    },
+    "tax": "17.60",
+    "total_with_tax": "178.20",
+    "payable": "178.20"
+  }
+}

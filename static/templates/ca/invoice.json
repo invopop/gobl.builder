@@ -1,0 +1,138 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "CA",
+  "uuid": "019d2fca-d3a8-7d4a-8a16-d9f63cef66b2",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "CAD",
+  "supplier": {
+    "name": "Cascade Manufacturing Corp.",
+    "tax_id": {
+      "country": "CA"
+    },
+    "addresses": [
+      {
+        "num": "192",
+        "street": "Granville Street",
+        "locality": "Calgary",
+        "region": "AB",
+        "code": "T2P 3M3",
+        "country": "CA"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Great Lakes Engineering Inc.",
+    "tax_id": {
+      "country": "CA"
+    },
+    "addresses": [
+      {
+        "num": "164",
+        "street": "Albert Street",
+        "locality": "Vancouver",
+        "region": "BC",
+        "code": "V6B 1A1",
+        "country": "CA"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "2",
+      "item": {
+        "name": "Network equipment",
+        "price": "2200.00"
+      },
+      "sum": "4400.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "rate": "zero",
+          "percent": "0.0%"
+        }
+      ],
+      "total": "4400.00"
+    },
+    {
+      "i": 2,
+      "quantity": "13",
+      "item": {
+        "name": "Industrial sensor kit",
+        "price": "890.00"
+      },
+      "sum": "11570.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "rate": "zero",
+          "percent": "0.0%"
+        }
+      ],
+      "total": "11570.00"
+    },
+    {
+      "i": 3,
+      "quantity": "4",
+      "item": {
+        "name": "Environmental assessment",
+        "price": "200.00",
+        "unit": "h"
+      },
+      "sum": "800.00",
+      "taxes": [
+        {
+          "cat": "GST",
+          "rate": "zero",
+          "percent": "0.0%"
+        }
+      ],
+      "total": "800.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "16770.00",
+    "total": "16770.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "GST",
+          "rates": [
+            {
+              "base": "16770.00",
+              "percent": "0.0%",
+              "amount": "0.00"
+            }
+          ],
+          "amount": "0.00"
+        }
+      ],
+      "sum": "0.00"
+    },
+    "tax": "0.00",
+    "total_with_tax": "16770.00",
+    "payable": "16770.00"
+  }
+}

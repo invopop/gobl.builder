@@ -1,0 +1,154 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "AT",
+  "uuid": "019d4541-36ec-7bee-8b5d-3ac7bffed1ca",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Tiroler Holzverarbeitung OG",
+    "tax_id": {
+      "country": "AT",
+      "code": "U59227848"
+    },
+    "addresses": [
+      {
+        "num": "11",
+        "street": "Kärntner Straße",
+        "locality": "Graz",
+        "region": "Steiermark",
+        "code": "8010",
+        "country": "AT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Vorarlberger Textil AG",
+    "tax_id": {
+      "country": "AT",
+      "code": "U13969428"
+    },
+    "addresses": [
+      {
+        "num": "6",
+        "street": "Mariahilfer Straße",
+        "locality": "Salzburg",
+        "region": "Salzburg",
+        "code": "5020",
+        "country": "AT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Ortstaxe",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt"
+        }
+      ],
+      "total": "2.00"
+    },
+    {
+      "i": 2,
+      "quantity": "1",
+      "item": {
+        "name": "Ortstaxe",
+        "price": "2.00"
+      },
+      "sum": "2.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "exempt"
+        }
+      ],
+      "total": "2.00"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-27",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Doppelzimmer",
+        "price": "135.00"
+      },
+      "sum": "405.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "10.0%"
+        }
+      ],
+      "total": "405.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "AT505468874969403853",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "409.00",
+    "total": "409.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "exempt",
+              "base": "4.00",
+              "amount": "0.00"
+            },
+            {
+              "key": "standard",
+              "base": "405.00",
+              "percent": "10.0%",
+              "amount": "40.50"
+            }
+          ],
+          "amount": "40.50"
+        }
+      ],
+      "sum": "40.50"
+    },
+    "tax": "40.50",
+    "total_with_tax": "449.50",
+    "payable": "449.50"
+  }
+}

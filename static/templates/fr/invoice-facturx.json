@@ -1,0 +1,173 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "FR",
+  "$addons": ["eu-en16931-v2017", "fr-facturx-v1"],
+  "uuid": "019d2fd4-ec7e-7b5a-94aa-3117a4a01890",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "EUR",
+  "tax": {
+    "ext": {
+      "untdid-document-type": "380"
+    }
+  },
+  "supplier": {
+    "name": "Bretagne Agroalimentaire SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "92192278406"
+    },
+    "addresses": [
+      {
+        "num": "185",
+        "street": "Rue de Rivoli",
+        "locality": "Lyon",
+        "region": "Auvergne-Rhône-Alpes",
+        "code": "69002",
+        "country": "FR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Alsacienne de Construction SAS",
+    "tax_id": {
+      "country": "FR",
+      "code": "95469423024"
+    },
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Avenue des Champs-Élysées",
+        "locality": "Paris",
+        "region": "Île-de-France",
+        "code": "75008",
+        "country": "FR"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "8",
+      "item": {
+        "name": "Équipement industriel",
+        "price": "2400.00",
+        "unit": "one"
+      },
+      "sum": "19200.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
+        }
+      ],
+      "total": "19200.00"
+    },
+    {
+      "i": 2,
+      "quantity": "10",
+      "item": {
+        "name": "Conseil en stratégie",
+        "price": "150.00",
+        "unit": "h"
+      },
+      "sum": "1500.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
+        }
+      ],
+      "total": "1500.00"
+    },
+    {
+      "i": 3,
+      "quantity": "18",
+      "item": {
+        "name": "Conseil en stratégie",
+        "price": "150.00",
+        "unit": "h"
+      },
+      "sum": "2700.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "20%",
+          "ext": {
+            "untdid-tax-category": "S"
+          }
+        }
+      ],
+      "total": "2700.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "FR3287496940385316671755267",
+          "name": "Bank Account"
+        }
+      ],
+      "ext": {
+        "untdid-payment-means": "58"
+      }
+    }
+  },
+  "totals": {
+    "sum": "23400.00",
+    "total": "23400.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "untdid-tax-category": "S"
+              },
+              "base": "23400.00",
+              "percent": "20%",
+              "amount": "4680.00"
+            }
+          ],
+          "amount": "4680.00"
+        }
+      ],
+      "sum": "4680.00"
+    },
+    "tax": "4680.00",
+    "total_with_tax": "28080.00",
+    "payable": "28080.00"
+  }
+}

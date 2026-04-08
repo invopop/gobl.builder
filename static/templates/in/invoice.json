@@ -1,0 +1,155 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IN",
+  "uuid": "019d2fca-e0a4-728c-9ebf-c058e4ada137",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "INR",
+  "supplier": {
+    "name": "Kaveri Consulting Services LLP",
+    "tax_id": {
+      "country": "IN",
+      "code": "19YGGTV4979B2ZY"
+    },
+    "addresses": [
+      {
+        "num": "185",
+        "street": "Rajaji Salai",
+        "locality": "New Delhi",
+        "region": "Delhi",
+        "code": "110001",
+        "country": "IN"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Narmada Logistics Pvt. Ltd.",
+    "tax_id": {
+      "country": "IN",
+      "code": "34RXMHI0277FDZ8"
+    },
+    "addresses": [
+      {
+        "num": "171",
+        "street": "Jawaharlal Nehru Marg",
+        "locality": "Mumbai",
+        "region": "Maharashtra",
+        "code": "400001",
+        "country": "IN"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "10",
+      "item": {
+        "name": "Industrial machinery",
+        "identities": [
+          {
+            "type": "HSN",
+            "code": "38625124"
+          }
+        ],
+        "price": "250000.00"
+      },
+      "sum": "2500000.00",
+      "taxes": [
+        {
+          "cat": "CGST",
+          "percent": "10%"
+        }
+      ],
+      "total": "2500000.00"
+    },
+    {
+      "i": 2,
+      "quantity": "16",
+      "item": {
+        "name": "IT consulting",
+        "identities": [
+          {
+            "type": "HSN",
+            "code": "87828140"
+          }
+        ],
+        "price": "5000.00",
+        "unit": "h"
+      },
+      "sum": "80000.00",
+      "taxes": [
+        {
+          "cat": "CGST",
+          "percent": "10%"
+        }
+      ],
+      "total": "80000.00"
+    },
+    {
+      "i": 3,
+      "quantity": "20",
+      "item": {
+        "name": "IT hardware",
+        "identities": [
+          {
+            "type": "HSN",
+            "code": "98556080"
+          }
+        ],
+        "price": "95000.00"
+      },
+      "sum": "1900000.00",
+      "taxes": [
+        {
+          "cat": "CGST",
+          "percent": "10%"
+        }
+      ],
+      "total": "1900000.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
+  "totals": {
+    "sum": "4480000.00",
+    "total": "4480000.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "CGST",
+          "rates": [
+            {
+              "base": "4480000.00",
+              "percent": "10%",
+              "amount": "448000.00"
+            }
+          ],
+          "amount": "448000.00"
+        }
+      ],
+      "sum": "448000.00"
+    },
+    "tax": "448000.00",
+    "total_with_tax": "4928000.00",
+    "payable": "4928000.00"
+  }
+}

@@ -1,0 +1,170 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "PL",
+  "$addons": ["pl-favat-v3"],
+  "uuid": "019d2fd4-f084-7d52-bc29-000ebce00fbf",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "currency": "PLN",
+  "tax": {
+    "ext": {
+      "pl-favat-invoice-type": "VAT"
+    }
+  },
+  "supplier": {
+    "name": "Poznańska Logistyka Sp. z o.o.",
+    "tax_id": {
+      "country": "PL",
+      "code": "6922784007"
+    },
+    "addresses": [
+      {
+        "num": "40",
+        "street": "ul. Piotrkowska",
+        "locality": "Kraków",
+        "region": "Małopolskie",
+        "code": "30-001",
+        "country": "PL"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Bydgoska Elektronika Sp. z o.o.",
+    "tax_id": {
+      "country": "PL",
+      "code": "8942302337"
+    },
+    "addresses": [
+      {
+        "num": "78",
+        "street": "ul. Marszałkowska",
+        "locality": "Kraków",
+        "region": "Małopolskie",
+        "code": "30-001",
+        "country": "PL"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "10",
+      "item": {
+        "name": "Doradztwo biznesowe",
+        "price": "350.00",
+        "unit": "h"
+      },
+      "sum": "3500.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pl-favat-tax-category": "1"
+          }
+        }
+      ],
+      "total": "3500.00"
+    },
+    {
+      "i": 2,
+      "quantity": "18",
+      "item": {
+        "name": "Doradztwo biznesowe",
+        "price": "350.00",
+        "unit": "h"
+      },
+      "sum": "6300.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pl-favat-tax-category": "1"
+          }
+        }
+      ],
+      "total": "6300.00"
+    },
+    {
+      "i": 3,
+      "quantity": "16",
+      "item": {
+        "name": "Rozwój oprogramowania",
+        "price": "280.00",
+        "unit": "h"
+      },
+      "sum": "4480.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pl-favat-tax-category": "1"
+          }
+        }
+      ],
+      "total": "4480.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "PL79596940385316671755267953",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "14280.00",
+    "total": "14280.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "pl-favat-tax-category": "1"
+              },
+              "base": "14280.00",
+              "percent": "23.0%",
+              "amount": "3284.40"
+            }
+          ],
+          "amount": "3284.40"
+        }
+      ],
+      "sum": "3284.40"
+    },
+    "tax": "3284.40",
+    "total_with_tax": "17564.40",
+    "payable": "17564.40"
+  }
+}

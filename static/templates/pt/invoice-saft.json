@@ -1,0 +1,185 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "PT",
+  "$addons": ["pt-saft-v1"],
+  "uuid": "019d2fd4-f231-7e7e-adfb-57a0621a2c99",
+  "type": "standard",
+  "series": "FT MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "value_date": "2026-03-27",
+  "currency": "EUR",
+  "tax": {
+    "ext": {
+      "pt-saft-invoice-type": "FT",
+      "pt-saft-source": "P"
+    }
+  },
+  "supplier": {
+    "name": "Alimentos do Algarve Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "592278409"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Rua Augusta",
+        "locality": "Porto",
+        "region": "Porto",
+        "code": "4000-007",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Engenharia do Minho Lda.",
+    "tax_id": {
+      "country": "PT",
+      "code": "396942300"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Avenida dos Aliados",
+        "locality": "Faro",
+        "region": "Faro",
+        "code": "8000-001",
+        "country": "PT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "18",
+      "item": {
+        "name": "Material eletrónico",
+        "price": "2200.00",
+        "unit": "one",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
+      },
+      "sum": "39600.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
+          }
+        }
+      ],
+      "total": "39600.00"
+    },
+    {
+      "i": 2,
+      "quantity": "8",
+      "item": {
+        "name": "Equipamento industrial",
+        "price": "3800.00",
+        "unit": "one",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
+      },
+      "sum": "30400.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
+          }
+        }
+      ],
+      "total": "30400.00"
+    },
+    {
+      "i": 3,
+      "quantity": "10",
+      "item": {
+        "name": "Consultoria de gestão",
+        "price": "85.00",
+        "unit": "h",
+        "ext": {
+          "pt-saft-product-type": "S"
+        }
+      },
+      "sum": "850.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "23.0%",
+          "ext": {
+            "pt-region": "PT",
+            "pt-saft-tax-rate": "NOR"
+          }
+        }
+      ],
+      "total": "850.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "PT41688749694038531667175",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "70850.00",
+    "total": "70850.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "ext": {
+                "pt-region": "PT",
+                "pt-saft-tax-rate": "NOR"
+              },
+              "base": "70850.00",
+              "percent": "23.0%",
+              "amount": "16295.50"
+            }
+          ],
+          "amount": "16295.50"
+        }
+      ],
+      "sum": "16295.50"
+    },
+    "tax": "16295.50",
+    "total_with_tax": "87145.50",
+    "payable": "87145.50"
+  }
+}

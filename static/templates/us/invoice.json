@@ -1,90 +1,135 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "US",
+  "uuid": "019d2fca-ed8f-7829-9db9-a30b47341f34",
   "type": "standard",
-  "series": "SAMPLE",
-  "code": "001",
-  "issue_date": "2023-04-21",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
   "currency": "USD",
-  "tax": {
-    "prices_include": "ST"
-  },
   "supplier": {
-    "name": "Provide One Inc.",
+    "name": "Pinehurst Technologies Inc.",
     "tax_id": {
       "country": "US"
     },
     "addresses": [
       {
-        "num": "16",
-        "street": "Jessie Street",
-        "locality": "San Francisco",
+        "num": "192",
+        "street": "North Michigan Avenue",
+        "locality": "Los Angeles",
         "region": "CA",
-        "code": "94105",
+        "code": "90012",
         "country": "US"
       }
     ],
     "emails": [
       {
-        "addr": "billing@provideone.com"
+        "addr": "billing@example.com"
       }
     ]
   },
   "customer": {
-    "name": "Sample Consumer",
+    "name": "Redstone Food Distributors LLC",
+    "tax_id": {
+      "country": "US"
+    },
+    "addresses": [
+      {
+        "num": "164",
+        "street": "Main Street",
+        "locality": "Los Angeles",
+        "region": "CA",
+        "code": "90012",
+        "country": "US"
+      }
+    ],
     "emails": [
       {
-        "addr": "email@sample.com"
+        "addr": "billing@example.com"
       }
     ]
   },
   "lines": [
     {
       "i": 1,
-      "quantity": "20",
+      "quantity": "2",
       "item": {
-        "name": "Development services",
-        "price": "90.00",
-        "unit": "h"
+        "name": "Server hardware",
+        "price": "3400.00"
       },
-      "sum": "1800.00",
-      "discounts": [
-        {
-          "percent": "10%",
-          "amount": "180.00",
-          "reason": "Special discount"
-        }
-      ],
+      "sum": "6800.00",
       "taxes": [
         {
           "cat": "ST",
-          "percent": "8.5%"
+          "percent": "10%"
         }
       ],
-      "total": "1620.00"
+      "total": "6800.00"
+    },
+    {
+      "i": 2,
+      "quantity": "13",
+      "item": {
+        "name": "Industrial sensor kit",
+        "price": "1200.00"
+      },
+      "sum": "15600.00",
+      "taxes": [
+        {
+          "cat": "ST",
+          "percent": "10%"
+        }
+      ],
+      "total": "15600.00"
+    },
+    {
+      "i": 3,
+      "quantity": "4",
+      "item": {
+        "name": "Legal advisory",
+        "price": "300.00",
+        "unit": "h"
+      },
+      "sum": "1200.00",
+      "taxes": [
+        {
+          "cat": "ST",
+          "percent": "10%"
+        }
+      ],
+      "total": "1200.00"
     }
   ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer"
+    }
+  },
   "totals": {
-    "sum": "1620.00",
-    "tax_included": "126.91",
-    "total": "1493.09",
+    "sum": "23600.00",
+    "total": "23600.00",
     "taxes": {
       "categories": [
         {
           "code": "ST",
           "rates": [
             {
-              "base": "1493.09",
-              "percent": "8.5%",
-              "amount": "126.91"
+              "base": "23600.00",
+              "percent": "10%",
+              "amount": "2360.00"
             }
           ],
-          "amount": "126.91"
+          "amount": "2360.00"
         }
       ],
-      "sum": "126.91"
+      "sum": "2360.00"
     },
-    "tax": "126.91",
-    "total_with_tax": "1620.00",
-    "payable": "1620.00"
+    "tax": "2360.00",
+    "total_with_tax": "25960.00",
+    "payable": "25960.00"
   }
 }

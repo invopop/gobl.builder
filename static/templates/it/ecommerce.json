@@ -1,0 +1,171 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "IT",
+  "$addons": ["it-sdi-v1"],
+  "uuid": "019d4541-5779-7e3c-a10c-dccf264e9235",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "tax": {
+    "ext": {
+      "it-sdi-document-type": "TD01",
+      "it-sdi-format": "FPR12"
+    }
+  },
+  "supplier": {
+    "name": "Logistica Adriatica S.r.l.",
+    "tax_id": {
+      "country": "IT",
+      "code": "99227840065"
+    },
+    "addresses": [
+      {
+        "num": "79",
+        "street": "Via Roma",
+        "locality": "Milano",
+        "region": "Lombardia",
+        "code": "20121",
+        "country": "IT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
+    "ext": {
+      "it-sdi-fiscal-regime": "RF01"
+    }
+  },
+  "customer": {
+    "name": "Tessile Milanese S.r.l.",
+    "tax_id": {
+      "country": "IT",
+      "code": "44230233809"
+    },
+    "addresses": [
+      {
+        "num": "96",
+        "street": "Via Giuseppe Garibaldi",
+        "locality": "Firenze",
+        "region": "Toscana",
+        "code": "50123",
+        "country": "IT"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "1",
+      "item": {
+        "name": "Pellicola protettiva",
+        "price": "9.99"
+      },
+      "sum": "9.99",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "22.0%"
+        }
+      ],
+      "total": "9.99"
+    },
+    {
+      "i": 2,
+      "quantity": "2",
+      "item": {
+        "name": "Cavo di ricarica USB-C",
+        "price": "12.99"
+      },
+      "sum": "25.98",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "22.0%"
+        }
+      ],
+      "total": "25.98"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "item": {
+        "name": "Cuffie wireless",
+        "price": "79.99"
+      },
+      "sum": "239.97",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "22.0%"
+        }
+      ],
+      "total": "239.97"
+    }
+  ],
+  "charges": [
+    {
+      "i": 1,
+      "key": "delivery",
+      "reason": "Shipping",
+      "amount": "6.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "IT4469403853166717552679535",
+          "name": "Bank Account"
+        }
+      ],
+      "ext": {
+        "it-sdi-payment-means": "MP05"
+      }
+    }
+  },
+  "totals": {
+    "sum": "275.94",
+    "charge": "6.00",
+    "total": "281.94",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "275.94",
+              "percent": "22.0%",
+              "amount": "60.71"
+            }
+          ],
+          "amount": "60.71"
+        }
+      ],
+      "sum": "60.71"
+    },
+    "tax": "60.71",
+    "total_with_tax": "342.65",
+    "payable": "342.65"
+  }
+}

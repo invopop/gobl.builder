@@ -1,0 +1,161 @@
+{
+  "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "DE",
+  "uuid": "019d4541-34c9-7a6b-9ef8-9fc426adc43c",
+  "type": "standard",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-31",
+  "currency": "EUR",
+  "supplier": {
+    "name": "Weber Maschinenbau GmbH",
+    "tax_id": {
+      "country": "DE",
+      "code": "592278402"
+    },
+    "addresses": [
+      {
+        "num": "129",
+        "street": "Friedrichstraße",
+        "locality": "München",
+        "region": "Bayern",
+        "code": "80331",
+        "country": "DE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "customer": {
+    "name": "Deutsche Handelskompanie GmbH",
+    "tax_id": {
+      "country": "DE",
+      "code": "496942305"
+    },
+    "addresses": [
+      {
+        "num": "71",
+        "street": "Kurfürstendamm",
+        "locality": "Köln",
+        "region": "Nordrhein-Westfalen",
+        "code": "50667",
+        "country": "DE"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ]
+  },
+  "lines": [
+    {
+      "i": 1,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-27",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Doppelzimmer",
+        "price": "130.00"
+      },
+      "sum": "390.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "7%"
+        }
+      ],
+      "total": "390.00"
+    },
+    {
+      "i": 2,
+      "quantity": "4",
+      "period": {
+        "start": "2026-03-25",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Doppelzimmer",
+        "price": "130.00"
+      },
+      "sum": "520.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "7%"
+        }
+      ],
+      "total": "520.00"
+    },
+    {
+      "i": 3,
+      "quantity": "3",
+      "period": {
+        "start": "2026-03-27",
+        "end": "2026-03-30"
+      },
+      "item": {
+        "name": "Doppelzimmer",
+        "price": "130.00"
+      },
+      "sum": "390.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "reduced",
+          "percent": "7%"
+        }
+      ],
+      "total": "390.00"
+    }
+  ],
+  "payment": {
+    "terms": {
+      "key": "instant",
+      "notes": "Payment due upon receipt."
+    },
+    "instructions": {
+      "key": "credit-transfer+sepa",
+      "credit_transfer": [
+        {
+          "iban": "DE08688749694038531667",
+          "name": "Bank Account"
+        }
+      ]
+    }
+  },
+  "totals": {
+    "sum": "1300.00",
+    "total": "1300.00",
+    "taxes": {
+      "categories": [
+        {
+          "code": "VAT",
+          "rates": [
+            {
+              "key": "standard",
+              "base": "1300.00",
+              "percent": "7%",
+              "amount": "91.00"
+            }
+          ],
+          "amount": "91.00"
+        }
+      ],
+      "sum": "91.00"
+    },
+    "tax": "91.00",
+    "total_with_tax": "1391.00",
+    "payable": "1391.00"
+  }
+}

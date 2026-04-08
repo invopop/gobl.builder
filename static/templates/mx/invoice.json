@@ -1,93 +1,153 @@
 {
   "$schema": "https://gobl.org/draft-0/bill/invoice",
+  "$regime": "MX",
+  "$addons": ["mx-cfdi-v4"],
+  "uuid": "019d2fca-e374-7595-ad54-504d76e21333",
   "type": "standard",
-  "series": "TEST",
-  "code": "00001",
-  "issue_date": "2023-07-10",
+  "series": "MOCK",
+  "code": "61929",
+  "issue_date": "2026-03-27",
+  "issue_time": "08:55:18",
   "currency": "MXN",
+  "tax": {
+    "ext": {
+      "mx-cfdi-doc-type": "I",
+      "mx-cfdi-issue-place": "44100",
+      "mx-cfdi-payment-method": "PPD"
+    }
+  },
   "supplier": {
-    "name": "ESCUELA KEMPER URGATE",
+    "name": "Servicios Profesionales Reforma SC",
     "tax_id": {
       "country": "MX",
-      "zone": "21000",
-      "code": "EKU9003173C9"
+      "code": "YGG901014CBX"
     },
+    "addresses": [
+      {
+        "num": "40",
+        "street": "Boulevard Manuel Ávila Camacho",
+        "locality": "Puebla",
+        "region": "PUE",
+        "code": "72000",
+        "country": "MX"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
     "ext": {
-      "mx-cfdi-fiscal-regime": "601"
+      "mx-cfdi-fiscal-regime": "612"
     }
   },
   "customer": {
-    "name": "UNIVERSIDAD ROBOTICA ESPAÑOLA",
+    "name": "Energía Renovable Solar SA de CV",
     "tax_id": {
       "country": "MX",
-      "zone": "86991",
-      "code": "URE180429TM6"
+      "code": "XMH730106MN4"
     },
+    "addresses": [
+      {
+        "num": "78",
+        "street": "Avenida Insurgentes Sur",
+        "locality": "Querétaro",
+        "region": "QUE",
+        "code": "64000",
+        "country": "MX"
+      }
+    ],
+    "emails": [
+      {
+        "addr": "billing@example.com"
+      }
+    ],
     "ext": {
-      "mx-cfdi-fiscal-regime": "601",
-      "mx-cfdi-use": "G01"
+      "mx-cfdi-fiscal-regime": "620",
+      "mx-cfdi-use": "S01"
     }
   },
   "lines": [
     {
       "i": 1,
-      "quantity": "1",
+      "quantity": "16",
       "item": {
-        "name": "Cobro por tarjetas",
-        "price": "10.00",
+        "name": "Hospedaje web",
+        "price": "500.00",
         "ext": {
-          "mx-cfdi-prod-serv": "84141602"
+          "mx-cfdi-prod-serv": "81112100"
         }
       },
-      "sum": "10.00",
-      "discounts": [
-        {
-          "percent": "10.0%",
-          "amount": "1.00"
-        }
-      ],
+      "sum": "8000.00",
       "taxes": [
         {
           "cat": "VAT",
-          "rate": "standard",
+          "key": "standard",
+          "rate": "general",
           "percent": "16.0%"
         }
       ],
-      "total": "9.00"
+      "total": "8000.00"
     },
     {
       "i": 2,
-      "quantity": "1",
+      "quantity": "13",
       "item": {
-        "name": "Porcentaje sobre GMV",
-        "price": "10.00",
-        "unit": "service",
+        "name": "Servicio de consultoría",
+        "price": "1500.00",
+        "unit": "h",
         "ext": {
-          "mx-cfdi-prod-serv": "80141628"
+          "mx-cfdi-prod-serv": "82101500"
         }
       },
-      "sum": "10.00",
+      "sum": "19500.00",
       "taxes": [
         {
           "cat": "VAT",
-          "rate": "standard",
+          "key": "standard",
+          "rate": "general",
           "percent": "16.0%"
         }
       ],
-      "total": "10.00"
+      "total": "19500.00"
+    },
+    {
+      "i": 3,
+      "quantity": "1",
+      "item": {
+        "name": "Hospedaje web",
+        "price": "500.00",
+        "ext": {
+          "mx-cfdi-prod-serv": "80111600"
+        }
+      },
+      "sum": "500.00",
+      "taxes": [
+        {
+          "cat": "VAT",
+          "key": "standard",
+          "rate": "general",
+          "percent": "16.0%"
+        }
+      ],
+      "total": "500.00"
     }
   ],
   "payment": {
     "terms": {
-      "notes": "Condiciones de pago"
+      "key": "instant",
+      "notes": "Payment due upon receipt."
     },
     "instructions": {
-      "key": "online+wallet"
+      "key": "credit-transfer",
+      "ext": {
+        "mx-cfdi-payment-means": "03"
+      }
     }
   },
   "totals": {
-    "sum": "19.00",
-    "total": "19.00",
+    "sum": "28000.00",
+    "total": "28000.00",
     "taxes": {
       "categories": [
         {
@@ -95,18 +155,18 @@
           "rates": [
             {
               "key": "standard",
-              "base": "19.00",
+              "base": "28000.00",
               "percent": "16.0%",
-              "amount": "3.04"
+              "amount": "4480.00"
             }
           ],
-          "amount": "3.04"
+          "amount": "4480.00"
         }
       ],
-      "sum": "3.04"
+      "sum": "4480.00"
     },
-    "tax": "3.04",
-    "total_with_tax": "22.04",
-    "payable": "22.04"
+    "tax": "4480.00",
+    "total_with_tax": "32480.00",
+    "payable": "32480.00"
   }
 }
