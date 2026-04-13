@@ -58,8 +58,9 @@ export function getGOBLErrorMessages(message: string): string[] {
     for (const fault of parsed.faults) {
       const text = fault.message || ''
       const paths = fault.paths && fault.paths.length > 0 ? fault.paths : ['$']
+      const prefix = fault.code ? `[${fault.code}] ` : ''
       for (const path of paths) {
-        messages.push(`${formatFaultPath(path)}: ${text}`)
+        messages.push(`${prefix}${formatFaultPath(path)}: ${text}`)
       }
     }
     if (messages.length > 0) return messages
