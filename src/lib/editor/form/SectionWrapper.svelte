@@ -1,6 +1,7 @@
 <script lang="ts">
   import { intersect } from 'svelte-intersection-observer-action'
   import FieldTitle from './FieldTitle.svelte'
+  import FieldError from './FieldError.svelte'
   import ExpandButton from '$lib/ui/ExpandButton.svelte'
   import { slide } from 'svelte/transition'
   import clsx from 'clsx'
@@ -8,8 +9,9 @@
   import { getBuilderContext } from '$lib/store/builder'
   import type { Schema } from './utils/schema'
   import type { SectionWrapperProps } from '$lib/types/editor'
+  import { canonicalPathKey, fieldPathSegments } from './utils/faultPaths'
 
-  const { envelopeIsSigned } = getBuilderContext()
+  const { envelopeIsSigned, faultsByPath } = getBuilderContext()
 
   const editorId = getContext('editorId')
 
@@ -30,6 +32,9 @@
   const intersectOptions = { callback, root: document.querySelector(`#${editorId}`) }
 
   let { field, readOnly, children, extraContent }: SectionWrapperProps = $props()
+
+  let ownPathKey = $derived(canonicalPathKey(fieldPathSegments(field)))
+  let containerErrors = $derived($faultsByPath.get(ownPathKey) ?? [])
 
   let element: HTMLElement
   let open = $state(true)
@@ -91,6 +96,13 @@
         <FieldTitle {field} />
         <ExpandButton {open} />
       </button>
+      {#if containerErrors.length > 0}
+        <div class="mt-1 flex flex-col space-y-1">
+          {#each containerErrors as message (message)}
+            <FieldError error={message} />
+          {/each}
+        </div>
+      {/if}
     </div>
   {/if}
 

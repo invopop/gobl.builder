@@ -11,7 +11,8 @@
   import SuccessIcon from '$lib/ui/icons/SuccessIcon.svelte'
   import LightbulbIcon from '$lib/ui/icons/LightbulbIcon.svelte'
   import { getBuilderContext } from '$lib/store/builder.js'
-  import { getAgentSystem, getGOBLErrorMessages } from '$lib/helpers'
+  import { getAgentSystem, formatFaultMessage, parseGOBLError } from '$lib/helpers'
+  import { parseSource, resolveFaultRange } from './faultLocator'
   import type { EditorCodeProps } from '$lib/types/editor'
 
   let monaco: typeof Monaco | undefined = $state()
@@ -30,6 +31,7 @@
   let drawerClosed = $state(false)
 
   let unsubscribeEditor: Unsubscriber
+  let unsubscribeGoblError: Unsubscriber
 
   const EditorUniqueId = Math.random().toString(36).slice(2, 7)
   const goblDocURL = `gobl://doc.json?${EditorUniqueId}`
@@ -160,8 +162,8 @@
     let currentVersion = initialVersion
     let lastVersion = initialVersion
 
-    builderContext.goblError.subscribe((goblErr) => {
-      if (!monaco) return
+    unsubscribeGoblError = builderContext.goblError.subscribe((goblErr) => {
+      if (!monaco || model.isDisposed()) return
 
       if (!goblErr) {
         monaco.editor.setModelMarkers(model, 'gobl', [])
@@ -169,20 +171,32 @@
       }
 
       const m = monaco
-      const errorsArr = getGOBLErrorMessages(goblErr.message)
+      const severity = m.MarkerSeverity.Error
+      const parsed = parseGOBLError(goblErr.message)
+      const markers: Monaco.editor.IMarkerData[] = []
 
-      m.editor.setModelMarkers(
-        model,
-        'gobl',
-        errorsArr.map((message: string) => ({
-          message,
-          severity: m.MarkerSeverity.Error,
+      if (parsed && Array.isArray(parsed.faults) && parsed.faults.length > 0) {
+        const root = parseSource(model.getValue())
+        for (const fault of parsed.faults) {
+          const paths = fault.paths && fault.paths.length > 0 ? fault.paths : ['$']
+          for (const path of paths) {
+            const range = resolveFaultRange(model, root, path)
+            markers.push({ message: formatFaultMessage(fault, path), severity, ...range })
+          }
+        }
+      } else {
+        const fallback = parsed?.message || parsed?.key || goblErr.message || 'Unknown error'
+        markers.push({
+          message: fallback,
+          severity,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
           endColumn: 1
-        }))
-      )
+        })
+      }
+
+      m.editor.setModelMarkers(model, 'gobl', markers)
     })
 
     unsubscribeEditor = editor.subscribe(({ value }) => {
@@ -271,6 +285,10 @@
 
     if (unsubscribeEditor != null) {
       unsubscribeEditor()
+    }
+
+    if (unsubscribeGoblError != null) {
+      unsubscribeGoblError()
     }
 
     const models = monaco?.editor.getModels()

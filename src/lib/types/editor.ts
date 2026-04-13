@@ -2,6 +2,7 @@ import type * as monaco from 'monaco-editor'
 import type { GOBLError, Keypair } from '@invopop/gobl-worker'
 import type { Readable, Writable } from 'svelte/store'
 import type { UIModelField, UIModelRootField } from '$lib/editor/form/utils/model'
+import type { FaultIndex } from '$lib/editor/form/utils/faultPaths'
 import type { Envelope, EnvelopeHeader } from './envelope'
 import type { EditorProblem } from '../editor/EditorProblem.js'
 import type { IconSource } from '@steeze-ui/svelte-icon'
@@ -72,6 +73,7 @@ export type BuilderContext = {
   highlightedItem: Writable<null | string>
   scrollingSection: Writable<boolean>
   documentHeaders: Readable<DocumentHeader[]>
+  faultsByPath: Readable<FaultIndex>
   updateSchema(value: string): void
   recreateEditor(): void
   lastFocusedElement: Writable<string | null>

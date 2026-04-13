@@ -8,15 +8,19 @@
   import { getBuilderContext } from '$lib/store/builder'
   import type { EditableFieldProps } from '$lib/types/editor'
   import { UIModelField } from './utils/model'
+  import { canonicalPathKey, fieldPathSegments } from './utils/faultPaths'
 
   const builderContext = getBuilderContext()
 
-  const { lastFocusedElement } = builderContext
+  const { lastFocusedElement, faultsByPath } = builderContext
 
   let { parseValue, field, readOnly = false, onFieldValueUpdated }: EditableFieldProps = $props()
 
   let error = $state('')
-  let showError = $derived(Boolean(error))
+  let ownPathKey = $derived(canonicalPathKey(fieldPathSegments(field)))
+  let serverErrors = $derived($faultsByPath.get(ownPathKey) ?? [])
+  let allErrors = $derived(error ? [error, ...serverErrors] : serverErrors)
+  let showError = $derived(allErrors.length > 0)
 
   function handleEdit(value: SchemaValue) {
     const parsedValue = parseValue(value)
@@ -93,6 +97,8 @@
     />
   {/if}
   {#if showError}
-    <FieldError {error} />
+    {#each allErrors as message (message)}
+      <FieldError error={message} />
+    {/each}
   {/if}
 </div>

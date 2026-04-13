@@ -37,30 +37,37 @@ export function formatErrors(error: string): string[] {
   return errors
 }
 
-type GOBLFault = { code?: string; paths?: string[]; message?: string }
-type ParsedGOBLError = { key?: string; faults?: GOBLFault[]; message?: string }
+export type GOBLFault = { code?: string; paths?: string[]; message?: string }
+export type ParsedGOBLError = { key?: string; faults?: GOBLFault[]; message?: string }
 
-function formatFaultPath(path: string) {
+export function formatFaultPath(path: string) {
   if (!path || path === '$') return '$'
   return path.startsWith('$.') ? path.slice(2) : path
 }
 
-export function getGOBLErrorMessages(message: string): string[] {
-  let parsed: ParsedGOBLError
+export function formatFaultMessage(fault: GOBLFault, path: string) {
+  const prefix = fault.code ? `[${fault.code}] ` : ''
+  return `${prefix}${formatFaultPath(path)}: ${fault.message || ''}`
+}
+
+export function parseGOBLError(message: string): ParsedGOBLError | null {
   try {
-    parsed = JSON.parse(message)
+    return JSON.parse(message)
   } catch {
-    return [message]
+    return null
   }
+}
+
+export function getGOBLErrorMessages(message: string): string[] {
+  const parsed = parseGOBLError(message)
+  if (!parsed) return [message]
 
   if (Array.isArray(parsed.faults) && parsed.faults.length > 0) {
     const messages: string[] = []
     for (const fault of parsed.faults) {
-      const text = fault.message || ''
       const paths = fault.paths && fault.paths.length > 0 ? fault.paths : ['$']
-      const prefix = fault.code ? `[${fault.code}] ` : ''
       for (const path of paths) {
-        messages.push(`${prefix}${formatFaultPath(path)}: ${text}`)
+        messages.push(formatFaultMessage(fault, path))
       }
     }
     if (messages.length > 0) return messages
