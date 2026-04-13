@@ -129,4 +129,4 @@ GOBL Builder is licensed under the [Apache-2.0 License](LICENSE).
 
 ---
 
-© 2024 Invopop, S.L.
+© 2026 Invopop, S.L.
