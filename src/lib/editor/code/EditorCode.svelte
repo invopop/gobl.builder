@@ -11,7 +11,7 @@
   import SuccessIcon from '$lib/ui/icons/SuccessIcon.svelte'
   import LightbulbIcon from '$lib/ui/icons/LightbulbIcon.svelte'
   import { getBuilderContext } from '$lib/store/builder.js'
-  import { getAgentSystem, getGOBLErrorMessage } from '$lib/helpers'
+  import { getAgentSystem, getGOBLErrorMessages } from '$lib/helpers'
   import type { EditorCodeProps } from '$lib/types/editor'
 
   let monaco: typeof Monaco | undefined = $state()
@@ -168,16 +168,15 @@
         return
       }
 
-      const errorString = getGOBLErrorMessage(goblErr.message)
+      const m = monaco
+      const errorsArr = getGOBLErrorMessages(goblErr.message)
 
-      const errorsArr = errorString.split(' / ')
-
-      monaco.editor.setModelMarkers(
+      m.editor.setModelMarkers(
         model,
         'gobl',
         errorsArr.map((message: string) => ({
           message,
-          severity: monaco?.MarkerSeverity.Error,
+          severity: m.MarkerSeverity.Error,
           startLineNumber: 1,
           startColumn: 1,
           endLineNumber: 1,
