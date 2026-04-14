@@ -15,7 +15,7 @@
 
   const editorId = getContext('editorId')
 
-  const { activeSection, activeItem, scrollingSection } = getBuilderContext()
+  const { activeSection, scrollingSection } = getBuilderContext()
 
   function callback(entry: IntersectionObserverEntry) {
     // If we are navigating from outside
@@ -47,7 +47,6 @@
   )
   let isParent = $derived(['object', 'array'].includes(field.type) && childrenType !== 'string')
   let isSection = $derived(field.is.root || (isParent && field.parent?.is.root))
-  let isActive = $derived(field.id === $activeItem)
   let wrapperClasses = $derived(
     clsx({
       'rounded-r': readOnly,

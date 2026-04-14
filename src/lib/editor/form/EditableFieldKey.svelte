@@ -15,7 +15,10 @@
   }: EditableFieldKeyProps = $props()
 
   let editing = $state(false)
-  let inputValue: SchemaValue = field.key
+  let inputValue: SchemaValue = $state(undefined)
+  $effect(() => {
+    inputValue = field.key
+  })
 
   function handleEdit(value: SchemaValue) {
     if (!value) return

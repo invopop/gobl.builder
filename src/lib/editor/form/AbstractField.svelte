@@ -43,7 +43,6 @@
   let childrenType = $derived((field.schema.items as Schema)?.type)
   let isHover = $derived($activeItem === field.id)
   let highlight = $derived($highlightedItem === field.id)
-  let showContextMenu = $derived(!readOnly && isHover)
   let contextMenuOffset = $derived.by(() => {
     if (!showAddMenu || !addMenuRef) {
       return 0
