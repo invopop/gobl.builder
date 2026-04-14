@@ -20,7 +20,9 @@
     clsx({
       'hover:bg-background-critical-bold hover:text-foreground-inverse text-foreground-critical':
         isDestructive,
-      'hover:bg-background-default-tertiary-hover text-foreground bg-background': !isDestructive,
+      'bg-background-critical border border-border-critical-bold':
+        isDestructive && needsConfirmation,
+      'hover:bg-background-default-tertiary-hover text-foreground': !isDestructive,
       'opacity-30': disabled
     })
   )
@@ -44,10 +46,11 @@
   title={tooltipText}
   {disabled}
   onclick={handleClick}
-  class="{classes} flex items-center justify-start w-full h-6 px-[4px] py-[3px] rounded"
+  class="{classes} flex items-center h-6 px-[4px] py-[3px] rounded whitespace-nowrap"
+  class:flex-row-reverse={isDestructive}
 >
   <Icon src={buttonIcon} class="h-4 w-4" />
   {#if isDestructive && needsConfirmation}
-    <span class="text-sm ml-1">Sure?</span>
+    <span class="text-sm mr-1">Sure?</span>
   {/if}
 </button>

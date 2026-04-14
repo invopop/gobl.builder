@@ -1,11 +1,9 @@
 <script lang="ts">
   import { tick } from 'svelte'
+  import { Trash } from 'svelte-hero-icons'
   import FieldButtons from '$lib/editor/form/FieldButtons.svelte'
-  import { Icon } from 'svelte-hero-icons'
-  import { Options } from '@invopop/ui-icons'
+  import FieldButton from '$lib/editor/form/FieldButton.svelte'
   import type { FieldContextMenuProps } from '$lib/types/editor.js'
-
-  let showButtons = $state(false)
 
   let {
     field,
@@ -14,6 +12,13 @@
     onFieldDuplicated,
     onFieldMoved
   }: FieldContextMenuProps = $props()
+
+  let parentIsArray = $derived(field.parent?.type === 'array')
+  let isArrayStringChildren = $derived(parentIsArray && field.type === 'string')
+  let hasAdd = $derived(['object', 'array'].includes(field.type) || isArrayStringChildren)
+  let hasDuplicate = $derived(field.is.duplicable && !isArrayStringChildren)
+  let hasMove = $derived(parentIsArray)
+  let deleteOnly = $derived(!hasAdd && !hasDuplicate && !hasMove && field.is.disposable)
 
   function handleRemove() {
     field.delete()
@@ -45,30 +50,23 @@
     await tick()
     destinationField?.tryFocus()
   }
-
-  function handleHover() {
-    showButtons = true
-  }
-
-  function handleBlur() {
-    showButtons = false
-  }
 </script>
 
-<div class="relative">
-  <button onmouseenter={handleHover} class="p-1 rounded border border-border">
-    <Icon src={Options} class="h-4 w-4 text-foreground" />
-  </button>
-  {#if showButtons}
-    <button onmouseleave={handleBlur} class="absolute top-[-4px] right-[-4px]">
-      <FieldButtons
-        {field}
-        onAdd={() => onFieldAdded?.(field)}
-        onDuplicate={handleDuplicate}
-        onDelete={handleRemove}
-        onMoveUp={handleModeFieldUp}
-        onMoveDown={handleModeFieldDown}
-      />
-    </button>
-  {/if}
-</div>
+{#if deleteOnly}
+  <FieldButton
+    icon={Trash}
+    confirmationIcon={Trash}
+    tooltipText="Remove"
+    isDestructive={true}
+    onClick={handleRemove}
+  />
+{:else}
+  <FieldButtons
+    {field}
+    onAdd={() => onFieldAdded?.(field)}
+    onDuplicate={handleDuplicate}
+    onDelete={handleRemove}
+    onMoveUp={handleModeFieldUp}
+    onMoveDown={handleModeFieldDown}
+  />
+{/if}
