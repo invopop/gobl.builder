@@ -46,7 +46,9 @@
   title={tooltipText}
   {disabled}
   onclick={handleClick}
-  class="{classes} flex items-center h-6 px-[4px] py-[3px] rounded whitespace-nowrap"
+  class="{classes} flex items-center justify-center h-6 rounded whitespace-nowrap"
+  class:w-6={!isDestructive || !needsConfirmation}
+  class:px-[4px]={isDestructive && needsConfirmation}
   class:flex-row-reverse={isDestructive}
 >
   <Icon src={buttonIcon} class="h-4 w-4" theme="outline" />
