@@ -31,11 +31,7 @@
   {/if}
   {#if canDuplicate}
     <li>
-      <FieldButton
-        icon={Duplicate}
-        tooltipText="Duplicate"
-        onClick={() => onDuplicate?.()}
-      />
+      <FieldButton icon={Duplicate} tooltipText="Duplicate" onClick={() => onDuplicate?.()} />
     </li>
   {/if}
   {#if canMoveUp}

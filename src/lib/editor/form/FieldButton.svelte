@@ -14,7 +14,9 @@
 
   let needsConfirmation = $state(false)
 
-  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? (confirmationIcon ?? icon) : icon)
+  let buttonIcon = $derived(
+    !isDestructive ? icon : needsConfirmation ? (confirmationIcon ?? icon) : icon
+  )
 
   let classes = $derived(
     clsx({
@@ -22,7 +24,8 @@
         isDestructive,
       'bg-background-critical border border-border-critical-bold':
         isDestructive && needsConfirmation,
-      'border border-border hover:bg-background-default-tertiary-hover text-foreground': !isDestructive,
+      'border border-border hover:bg-background-default-tertiary-hover text-foreground':
+        !isDestructive,
       'opacity-30': disabled
     })
   )

@@ -181,9 +181,15 @@
   onkeydown={handleKeyDown}
   onfocusin={handleFocusIn}
 >
-  <div class="{wrapperClasses} rounded-l flex transition-colors duration-150 ease-in-out" class:my-1={isParent} class:relative={isParent}>
+  <div
+    class="{wrapperClasses} rounded-l flex transition-colors duration-150 ease-in-out"
+    class:my-1={isParent}
+    class:relative={isParent}
+  >
     {#if isParent && !isSection && !field.is.root}
-      <div class="{classes} w-2 flex-none rounded-l transition-colors duration-150 ease-in-out"></div>
+      <div
+        class="{classes} w-2 flex-none rounded-l transition-colors duration-150 ease-in-out"
+      ></div>
     {/if}
     <div class="flex-1">
       <AbstractComponent
