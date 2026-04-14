@@ -40,8 +40,7 @@ function walkFieldTree(root: UIModelField): Set<string> {
 
   function visit(field: UIModelField, segs: (string | number)[]) {
     for (const child of field.children || []) {
-      const childSegs =
-        field.type === 'array' ? [...segs, Number(child.key)] : [...segs, child.key]
+      const childSegs = field.type === 'array' ? [...segs, Number(child.key)] : [...segs, child.key]
       keys.add(canonicalPathKey(childSegs))
       visit(child, childSegs)
     }
