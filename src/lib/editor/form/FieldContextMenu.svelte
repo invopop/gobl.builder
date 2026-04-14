@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte'
-  import { Trash } from 'svelte-hero-icons'
+  import { Delete } from '@invopop/ui-icons'
   import FieldButtons from '$lib/editor/form/FieldButtons.svelte'
   import FieldButton from '$lib/editor/form/FieldButton.svelte'
   import type { FieldContextMenuProps } from '$lib/types/editor.js'
@@ -54,8 +54,8 @@
 
 {#if deleteOnly}
   <FieldButton
-    icon={Trash}
-    confirmationIcon={Trash}
+    icon={Delete}
+    confirmationIcon={Delete}
     tooltipText="Remove"
     isDestructive={true}
     onClick={handleRemove}

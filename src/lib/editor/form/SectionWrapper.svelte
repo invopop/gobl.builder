@@ -51,7 +51,6 @@
   let wrapperClasses = $derived(
     clsx({
       'rounded-r': readOnly,
-      'bg-background-default-secondary': isActive,
       'rounded-l': isSection
     })
   )

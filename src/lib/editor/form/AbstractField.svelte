@@ -64,7 +64,6 @@
   )
   let classes = $derived(
     clsx({
-      'bg-background-default-secondary': isHover,
       'border-border-selected-bold': highlight,
       'border-border-default-secondary': !highlight,
       'border-l border-t border-b': childrenType !== 'string'
@@ -182,9 +181,9 @@
   onkeydown={handleKeyDown}
   onfocusin={handleFocusIn}
 >
-  <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent} class:relative={isParent}>
+  <div class="{wrapperClasses} rounded-l flex transition-colors duration-150 ease-in-out" class:my-1={isParent} class:relative={isParent}>
     {#if isParent && !isSection && !field.is.root}
-      <div class="{classes} w-2 flex-none rounded-l"></div>
+      <div class="{classes} w-2 flex-none rounded-l transition-colors duration-150 ease-in-out"></div>
     {/if}
     <div class="flex-1">
       <AbstractComponent

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Trash, DocumentDuplicate, ArrowUp, ArrowDown, Plus } from 'svelte-hero-icons'
+  import { Delete, Duplicate, ArrowUp, ArrowDown, Add } from '@invopop/ui-icons'
   import FieldButton from './FieldButton.svelte'
   import type { FieldButtonsProps } from '$lib/types/editor'
 
@@ -26,13 +26,13 @@
 <ul class="flex space-x-2 rounded-md py-1 px-[5px]">
   {#if showAdd}
     <li>
-      <FieldButton icon={Plus} tooltipText={addLabel} onClick={() => onAdd?.()} />
+      <FieldButton icon={Add} tooltipText={addLabel} onClick={() => onAdd?.()} />
     </li>
   {/if}
   {#if canDuplicate}
     <li>
       <FieldButton
-        icon={DocumentDuplicate}
+        icon={Duplicate}
         tooltipText="Duplicate"
         onClick={() => onDuplicate?.()}
       />
@@ -51,8 +51,8 @@
   {#if field?.is.disposable}
     <li>
       <FieldButton
-        icon={Trash}
-        confirmationIcon={Trash}
+        icon={Delete}
+        confirmationIcon={Delete}
         tooltipText="Remove"
         isDestructive={true}
         onClick={() => onDelete?.()}

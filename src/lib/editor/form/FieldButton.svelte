@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { FieldButtonProps } from '$lib/types/editor'
   import clsx from 'clsx'
-  import { Icon } from 'svelte-hero-icons'
+  import { Icon } from '@steeze-ui/svelte-icon'
 
   let {
     icon,
@@ -14,7 +14,7 @@
 
   let needsConfirmation = $state(false)
 
-  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? confirmationIcon : icon)
+  let buttonIcon = $derived(!isDestructive ? icon : needsConfirmation ? (confirmationIcon ?? icon) : icon)
 
   let classes = $derived(
     clsx({
@@ -22,7 +22,7 @@
         isDestructive,
       'bg-background-critical border border-border-critical-bold':
         isDestructive && needsConfirmation,
-      'hover:bg-background-default-tertiary-hover text-foreground': !isDestructive,
+      'border border-border hover:bg-background-default-tertiary-hover text-foreground': !isDestructive,
       'opacity-30': disabled
     })
   )
@@ -49,7 +49,7 @@
   class="{classes} flex items-center h-6 px-[4px] py-[3px] rounded whitespace-nowrap"
   class:flex-row-reverse={isDestructive}
 >
-  <Icon src={buttonIcon} class="h-4 w-4" />
+  <Icon src={buttonIcon} class="h-4 w-4" theme="outline" />
   {#if isDestructive && needsConfirmation}
     <span class="text-sm mr-1">Sure?</span>
   {/if}
