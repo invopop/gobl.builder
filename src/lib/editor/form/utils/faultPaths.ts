@@ -1,9 +1,11 @@
 import type { GOBLError } from '@invopop/gobl-worker'
-import { formatFaultMessage, parseGOBLError } from '$lib/helpers'
+import { parseGOBLError } from '$lib/helpers'
 import { parseJSONPath } from '$lib/editor/code/faultLocator'
 import type { UIModelField } from './model'
 
 export type FaultIndex = Map<string, string[]>
+
+const ROOT_KEY = canonicalPathKey([])
 
 /**
  * Walk the parent chain of a UIModelField (excluding the root) and return the
@@ -70,7 +72,15 @@ export function buildFaultIndex(
   if (!goblError || !root) return index
 
   const parsed = parseGOBLError(goblError.message)
-  if (!parsed?.faults?.length) return index
+  if (!parsed) return index
+
+  // Non-fault errors (calculation, input, etc.) have a top-level message
+  // but no faults array. Show them at the document root.
+  if (!parsed.faults?.length) {
+    const message = parsed.message || parsed.key || 'Unknown error'
+    index.set(ROOT_KEY, [message])
+    return index
+  }
 
   const existingKeys = walkFieldTree(root)
   const rootHasDoc = Boolean(root.childrenMap?.doc)
@@ -94,7 +104,7 @@ export function buildFaultIndex(
         key = canonicalPathKey(segments)
       }
 
-      const message = formatFaultMessage(fault, path)
+      const message = fault.message || ''
       const list = index.get(key)
       if (list) {
         list.push(message)

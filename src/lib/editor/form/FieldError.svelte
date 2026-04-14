@@ -5,9 +5,7 @@
   let { error = '' }: FieldErrorProps = $props()
 </script>
 
-<span
-  class="text-foreground-critical text-sm whitespace-nowrap flex space-x-1 items-center h-[18px]"
->
+<span class="text-foreground-critical text-sm flex space-x-1 items-start">
   <Icon src={ExclamationCircle} solid class="h-4 w-4 text-foreground-critical" />
   <span>{error}</span>
 </span>
