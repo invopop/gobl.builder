@@ -503,7 +503,7 @@
           <ul>
             {#each sortedProblems as problem}
               <li class="block cursor-pointer px-4 py-1 hover:bg-zinc-700">
-                <button onclick={handleProblemClick(problem)}>
+                <button class="select-text text-left" onclick={handleProblemClick(problem)}>
                   <EditorProblem {problem} />
                 </button>
               </li>
