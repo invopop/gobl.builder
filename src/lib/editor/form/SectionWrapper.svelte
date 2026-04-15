@@ -1,6 +1,7 @@
 <script lang="ts">
   import { intersect } from 'svelte-intersection-observer-action'
   import FieldTitle from './FieldTitle.svelte'
+  import FieldError from './FieldError.svelte'
   import ExpandButton from '$lib/ui/ExpandButton.svelte'
   import { slide } from 'svelte/transition'
   import clsx from 'clsx'
@@ -8,12 +9,13 @@
   import { getBuilderContext } from '$lib/store/builder'
   import type { Schema } from './utils/schema'
   import type { SectionWrapperProps } from '$lib/types/editor'
+  import { canonicalPathKey, fieldPathSegments } from './utils/faultPaths'
 
-  const { envelopeIsSigned } = getBuilderContext()
+  const { envelopeIsSigned, faultsByPath } = getBuilderContext()
 
   const editorId = getContext('editorId')
 
-  const { activeSection, activeItem, scrollingSection } = getBuilderContext()
+  const { activeSection, scrollingSection } = getBuilderContext()
 
   function callback(entry: IntersectionObserverEntry) {
     // If we are navigating from outside
@@ -31,6 +33,9 @@
 
   let { field, readOnly, children, extraContent }: SectionWrapperProps = $props()
 
+  let ownPathKey = $derived(canonicalPathKey(fieldPathSegments(field)))
+  let containerErrors = $derived($faultsByPath.get(ownPathKey) ?? [])
+
   let element: HTMLElement
   let open = $state(true)
 
@@ -42,11 +47,9 @@
   )
   let isParent = $derived(['object', 'array'].includes(field.type) && childrenType !== 'string')
   let isSection = $derived(field.is.root || (isParent && field.parent?.is.root))
-  let isActive = $derived(field.id === $activeItem)
   let wrapperClasses = $derived(
     clsx({
       'rounded-r': readOnly,
-      'bg-background-default-secondary': isActive,
       'rounded-l': isSection
     })
   )
@@ -91,6 +94,13 @@
         <FieldTitle {field} />
         <ExpandButton {open} />
       </button>
+      {#if containerErrors.length > 0}
+        <div class="mt-1 flex flex-col space-y-1">
+          {#each containerErrors as message (message)}
+            <FieldError error={message} />
+          {/each}
+        </div>
+      {/if}
     </div>
   {/if}
 

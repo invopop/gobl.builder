@@ -43,7 +43,6 @@
   let childrenType = $derived((field.schema.items as Schema)?.type)
   let isHover = $derived($activeItem === field.id)
   let highlight = $derived($highlightedItem === field.id)
-  let showContextMenu = $derived(!readOnly && isHover)
   let contextMenuOffset = $derived.by(() => {
     if (!showAddMenu || !addMenuRef) {
       return 0
@@ -64,7 +63,6 @@
   )
   let classes = $derived(
     clsx({
-      'bg-background-default-secondary': isHover,
       'border-border-selected-bold': highlight,
       'border-border-default-secondary': !highlight,
       'border-l border-t border-b': childrenType !== 'string'
@@ -182,9 +180,15 @@
   onkeydown={handleKeyDown}
   onfocusin={handleFocusIn}
 >
-  <div class="{wrapperClasses} rounded-l flex" class:my-1={isParent}>
+  <div
+    class="{wrapperClasses} rounded-l flex transition-colors duration-150 ease-in-out"
+    class:my-1={isParent}
+    class:relative={isParent}
+  >
     {#if isParent && !isSection && !field.is.root}
-      <div class="{classes} w-2 flex-none rounded-l"></div>
+      <div
+        class="{classes} w-2 flex-none rounded-l transition-colors duration-150 ease-in-out"
+      ></div>
     {/if}
     <div class="flex-1">
       <AbstractComponent
@@ -198,12 +202,31 @@
         {onFieldKeyUpdated}
       />
     </div>
+    {#if isParent && !readOnly}
+      <div class="{contextMenuClasses} absolute top-1 right-1 z-10 context-actions">
+        <FieldContextMenu
+          {field}
+          onFieldAdded={handleAddField}
+          {onFieldDeleted}
+          {onFieldDuplicated}
+          {onFieldMoved}
+        />
+      </div>
+    {/if}
+    {#if showAddMenu}
+      <div
+        class="absolute top-12 right-0 w-64 z-20"
+        style={`margin-top: -${contextMenuOffset}px`}
+        bind:this={addMenuRef}
+      >
+        <AddFieldMenu {onFieldAdded} {field} onCloseAddFieldMenu={() => (showAddMenu = false)} />
+      </div>
+    {/if}
   </div>
-  {#if childrenType !== 'string'}
-    <div class="absolute top-0 right-0 w-9 h-10 -mr-9 bg-transparent">
+  {#if !isParent && !readOnly && childrenType !== 'string'}
+    <div class="absolute top-0 right-0 w-7 h-10 -mr-7 bg-transparent">
       <span
-        class="{contextMenuClasses} absolute top-0 left-0 pt-[7px] pr-2 pb-[5.5px] bg-background-default-secondary rounded-r"
-        class:invisible={!showContextMenu}
+        class="{contextMenuClasses} absolute top-0 right-0 pt-[7px] pb-[5.5px] bg-background rounded context-actions"
       >
         <FieldContextMenu
           {field}
@@ -213,20 +236,20 @@
           {onFieldMoved}
         />
       </span>
-      {#if showAddMenu}
-        <div
-          class="absolute top-12 -right-8 w-64 z-20"
-          style={`margin-top: -${contextMenuOffset}px`}
-          bind:this={addMenuRef}
-        >
-          <AddFieldMenu {onFieldAdded} {field} onCloseAddFieldMenu={() => (showAddMenu = false)} />
-        </div>
-      {/if}
     </div>
   {/if}
 </div>
 
 <style>
+  .context-actions {
+    visibility: hidden;
+  }
+
+  .expanded-area:hover:not(:has(.expanded-area:hover)) > :global(.context-actions),
+  .expanded-area:hover:not(:has(.expanded-area:hover)) > * > :global(.context-actions) {
+    visibility: visible;
+  }
+
   .hr-separator {
     border-image: repeating-linear-gradient(
       90deg,

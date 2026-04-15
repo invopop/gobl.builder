@@ -42,7 +42,7 @@
   let editorForm: EditorForm | null = $state(null)
   let initialEditorData = ''
 
-  const builderContext = createBuilderContext(onNotification)
+  const builderContext = createBuilderContext((notification) => onNotification?.(notification))
 
   const { editor, jsonSchema, envelope, envelopeIsSigned, activeSection, documentHeaders } =
     builderContext
@@ -85,11 +85,13 @@
     }
   })
 
-  if (signEnabled) {
-    GOBL.keygen().then((k) => {
-      builderContext.keypair.set(k)
-    })
-  }
+  $effect(() => {
+    if (signEnabled) {
+      GOBL.keygen().then((k) => {
+        builderContext.keypair.set(k)
+      })
+    }
+  })
 
   // Dispatch all `change` events when the envelope is built.
   envelope.subscribe((envelope) => {

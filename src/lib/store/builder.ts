@@ -6,6 +6,7 @@ import type * as monaco from 'monaco-editor'
 import { objectHasEmptyProperties } from '$lib/helpers'
 import { writableDerived } from './writableDerived'
 import { getUIModel, type UIModelRootField } from '$lib/editor/form/utils/model'
+import { buildFaultIndex } from '$lib/editor/form/utils/faultPaths'
 import { getDebouncedFunction } from '$lib/editor/form/utils/debounce'
 import type { Envelope } from '$lib/types/envelope'
 import { newEnvelope } from '$lib/helpers/envelope'
@@ -95,6 +96,10 @@ export function createBuilderContext(
       debouncedRecreateUIModel($schema, set)
     },
     { value: undefined as UIModelRootField | undefined, updatedAt: 0 }
+  )
+
+  const faultsByPath = derived([goblError, uiModel], ([$goblError, $uiModel]) =>
+    buildFaultIndex($goblError, $uiModel.value)
   )
 
   const documentHeaders = derived(uiModel, ($uiModel) => {
@@ -189,6 +194,7 @@ export function createBuilderContext(
     highlightedItem,
     scrollingSection,
     documentHeaders,
+    faultsByPath,
     recreateEditor,
     lastFocusedElement,
     notify

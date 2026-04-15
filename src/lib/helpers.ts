@@ -37,54 +37,53 @@ export function formatErrors(error: string): string[] {
   return errors
 }
 
-export function getErrorString(errorObj: Record<string, object | string>) {
-  const errorString = parseErrorString(errorObj)
+export type GOBLFault = { code?: string; paths?: string[]; message?: string }
+export type ParsedGOBLError = { key?: string; faults?: GOBLFault[]; message?: string }
 
-  return errorString.substring(3)
+export function formatFaultPath(path: string) {
+  if (!path || path === '$') return '$'
+  return path.startsWith('$.') ? path.slice(2) : path
 }
 
-export function parseErrorString(errorObj: Record<string, object | string>, currentPath = '') {
-  let errorString = ''
+export function formatFaultMessage(fault: GOBLFault, path: string) {
+  const prefix = fault.code ? `[${fault.code}] ` : ''
+  return `${prefix}${formatFaultPath(path)}: ${fault.message || ''}`
+}
 
-  for (const [key, value] of Object.entries(errorObj)) {
-    const newPath = currentPath ? `${currentPath} > ${key}` : key
+export function parseGOBLError(message: string): ParsedGOBLError | null {
+  try {
+    return JSON.parse(message)
+  } catch {
+    return null
+  }
+}
 
-    if (typeof value === 'object' && value !== null) {
-      errorString += parseErrorString(value as Record<string, object | string>, newPath)
-    } else {
-      errorString += ` / ${newPath}: ${value}`
+export function getGOBLErrorMessages(message: string): string[] {
+  const parsed = parseGOBLError(message)
+  if (!parsed) return [message]
+
+  if (Array.isArray(parsed.faults) && parsed.faults.length > 0) {
+    const messages: string[] = []
+    for (const fault of parsed.faults) {
+      const paths = fault.paths && fault.paths.length > 0 ? fault.paths : ['$']
+      for (const path of paths) {
+        messages.push(formatFaultMessage(fault, path))
+      }
     }
+    if (messages.length > 0) return messages
   }
 
-  return errorString
-}
-
-export function getGOBLErrorMessage(message: string) {
-  const parsedError = JSON.parse(message)
-
-  let m = ''
-
-  if (parsedError.key === 'validation') {
-    m = getErrorString(parsedError.fields?.doc || parsedError.fields?.head || {})
-  }
-
-  if (parsedError.key === 'calculation') {
-    m = getErrorString(parsedError.fields || {})
-  }
-
-  return m || parsedError.message || parsedError.key || 'Unknown error'
+  return [parsed.message || parsed.key || 'Unknown error']
 }
 
 export async function displayAllErrors(
   error: string,
   toastFunction?: (notification: NotificationProps) => void
 ) {
-  const errorMessage = getGOBLErrorMessage(error)
-  const errorsArr = errorMessage.split(' / ')
-
-  for (let i = 0; i < errorsArr.length; i++) {
-    if (!toastFunction) return
-    toastFunction({ message: errorsArr[i], type: 'error' })
+  if (!toastFunction) return
+  const errors = getGOBLErrorMessages(error)
+  for (const message of errors) {
+    toastFunction({ message, type: 'error' })
   }
 }
 
