@@ -4,7 +4,15 @@ import { sleep } from './sleep.js'
 
 export async function generateCorrectOptionsModel(schema: string) {
   const schemaObj = JSON.parse(schema)
-  const options = schemaObj.$defs.CorrectionOptions
+  // Follow the top-level $ref to locate the correction options definition
+  // inside $defs, rather than relying on a fixed key name.
+  const defsKey = schemaObj.$ref?.replace(/^#\/\$defs\//, '')
+  const options = defsKey ? schemaObj.$defs?.[defsKey] : undefined
+
+  if (!options) {
+    throw new Error(`Correction options schema not found at ${schemaObj.$ref}`)
+  }
+
   const parsedSchema = await parseSchema(schemaObj.$id, options, schemaObj)
 
   const CORRECTION_OPTIONS_SCHEMA_URL =
