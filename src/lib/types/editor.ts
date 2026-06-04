@@ -1,5 +1,5 @@
 import type * as monaco from 'monaco-editor'
-import type { GOBLError, Keypair } from '@invopop/gobl-worker'
+import type { GOBLError, Keypair } from '$lib/gobl/client'
 import type { Readable, Writable } from 'svelte/store'
 import type { UIModelField, UIModelRootField } from '$lib/editor/form/utils/model'
 import type { FaultIndex } from '$lib/editor/form/utils/faultPaths'
@@ -81,7 +81,7 @@ export type BuilderContext = {
 }
 
 export interface BuildActionResponse {
-  result?: string
+  result?: Envelope
   error?: GOBLError
 }
 
@@ -204,6 +204,11 @@ export interface NotificationProps {
 export interface EnvelopeEditorProps {
   // Used for JSON Schema validation within Monaco Editor. When set, this should  be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   jsonSchemaURL?: string
+  // Base URL of the GOBL API used for build, sign, validate, correct,
+  // replicate, keygen and schema operations. Defaults to the public service at
+  // `https://gobl.dev/v0`. Embedders may point this at a same-origin path
+  // (e.g. `/api/gobl`) that proxies the GOBL API and adds authentication.
+  apiBaseUrl?: string
   // Data is used for setting editor contents. Note: there is "one way" binding;
   // e.g. you can set data but changes are not bound to the parent. Use the
   // `change` event, to receive changes to the editor contents and GOBL
@@ -319,6 +324,9 @@ export interface ModalProps {
 
 export interface ObjectEditorProps {
   jsonSchemaURL?: string
+  // Base URL of the GOBL API used to fetch JSON schemas. See
+  // `EnvelopeEditorProps.apiBaseUrl`.
+  apiBaseUrl?: string
   data?: unknown
   id?: string
   readOnly?: boolean

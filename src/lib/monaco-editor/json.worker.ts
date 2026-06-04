@@ -28,7 +28,7 @@ self.onmessage = () => {
 let defaultSchemaRequestService: ((url: string) => Promise<string>) | undefined
 if (typeof fetch !== 'undefined') {
   defaultSchemaRequestService = async function (url: string) {
-    return await fetchJsonSchema(url)
+    return JSON.stringify(await fetchJsonSchema(url))
   }
 }
 

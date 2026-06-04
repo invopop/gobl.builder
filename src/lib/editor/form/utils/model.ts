@@ -2,8 +2,12 @@ import { tick } from 'svelte'
 import { getRootSchema, parseSchema, type Schema, type SchemaValue } from './schema.js'
 import { sleep } from './sleep.js'
 
-export async function generateCorrectOptionsModel(schema: string) {
-  const schemaObj = JSON.parse(schema)
+export async function generateCorrectOptionsModel(schema: Record<string, unknown>) {
+  const schemaObj = schema as {
+    $ref?: string
+    $id?: string
+    $defs?: Record<string, Schema>
+  } & Record<string, unknown>
   // Follow the top-level $ref to locate the correction options definition
   // inside $defs, rather than relying on a fixed key name.
   const defsKey = schemaObj.$ref?.replace(/^#\/\$defs\//, '')
@@ -13,7 +17,7 @@ export async function generateCorrectOptionsModel(schema: string) {
     throw new Error(`Correction options schema not found at ${schemaObj.$ref}`)
   }
 
-  const parsedSchema = await parseSchema(schemaObj.$id, options, schemaObj)
+  const parsedSchema = await parseSchema(schemaObj.$id ?? '', options, schemaObj)
 
   const CORRECTION_OPTIONS_SCHEMA_URL =
     'https://gobl.org/draft-0/bill/correction-options?tax_regime='

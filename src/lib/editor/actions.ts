@@ -1,7 +1,7 @@
 import { get } from 'svelte/store'
-import * as GOBL from '@invopop/gobl-worker'
-import { encodeUTF8ToBase64 } from '$lib/encodeUTF8ToBase64.js'
+import * as GOBL from '$lib/gobl/client'
 import { envelopeGOBLSchema } from '$lib/helpers/envelope'
+import type { Envelope } from '$lib/types/envelope'
 import type {
   BuildActionResponse,
   BuilderContext,
@@ -9,7 +9,7 @@ import type {
   ValidateActionResponse
 } from '$lib/types/editor'
 
-// Send a request to the GOBL worker to run the "build" operation using the current
+// Send a request to the GOBL API to run the "build" operation using the current
 // editor window contents and update with the results.
 export async function build(
   ctx: BuilderContext,
@@ -22,13 +22,7 @@ export async function build(
   try {
     const sendData = getGOBLPayload(ctx, options)
 
-    const payload: GOBL.BuildPayload = {
-      data: encodeUTF8ToBase64(sendData),
-      draft: true,
-      envelop: true
-    }
-    const rawResult = await GOBL.build({ payload })
-    const result = JSON.parse(rawResult)
+    const result = await GOBL.build<Envelope>(sendData, { envelop: true })
 
     ctx.envelope.set(result)
     ctx.goblError.set(null)
@@ -44,7 +38,7 @@ export async function build(
   }
 }
 
-// Send a request to the GOBL worker to run the "sign" operation using the current
+// Send a request to the GOBL API to run the "sign" operation using the current
 // editor window contents and update with the results.
 export async function sign(ctx: BuilderContext): Promise<BuildActionResponse> {
   const { keypair } = ctx
@@ -57,12 +51,7 @@ export async function sign(ctx: BuilderContext): Promise<BuildActionResponse> {
   try {
     const sendData = getGOBLPayload(ctx)
 
-    const payload: GOBL.SignPayload = {
-      data: encodeUTF8ToBase64(sendData),
-      privatekey: keypairValue.private
-    }
-    const rawResult = await GOBL.sign({ payload })
-    const result = JSON.parse(rawResult)
+    const result = await GOBL.sign<Envelope>(sendData, keypairValue.private)
 
     ctx.envelope.set(result)
     ctx.goblError.set(null)
@@ -78,7 +67,7 @@ export async function sign(ctx: BuilderContext): Promise<BuildActionResponse> {
   }
 }
 
-// Send a request to the GOBL worker to run the "validate" operation using the current
+// Send a request to the GOBL API to run the "validate" operation using the current
 // editor window contents and update with the results.
 export async function validate(ctx: BuilderContext): Promise<ValidateActionResponse> {
   if (!get(ctx.validEditor) || !get(ctx.envelopeIsSigned)) {
@@ -88,10 +77,7 @@ export async function validate(ctx: BuilderContext): Promise<ValidateActionRespo
   try {
     const sendData = getGOBLPayload(ctx)
 
-    const payload: GOBL.ValidatePayload = {
-      data: encodeUTF8ToBase64(sendData)
-    }
-    await GOBL.validate({ payload })
+    await GOBL.validate(sendData)
 
     ctx.goblError.set(null)
 
@@ -107,7 +93,7 @@ export async function validate(ctx: BuilderContext): Promise<ValidateActionRespo
   }
 }
 
-// Send a request to the GOBL worker to run the "replicate" operation using the current editor window contents.
+// Send a request to the GOBL API to run the "replicate" operation using the current editor window contents.
 export async function replicate(ctx: BuilderContext): Promise<BuildActionResponse> {
   if (!get(ctx.validEditor)) {
     return {}
@@ -116,12 +102,7 @@ export async function replicate(ctx: BuilderContext): Promise<BuildActionRespons
   try {
     const sendData = getGOBLPayload(ctx)
 
-    const payload: GOBL.ValidatePayload = {
-      data: encodeUTF8ToBase64(sendData)
-    }
-
-    const rawResult = await GOBL.replicate({ payload })
-    const result = JSON.parse(rawResult)
+    const result = await GOBL.replicate<Envelope>(sendData)
 
     return { result }
   } catch (e) {
@@ -134,7 +115,7 @@ export async function replicate(ctx: BuilderContext): Promise<BuildActionRespons
   }
 }
 
-// Send a request to the GOBL worker to get the adecuate correction fields using
+// Send a request to the GOBL API to get the adecuate correction fields using
 // editor window contents to read the tax regime.
 export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
   if (!get(ctx.validEditor)) {
@@ -144,12 +125,7 @@ export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
   try {
     const sendData = getGOBLPayload(ctx)
 
-    const payload: GOBL.CorrectPayload = {
-      data: encodeUTF8ToBase64(sendData),
-      schema: true
-    }
-
-    const schema = await GOBL.correct({ payload })
+    const schema = await GOBL.correctionOptionsSchema(sendData)
 
     ctx.goblError.set(null)
 
@@ -159,7 +135,7 @@ export async function getCorrectionOptionsSchema(ctx: BuilderContext) {
   }
 }
 
-// Send a request to the GOBL worker to run the "correct" operation using the current
+// Send a request to the GOBL API to run the "correct" operation using the current
 // editor window contents and update with the results.
 export async function correct(
   options: string,
@@ -173,13 +149,7 @@ export async function correct(
   try {
     const sendData = getGOBLPayload(ctx)
 
-    const payload: GOBL.CorrectPayload = {
-      data: encodeUTF8ToBase64(sendData),
-      options: encodeUTF8ToBase64(options)
-    }
-
-    const rawResult = await GOBL.correct({ payload })
-    const result = JSON.parse(rawResult)
+    const result = await GOBL.correct<Envelope>(sendData, JSON.parse(options))
 
     if (autocorrect) {
       ctx.envelope.set(result)
@@ -199,8 +169,7 @@ export async function correct(
 }
 
 export async function getSchemas() {
-  const schemas = await GOBL.schemas()
-  return JSON.parse(schemas).list
+  return await GOBL.schemas()
 }
 
 function getGOBLPayload(ctx: BuilderContext, options: BuildOptions = {}) {
@@ -214,9 +183,9 @@ function getGOBLPayload(ctx: BuilderContext, options: BuildOptions = {}) {
     delete envelopeValue.sigs
   }
   if (doc.$schema == envelopeGOBLSchema) {
-    return editorValue.value || '' // send as-is
+    return doc // send as-is
   }
   envelopeValue.doc = doc
 
-  return JSON.stringify(envelopeValue)
+  return envelopeValue
 }

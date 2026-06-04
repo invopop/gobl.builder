@@ -116,12 +116,24 @@ npm run preview
 This uses `vite` to serve a previously built `build` folder on
 http://localhost:4173.
 
-### GOBL WASM binary
+### GOBL API
 
-GOBL Builder makes use of [gobl cli](https://github.com/invopop/gobl?tab=readme-ov-file#cli) for
-validating, calculating and building GOBL documents. This is done using the [@invopop/gobl-worker](https://www.npmjs.com/package/@invopop/gobl-worker) package that prepares a Worker and uses the WASM binary distributed on `cdn.gobl.org`.
+GOBL Builder uses the [GOBL API](https://docs.gobl.org/api/introduction) for
+validating, calculating, building, signing, and correcting GOBL documents, as
+well as fetching JSON schemas. By default, requests are sent to the public
+service at `https://gobl.dev/v0`.
 
-To upgrade the version of the GOBL worker currently in use, simply update the [package.json](./package.json) file to reflect the new version.
+When embedding the builder, the endpoint can be overridden with the
+`apiBaseUrl` prop on both `EnvelopeEditor` and `ObjectEditor`, for example to
+point at a same-origin path that proxies the GOBL API and adds authentication:
+
+```html
+<EnvelopeEditor
+  data=""
+  jsonSchemaURL="https://gobl.org/draft-0/bill/invoice"
+  apiBaseUrl="/api/gobl"
+/>
+```
 
 ## License
 

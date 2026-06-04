@@ -1,4 +1,4 @@
-import type { GOBLError } from '@invopop/gobl-worker'
+import type { GOBLError } from '$lib/gobl/client'
 import { parseGOBLError } from '$lib/helpers'
 import { parseJSONPath } from '$lib/editor/code/faultLocator'
 import type { UIModelField } from './model'

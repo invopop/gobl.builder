@@ -1,5 +1,5 @@
 import type { BuilderContext, NotificationProps } from '$lib/types/editor'
-import type { GOBLError } from '@invopop/gobl-worker'
+import type { GOBLError } from '$lib/gobl/client'
 import { getContext, setContext } from 'svelte'
 import { derived, get, writable, type Writable } from 'svelte/store'
 import type * as monaco from 'monaco-editor'
