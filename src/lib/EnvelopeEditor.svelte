@@ -1,10 +1,10 @@
 <script lang="ts">
-  import * as GOBL from '@invopop/gobl-worker'
+  import * as GOBL from '$lib/gobl/client'
   import hash from 'object-hash'
   import { envelopeDocumentJSON } from '$lib/helpers/envelope'
   import EditorCode from './editor/code/EditorCode.svelte'
   import EditorForm from './editor/form/EditorForm.svelte'
-  import { isEnvelope } from '@invopop/gobl-worker'
+  import { isEnvelope, setApiBaseUrl, DEFAULT_API_BASE_URL } from '$lib/gobl/client'
   import { problemSeverityMap } from './editor/EditorProblem.js'
   import * as actions from './editor/actions'
   import type { BuildOptions, DocumentHeader, State } from './types/editor'
@@ -19,6 +19,7 @@
 
   let {
     jsonSchemaURL = '',
+    apiBaseUrl = DEFAULT_API_BASE_URL,
     data = $bindable(''),
     state: initialState = $bindable('init'),
     problems = $bindable([]),
@@ -38,6 +39,14 @@
     onReplicate,
     onNotification
   }: EnvelopeEditorProps = $props()
+
+  // Configure the GOBL API endpoint before any operation runs. The initial
+  // value is applied eagerly during init; the effect keeps it in sync.
+  // svelte-ignore state_referenced_locally
+  setApiBaseUrl(apiBaseUrl)
+  $effect(() => {
+    setApiBaseUrl(apiBaseUrl)
+  })
 
   let editorForm: EditorForm | null = $state(null)
   let initialEditorData = ''
@@ -182,7 +191,7 @@
       return
     }
 
-    return await generateCorrectOptionsModel(result?.schema || '')
+    return await generateCorrectOptionsModel(result.schema)
   }
 
   export const correctWithOptions = async (options: string) => {

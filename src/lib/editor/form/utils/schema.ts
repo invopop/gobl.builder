@@ -1,6 +1,6 @@
 import type { JSONSchema7 } from 'json-schema'
 import { path } from './path.js'
-import * as GOBL from '@invopop/gobl-worker'
+import * as GOBL from '$lib/gobl/client'
 
 export type Schema = JSONSchema7
 
@@ -13,15 +13,15 @@ const EMPTY_SCHEMA: Schema = {
   properties: {}
 }
 
-export async function fetchJsonSchema(url: string) {
+export async function fetchJsonSchema(url: string): Promise<Schema> {
   const GOBL_URL = 'https://gobl.org/draft-0/'
-  // We only support loading json from the worker without ?query=modifiers
+  // We only support loading json from the API without ?query=modifiers
   const GOBL_URL_REGEX = /^https:\/\/gobl\.org\/draft-0\/[^?]*$/
 
   const isGoblSchema = GOBL_URL_REGEX.test(url)
 
   if (isGoblSchema) {
-    return await GOBL.schema(url.replace(GOBL_URL, ''))
+    return (await GOBL.schema(url.replace(GOBL_URL, ''))) as Schema
   }
 
   const response = await fetch(url)
@@ -41,9 +41,7 @@ async function fetchExternalSchema(id: string): Promise<Schema> {
   if (schema) return schema
 
   try {
-    const result = await fetchJsonSchema(id)
-
-    schema = JSON.parse(result)
+    schema = await fetchJsonSchema(id)
 
     SchemaRegistry[id] = schema
 
