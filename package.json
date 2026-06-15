@@ -117,7 +117,9 @@
     "cookie": "0.7.2",
     "@typescript-eslint/typescript-estree": {
       "minimatch": "9.0.9"
-    }
+    },
+    "devalue": ">=5.8.1",
+    "esbuild": ">=0.28.1"
   },
   "engines": {
     "node": ">=22.12.0"
