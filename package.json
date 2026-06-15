@@ -102,7 +102,7 @@
     "jsonc-parser": "^3.3.1",
     "mode-watcher": "^1.1.0",
     "monaco-editor": "0.52.0",
-    "svelte": "^5.0.0",
+    "svelte": "^5.56.3",
     "svelte-floating-ui": "^1.5.3",
     "svelte-hero-icons": "^5.0.0",
     "svelte-intersection-observer-action": "^0.0.4",
