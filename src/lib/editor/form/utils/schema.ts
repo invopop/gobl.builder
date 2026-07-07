@@ -14,14 +14,13 @@ const EMPTY_SCHEMA: Schema = {
 }
 
 export async function fetchJsonSchema(url: string): Promise<Schema> {
-  const GOBL_URL = 'https://gobl.org/draft-0/'
-  // We only support loading json from the API without ?query=modifiers
-  const GOBL_URL_REGEX = /^https:\/\/gobl\.org\/draft-0\/[^?]*$/
+  // Query modifiers (e.g. ?tax_regime=) are ignored by the schema servers,
+  // so they are stripped before loading the schema through the API.
+  const GOBL_URL_REGEX = /^https:\/\/gobl\.org\/draft-0\/([^?#]+)/
 
-  const isGoblSchema = GOBL_URL_REGEX.test(url)
-
-  if (isGoblSchema) {
-    return (await GOBL.schema(url.replace(GOBL_URL, ''))) as Schema
+  const match = url.match(GOBL_URL_REGEX)
+  if (match) {
+    return (await GOBL.schema(match[1])) as Schema
   }
 
   const response = await fetch(url)
@@ -63,6 +62,62 @@ async function fetchSchema(id: string): Promise<Schema> {
 
   SchemaRegistry[id] = schema
   return schema
+}
+
+// loadSchemaSet fetches the schema at the given URL together with every
+// GOBL schema it references, directly or transitively, reusing the shared
+// SchemaRegistry cache. Callers like the Monaco code editor can then
+// validate documents without requesting any schemas from gobl.org.
+// Throws when the root schema cannot be loaded; missing referenced schemas
+// degrade to an empty placeholder instead.
+export async function loadSchemaSet(url: string): Promise<Array<{ uri: string; schema: Schema }>> {
+  const rootId = url.split('#')[0]
+  if (!SchemaRegistry[rootId]) {
+    SchemaRegistry[rootId] = await fetchJsonSchema(rootId)
+  }
+
+  const found = new Map<string, Schema>()
+  const queue = [rootId]
+
+  while (queue.length > 0) {
+    const id = queue.shift() as string
+    if (found.has(id)) continue
+
+    const schema = await fetchExternalSchema(id)
+    found.set(id, schema)
+
+    for (const ref of collectGOBLRefs(schema)) {
+      const base = ref.split('#')[0]
+      if (base && !found.has(base)) {
+        queue.push(base)
+      }
+    }
+  }
+
+  return [...found.entries()].map(([uri, schema]) => ({ uri, schema }))
+}
+
+function collectGOBLRefs(node: unknown, refs = new Set<string>()): Set<string> {
+  if (Array.isArray(node)) {
+    for (const item of node) {
+      collectGOBLRefs(item, refs)
+    }
+    return refs
+  }
+  if (node && typeof node === 'object') {
+    for (const [key, value] of Object.entries(node)) {
+      if (
+        key === '$ref' &&
+        typeof value === 'string' &&
+        value.startsWith('https://gobl.org/draft-0/')
+      ) {
+        refs.add(value)
+      } else {
+        collectGOBLRefs(value, refs)
+      }
+    }
+  }
+  return refs
 }
 
 export async function parseSchema(
