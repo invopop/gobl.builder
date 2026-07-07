@@ -68,9 +68,16 @@ async function fetchSchema(id: string): Promise<Schema> {
 // GOBL schema it references, directly or transitively, reusing the shared
 // SchemaRegistry cache. Callers like the Monaco code editor can then
 // validate documents without requesting any schemas from gobl.org.
+// Throws when the root schema cannot be loaded; missing referenced schemas
+// degrade to an empty placeholder instead.
 export async function loadSchemaSet(url: string): Promise<Array<{ uri: string; schema: Schema }>> {
+  const rootId = url.split('#')[0]
+  if (!SchemaRegistry[rootId]) {
+    SchemaRegistry[rootId] = await fetchJsonSchema(rootId)
+  }
+
   const found = new Map<string, Schema>()
-  const queue = [url.split('#')[0]]
+  const queue = [rootId]
 
   while (queue.length > 0) {
     const id = queue.shift() as string

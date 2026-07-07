@@ -62,12 +62,15 @@
     let enableSchemaRequest = false
     let schemas: { uri: string; fileMatch?: string[]; schema?: unknown }[] = []
     if (uri) {
+      // loadSchemaSet returns fragment-free URIs, so match against the
+      // same base when attaching the document to its root schema.
+      const baseURI = uri.split('#')[0]
       try {
-        schemas = (await loadSchemaSet(uri)).map((entry) =>
-          entry.uri === uri ? { ...entry, fileMatch: [goblDocURL] } : entry
+        schemas = (await loadSchemaSet(baseURI)).map((entry) =>
+          entry.uri === baseURI ? { ...entry, fileMatch: [goblDocURL] } : entry
         )
       } catch {
-        schemas = [{ fileMatch: [goblDocURL], uri }]
+        schemas = [{ fileMatch: [goblDocURL], uri: baseURI }]
         enableSchemaRequest = true
       }
     }
