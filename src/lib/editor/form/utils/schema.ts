@@ -94,7 +94,9 @@ export async function loadSchemaSet(url: string): Promise<Array<{ uri: string; s
     }
   }
 
-  return [...found.entries()].map(([uri, schema]) => ({ uri, schema }))
+  // Deep-clone the returned schemas so callers hold a stable snapshot that
+  // can never share mutable objects with the registry or the form parser.
+  return [...found.entries()].map(([uri, schema]) => ({ uri, schema: structuredClone(schema) }))
 }
 
 function collectGOBLRefs(node: unknown, refs = new Set<string>()): Set<string> {
@@ -208,7 +210,11 @@ export async function parseSchema(
 }
 
 async function getSchema(id: string, value: SchemaValue) {
-  let schema = await fetchSchema(id)
+  // parseSchema rewrites parts of the schema for form display (e.g. it
+  // forces num/amount refs to type "number" for alignment) and mutates
+  // nested objects in place, so parse a deep clone to keep the cached
+  // registry copy pristine for other consumers like the Monaco editor.
+  let schema = structuredClone(await fetchSchema(id))
   schema = await parseSchema(id, schema, value)
 
   return schema
