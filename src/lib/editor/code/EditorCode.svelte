@@ -12,6 +12,7 @@
   import LightbulbIcon from '$lib/ui/icons/LightbulbIcon.svelte'
   import { getBuilderContext } from '$lib/store/builder.js'
   import { getAgentSystem, formatFaultMessage, parseGOBLError } from '$lib/helpers'
+  import { loadSchemaSet } from '../form/utils/schema.js'
   import { parseSource, resolveFaultRange } from './faultLocator'
   import type { EditorCodeProps } from '$lib/types/editor'
 
@@ -47,22 +48,38 @@
     }
   }
 
-  function setSchemaURI(uri: string) {
+  let schemaRequestId = 0
+
+  async function setSchemaURI(uri: string) {
     if (!monaco) {
       return
     }
+    const requestId = ++schemaRequestId
+
+    // Preload the schema and everything it references through the GOBL API
+    // client so monaco validates without fetching schemas from gobl.org
+    // itself. Fall back to monaco's own schema requests if that fails.
+    let enableSchemaRequest = false
+    let schemas: { uri: string; fileMatch?: string[]; schema?: unknown }[] = []
+    if (uri) {
+      try {
+        schemas = (await loadSchemaSet(uri)).map((entry) =>
+          entry.uri === uri ? { ...entry, fileMatch: [goblDocURL] } : entry
+        )
+      } catch {
+        schemas = [{ fileMatch: [goblDocURL], uri }]
+        enableSchemaRequest = true
+      }
+    }
+    if (!monaco || requestId !== schemaRequestId) {
+      return
+    }
+
     monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
       validate: true,
-      enableSchemaRequest: true,
+      enableSchemaRequest,
       schemaValidation: 'warning',
-      schemas: uri
-        ? [
-            {
-              fileMatch: [goblDocURL],
-              uri
-            }
-          ]
-        : []
+      schemas
     })
     if (monacoEditor) {
       const value = monacoEditor.getValue()
