@@ -4,7 +4,7 @@
   import { envelopeDocumentJSON } from '$lib/helpers/envelope'
   import EditorCode from './editor/code/EditorCode.svelte'
   import EditorForm from './editor/form/EditorForm.svelte'
-  import { isEnvelope, setApiBaseUrl, DEFAULT_API_BASE_URL } from '$lib/gobl/client'
+  import { isEnvelope, setApiBaseUrl } from '$lib/gobl/client'
   import { problemSeverityMap } from './editor/EditorProblem.js'
   import * as actions from './editor/actions'
   import type { BuildOptions, DocumentHeader, State } from './types/editor'
@@ -19,7 +19,7 @@
 
   let {
     jsonSchemaURL = '',
-    apiBaseUrl = DEFAULT_API_BASE_URL,
+    apiBaseUrl = '',
     data = $bindable(''),
     state: initialState = $bindable('init'),
     problems = $bindable([]),
@@ -41,7 +41,9 @@
   }: EnvelopeEditorProps = $props()
 
   // Configure the GOBL API endpoint before any operation runs. The initial
-  // value is applied eagerly during init; the effect keeps it in sync.
+  // value is applied eagerly during init; the effect keeps it in sync. An
+  // empty prop is a no-op so an editor without an explicit endpoint inherits
+  // the currently-configured one instead of resetting it to the default.
   // svelte-ignore state_referenced_locally
   setApiBaseUrl(apiBaseUrl)
   $effect(() => {

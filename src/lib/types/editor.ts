@@ -205,9 +205,11 @@ export interface EnvelopeEditorProps {
   // Used for JSON Schema validation within Monaco Editor. When set, this should  be the JSON Schema URL of a GOBL document, e.g. an invoice. Not an envelope.
   jsonSchemaURL?: string
   // Base URL of the GOBL API used for build, sign, validate, correct,
-  // replicate, keygen and schema operations. Defaults to the public service at
-  // `https://gobl.dev/v0`. Embedders may point this at a same-origin path
-  // (e.g. `/api/gobl`) that proxies the GOBL API and adds authentication.
+  // replicate, keygen and schema operations. Embedders may point this at a
+  // same-origin path (e.g. `/api/gobl`) that proxies the GOBL API and adds
+  // authentication. When left unset the editor keeps whatever endpoint is
+  // already configured (the public `https://gobl.dev/v0` service initially),
+  // so nested editors never reset an embedder's choice.
   apiBaseUrl?: string
   // Data is used for setting editor contents. Note: there is "one way" binding;
   // e.g. you can set data but changes are not bound to the parent. Use the
