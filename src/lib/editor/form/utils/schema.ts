@@ -35,16 +35,34 @@ function getRelativeSchema(parentSchema: Schema, id: string, del = '/'): Schema 
   return path(parentSchema, id, del)
 }
 
+// In-flight schema requests, keyed by URL, so that concurrent consumers
+// (the form parser branches and the Monaco preload) share a single fetch
+// instead of each missing the registry cache and requesting the same
+// schema again.
+const pendingSchemas: Record<string, Promise<Schema>> = {}
+
+function fetchExternalSchemaStrict(id: string): Promise<Schema> {
+  const schema = SchemaRegistry[id]
+  if (schema) return Promise.resolve(schema)
+
+  let req = pendingSchemas[id]
+  if (!req) {
+    req = fetchJsonSchema(id)
+      .then((fetched) => {
+        SchemaRegistry[id] = fetched
+        return fetched
+      })
+      .finally(() => {
+        delete pendingSchemas[id]
+      })
+    pendingSchemas[id] = req
+  }
+  return req
+}
+
 async function fetchExternalSchema(id: string): Promise<Schema> {
-  let schema = SchemaRegistry[id]
-  if (schema) return schema
-
   try {
-    schema = await fetchJsonSchema(id)
-
-    SchemaRegistry[id] = schema
-
-    return schema
+    return await fetchExternalSchemaStrict(id)
   } catch (error) {
     return EMPTY_SCHEMA
   }
@@ -72,9 +90,7 @@ async function fetchSchema(id: string): Promise<Schema> {
 // degrade to an empty placeholder instead.
 export async function loadSchemaSet(url: string): Promise<Array<{ uri: string; schema: Schema }>> {
   const rootId = url.split('#')[0]
-  if (!SchemaRegistry[rootId]) {
-    SchemaRegistry[rootId] = await fetchJsonSchema(rootId)
-  }
+  await fetchExternalSchemaStrict(rootId)
 
   const found = new Map<string, Schema>()
   const queue = [rootId]
