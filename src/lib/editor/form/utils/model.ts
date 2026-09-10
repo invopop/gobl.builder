@@ -1,6 +1,18 @@
 import { tick } from 'svelte'
-import { getRootSchema, parseSchema, type Schema, type SchemaValue } from './schema.js'
+import {
+  getRootSchema,
+  preloadSchemas,
+  registerSchema,
+  resolveSchema,
+  type Schema,
+  type SchemaValue
+} from './schema.js'
 import { sleep } from './sleep.js'
+
+// Cap on how deep an empty value is seeded from a schema's required and
+// recommended fields. Real documents nest a handful of levels; recursive
+// schemas such as org/party (whose `agent` is another party) do not stop.
+const MAX_EMPTY_VALUE_NESTING = 10
 
 export async function generateCorrectOptionsModel(schema: Record<string, unknown>) {
   const schemaObj = schema as {
@@ -17,7 +29,13 @@ export async function generateCorrectOptionsModel(schema: Record<string, unknown
     throw new Error(`Correction options schema not found at ${schemaObj.$ref}`)
   }
 
-  const parsedSchema = await parseSchema(schemaObj.$id ?? '', options, schemaObj)
+  // These options come straight from the API's /correct endpoint rather than
+  // the schema registry, so register the document (its `$defs` are only
+  // reachable through it) and preload what it references before resolving.
+  registerSchema(schemaObj as Schema)
+  await preloadSchemas(schemaObj as Schema, schemaObj as SchemaValue)
+
+  const parsedSchema = resolveSchema(schemaObj.$id ?? '', options, schemaObj)
 
   const CORRECTION_OPTIONS_SCHEMA_URL =
     'https://gobl.org/draft-0/bill/correction-options?tax_regime='
@@ -50,6 +68,11 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
   public childrenMap?: Record<string, UIModelField>
   public options?: SchemaOption[]
   public is: UIModelFieldFlags
+  // Identifier of the schema document this field's schema came from, used as
+  // the base when resolving the relative references of its children. Nodes
+  // defined inline inside a document carry no `$id` of their own and so
+  // inherit their parent's.
+  public schemaId: string
 
   constructor(
     public schema: Schema,
@@ -65,6 +88,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       /[^a-zA-Z0-9-_]/g,
       ''
     )
+    this.schemaId = this.schema.$id || this.parent?.schemaId || ''
     this.type = this.schema.type as string
     this.controlType = this.getControlType()
     this.controlMeta = this.getControlMeta()
@@ -110,12 +134,21 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         let index = 0
 
         for (const [key, value] of items) {
-          const subSchema =
+          const childSchema =
             this.controlType === 'dictionary'
               ? this.controlMeta.schema
               : (this.schema.properties?.[key] as Schema | undefined)
 
-          if (!subSchema) continue
+          if (!childSchema) continue
+
+          // Expand the child one level deeper, now that we know the document
+          // actually holds a value for it.
+          const subSchema = resolveSchema(
+            this.schemaId,
+            childSchema,
+            this.value as SchemaValue,
+            key
+          )
 
           const childUIModelField = new UIModelField(
             subSchema,
@@ -152,14 +185,23 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
       case 'array': {
         // @todo: Support multiple types (Schema[])
-        const subSchema = this.schema.items as Schema | undefined
-        if (!subSchema) break
+        const itemsSchema = this.schema.items as Schema | undefined
+        if (!itemsSchema) break
 
         const items = ((this.value || []) as SchemaValue[]).entries()
         let index = 0
 
         for (const [k, value] of items) {
           const key = k + ''
+          // Resolved per item rather than once for the array: entries of a
+          // `schema/object` array (a document's `complements`) each name their
+          // own schema, and only the item's own value can say which.
+          const subSchema = resolveSchema(
+            this.schemaId,
+            itemsSchema,
+            this.value as SchemaValue,
+            key
+          )
           const childUIModelField = new UIModelField(
             subSchema,
             value,
@@ -184,7 +226,7 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
           {
             key: `item`,
             required: (this.schema.required || []).includes(this.key),
-            schema: subSchema
+            schema: itemsSchema
           }
         ]
 
@@ -324,8 +366,12 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     const childLength = childs.length
     const key = this.getNextChildFieldKey(option.key)
 
+    // Options carry the shallow schema listed by the parent, so expand it
+    // before the field is built.
+    const schema = resolveSchema(this.schemaId, option.schema, this.value as SchemaValue, key)
+
     const newField = new UIModelField(
-      option.schema,
+      schema,
       value,
       this.root.uniqueId,
       key,
@@ -573,8 +619,15 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
     }
   }
 
+  // Seeds the value of a new field from the required and recommended fields
+  // of its schema. Unlike the rest of the model this walks down the schema
+  // rather than the document, so the depth is capped: a recursive schema
+  // would otherwise describe an infinitely deep empty value.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getEmptyFieldValue(option: SchemaOption, nestingLevel: number = Number.POSITIVE_INFINITY): any {
+  getEmptyFieldValue(option: SchemaOption, nestingLevel: number = MAX_EMPTY_VALUE_NESTING): any {
+    if (nestingLevel <= 0) return
+
+    const baseId = option.schema?.$id || this.schemaId
     let value
 
     switch (option.schema?.type) {
@@ -585,11 +638,14 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
 
         value = displayFields.reduce(
           (acc, key) => {
-            const schema = (option.schema.properties || {})[key] as Schema
+            const childSchema = (option.schema.properties || {})[key] as Schema
+            if (!childSchema) return acc
+
+            const schema = resolveSchema(baseId, childSchema)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if ((schema as any)?.calculated) return acc
 
-            acc[key] = this.getEmptyFieldValue({ key, schema, required: true }, --nestingLevel)
+            acc[key] = this.getEmptyFieldValue({ key, schema, required: true }, nestingLevel - 1)
             return acc
           },
           {} as Record<string, SchemaValue>
@@ -598,10 +654,13 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
         break
       }
       case 'array': {
-        const schema = option.schema.items as Schema
+        const itemsSchema = option.schema.items as Schema
+        if (!itemsSchema) break
+
+        const schema = resolveSchema(baseId, itemsSchema)
         const firstItem = this.getEmptyFieldValue(
           { key: '0', schema, required: false },
-          --nestingLevel
+          nestingLevel - 1
         )
 
         value = [firstItem]
@@ -633,7 +692,14 @@ export class UIModelField<V extends SchemaValue | unknown = unknown> {
       }
       case 'dictionary': {
         const childOption = this.getControlMeta(option.schema) as SchemaOption
-        value = { key: childOption ? this.getEmptyFieldValue(childOption) : '' }
+        value = {
+          key: childOption
+            ? this.getEmptyFieldValue(
+                { ...childOption, schema: resolveSchema(baseId, childOption.schema) },
+                nestingLevel - 1
+              )
+            : ''
+        }
         break
       }
     }
