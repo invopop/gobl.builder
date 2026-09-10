@@ -138,11 +138,16 @@ function collectGOBLRefs(node: unknown, refs = new Set<string>()): Set<string> {
   return refs
 }
 
+// A schema may nest inside itself once, as org/party does through its agent
+// field; deeper repeats keep their $ref unexpanded so parsing terminates.
+const MAX_SELF_NESTING = 2
+
 export async function parseSchema(
   id: string,
   schema: Schema,
   value: SchemaValue,
-  key: string | undefined = undefined
+  key: string | undefined = undefined,
+  parents: string[] = []
 ): Promise<Schema> {
   const ref = schema.$ref || ''
 
@@ -174,7 +179,11 @@ export async function parseSchema(
       // TODO: Loop other objects an array if the key is not at root level
       // TODO: Support object types (not array)
     }
-    let refSchema = await getSchema(relId, value)
+    if (parents.filter((p) => p === relId).length >= MAX_SELF_NESTING) {
+      return { ...pSchema, $ref: relId }
+    }
+
+    let refSchema = await getSchema(relId, value, parents)
 
     if (addSchemaProp) {
       const props = refSchema.properties || {}
@@ -207,7 +216,7 @@ export async function parseSchema(
   // Object type
   if (pSchema.type === 'object' && pSchema.properties) {
     for (const [k, v] of Object.entries(pSchema.properties)) {
-      pSchema.properties[k] = await parseSchema(id, v as Schema, value, k)
+      pSchema.properties[k] = await parseSchema(id, v as Schema, value, k, parents)
     }
   }
 
@@ -215,23 +224,23 @@ export async function parseSchema(
   if (pSchema.type === 'array' && pSchema.items) {
     if (Array.isArray(pSchema.items)) {
       for (const [i, v] of pSchema.items.entries()) {
-        pSchema.items[i] = await parseSchema(id, v as Schema, value, String(i))
+        pSchema.items[i] = await parseSchema(id, v as Schema, value, String(i), parents)
       }
     } else {
-      pSchema.items = await parseSchema(id, pSchema.items as Schema, value, key)
+      pSchema.items = await parseSchema(id, pSchema.items as Schema, value, key, parents)
     }
   }
 
   return pSchema
 }
 
-async function getSchema(id: string, value: SchemaValue) {
+async function getSchema(id: string, value: SchemaValue, parents: string[] = []) {
   // parseSchema rewrites parts of the schema for form display (e.g. it
   // forces num/amount refs to type "number" for alignment) and mutates
   // nested objects in place, so parse a deep clone to keep the cached
   // registry copy pristine for other consumers like the Monaco editor.
   let schema = structuredClone(await fetchSchema(id))
-  schema = await parseSchema(id, schema, value)
+  schema = await parseSchema(id, schema, value, undefined, [...parents, id])
 
   return schema
 }
