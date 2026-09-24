@@ -27,8 +27,16 @@
 
   createBuilderContext()
 
-  async function generateModel(schema: SchemaValue) {
-    model = await getUIModel(jsonSchemaURL, schema, id)
+  async function generateModel(value: SchemaValue) {
+    model = await getUIModel(jsonSchemaURL, value, id)
+  }
+
+  // Structural changes (add, delete, duplicate, move) mutate the model in
+  // place, so reassigning it would not re-render anything. Rebuild it from
+  // its current value instead, as the envelope editor does.
+  function regenerateModel() {
+    if (!model) return
+    generateModel(model.toValue())
   }
 
   export function getJson(): string {
@@ -42,5 +50,5 @@
 </script>
 
 {#if model}
-  <DynamicForm {model} {readOnly} onUiRefreshNeeded={(m) => (model = m)} />
+  <DynamicForm {model} {readOnly} onUiRefreshNeeded={regenerateModel} />
 {/if}
