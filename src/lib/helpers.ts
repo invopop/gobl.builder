@@ -87,32 +87,16 @@ export async function displayAllErrors(
   }
 }
 
-export function objectHasEmptyProperties(obj: Record<string, unknown>) {
-  for (const key in obj) {
-    const value = obj[key]
+// Reports whether a document still has an empty string anywhere in it, so
+// the editor can hold off building until the user has filled in the fields
+// they just added. Walks objects and arrays alike: a freshly added array of
+// strings (such as `$tags`) starts life as `[""]`, and that empty string
+// must be caught as much as one sitting under an object key.
+export function objectHasEmptyProperties(value: unknown): boolean {
+  if (value === '') return true
+  if (typeof value !== 'object' || value === null) return false
 
-    if (value === '') {
-      return true // Found an empty string
-    }
-
-    if (typeof value === 'object' && value !== null) {
-      if (Array.isArray(value)) {
-        // If the property is an array, check each element
-        for (const element of value) {
-          if (objectHasEmptyProperties(element)) {
-            return true // Found an empty string in array element
-          }
-        }
-      } else {
-        // If the property is an object (but not an array), recursively check its properties
-        if (objectHasEmptyProperties(value as Record<string, unknown>)) {
-          return true // Found an empty string in nested object
-        }
-      }
-    }
-  }
-
-  return false // No empty string found
+  return Object.values(value).some(objectHasEmptyProperties)
 }
 
 export function getAgentSystem() {
